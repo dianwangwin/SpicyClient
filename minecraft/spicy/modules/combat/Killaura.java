@@ -40,6 +40,7 @@ import spicy.settings.BooleanSetting;
 import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
 import spicy.settings.Setting;
+import spicy.settings.SettingChangeEvent;
 import spicy.util.Timer;
 
 public class Killaura extends Module {
@@ -50,20 +51,30 @@ public class Killaura extends Module {
 	private NumberSetting aps = new NumberSetting("APS", 10, 0, 20, 1);
 	private BooleanSetting noSwing = new BooleanSetting("NoSwing", false);
 	private BooleanSetting disableOnDeath = new BooleanSetting("DisableOnDeath", false);
+	public BooleanSetting dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", true);
+	private ModeSetting targetsSetting = new ModeSetting("Targets", "Players", "Players", "Animals", "Mobs", "Everything");
+	public ModeSetting newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
+	public ModeSetting targetingMode = new ModeSetting("Targeting mode", "Single", "Single", "Switch");
+	public NumberSetting switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
+	
+	// These settings are not used anymore but are still here so you can update old configs
 	private BooleanSetting autoblock = new BooleanSetting("Autoblock", false);
-	private ModeSetting targetModeSetting = new ModeSetting("Targets", "Players", "Players", "Animals", "Mobs", "Everything");
+	public ModeSetting targetModeSetting = new ModeSetting("Targets", "Players", "Players", "Animals", "Mobs", "Everything");
 	
 	public Killaura() {
 		super("Killaura", Keyboard.KEY_NONE, Category.COMBAT);
-		targetModeSetting.index = targetModeSetting.modes.size() - 1;
+		targetsSetting.index = targetsSetting.modes.size() - 1;
 		resetSettings();
 	}
+	
+	private static Timer targetSwitchTimer = new Timer();
+	private static EntityLivingBase lastTarget = null;
 	
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
-		targetModeSetting.index = targetModeSetting.modes.size() - 1;
-		this.addSettings(range, aps, noSwing, disableOnDeath, autoblock, targetModeSetting);
+		targetsSetting.index = targetsSetting.modes.size() - 1;
+		this.addSettings(range, aps, noSwing, switchTime, disableOnDeath, dontHitDeadEntitys, targetsSetting, newAutoblock, targetingMode);
 	}
 	
 	public void onEnable() {
@@ -80,6 +91,24 @@ public class Killaura extends Module {
 	}
 	
 	public Timer timer = new Timer();
+	
+	@Override
+	public void onSettingChange(SettingChangeEvent e) {
+		
+		if (e.setting != null & e.setting.equals(targetingMode)) {
+			
+			if (targetingMode.is("Single") && settings.contains(switchTime)) {
+				settings.remove(switchTime);
+				this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
+			}
+			else if (targetingMode.is("Switch") && !settings.contains(switchTime)) {
+				settings.add(switchTime);
+				this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
+			}
+			
+		}
+		
+	}
 	
 	public void onEvent(Event e) {
 		
@@ -108,7 +137,11 @@ public class Killaura extends Module {
 				// This was changed so it would work on servers like mineplex where they spoof the players health to always be 0
 				//targets = targets.stream().filter(entity -> entity.getDistanceToEntity(mc.thePlayer) < range.getValue() && entity != mc.thePlayer && !entity.isDead && entity.getHealth() > 0).collect(Collectors.toList());
 				
-				targets = targets.stream().filter(entity -> entity.getDistanceToEntity(mc.thePlayer) < range.getValue() && entity != mc.thePlayer && !entity.isDead).collect(Collectors.toList());
+				if (dontHitDeadEntitys.enabled) {
+					targets = targets.stream().filter(entity -> entity.getDistanceToEntity(mc.thePlayer) < range.getValue() && entity != mc.thePlayer && !entity.isDead && entity.getHealth() > 0).collect(Collectors.toList());
+				}else {
+					targets = targets.stream().filter(entity -> entity.getDistanceToEntity(mc.thePlayer) < range.getValue() && entity != mc.thePlayer && !entity.isDead).collect(Collectors.toList());
+				}
 				
 				
 				if (targets.isEmpty()) {
@@ -123,7 +156,7 @@ public class Killaura extends Module {
 						}
 					}
 					
-					int target_filter = targetModeSetting.index;
+					int target_filter = targetsSetting.index;
 					
 					if (target_filter == 0) {
 						// kill aura will only hit non invisible players
@@ -173,6 +206,20 @@ public class Killaura extends Module {
 					
 					target = targets.get(0);
 					
+					if (targetingMode.is("Switch")) {
+						
+						if (lastTarget != null && targets.contains(lastTarget)) {
+							target = lastTarget;
+							if (targetSwitchTimer.hasTimeElapsed((long) (switchTime.getValue()*1000), true)) {
+								target = targets.get(0);
+							}
+							
+						}
+						
+					}
+					
+					lastTarget = target;
+					
 					// This removes a bug which would cause you get get kicked for invalid player movement
 					if (target.posX == mc.thePlayer.posX && target.posY == mc.thePlayer.posY && target.posZ == mc.thePlayer.posZ) {
 						
@@ -183,7 +230,10 @@ public class Killaura extends Module {
 						
 					}
 					
-                    if (autoblock.enabled && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
+                    if (newAutoblock.is("Hypixel") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
+                        mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
+                    }
+                    else if (newAutoblock.is("Vanilla") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
                         mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
                     }
 					
@@ -195,7 +245,7 @@ public class Killaura extends Module {
 							mc.thePlayer.setSprinting(true);
 						}
 						
-                        if (mc.thePlayer.isBlocking() && autoblock.enabled) {
+                        if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel")) {
                             mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
                         }
                         
@@ -211,7 +261,7 @@ public class Killaura extends Module {
                             mc.thePlayer.onEnchantmentCritical(target);
                         }
                         
-                        if (mc.thePlayer.isBlocking() && autoblock.enabled || mc.gameSettings.keyBindUseItem.pressed && mc.thePlayer.getCurrentEquippedItem() != null) {
+                        if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") || mc.gameSettings.keyBindUseItem.pressed && mc.thePlayer.getCurrentEquippedItem() != null) {
                             mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());
                         }
 						

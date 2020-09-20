@@ -282,7 +282,6 @@ public class SpicyClient {
 		}
 		
 		for (Module temp : SpicyClient.modules) {
-			System.out.println(temp.additionalInformation);
 			if (temp.additionalInformation.equalsIgnoreCase(""
 					+ "")) {
 				temp.additionalInformation = "";

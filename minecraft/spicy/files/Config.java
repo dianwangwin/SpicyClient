@@ -14,6 +14,8 @@ import spicy.modules.player.*;
 import spicy.modules.render.*;
 import spicy.modules.world.*;
 import spicy.settings.BooleanSetting;
+import spicy.settings.ModeSetting;
+import spicy.settings.NumberSetting;
 
 public class Config {
 	
@@ -65,7 +67,7 @@ public class Config {
 	public PingSpoof pingSpoof = new PingSpoof();
 	public KillSults killSults = new KillSults();
 	
-	public String clientName = "SpicyClient ", clientVersion = "B3 Beta 0001";
+	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
 	public Config(String name) {
 		this.name = name;
@@ -77,6 +79,16 @@ public class Config {
 	}
 	
 	public boolean updateConfig() {
+		
+		if (clientVersion.contains("B3 Beta")) {
+			
+			this.killSults.pvplandsPayback = new BooleanSetting("Payback", false);
+			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", true);
+			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
+			this.killaura.targetingMode = new ModeSetting("Targeting mode", "Single", "Single", "Switch");
+			this.killaura.switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
+			
+		}
 		
 		Config temp = new Config("temp");
 		if (this.version.equalsIgnoreCase(temp.version)) {
@@ -92,6 +104,10 @@ public class Config {
 		else if (this.version.equalsIgnoreCase("B2")) {
 			
 			this.killSults.pvplandsPayback = new BooleanSetting("Payback", false);
+			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", true);
+			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "Vanilla", "Vanilla", "Hypixel");
+			this.killaura.targetingMode = new ModeSetting("Targeting mode", "Single", "Single", "Switch");
+			this.killaura.switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
 			
 		}
 		
@@ -121,6 +137,7 @@ public class Config {
 			m.toggle();
 			m.toggle();
 		}
+		
 		SpicyClient.config = this;
 		
 		try {
