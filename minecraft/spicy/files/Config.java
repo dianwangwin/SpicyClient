@@ -82,6 +82,8 @@ public class Config {
 		
 		if (clientVersion.contains("B3 Beta")) {
 			
+			this.nofall.noFallMode = new ModeSetting("NoFall Mode", "Vanilla", "Vanilla", "Packet");
+			
 		}
 		
 		Config temp = new Config("temp");
@@ -106,6 +108,8 @@ public class Config {
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
 			this.killaura.targetingMode = new ModeSetting("Targeting mode", "Single", "Single", "Switch");
 			this.killaura.switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
+			
+			this.nofall.noFallMode = new ModeSetting("NoFall Mode", "Vanilla", "Vanilla", "Packet");
 			
 		}
 		
