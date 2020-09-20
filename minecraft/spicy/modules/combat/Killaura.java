@@ -83,7 +83,7 @@ public class Killaura extends Module {
 	
 	public void onDisable() {
 		
-        if (mc.thePlayer != null) {
+        if (mc.thePlayer != null && newAutoblock.is("Hypixel")) {
             mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
         }
 
