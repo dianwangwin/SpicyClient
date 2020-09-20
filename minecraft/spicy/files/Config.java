@@ -82,8 +82,6 @@ public class Config {
 		
 		if (clientVersion.contains("B3 Beta")) {
 			
-			this.nofall.noFallMode = new ModeSetting("NoFall Mode", "Vanilla", "Vanilla", "Packet");
-			
 		}
 		
 		Config temp = new Config("temp");
@@ -106,10 +104,13 @@ public class Config {
 			this.killSults.pvplandsPayback = new BooleanSetting("Payback", false);
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", true);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
+			this.killaura.newAutoblock.cycle(false);
+			this.killaura.newAutoblock.cycle(false);
 			this.killaura.targetingMode = new ModeSetting("Targeting mode", "Single", "Single", "Switch");
 			this.killaura.switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
 			
 			this.nofall.noFallMode = new ModeSetting("NoFall Mode", "Vanilla", "Vanilla", "Packet");
+			this.nofall.noFallMode.cycle(false);
 			
 		}
 		
