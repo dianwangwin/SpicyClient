@@ -95,6 +95,10 @@ public class Config {
 			return false;
 		}
 		
+		Command.sendPrivateChatMessage("Outdated config detected!");
+		Command.sendPrivateChatMessage("This config is from the version " + this.version);
+		Command.sendPrivateChatMessage("Updating the config to the version " + temp.version + "...");
+		
 		if (this.version.equalsIgnoreCase("B1") || this.version.equalsIgnoreCase("B2 Beta")) {
 			
 			Command.sendPrivateChatMessage("Legacy configs are not supported, legacy configs are configs from the versions B1 and B2 Beta");
@@ -105,15 +109,13 @@ public class Config {
 			
 			this.killSults.pvplandsPayback = new BooleanSetting("Payback", false);
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", true);
-			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "Vanilla", "Vanilla", "Hypixel");
+			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
 			this.killaura.targetingMode = new ModeSetting("Targeting mode", "Single", "Single", "Switch");
 			this.killaura.switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
 			
 		}
 		
-		Command.sendPrivateChatMessage("Outdated config detected!");
-		Command.sendPrivateChatMessage("This config is from the version " + this.version);
-		Command.sendPrivateChatMessage("Updating the config to the version " + temp.version + "...");
+		this.version = temp.version;
 		
 		Command.sendPrivateChatMessage("Config updated :)");
 		

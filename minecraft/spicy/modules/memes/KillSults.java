@@ -170,6 +170,10 @@ public class KillSults extends Module {
 								return;
 							}
 							
+						}else {
+							
+							return;
+							
 						}
 						
 						Random random = new Random();
