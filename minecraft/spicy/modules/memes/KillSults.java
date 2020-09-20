@@ -268,6 +268,10 @@ public class KillSults extends Module {
 		spicyClientAdsKillsults.add("<PlayerName> Should install SpicyClient");
 		spicyClientAdsKillsults.add("<PlayerName> SpicyClient increases your skill");
 		spicyClientAdsKillsults.add("<PlayerName> Doesn't use SpicyClient");
+		spicyClientAdsKillsults.add("<PlayerName> Download SpicyClient today to show those nons whos boss");
+		spicyClientAdsKillsults.add("<PlayerName> SpicyClient if free and opensource, download today at SpicyClient.info");
+		spicyClientAdsKillsults.add("<PlayerName> Is bad because they dont use SpicyClient");
+		spicyClientAdsKillsults.add("<PlayerName> Get SpicyClient noob");
 		
 	}
 	

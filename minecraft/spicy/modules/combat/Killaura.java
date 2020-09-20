@@ -112,6 +112,16 @@ public class Killaura extends Module {
 	
 	public void onEvent(Event e) {
 		
+		if (e instanceof EventUpdate) {
+			
+			if (e.isPre()) {
+				
+				this.additionalInformation = targetingMode.getMode();
+				
+			}
+			
+		}
+		
 		if (e instanceof EventMotion) {
 			
 			if (e.isPre()) {
