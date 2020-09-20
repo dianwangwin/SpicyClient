@@ -1,4 +1,4 @@
-# >SpicyClient
+# SpicyClient
 
 ## Introduction
 
