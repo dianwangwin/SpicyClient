@@ -68,11 +68,11 @@ public class OldHitting extends Module {
 				}
 				else if (animationSetting.getMode() == "Spaz 2") {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
-					ir.transformFirstPersonItem(0, partialTicks);
+					ir.transformFirstPersonItem(0, (swingProgress == 0) ? 0 : partialTicks);
 				}
 				else if (animationSetting.getMode() == "Jitter") {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
-					ir.transformFirstPersonItem(0, partialTicks / 100);
+					ir.transformFirstPersonItem(0, (swingProgress == 0) ? 0 : partialTicks / 100);
 				}
 				else if (animationSetting.getMode() == "Multi Tap") {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
