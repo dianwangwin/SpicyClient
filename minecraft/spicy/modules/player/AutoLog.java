@@ -25,7 +25,7 @@ import spicy.ui.NewAltManager;
 
 public class AutoLog extends Module {
 	
-	private ModeSetting mode = new ModeSetting("mode", "Vanilla", "Vanilla", "Pvplands");
+	private ModeSetting mode = new ModeSetting("mode", "Vanilla", "Vanilla", "Packet");
 	private NumberSetting health = new NumberSetting("health", 4, 1, 20, 1);
 	
 	
