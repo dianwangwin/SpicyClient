@@ -22,6 +22,8 @@ public class Bhop extends Module {
 	
 	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "PvpLands", "Hypixel", "Test", "Test 2", "Test 3");
 	
+	private static double lastY;
+	
 	public Bhop() {
 		super("Bhop", Keyboard.KEY_NONE, Category.MOVEMENT);
 		resetSettings();
@@ -34,7 +36,7 @@ public class Bhop extends Module {
 	}
 	
 	public void onEnable() {
-		
+		lastY = mc.thePlayer.posY;
 	}
 	
 	public void onDisable() {
@@ -125,13 +127,8 @@ public class Bhop extends Module {
 				}
 				else if (mode.getMode().equalsIgnoreCase("Test") && !b.isEnabled() && !mc.thePlayer.isInWater()) {
 					
-					if (mc.thePlayer.onGround && mc.gameSettings.keyBindForward.pressed) {
-						
-						mc.gameSettings.keyBindJump.pressed = false;
-						
-						mc.thePlayer.sendQueue.addToSendQueue(new C13PacketPlayerAbilities(new PlayerCapabilities()));
-						
-					}
+					event.y -= mc.thePlayer.posY -= 3;
+					lastY = mc.thePlayer.posY + 3;
 					
 				}
 				
