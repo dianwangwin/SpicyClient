@@ -270,6 +270,7 @@ public class SpicyClient {
 		modules.add(c.antibot);
 		modules.add(c.pingSpoof);
 		modules.add(c.killSults);
+		modules.add(c.autoLog);
 		
 		// Hud modules
 		

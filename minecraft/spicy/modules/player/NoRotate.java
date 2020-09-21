@@ -20,7 +20,7 @@ import spicy.ui.NewAltManager;
 
 public class NoRotate extends Module {
 	
-	BooleanSetting notify = new BooleanSetting("Notify", false);
+	private BooleanSetting notify = new BooleanSetting("Notify", false);
 	
 	public NoRotate() {
 		super("NoRotate", Keyboard.KEY_NONE, Category.PLAYER);

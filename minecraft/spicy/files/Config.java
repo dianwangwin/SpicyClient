@@ -66,6 +66,7 @@ public class Config {
 	public Antibot antibot = new Antibot();
 	public PingSpoof pingSpoof = new PingSpoof();
 	public KillSults killSults = new KillSults();
+	public AutoLog autoLog = new AutoLog();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -80,9 +81,7 @@ public class Config {
 	
 	public boolean updateConfig() {
 		
-		if (clientVersion.contains("B3 Beta")) {
-			
-		}
+		this.autoLog = new AutoLog();
 		
 		Config temp = new Config("temp");
 		if (this.version.equalsIgnoreCase(temp.version)) {
@@ -102,7 +101,7 @@ public class Config {
 		else if (this.version.equalsIgnoreCase("B2")) {
 			
 			this.killSults.pvplandsPayback = new BooleanSetting("Payback", false);
-			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", true);
+			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
 			this.killaura.newAutoblock.cycle(false);
 			this.killaura.newAutoblock.cycle(false);
@@ -113,6 +112,7 @@ public class Config {
 			this.nofall.noFallMode.cycle(false);
 			
 			this.noClip = new NoClip();
+			this.autoLog = new AutoLog();
 			
 		}
 		
