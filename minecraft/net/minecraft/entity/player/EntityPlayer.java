@@ -1942,7 +1942,7 @@ public abstract class EntityPlayer extends EntityLivingBase
     /**
      * sets the players height back to normal after doing things like sleeping and dieing
      */
-    protected void resetHeight()
+    public void resetHeight()
     {
         if (!this.isSpectator())
         {

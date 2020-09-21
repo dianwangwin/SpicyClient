@@ -112,6 +112,8 @@ public class Config {
 			this.nofall.noFallMode = new ModeSetting("NoFall Mode", "Vanilla", "Vanilla", "Packet");
 			this.nofall.noFallMode.cycle(false);
 			
+			this.noClip = new NoClip();
+			
 		}
 		
 		this.version = temp.version;
