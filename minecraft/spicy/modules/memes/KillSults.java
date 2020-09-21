@@ -235,6 +235,7 @@ public class KillSults extends Module {
 		furryKillsults.add("<PlayerName> Probably watches BetaEtaDelota (not me) on youtube");
 		furryKillsults.add("<PlayerName> Probably watches furry youtubers");
 		
+		// WARNING THE RETARDED FURRY KILLSULTS ARE NSFW
 		// for the retarded furry killsults list
 		// Writing these made me cringe so hard and I refuse to make more
 		retardedFurryKillsults.add("It's <PlayerName>s time to E621 and cry");
@@ -246,6 +247,12 @@ public class KillSults extends Module {
 		retardedFurryKillsults.add("<PlayerName> Did you know that there is no cock like horse cock");
 		retardedFurryKillsults.add("<PlayerName> bought a bad dragon dildo");
 		retardedFurryKillsults.add("waww x3 nuzzwes pounces on <PlayerName> uwu <PlayerName> so wawm>");
+		// Ok so maybe I made more...
+		retardedFurryKillsults.add("hey <PlayerName> Want to browse e621 with me?");
+		retardedFurryKillsults.add("<PlayerName> Do you also enjoy gay furry vore");
+		retardedFurryKillsults.add("Sorry <PlayerName>, but I only like the kinky furry shit");
+		retardedFurryKillsults.add("Wait, <PlayerName> wants to mursuit with me?!?!?!?");
+		retardedFurryKillsults.add("<PlayerName> Enjoys e621 confirmed?!?!?!?!?!?!?!");
 		
 		// for the annoying killsults list
 		annoyingKillsults.add("<PlayerName> L");
