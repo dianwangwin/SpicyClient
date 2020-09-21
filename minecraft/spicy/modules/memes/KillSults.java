@@ -252,7 +252,7 @@ public class KillSults extends Module {
 		retardedFurryKillsults.add("<PlayerName> Do you also enjoy gay furry vore");
 		retardedFurryKillsults.add("Sorry <PlayerName>, but I only like the kinky furry shit");
 		retardedFurryKillsults.add("Wait, <PlayerName> wants to mursuit with me?!?!?!?");
-		retardedFurryKillsults.add("<PlayerName> Enjoys e621 confirmed?!?!?!?!?!?!?!");
+		retardedFurryKillsults.add("<PlayerName> Enjoys e621 confirmed?!?!?!?!?!?!?!"); 
 		
 		// for the annoying killsults list
 		annoyingKillsults.add("<PlayerName> L");
