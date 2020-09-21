@@ -89,6 +89,13 @@ public class Bhop extends Module {
 					}
 					
 				}
+				else if (mode.getMode().equalsIgnoreCase("Pvplands") && !b.isEnabled() && mc.thePlayer.isInWater()) {
+					if (mc.thePlayer.onGround) {
+						mc.gameSettings.keyBindJump.pressed = false;
+						mc.thePlayer.jump();
+						mc.thePlayer.setSprinting(true);
+					}
+				}
 				else if (mode.getMode().equalsIgnoreCase("Hypixel") && !b.isEnabled()) {
 					
 					mc.thePlayer.setSprinting(true);
@@ -126,9 +133,6 @@ public class Bhop extends Module {
 					}
 				}
 				else if (mode.getMode().equalsIgnoreCase("Test") && !b.isEnabled() && !mc.thePlayer.isInWater()) {
-					
-					event.y -= mc.thePlayer.posY -= 3;
-					lastY = mc.thePlayer.posY + 3;
 					
 				}
 				
