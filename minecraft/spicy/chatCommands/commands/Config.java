@@ -1,6 +1,9 @@
 package spicy.chatCommands.commands;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import spicy.SpicyClient;
 import spicy.chatCommands.Command;
@@ -9,25 +12,26 @@ import spicy.files.FileManager;
 public class Config extends Command {
 
 	public Config() {
-		super("config", "config <save/load> <configName>", 2);
+		super("config", "config <save/load/list> <configName>", 1);
 	}
 	
 	@Override
 	public void commandAction(String message) {
 		
 		String[] splitMessage = message.split(" ");
-		String configName = "";
-		
+		String configName = "";;
 		for (int i = 0; i < splitMessage.length; i++) {
 			if (i >= 2) {
 				configName += splitMessage[i] + " ";
 			}
 		}
 		
-		configName = configName.replaceFirst(".config ", "");
-		configName = configName.substring(0, configName.length() - 1);
+		if (configName != "") {
+			configName = configName.replaceFirst(".config ", "");
+			configName = configName.substring(0, configName.length() - 1);
+		}
 		
-		if (splitMessage[1].equalsIgnoreCase("save")) {
+		if (splitMessage[1].equalsIgnoreCase("save") && configName != "") {
 			try {
 				sendPrivateChatMessage("Saving the config...");
 				FileManager.save_config(configName);
@@ -37,7 +41,7 @@ public class Config extends Command {
 				e.printStackTrace();
 			}
 		}
-		else if (splitMessage[1].equalsIgnoreCase("load")) {
+		else if (splitMessage[1].equalsIgnoreCase("load") && configName != "") {
 			try {
 				sendPrivateChatMessage("Loading the config...");
 				FileManager.load_config(configName);
@@ -46,7 +50,28 @@ public class Config extends Command {
 				sendPrivateChatMessage("Failed to load config");
 				e.printStackTrace();
 			}
-		}else {	
+		}
+		else if (splitMessage[1].equalsIgnoreCase("list")) {
+			File[] files = FileManager.configs.listFiles();
+			
+			if (files == null) {
+				
+				sendPrivateChatMessage("You have 0 configs");
+				return;
+				
+			}
+			
+			sendPrivateChatMessage("You have " + files.length + " configs");
+			
+			for (File file : files) {
+			    if (file.isFile()) {
+			    	
+			    	sendPrivateChatMessage(" - " + file.getName().replace(".SpicyClientConfig", ""));
+			    	
+			    }
+			}
+			
+		}else {
 			incorrectParameters();
 		}
 		
@@ -54,7 +79,7 @@ public class Config extends Command {
 	
 	@Override
 	public void incorrectParameters() {
-		sendPrivateChatMessage("Please use .config <save/load> <configName>");
+		sendPrivateChatMessage("Please use .config <save/load/list> <configName>");
 	}
 	
 }

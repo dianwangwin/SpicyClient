@@ -23,8 +23,8 @@ public class FileManager {
 	
 	private static Gson gson = new Gson();
 	
-	private static File ROOT_DIR = new File("SpicyClient_V1");
-	private static File configs = new File(ROOT_DIR, "configs");
+	public static File ROOT_DIR = new File("SpicyClient_V1");
+	public static File configs = new File(ROOT_DIR, "configs");
 	
 	public static void init() {
 		
