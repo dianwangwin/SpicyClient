@@ -280,8 +280,19 @@ public class SpicyClient {
 			
 			temp.name = temp.name.replaceAll("\\s+","");
 			
+			if (temp.additionalInformation.equalsIgnoreCase(""
+					+ "")) {
+				temp.additionalInformation = "";
+			}
+			
+			temp.ClickGuiExpanded = false;
+			temp.expanded = false;
+			temp.index = 0;
+			
 		}
 		
+		// Moved up there
+		/*
 		for (Module temp : SpicyClient.modules) {
 			if (temp.additionalInformation.equalsIgnoreCase(""
 					+ "")) {
@@ -289,6 +300,7 @@ public class SpicyClient {
 			}
 			
 		}
+		*/
 		
 	}
 	
