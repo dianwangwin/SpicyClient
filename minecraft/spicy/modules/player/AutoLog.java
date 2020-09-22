@@ -64,7 +64,7 @@ public class AutoLog extends Module {
 					}
 					
 				}
-				else if (mode.is("Pvplands")) {
+				else if (mode.is("Packet")) {
 					
 					if (mc.thePlayer.getHealth() <= health.getValue() && mc.thePlayer.getHealth() != 0) {
 						

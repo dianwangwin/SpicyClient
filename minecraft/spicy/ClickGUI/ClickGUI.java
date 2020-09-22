@@ -122,15 +122,27 @@ public class ClickGUI extends GuiScreen {
 								String temp;
 								if (s instanceof BooleanSetting) {
 									BooleanSetting b = (BooleanSetting) s;
-									temp = b.name + ": " + b.enabled;
+									temp = b.name + ": false";
 								}
 								else if (s instanceof NumberSetting) {
 									NumberSetting b = (NumberSetting) s;
-									temp = b.name + ": " + b.getValue();
+									temp = b.name + ": " + b.getMaximum();
 								}
 								else if (s instanceof ModeSetting) {
+									
 									ModeSetting b = (ModeSetting) s;
 									temp = b.name + ": " + b.getMode();
+									
+									for (String str : b.modes) {
+										
+										if (fr.getStringWidth(b.name + ": " + str) >= fr.getStringWidth(b.name + ": " + temp)) {
+											
+											temp = b.name + ": " + str;
+											
+										}
+										
+									}
+									
 								}
 								else if (s instanceof KeybindSetting) {
 									KeybindSetting b = (KeybindSetting) s;
