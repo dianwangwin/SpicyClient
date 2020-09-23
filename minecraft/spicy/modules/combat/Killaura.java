@@ -21,6 +21,7 @@ import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
+import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.network.play.server.S0CPacketSpawnPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -84,7 +85,7 @@ public class Killaura extends Module {
 	public void onDisable() {
 		
         if (mc.thePlayer != null && newAutoblock.is("Hypixel")) {
-            mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+            //mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
         }
 
 		
@@ -255,16 +256,16 @@ public class Killaura extends Module {
 							mc.thePlayer.setSprinting(true);
 						}
 						
-                        if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel")) {
-                            mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-                        }
-                        
 						if (noSwing.enabled) {
 							mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
 						}else {
 							mc.thePlayer.swingItem();
 						}
-                        
+						
+                        if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel")) {
+                            mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+                        }
+						
                         mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
                         float sharpLevel = EnchantmentHelper.func_152377_a(mc.thePlayer.inventory.getCurrentItem(), target.getCreatureAttribute());
                         if (sharpLevel > 0.0F) {

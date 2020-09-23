@@ -73,7 +73,7 @@ public class Bhop extends Module {
 				if (b == null) {
 					
 				}
-				else if (mode.is("Pvplands") && !b.isEnabled() && !mc.thePlayer.isInWater()) {
+				else if (mode.getMode().equalsIgnoreCase("Pvplands") && !b.isEnabled() && !mc.thePlayer.isInWater()) {
 					
 					if (mc.thePlayer.onGround && mc.gameSettings.keyBindForward.pressed) {
 						mc.thePlayer.setSprinting(true);
@@ -90,7 +90,7 @@ public class Bhop extends Module {
 					}
 					
 				}
-				else if (mode.is("Pvplands") && !b.isEnabled() && mc.thePlayer.isInWater()) {
+				else if (mode.getMode().equalsIgnoreCase("Pvplands") && !b.isEnabled() && mc.thePlayer.isInWater()) {
 					if (mc.thePlayer.onGround) {
 						mc.gameSettings.keyBindJump.pressed = false;
 						mc.thePlayer.jump();
@@ -107,7 +107,6 @@ public class Bhop extends Module {
 					else if (mc.thePlayer.onGround) {
 						mc.thePlayer.setSprinting(true);
 			            mc.thePlayer.jump();
-						System.err.println("jump");
 					}
 					
 					if (mc.gameSettings.keyBindLeft.pressed && !mc.gameSettings.keyBindRight.pressed) {
@@ -165,18 +164,69 @@ public class Bhop extends Module {
 					if (!mc.gameSettings.keyBindForward.pressed && !mc.gameSettings.keyBindBack.pressed && mc.gameSettings.keyBindRight.pressed && mc.gameSettings.keyBindLeft.pressed) {
 						
 					}else {
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.29F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.29F) * -1;
+					}
+					
+				}
+				else if (mode.getMode().equalsIgnoreCase("Test") && !b.isEnabled() && !mc.thePlayer.isInWater()) {
+					
+					float f = mc.thePlayer.rotationYaw * 0.017453292F;
+					float l = (mc.thePlayer.rotationYaw + 90) * 0.017453292F;
+					float r = (mc.thePlayer.rotationYaw - 90) * 0.017453292F;
+					
+					mc.gameSettings.keyBindJump.pressed = false;
+					
+					if (mc.thePlayer.onGround && mc.gameSettings.keyBindForward.pressed) {
+						mc.thePlayer.setSprinting(true);
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.33F) * -1;
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.33F);
+			            mc.thePlayer.jump();
+						
+					}else if (mc.gameSettings.keyBindForward.pressed) {
+						mc.thePlayer.setSprinting(true);
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.33F) * -1;
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.33F);
+					}
+					
+					if (mc.thePlayer.onGround && mc.gameSettings.keyBindBack.pressed && !mc.gameSettings.keyBindForward.pressed) {
+						mc.thePlayer.setSprinting(true);
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.33F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.33F) * -1;
+			            mc.thePlayer.jump();
+						
+					}else if (mc.gameSettings.keyBindBack.pressed && !mc.gameSettings.keyBindForward.pressed) {
+						mc.thePlayer.setSprinting(true);
 			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.33F);
 			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.33F) * -1;
 					}
 					
-				}
-				else if (mode.is("Test") && !b.isEnabled() && !mc.thePlayer.isInWater()) {
+					if (mc.thePlayer.onGround && mc.gameSettings.keyBindLeft.pressed && !mc.gameSettings.keyBindRight.pressed) {
+						mc.thePlayer.setSprinting(true);
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(l) * 0.33F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(l) * 0.33F) * -1;
+			            mc.thePlayer.jump();
+						
+					}else if (mc.gameSettings.keyBindLeft.pressed && !mc.gameSettings.keyBindRight.pressed) {
+						mc.thePlayer.setSprinting(true);
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(l) * 0.33F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(l) * 0.33F) * -1;
+					}
+					
+					if (mc.thePlayer.onGround && mc.gameSettings.keyBindRight.pressed && !mc.gameSettings.keyBindLeft.pressed) {
+						mc.thePlayer.setSprinting(true);
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(r) * 0.33F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(r) * 0.33F) * -1;
+			            mc.thePlayer.jump();
+						
+					}else if (mc.gameSettings.keyBindRight.pressed && !mc.gameSettings.keyBindLeft.pressed) {
+						mc.thePlayer.setSprinting(true);
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(r) * 0.33F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(r) * 0.33F) * -1;
+					}
 					
 				}
-				else if (mode.is("Test 2") && !b.isEnabled()) {
-					
-				}
-				else if (mode.is("Test 3") && !b.isEnabled()) {
+				else if (mode.getMode() == "Test 3" && !b.isEnabled()) {
 					
 				}
 				
