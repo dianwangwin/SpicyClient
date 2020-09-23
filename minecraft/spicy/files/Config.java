@@ -82,8 +82,6 @@ public class Config {
 	
 	public boolean updateConfig() {
 		
-		this.floofyFoxes = new FloofyFoxes();
-		
 		Config temp = new Config("temp");
 		if (this.version.equalsIgnoreCase(temp.version)) {
 			return false;
