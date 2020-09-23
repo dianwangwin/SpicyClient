@@ -67,6 +67,7 @@ public class Config {
 	public PingSpoof pingSpoof = new PingSpoof();
 	public KillSults killSults = new KillSults();
 	public AutoLog autoLog = new AutoLog();
+	public FloofyFoxes floofyFoxes = new FloofyFoxes();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -81,7 +82,7 @@ public class Config {
 	
 	public boolean updateConfig() {
 		
-		this.autoLog = new AutoLog();
+		this.floofyFoxes = new FloofyFoxes();
 		
 		Config temp = new Config("temp");
 		if (this.version.equalsIgnoreCase(temp.version)) {
@@ -113,6 +114,7 @@ public class Config {
 			
 			this.noClip = new NoClip();
 			this.autoLog = new AutoLog();
+			this.floofyFoxes = new FloofyFoxes();
 			
 		}
 		

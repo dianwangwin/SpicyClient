@@ -21,6 +21,7 @@ import optifine.CapeUtils;
 import optifine.Config;
 import optifine.PlayerConfigurations;
 import optifine.Reflector;
+import spicy.SpicyClient;
 
 public abstract class AbstractClientPlayer extends EntityPlayer
 {
@@ -84,6 +85,13 @@ public abstract class AbstractClientPlayer extends EntityPlayer
      */
     public ResourceLocation getLocationSkin()
     {
+    	
+    	if (SpicyClient.config.floofyFoxes.isEnabled()) {
+    		
+    		return new ResourceLocation("spicy/fox.png");
+    		
+    	}
+    	
         NetworkPlayerInfo networkplayerinfo = this.getPlayerInfo();
         return networkplayerinfo == null ? DefaultPlayerSkin.getDefaultSkin(this.getUniqueID()) : networkplayerinfo.getLocationSkin();
     }

@@ -57,8 +57,6 @@ public class SpicyClient {
 	
 	public static Config config;
 	
-	public static ArrayList<Module> moduleObjectList = new ArrayList<Module>();
-	
 	public static AltService TheAltening = new AltService();
 	
 	public static CommandManager commandManager = new CommandManager();
@@ -271,6 +269,7 @@ public class SpicyClient {
 		modules.add(c.pingSpoof);
 		modules.add(c.killSults);
 		modules.add(c.autoLog);
+		modules.add(c.floofyFoxes);
 		
 		// Hud modules
 		
