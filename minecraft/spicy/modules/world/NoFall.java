@@ -16,6 +16,7 @@ public class NoFall extends Module {
 	
 	public NoFall() {
 		super("No Fall", Keyboard.KEY_NONE, Category.WORLD);
+		resetSettings();
 	}
 	
 	@Override

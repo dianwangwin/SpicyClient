@@ -23,6 +23,7 @@ public class Bhop extends Module {
 	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "PvpLands", "Hypixel", "Test", "Test 2", "Test 3");
 	
 	private static double lastY;
+	private static float rotate = 180;
 	
 	public Bhop() {
 		super("Bhop", Keyboard.KEY_NONE, Category.MOVEMENT);
@@ -72,7 +73,7 @@ public class Bhop extends Module {
 				if (b == null) {
 					
 				}
-				else if (mode.getMode().equalsIgnoreCase("Pvplands") && !b.isEnabled() && !mc.thePlayer.isInWater()) {
+				else if (mode.is("Pvplands") && !b.isEnabled() && !mc.thePlayer.isInWater()) {
 					
 					if (mc.thePlayer.onGround && mc.gameSettings.keyBindForward.pressed) {
 						mc.thePlayer.setSprinting(true);
@@ -89,16 +90,16 @@ public class Bhop extends Module {
 					}
 					
 				}
-				else if (mode.getMode().equalsIgnoreCase("Pvplands") && !b.isEnabled() && mc.thePlayer.isInWater()) {
+				else if (mode.is("Pvplands") && !b.isEnabled() && mc.thePlayer.isInWater()) {
 					if (mc.thePlayer.onGround) {
 						mc.gameSettings.keyBindJump.pressed = false;
 						mc.thePlayer.jump();
 						mc.thePlayer.setSprinting(true);
 					}
 				}
-				else if (mode.getMode() == "Hypixel" && !b.isEnabled() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
+				else if (mode.is("Hypixel") && !b.isEnabled() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
 					
-					float rotate = 180;
+					rotate = 180;
 					
 					if (!mc.gameSettings.keyBindForward.pressed && !mc.gameSettings.keyBindBack.pressed && mc.gameSettings.keyBindRight.pressed && mc.gameSettings.keyBindLeft.pressed) {
 						
@@ -106,7 +107,7 @@ public class Bhop extends Module {
 					else if (mc.thePlayer.onGround) {
 						mc.thePlayer.setSprinting(true);
 			            mc.thePlayer.jump();
-						
+						System.err.println("jump");
 					}
 					
 					if (mc.gameSettings.keyBindLeft.pressed && !mc.gameSettings.keyBindRight.pressed) {
@@ -164,89 +165,18 @@ public class Bhop extends Module {
 					if (!mc.gameSettings.keyBindForward.pressed && !mc.gameSettings.keyBindBack.pressed && mc.gameSettings.keyBindRight.pressed && mc.gameSettings.keyBindLeft.pressed) {
 						
 					}else {
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.34F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.34F) * -1;
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.33F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.33F) * -1;
 					}
 					
 				}
-				else if (mode.getMode() == "Test" && !b.isEnabled() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
-					
-					float rotate = 180;
-					
-					if (!mc.gameSettings.keyBindForward.pressed && !mc.gameSettings.keyBindBack.pressed && mc.gameSettings.keyBindRight.pressed && mc.gameSettings.keyBindLeft.pressed) {
-						
-					}
-					else if (mc.thePlayer.onGround) {
-						mc.thePlayer.setSprinting(true);
-			            mc.thePlayer.jump();
-						
-					}
-					
-					if (mc.gameSettings.keyBindLeft.pressed && !mc.gameSettings.keyBindRight.pressed) {
-						
-						if (!mc.gameSettings.keyBindForward.pressed && !mc.gameSettings.keyBindRight.pressed && !mc.gameSettings.keyBindBack.pressed) {
-							rotate -= 90;
-						}
-						else if (mc.gameSettings.keyBindForward.pressed) {
-							rotate -= 10;
-						}else {
-							rotate += 45;
-						}
-						
-					}
-					
-					if (mc.gameSettings.keyBindRight.pressed && !mc.gameSettings.keyBindLeft.pressed) {
-						
-						if (!mc.gameSettings.keyBindForward.pressed && !mc.gameSettings.keyBindLeft.pressed && !mc.gameSettings.keyBindBack.pressed) {
-							rotate += 90;
-						}
-						else if (mc.gameSettings.keyBindForward.pressed) {
-							rotate += 90;
-						}else {
-							rotate -= 45;
-						}
-						
-					}
-					
-					if (mc.gameSettings.keyBindBack.pressed) {
-						
-						if (mc.gameSettings.keyBindForward.pressed) {
-							rotate += 45;
-						}else {
-							rotate -= 180;
-						}
-						
-					}
-					
-					if (mc.gameSettings.keyBindForward.pressed) {
-						
-						if (rotate != 180) {
-							
-							if (rotate < 0) {
-								rotate += 45;
-							}else {
-								rotate -= 45;
-							}
-							
-						}
-						
-					}
-					
-					float f = (mc.thePlayer.rotationYaw + rotate) * 0.017453292F;
-					
-					if (!mc.gameSettings.keyBindForward.pressed && !mc.gameSettings.keyBindBack.pressed && mc.gameSettings.keyBindRight.pressed && mc.gameSettings.keyBindLeft.pressed) {
-						
-					}else {
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.5F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.5F) * -1;
-					}
+				else if (mode.is("Test") && !b.isEnabled() && !mc.thePlayer.isInWater()) {
 					
 				}
-				
-				else if (mode.getMode() == "Test 2" && !b.isEnabled()) {
+				else if (mode.is("Test 2") && !b.isEnabled()) {
 					
 				}
-				else if (mode.getMode() == "Test 3" && !b.isEnabled()) {
+				else if (mode.is("Test 3") && !b.isEnabled()) {
 					
 				}
 				
