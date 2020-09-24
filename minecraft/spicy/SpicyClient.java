@@ -270,6 +270,7 @@ public class SpicyClient {
 		modules.add(c.killSults);
 		modules.add(c.autoLog);
 		modules.add(c.floofyFoxes);
+		modules.add(c.jesus);
 		
 		// Hud modules
 		

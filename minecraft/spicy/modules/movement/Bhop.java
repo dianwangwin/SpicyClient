@@ -144,7 +144,7 @@ public class Bhop extends Module {
 						mc.thePlayer.setSprinting(true);
 					}
 				}
-				else if (mode.is("Hypixel") && !b.isEnabled() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
+				else if (mode.is("Hypixel") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
 					
 					rotate = 180;
 					

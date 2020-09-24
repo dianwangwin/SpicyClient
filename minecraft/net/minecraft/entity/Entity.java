@@ -1129,6 +1129,10 @@ public abstract class Entity implements ICommandSender
     {
         return this.inWater;
     }
+    
+    public void setIsInWater(boolean inWater) {
+    	this.inWater = inWater;
+    }
 
     /**
      * Returns if this entity is in water and will end up adding the waters velocity to the entity
@@ -1242,7 +1246,7 @@ public abstract class Entity implements ICommandSender
     {
         return this.worldObj.isMaterialInBB(this.getEntityBoundingBox().expand(-0.10000000149011612D, -0.4000000059604645D, -0.10000000149011612D), Material.lava);
     }
-
+    
     /**
      * Used in both water and by flying objects
      */
