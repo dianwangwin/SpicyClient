@@ -1,4 +1,4 @@
-package spicy.modules.world;
+package spicy.modules.player;
 
 import org.lwjgl.input.Keyboard;
 
@@ -15,7 +15,7 @@ public class NoFall extends Module {
 	public ModeSetting noFallMode = new ModeSetting("NoFall Mode", "Vanilla", "Vanilla", "Packet");
 	
 	public NoFall() {
-		super("No Fall", Keyboard.KEY_NONE, Category.WORLD);
+		super("No Fall", Keyboard.KEY_NONE, Category.PLAYER);
 		resetSettings();
 	}
 	

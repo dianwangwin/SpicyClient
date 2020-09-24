@@ -5,7 +5,9 @@ import org.lwjgl.input.Keyboard;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.util.AxisAlignedBB;
 import spicy.events.Event;
+import spicy.events.listeners.EventGetLiquidHitbox;
 import spicy.events.listeners.EventMotion;
 import spicy.events.listeners.EventPlayerUseItem;
 import spicy.events.listeners.EventUpdate;
@@ -14,8 +16,10 @@ import spicy.modules.Module;
 public class Jesus extends Module {
 
 	public Jesus() {
-		super("Jesus", Keyboard.KEY_NONE, Category.BETA);
+		super("Jesus", Keyboard.KEY_NONE, Category.MOVEMENT);
 	}
+	
+	private boolean riseUp = false;
 	
 	public void onEnable() {
 		
@@ -27,12 +31,25 @@ public class Jesus extends Module {
 	
 	public void onEvent(Event e) {
 		
+		if (e instanceof EventGetLiquidHitbox) {
+			
+			if (e.isPre()) {
+				
+				EventGetLiquidHitbox event = (EventGetLiquidHitbox) e;
+				event.returnValue = AxisAlignedBB.fromBounds(event.pos.getX() + event.minX, event.pos.getY() + event.minY, event.pos.getZ() + event.minZ, event.pos.getX() + event.maxX, event.pos.getY() + event.maxY, event.pos.getZ() + event.maxZ);
+				
+			}
+			
+		}
+		
 		if (e instanceof EventMotion) {
 			
 			if (e.isPost()) {
-				
+				/*
 		        if (mc.thePlayer.worldObj.handleMaterialAcceleration(mc.thePlayer.getEntityBoundingBox().expand(0.0D, 0.05D, 0.0D).contract(0.001D, 0.001D, 0.001D), Material.water, mc.thePlayer)){
-		        	if (mc.thePlayer.motionY <= 0) {
+		        	if ((mc.thePlayer.fallDistance >= 0.0000000000000000000000000001 && !mc.thePlayer.isInWater()) || !riseUp) {
+		        		
+		        		riseUp = true;
 		        		
 		        		double y, y1;
 						mc.thePlayer.motionY = 0;
@@ -49,10 +66,14 @@ public class Jesus extends Module {
 						mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 		        		
 		        	}else {
-		        		mc.thePlayer.motionY = 0.1;
+		        		mc.thePlayer.motionY = 0;
 		        	}
+		        }else {
+		        	
+		        	riseUp = false;
+		        	
 		        }
-				
+				*/
 			}
 			
 		}

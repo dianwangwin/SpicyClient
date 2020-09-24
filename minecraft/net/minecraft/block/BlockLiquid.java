@@ -19,6 +19,9 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColorHelper;
+import spicy.SpicyClient;
+import spicy.events.EventType;
+import spicy.events.listeners.EventGetLiquidHitbox;
 
 public abstract class BlockLiquid extends Block
 {
@@ -120,7 +123,18 @@ public abstract class BlockLiquid extends Block
 
     public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
     {
-        return null;
+    	
+    	EventGetLiquidHitbox event = new EventGetLiquidHitbox(worldIn, pos, state, minX, minY, minZ, maxX, maxY, maxZ);
+    	event.setType(EventType.PRE);
+    	SpicyClient.onEvent(event);
+    	
+    	if (event.isCanceled()) {
+    		
+    		return null;
+    		
+    	}
+    	
+        return event.returnValue;
     }
 
     /**
