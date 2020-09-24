@@ -230,9 +230,7 @@ public class KillSults extends Module {
 		furryKillsults.add("<PlayerName> Should check out http://spicyclient.info/furry3.png");
 		furryKillsults.add("<PlayerName> browses furaffinity");
 		furryKillsults.add("<PlayerName> joined r/furryirl");
-		furryKillsults.add("<PlayerName> Probably watches FurryFoofi (not me) on youtube");
-		furryKillsults.add("<PlayerName> Probably watches Majira Strawberry (not me) on youtube");
-		furryKillsults.add("<PlayerName> Probably watches BetaEtaDelota (not me) on youtube");
+		// Removed the youtube channel names because they probably don't want to me mentioned in this client
 		furryKillsults.add("<PlayerName> Probably watches furry youtubers");
 		
 		// WARNING THE RETARDED FURRY KILLSULTS ARE NSFW

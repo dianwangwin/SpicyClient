@@ -256,26 +256,30 @@ public class Killaura extends Module {
 							mc.thePlayer.setSprinting(true);
 						}
 						
+                        if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
+                        	
+                            mc.gameSettings.keyBindUseItem.pressed = false;
+                            mc.playerController.onStoppedUsingItem(mc.thePlayer);
+                        	//mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+                        	
+                        }
+						
 						if (noSwing.enabled) {
 							mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
 						}else {
 							mc.thePlayer.swingItem();
 						}
 						
-                        if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel")) {
-                        	
-                        	mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-                        	
-                        }
-						
                         mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
+                        
                         float sharpLevel = EnchantmentHelper.func_152377_a(mc.thePlayer.inventory.getCurrentItem(), target.getCreatureAttribute());
                         if (sharpLevel > 0.0F) {
                             mc.thePlayer.onEnchantmentCritical(target);
                         }
                         
-                        if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") || mc.gameSettings.keyBindUseItem.pressed && mc.thePlayer.getCurrentEquippedItem() != null) {
-                            mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());
+                        if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword || mc.gameSettings.keyBindUseItem.pressed && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
+                        	mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
+                        	//mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, Action.INTERACT));
                         }
 						
 						if (s.toggled) {

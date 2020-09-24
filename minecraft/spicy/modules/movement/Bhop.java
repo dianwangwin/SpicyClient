@@ -214,8 +214,8 @@ public class Bhop extends Module {
 					}else {
 						mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 						event.onGround = true;
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.32F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.32F) * -1;
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.31F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.31F) * -1;
 					}
 					
 				}

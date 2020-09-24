@@ -69,6 +69,7 @@ public class Config {
 	public AutoLog autoLog = new AutoLog();
 	public FloofyFoxes floofyFoxes = new FloofyFoxes();
 	public Jesus jesus = new Jesus();
+	public Phase phase = new Phase();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -84,6 +85,7 @@ public class Config {
 	public boolean updateConfig() {
 		
 		this.jesus = new Jesus();
+		this.phase = new Phase();
 		
 		Config temp = new Config("temp");
 		if (this.version.equalsIgnoreCase(temp.version)) {
@@ -117,6 +119,7 @@ public class Config {
 			this.autoLog = new AutoLog();
 			this.floofyFoxes = new FloofyFoxes();
 			this.jesus = new Jesus();
+			this.phase = new Phase();
 			
 		}
 		

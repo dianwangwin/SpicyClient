@@ -271,6 +271,7 @@ public class SpicyClient {
 		modules.add(c.autoLog);
 		modules.add(c.floofyFoxes);
 		modules.add(c.jesus);
+		modules.add(c.phase);
 		
 		// Hud modules
 		
