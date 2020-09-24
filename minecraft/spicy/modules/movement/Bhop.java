@@ -6,15 +6,19 @@ import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerCapabilities;
+import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
+import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import spicy.SpicyClient;
+import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventMotion;
 import spicy.events.listeners.EventUpdate;
 import spicy.events.listeners.EventOnLadder;
+import spicy.events.listeners.EventPacket;
 import spicy.modules.Module;
 import spicy.settings.ModeSetting;
 
@@ -24,6 +28,9 @@ public class Bhop extends Module {
 	
 	private static double lastY;
 	private static float rotate = 180;
+	
+	private static int lagbackCheck = 0;
+	private static long lastLagback = System.currentTimeMillis();
 	
 	public Bhop() {
 		super("Bhop", Keyboard.KEY_NONE, Category.MOVEMENT);
@@ -47,6 +54,45 @@ public class Bhop extends Module {
 	private int status = 0;
 	
 	public void onEvent(Event e) {
+		
+		if (e instanceof EventPacket) {
+			
+			if (e.isPre()) {
+				
+				if (((EventPacket) e).packet instanceof S08PacketPlayerPosLook) {
+					
+					if (lagbackCheck >= 4) {
+						
+						lagbackCheck = 0;
+						this.toggle();
+						Command.sendPrivateChatMessage(this.name + " has been disabled due to lagbacks");
+						
+					}else {
+						
+						lastLagback = System.currentTimeMillis();
+						lagbackCheck++;
+						
+					}
+					
+				}
+				
+			}
+			
+		}
+		
+		if (e instanceof EventUpdate) {
+			
+			if (e.isPre()) {
+				
+				if (lastLagback + (5*1000) < System.currentTimeMillis()) {
+					
+					lagbackCheck = 0;
+					
+				}
+				
+			}
+			
+		}
 		
 		BlockFly b = (BlockFly) this.findModule(this.getModuleName(new BlockFly()));
 		
@@ -106,7 +152,8 @@ public class Bhop extends Module {
 					}
 					else if (mc.thePlayer.onGround) {
 						mc.thePlayer.setSprinting(true);
-			            mc.thePlayer.jump();
+						mc.thePlayer.motionY += 0.5;
+			            //mc.thePlayer.jump();
 					}
 					
 					if (mc.gameSettings.keyBindLeft.pressed && !mc.gameSettings.keyBindRight.pressed) {
@@ -164,8 +211,10 @@ public class Bhop extends Module {
 					if (!mc.gameSettings.keyBindForward.pressed && !mc.gameSettings.keyBindBack.pressed && mc.gameSettings.keyBindRight.pressed && mc.gameSettings.keyBindLeft.pressed) {
 						
 					}else {
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.29F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.29F) * -1;
+						mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
+						event.onGround = true;
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.32F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.32F) * -1;
 					}
 					
 				}
