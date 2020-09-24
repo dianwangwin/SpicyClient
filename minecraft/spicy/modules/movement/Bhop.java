@@ -64,6 +64,7 @@ public class Bhop extends Module {
 					if (lagbackCheck >= 4) {
 						
 						lagbackCheck = 0;
+						lastLagback = System.currentTimeMillis() - (5*1000);
 						this.toggle();
 						Command.sendPrivateChatMessage(this.name + " has been disabled due to lagbacks");
 						
