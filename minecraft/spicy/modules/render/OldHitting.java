@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.network.play.server.S02PacketChat;
+import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventPacket;
 import spicy.events.listeners.EventSwordBlockAnimation;

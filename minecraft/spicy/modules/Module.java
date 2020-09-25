@@ -47,7 +47,7 @@ public class Module {
 	// This was changed because it was causing crashes inside of the click gui
 	// public List<Setting> settings = new ArrayList<Setting>();
 	
-	public CopyOnWriteArrayList<Setting> settings = new CopyOnWriteArrayList<Setting>();
+	public transient CopyOnWriteArrayList<Setting> settings = new CopyOnWriteArrayList<Setting>();
 	
 	public Module(String name, int key, Category category) {
 		this.name = name;

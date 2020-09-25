@@ -132,8 +132,8 @@ public class Bhop extends Module {
 					}
 					else if (mc.gameSettings.keyBindForward.pressed) {
 			            float f = mc.thePlayer.rotationYaw * 0.017453292F;
-			            mc.thePlayer.motionX -= (double)(MathHelper.sin(f) * 0.03F);
-			            mc.thePlayer.motionZ += (double)(MathHelper.cos(f) * 0.03F);
+			            mc.thePlayer.motionX -= (double)(MathHelper.sin(f) * 0.035F);
+			            mc.thePlayer.motionZ += (double)(MathHelper.cos(f) * 0.035F);
 					}
 					
 				}

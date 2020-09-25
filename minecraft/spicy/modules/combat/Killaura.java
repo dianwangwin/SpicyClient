@@ -53,7 +53,7 @@ public class Killaura extends Module {
 	private BooleanSetting noSwing = new BooleanSetting("NoSwing", false);
 	private BooleanSetting disableOnDeath = new BooleanSetting("DisableOnDeath", false);
 	public BooleanSetting dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", true);
-	private ModeSetting targetsSetting = new ModeSetting("Targets", "Players", "Players", "Animals", "Mobs", "Everything");
+	public ModeSetting targetsSetting = new ModeSetting("Targets", "Players", "Players", "Animals", "Mobs", "Everything");
 	public ModeSetting newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
 	public ModeSetting targetingMode = new ModeSetting("Targeting mode", "Single", "Single", "Switch");
 	public NumberSetting switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
@@ -85,10 +85,14 @@ public class Killaura extends Module {
 	public void onDisable() {
 		
         if (mc.thePlayer != null && newAutoblock.is("Hypixel")) {
-            //mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+            if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
+            	
+                mc.gameSettings.keyBindUseItem.pressed = false;
+                mc.playerController.onStoppedUsingItem(mc.thePlayer);
+                
+            }
         }
 
-		
 	}
 	
 	public Timer timer = new Timer();
@@ -156,6 +160,14 @@ public class Killaura extends Module {
 				
 				
 				if (targets.isEmpty()) {
+					
+                    if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
+                    	
+                        mc.gameSettings.keyBindUseItem.pressed = false;
+                        mc.playerController.onStoppedUsingItem(mc.thePlayer);
+                        
+                    }
+					
 					return;
 				}
 				
@@ -212,6 +224,12 @@ public class Killaura extends Module {
 					targets.removeAll(targetsToRemove);
 					
 					if (targets.isEmpty()) {
+	                    if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
+	                    	
+	                        mc.gameSettings.keyBindUseItem.pressed = false;
+	                        mc.playerController.onStoppedUsingItem(mc.thePlayer);
+	                        
+	                    }
 						return;
 					}
 					
@@ -242,7 +260,9 @@ public class Killaura extends Module {
 					}
 					
                     if (newAutoblock.is("Hypixel") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
-                        mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
+                    	mc.gameSettings.keyBindUseItem.pressed = true;
+                    	mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());
+                        //mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
                     }
                     else if (newAutoblock.is("Vanilla") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
                         mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
@@ -289,6 +309,15 @@ public class Killaura extends Module {
 					}
 					
 				}else {
+					
+                    if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
+                    	
+                        mc.gameSettings.keyBindUseItem.pressed = false;
+                        mc.playerController.onStoppedUsingItem(mc.thePlayer);
+                        
+                    }
+                    
+		            return;
 					
 				}
 				
