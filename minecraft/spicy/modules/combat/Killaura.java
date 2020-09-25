@@ -149,9 +149,6 @@ public class Killaura extends Module {
 				List<EntityLivingBase> targetsToRemove = (List<EntityLivingBase>) mc.theWorld.loadedEntityList.stream().filter(EntityLivingBase.class::isInstance).collect(Collectors.toList());
 				targetsToRemove.clear();
 				
-				// This was changed so it would work on servers like mineplex where they spoof the players health to always be 0
-				//targets = targets.stream().filter(entity -> entity.getDistanceToEntity(mc.thePlayer) < range.getValue() && entity != mc.thePlayer && !entity.isDead && entity.getHealth() > 0).collect(Collectors.toList());
-				
 				if (dontHitDeadEntitys.enabled) {
 					targets = targets.stream().filter(entity -> entity.getDistanceToEntity(mc.thePlayer) < range.getValue() && entity != mc.thePlayer && !entity.isDead && entity.getHealth() > 0).collect(Collectors.toList());
 				}else {

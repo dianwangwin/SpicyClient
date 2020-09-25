@@ -69,7 +69,7 @@ public class Antibot extends Module {
 				
 				EventPacket packet = (EventPacket) e;
 				
-				if (packet.packet instanceof S0CPacketSpawnPlayer) {
+				if (packet.packet instanceof S0CPacketSpawnPlayer && !(mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel"))) {
 					
 	                S0CPacketSpawnPlayer p = (S0CPacketSpawnPlayer) packet.packet;
 	                double entX = p.getX() / 32D;
@@ -82,10 +82,28 @@ public class Antibot extends Module {
 	                float distance = MathHelper.sqrt_double(diffX * diffX + diffY * diffY + diffZ * diffZ);
 	                
 	                if (distance <= 17 && entY > mc.thePlayer.posY + 1 && (entX != mc.thePlayer.posX && entY != mc.thePlayer.posY && entZ != mc.thePlayer.posZ)) {
-	                	//Command.sendPrivateChatMessage("a bot was removed from your game");
+	                	//Entity entity = mc.theWorld.getEntityByID(p.getEntityID());
+	                	//Command.sendPrivateChatMessage("The " + entity.getDisplayName().getFormattedText() + " bot was removed from your game");
 	                	packet.setCanceled(true);
 	                }
 					
+				}
+				else if (packet.packet instanceof S0CPacketSpawnPlayer && mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel")) {
+					
+					S0CPacketSpawnPlayer p = (S0CPacketSpawnPlayer) packet.packet;
+					Entity entity = mc.theWorld.getEntityByID(p.getEntityID());
+					
+					if (entity == null) {
+						return;
+					}
+					
+	                if (entity.getDisplayName().getFormattedText().startsWith("\u00a7") && !entity.isInvisible() && !entity.getDisplayName().getFormattedText().toLowerCase().contains("npc")) {
+	                	
+	                }else {
+	                	Command.sendPrivateChatMessage("The " + entity.getDisplayName().getFormattedText() + " bot was removed from your game");
+	                	packet.setCanceled(true);
+	                }
+	                
 				}
 				
 			}
