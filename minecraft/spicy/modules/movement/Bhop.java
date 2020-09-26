@@ -7,6 +7,7 @@ import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerCapabilities;
+import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
@@ -20,6 +21,7 @@ import spicy.events.listeners.EventMotion;
 import spicy.events.listeners.EventUpdate;
 import spicy.events.listeners.EventOnLadder;
 import spicy.events.listeners.EventPacket;
+import spicy.events.listeners.EventSendPacket;
 import spicy.modules.Module;
 import spicy.settings.BooleanSetting;
 import spicy.settings.ModeSetting;
@@ -144,8 +146,6 @@ public class Bhop extends Module {
 						
 					}
 					
-					packetEvent.setCanceled(true);
-					
 				}
 				
 			}
@@ -216,6 +216,8 @@ public class Bhop extends Module {
 					}
 				}
 				else if (mode.is("Hypixel") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
+					
+					mc.timer.ticksPerSecond = 23.2f;
 					
 					rotate = 180;
 					
@@ -293,19 +295,24 @@ public class Bhop extends Module {
 					}else {
 						mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 						event.onGround = true;
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.33F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.33F) * -1;
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.30F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.30F) * -1;
+			            event.setCanceled(true);
 					}
 					
 				}
 				else if (mode.is("Test") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
-					
+
 				}
+				
 			}
+			
 		}
 		
 	}
 	
+	
+	// Remove this later
     public static double defaultSpeed() {
     	
         double normalSpeed = 0.2873D;
