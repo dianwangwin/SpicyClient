@@ -1,9 +1,13 @@
 package spicy.modules.movement;
 
+import java.util.Random;
+
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.MathHelper;
+import spicy.SpicyClient;
+import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
@@ -33,19 +37,34 @@ public class Fly extends Module {
 			original_fly_speed = mc.thePlayer.capabilities.getFlySpeed();
 		}
 		else if (mode.getMode().equals("Hypixel")) {
-			mc.timer.ticksPerSecond = 20f;
+			if (mc.thePlayer.onGround) {
+				if (SpicyClient.config.blink.isEnabled()) {
+					
+				}else {
+					SpicyClient.config.blink.toggle();
+				}
+			}else {
+				this.toggle();
+				Command.sendPrivateChatMessage("You have to be standing on ground before you toggle fly");
+			}
 		}
 	}
 	
 	public void onDisable() {
+		
 		if (mode.getMode().equals("Vanilla")) {
 			mc.thePlayer.capabilities.setFlySpeed(original_fly_speed);
 			mc.thePlayer.capabilities.isFlying = false;
 			mc.thePlayer.capabilities.allowFlying = false;
 		}
 		else if (mode.getMode().equals("Hypixel")) {
-			mc.timer.ticksPerSecond = 20f;
+			
+			if (SpicyClient.config.blink.isEnabled()) {
+				SpicyClient.config.blink.toggle();
+			}
+			
 		}
+		
 	}
 	
 	private static float original_fly_speed;
@@ -73,23 +92,16 @@ public class Fly extends Module {
 				}
 				else if (mode.getMode().equals("Hypixel")) {
 					
-					// Big thank you to MintyCodes for showing this code in his video
-					// Go like his video or subscribe
-					// https://www.youtube.com/watch?v=lhEzBWNP3hE&list=WL&index=23
-					
-					double y, y1;
-					mc.thePlayer.motionY = 0;
-					
-					if (mc.thePlayer.ticksExisted % 3 ==0) {
-						
-						y = mc.thePlayer.posY - 1.0E-10D;
-						mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, y, mc.thePlayer.posZ, true));
-						
-					}
-					
-					y1 = mc.thePlayer.posY + 1.0E-10D;
-					mc.thePlayer.setPosition(mc.thePlayer.posX, y1, mc.thePlayer.posZ);
-					mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
+			        if (!mc.thePlayer.onGround && mc.thePlayer.fallDistance >= 2.7f) {
+			        	
+			        	Random r = new Random();
+			        	//mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
+			        	mc.thePlayer.motionY = -((r.nextInt(10)) / 100);
+			            float f = mc.thePlayer.rotationYaw * 0.017453292F;
+			            mc.thePlayer.motionX -= (double)(MathHelper.sin(f) * 0.035f);
+			            mc.thePlayer.motionZ += (double)(MathHelper.cos(f) * 0.035f);
+
+			        }
 					
 				}
 				

@@ -86,6 +86,9 @@ public class Config {
 		
 		this.killaura.targetsSetting.index = this.killaura.targetModeSetting.index;
 		
+		this.bhop.glideEnabled = new BooleanSetting("Glide", false);
+		this.bhop.hypixelGlideAmount = new NumberSetting("Glide amount", 10, 4, 30, 1);
+		
 		this.jesus = new Jesus();
 		this.phase = new Phase();
 		
@@ -124,6 +127,9 @@ public class Config {
 			this.jesus = new Jesus();
 			this.phase = new Phase();
 			
+			this.bhop.glideEnabled = new BooleanSetting("Glide", false);
+			this.bhop.hypixelGlideAmount = new NumberSetting("Glide amount", 10, 4, 30, 1);
+			
 		}
 		
 		this.version = temp.version;
@@ -139,6 +145,15 @@ public class Config {
 		if (updateConfig()) {
 			Command.sendPrivateChatMessage("Config load canceled");
 			return;
+		}
+		
+		this.clientVersion.replaceAll("\\s+","");
+		
+		if (this.clientVersion != "") {
+			
+			this.clientName = "SpicyClient ";
+			this.clientVersion = "B3 Beta";
+			
 		}
 		
 		SpicyClient.loadConfig(this);

@@ -1,6 +1,7 @@
 package spicy.modules.movement;
 
 import java.io.IOException;
+import java.util.Comparator;
 
 import org.lwjgl.input.Keyboard;
 
@@ -20,11 +21,18 @@ import spicy.events.listeners.EventUpdate;
 import spicy.events.listeners.EventOnLadder;
 import spicy.events.listeners.EventPacket;
 import spicy.modules.Module;
+import spicy.settings.BooleanSetting;
 import spicy.settings.ModeSetting;
+import spicy.settings.NumberSetting;
+import spicy.settings.SettingChangeEvent;
 
 public class Bhop extends Module {
 	
 	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "PvpLands", "Hypixel", "Test", "Test 2", "Test 3");
+	
+	// For the hypixel glide
+	public BooleanSetting glideEnabled = new BooleanSetting("Glide", false);
+	public NumberSetting hypixelGlideAmount = new NumberSetting("Glide amount", 10, 4, 30, 1);
 	
 	private static double lastY;
 	private static float rotate = 180;
@@ -40,7 +48,66 @@ public class Bhop extends Module {
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
-		this.addSettings(mode);
+		this.addSettings(glideEnabled, hypixelGlideAmount, mode);
+	}
+	
+	@Override
+	public void onSettingChange(SettingChangeEvent e) {
+		
+		if (e.setting != null) {
+			
+			if (e.setting.equals(mode)) {
+				
+				if (mode.is("Hypixel")) {
+					
+					if (!settings.contains(glideEnabled)) {
+						settings.add(glideEnabled);
+						this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
+					}
+					
+					if (glideEnabled.enabled) {
+						if (!settings.contains(hypixelGlideAmount)) {
+							settings.add(hypixelGlideAmount);
+							this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
+						}
+					}
+					
+				}else {
+					
+					if (settings.contains(glideEnabled)) {
+						settings.remove(glideEnabled);
+						this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
+					}
+					if (settings.contains(hypixelGlideAmount)) {
+						settings.remove(hypixelGlideAmount);
+						this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
+					}
+					
+				}
+				
+			}
+			else if (e.setting.equals(glideEnabled)) {
+				
+				if (glideEnabled.enabled) {
+					
+					if (!settings.contains(hypixelGlideAmount)) {
+						settings.add(hypixelGlideAmount);
+						this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
+					}
+					
+				}else {
+					
+					if (settings.contains(hypixelGlideAmount)) {
+						settings.remove(hypixelGlideAmount);
+						this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
+					}
+					
+				}
+				
+			}
+			
+		}
+		
 	}
 	
 	public void onEnable() {
@@ -59,7 +126,9 @@ public class Bhop extends Module {
 			
 			if (e.isPre()) {
 				
-				if (((EventPacket) e).packet instanceof S08PacketPlayerPosLook) {
+				EventPacket packetEvent = (EventPacket) e;
+				
+				if (packetEvent.packet instanceof S08PacketPlayerPosLook) {
 					
 					if (lagbackCheck >= 4) {
 						
@@ -75,6 +144,8 @@ public class Bhop extends Module {
 						
 					}
 					
+					packetEvent.setCanceled(true);
+					
 				}
 				
 			}
@@ -86,8 +157,8 @@ public class Bhop extends Module {
 			if (e.isPre()) {
 				
 				if (lastLagback + (5*1000) < System.currentTimeMillis()) {
-					
 					lagbackCheck = 0;
+					lastLagback = System.currentTimeMillis() + (10*1000);
 					
 				}
 				
@@ -114,7 +185,7 @@ public class Bhop extends Module {
 		
 		if (e instanceof EventMotion) {
 			
-			if (e.isPost()) {
+			if (e.isBeforePost()) {
 				
 				EventMotion event = (EventMotion) e;
 				if (b == null) {
@@ -155,6 +226,14 @@ public class Bhop extends Module {
 						mc.thePlayer.setSprinting(true);
 						mc.thePlayer.motionY += 0.5;
 			            //mc.thePlayer.jump();
+					}
+					else if (mc.thePlayer.motionY <= -0.00001 && mc.thePlayer.fallDistance < 5 && glideEnabled.enabled) {
+						
+						mc.thePlayer.motionY -= mc.thePlayer.motionY / hypixelGlideAmount.getValue();
+						
+						// Debug crap
+						// Command.sendPrivateChatMessage(mc.thePlayer.motionY / 5 + "");
+						
 					}
 					
 					if (mc.gameSettings.keyBindLeft.pressed && !mc.gameSettings.keyBindRight.pressed) {
@@ -214,74 +293,15 @@ public class Bhop extends Module {
 					}else {
 						mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 						event.onGround = true;
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.31F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.31F) * -1;
-					}
-					
-				}
-				else if (mode.getMode().equalsIgnoreCase("Test") && !b.isEnabled() && !mc.thePlayer.isInWater()) {
-					
-					float f = mc.thePlayer.rotationYaw * 0.017453292F;
-					float l = (mc.thePlayer.rotationYaw + 90) * 0.017453292F;
-					float r = (mc.thePlayer.rotationYaw - 90) * 0.017453292F;
-					
-					mc.gameSettings.keyBindJump.pressed = false;
-					
-					if (mc.thePlayer.onGround && mc.gameSettings.keyBindForward.pressed) {
-						mc.thePlayer.setSprinting(true);
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.33F) * -1;
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.33F);
-			            mc.thePlayer.jump();
-						
-					}else if (mc.gameSettings.keyBindForward.pressed) {
-						mc.thePlayer.setSprinting(true);
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.33F) * -1;
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.33F);
-					}
-					
-					if (mc.thePlayer.onGround && mc.gameSettings.keyBindBack.pressed && !mc.gameSettings.keyBindForward.pressed) {
-						mc.thePlayer.setSprinting(true);
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.33F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.33F) * -1;
-			            mc.thePlayer.jump();
-						
-					}else if (mc.gameSettings.keyBindBack.pressed && !mc.gameSettings.keyBindForward.pressed) {
-						mc.thePlayer.setSprinting(true);
 			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.33F);
 			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.33F) * -1;
 					}
 					
-					if (mc.thePlayer.onGround && mc.gameSettings.keyBindLeft.pressed && !mc.gameSettings.keyBindRight.pressed) {
-						mc.thePlayer.setSprinting(true);
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(l) * 0.33F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(l) * 0.33F) * -1;
-			            mc.thePlayer.jump();
-						
-					}else if (mc.gameSettings.keyBindLeft.pressed && !mc.gameSettings.keyBindRight.pressed) {
-						mc.thePlayer.setSprinting(true);
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(l) * 0.33F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(l) * 0.33F) * -1;
-					}
-					
-					if (mc.thePlayer.onGround && mc.gameSettings.keyBindRight.pressed && !mc.gameSettings.keyBindLeft.pressed) {
-						mc.thePlayer.setSprinting(true);
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(r) * 0.33F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(r) * 0.33F) * -1;
-			            mc.thePlayer.jump();
-						
-					}else if (mc.gameSettings.keyBindRight.pressed && !mc.gameSettings.keyBindLeft.pressed) {
-						mc.thePlayer.setSprinting(true);
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(r) * 0.33F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(r) * 0.33F) * -1;
-					}
+				}
+				else if (mode.is("Test") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
 					
 				}
-				else if (mode.getMode() == "Test 3" && !b.isEnabled()) {
-					
-				}
-				
 			}
-			
 		}
 		
 	}

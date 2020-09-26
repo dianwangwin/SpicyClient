@@ -63,6 +63,20 @@ public class Antibot extends Module {
 	
 	public void onEvent(Event e) {
 		
+		if (e instanceof EventUpdate) {
+			
+			if (e.isPre()) {
+				
+				if (mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel")) {
+					this.additionalInformation = "Hypixel";
+				}else {
+					this.additionalInformation = "Advanced";
+				}
+				
+			}
+			
+		}
+		
 		if (e instanceof EventPacket && AntibotMode.is("Advanced")) {
 			
 			if (e.isIncoming() && e.isPre()) {
@@ -113,8 +127,6 @@ public class Antibot extends Module {
 		if (e instanceof EventUpdate) {
 			
 			if (e.isPre() && AntibotMode.is("Advanced")) {
-				
-				this.additionalInformation = "Advanced";
 				
 				for (Object entity : mc.theWorld.loadedEntityList) {
 					
