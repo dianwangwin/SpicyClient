@@ -28,6 +28,7 @@ import net.minecraft.network.play.server.S0CPacketSpawnPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import spicy.SpicyClient;
 import spicy.chatCommands.Command;
 import spicy.events.Event;
@@ -283,8 +284,10 @@ public class Killaura extends Module {
 							mc.thePlayer.setSprinting(true);
 						}
 						
-    					if (random.nextInt(100) <= 30) {
+    					if (random.nextInt(100) <= 10) {
     						
+    						// This was removed
+    						// startBlocking(true);
     						startBlocking(false);
     						
     					}else {
@@ -346,15 +349,29 @@ public class Killaura extends Module {
 		
 	}
 	
+	private int interactBlock = 0;
+	
 	private void startBlocking(boolean interactAutoblock) {
 		
         if (newAutoblock.is("Hypixel") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
         	
-        	if (target != null && interactAutoblock) {
-        		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity((Entity)target, C02PacketUseEntity.Action.INTERACT));
+        	if (target != null && interactAutoblock && interactBlock == 0) {
+        		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, new Vec3(randomNumber(-50, 50) / 100.0, randomNumber(0, 200) / 100.0, randomNumber(-50, 50) / 100.0)));
+        		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.INTERACT));
+        		interactBlock++;
+        		Command.sendPrivateChatMessage("Interact packets sent :)");
+        	}
+        	else if (interactBlock < 3 && interactAutoblock) {
+        		interactBlock++;
+        	}
+        	else if (interactBlock == 3 && interactAutoblock) {
+        		interactBlock = 0;
+        		Command.sendPrivateChatMessage("Interact packets canceled :)");
         	}
         	
-        	mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
+        	mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(getHypixelBlockpos(mc.getSession().getUsername()), 255, mc.thePlayer.inventory.getCurrentItem(), 0.0f, 0.0f, 0.0f));
+        	//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
+        	
         	mc.thePlayer.setItemInUse(mc.thePlayer.getCurrentEquippedItem(), 10);
         	//mc.gameSettings.keyBindUseItem.pressed = true;
         	//mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());
@@ -366,4 +383,24 @@ public class Killaura extends Module {
 		
 	}
 	
+	// I found these methods on github somewhere
+    public static int randomNumber(final int max, final int min) {
+        return Math.round(min + (float)Math.random() * (max - min));
+    }
+    public static Long randomNumber(final Long max, final Long min) {
+        return Math.round(min + Math.random() * (max - min));
+    }
+    
+    public static BlockPos getHypixelBlockpos(final String str) {
+        int val = 89;
+        if (str != null && str.length() > 1) {
+            final char[] chs = str.toCharArray();
+            for (int lenght = chs.length, i = 0; i < lenght; ++i) {
+                val += chs[i] * str.length() * str.length() + str.charAt(0) + str.charAt(1);
+            }
+            val /= str.length();
+        }
+        return new BlockPos(val, -val % 255, val);
+    }
+    
 }
