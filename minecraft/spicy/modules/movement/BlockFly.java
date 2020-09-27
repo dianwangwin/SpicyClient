@@ -1,13 +1,16 @@
 package spicy.modules.movement;
 
 import java.util.Comparator;
+import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
@@ -15,6 +18,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
 import spicy.SpicyClient;
+import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventMotion;
 import spicy.events.listeners.EventSneaking;
@@ -81,8 +85,8 @@ public class BlockFly extends Module {
 	}
 	
 	public void onEnable() {
-		oldYaw = mc.thePlayer.rotationYaw;
-		oldPitch = mc.thePlayer.rotationPitch;
+		oldYaw = -1000;
+		oldPitch = -1000;
 	}
 	
 	public void onDisable() {
@@ -93,8 +97,8 @@ public class BlockFly extends Module {
 	private BlockPos playerPos;
 	private EnumFacing currentFacing;
 	
-	private float oldYaw = 0;
-	private float oldPitch = 0;
+	private float oldYaw = -1000;
+	private float oldPitch = -1000;
 	
 	public void onEvent(Event e) {
 		
@@ -121,12 +125,6 @@ public class BlockFly extends Module {
 				playerPos = new BlockPos(event.getX(), event.getY(), event.getZ());
 				currentPos = new BlockPos(event.getX(), event.getY() - 1, event.getZ());
 				
-				if (keepRotations.enabled) {
-					hypixelRotation(event);
-					oldYaw = event.yaw;
-					oldPitch = event.pitch;
-				}
-				
 				if (sprintEnabled.enabled) {
 					mc.thePlayer.setSprinting(true);
 				}else {
@@ -137,11 +135,37 @@ public class BlockFly extends Module {
 					mc.gameSettings.keyBindSneak.pressed = true;
 				}
 				
-				if (rotationMode.is("90 degree snap")) {
-					currentFacing = snapFacingAndRotation(event);
+				if (keepRotations.enabled) {
+					keepRotations(event);
 				}
 				
-				if (currentFacing == null || currentPos == null || mc.thePlayer.getCurrentEquippedItem() == null) {
+				if (rotationMode.is("90 degree snap")) {
+					currentFacing = snapFacingAndRotation(event);
+					if (event.yaw != mc.thePlayer.rotationYaw) {
+						event.yaw = event.yaw + 180;
+					}
+					Random random = new Random();
+					int r = random.nextInt(4);
+					if (random.nextBoolean()) {
+						r *= -1;
+					}
+					event.pitch += r;
+					
+					r = random.nextInt(4);
+					if (random.nextBoolean()) {
+						r *= -1;
+					}
+					
+					event.yaw += r;
+					
+				}
+				else if (rotationMode.is("test")) {
+					
+					currentFacing = snapFacingAndRotation(event);
+					
+				}
+				
+				if (currentFacing == null || currentPos == null || mc.thePlayer.getCurrentEquippedItem() == null || !(mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemBlock)) {
 					
 				}else {
 					if (sneakMode.getMode() == "End of block") {
@@ -150,6 +174,8 @@ public class BlockFly extends Module {
 					if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem(), currentPos, currentFacing, new Vec3(currentPos.getX(), currentPos.getY(), currentPos.getZ()))) {
 						mc.thePlayer.swingItem();
 						System.out.println("Sent a block place packet");
+						oldYaw = event.yaw;
+						oldPitch = event.pitch;
 					}
 					
 				}
@@ -160,39 +186,60 @@ public class BlockFly extends Module {
 		
 	}
 	
-	public void hypixelRotation(EventMotion event) {
+	public void keepRotations(EventMotion event) {
 		
-		if (mc.thePlayer.moveForward > 0.01 && mc.thePlayer.moveStrafing == 0) {
+		Random random = new Random();
+		
+		if (rotationMode.is("90 degree snap")) {
 			
-			currentFacing = mc.thePlayer.getHorizontalFacing();
-			if (currentFacing == EnumFacing.NORTH) {
+			if (mc.thePlayer.moveForward > 0.01 && mc.thePlayer.moveStrafing == 0) {
 				
-				event.setYaw(mc.thePlayer.rotationYaw + 180);
-				event.setPitch((float) pitch.getValue());
-				return;
+				int pitch = random.nextInt(2);
+				pitch = pitch + 75;
+				
+				float yaw = random.nextInt(2);
+				if (random.nextBoolean()) {
+					
+					yaw = yaw * -1;
+					
+				}
+				
+				currentFacing = mc.thePlayer.getHorizontalFacing();
+				if (currentFacing == EnumFacing.NORTH) {
+					
+					event.setYaw(mc.thePlayer.rotationYaw + 180 + yaw);
+					event.setPitch(pitch);
+					return;
+					
+				}
+				if (currentFacing == EnumFacing.EAST) {
+					
+					event.setYaw(mc.thePlayer.rotationYaw + 180 + yaw);
+					event.setPitch(pitch);
+					return;
+					
+				}
+				if (currentFacing == EnumFacing.SOUTH) {
+					
+					event.setYaw(mc.thePlayer.rotationYaw + 180 + yaw);
+					event.setPitch(pitch);
+					return;
+					
+				}
+				if (currentFacing == EnumFacing.WEST) {
+					
+					event.setYaw(mc.thePlayer.rotationYaw + 180 + yaw);
+					event.setPitch(pitch);
+					return;
+					
+				}
 				
 			}
-			if (currentFacing == EnumFacing.EAST) {
-				
-				event.setYaw(mc.thePlayer.rotationYaw + 180);
-				event.setPitch((float) pitch.getValue());
-				return;
-				
-			}
-			if (currentFacing == EnumFacing.SOUTH) {
-				
-				event.setYaw(mc.thePlayer.rotationYaw + 180);
-				event.setPitch((float) pitch.getValue());
-				return;
-				
-			}
-			if (currentFacing == EnumFacing.WEST) {
-				
-				event.setYaw(mc.thePlayer.rotationYaw + 180);
-				event.setPitch((float) pitch.getValue());
-				return;
-				
-			}
+			
+		}else {
+			
+			event.setYaw(oldYaw);
+			event.setPitch(oldPitch);
 			
 		}
 		
@@ -254,173 +301,133 @@ public class BlockFly extends Module {
 		
 	}
 	
-	public EnumFacing setBlockAndFacing(EventMotion event) {
+	public float[] getRotations(double x, double y, double z) {
 		
-		EnumFacing facing = null;
+		double playerX = mc.thePlayer.posX, playerZ = mc.thePlayer.posZ;
 		
-		if (currentPos == null) {
+		if (currentFacing == null) {
+			return null;
+		}
+		
+		double deltaX = x + (x - x) - playerX,
+				deltaY = y - 3.5 - mc.thePlayer.posY + mc.thePlayer.getEyeHeight(),
+				deltaZ = z + (z - z) - playerZ,
+				distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaZ, 2));
+		
+		//deltaY = y - 3.5 + e.getEyeHeight() - mc.thePlayer.posY + mc.thePlayer.getEyeHeight(),
+		
+		float yaw = (float) Math.toDegrees(-Math.atan(deltaX / deltaZ)),
+				pitch = (float) -Math.toDegrees(Math.atan(deltaY / distance));
+		
+		
+		if (deltaX < 0 && deltaZ < 0) {
 			
-		}else {
+			yaw = (float) (90 + Math.toDegrees(Math.atan(deltaZ/deltaX)));
 			
-			if (mc.thePlayer.moveForward > 0.01 && mc.thePlayer.moveStrafing == 0) {
+		}else if (deltaX > 0 && deltaZ < 0) {
+			
+			yaw = (float) (-90 + Math.toDegrees(Math.atan(deltaZ/deltaX)));
+			
+		}
+		
+		float tempYaw = yaw;
+		
+		if (!(tempYaw < mc.thePlayer.rotationYaw - 130) && !(tempYaw > mc.thePlayer.rotationYaw + 130)) {
+			Command.sendPrivateChatMessage("no");
+			return null;
+		}
+		
+		if (pitch >= 88) {
+			return null;
+		}
+		
+		Command.sendPrivateChatMessage("Yaw: " + yaw + " Pitch: " + pitch);
+		
+		//return new float[] { yaw, pitch };
+		return new float[] { yaw, pitch };
+		
+	}
+	
+	public double[] getCoords(EventMotion event) {
+
+		if (currentPos != null && mc.theWorld.getBlockState(currentPos).getBlock() instanceof BlockAir) {
+			
+			if (true) {
 				
-				currentFacing = mc.thePlayer.getHorizontalFacing();
-				if (currentFacing == EnumFacing.NORTH) {
-					facing = EnumFacing.SOUTH;
-					if (mc.theWorld.getBlockState(currentPos.add(0, 0, 1)).getBlock() instanceof BlockAir) {
-						
-					}else {
-						return facing;
-					}
-				}
-				if (currentFacing == EnumFacing.EAST) {
-					facing = EnumFacing.WEST;
-					if (mc.theWorld.getBlockState(currentPos.add(-1, 0, 0)).getBlock() instanceof BlockAir) {
-						
-					}else {
-						return facing;
-					}
-				}
-				if (currentFacing == EnumFacing.SOUTH) {
-					facing = EnumFacing.NORTH;
-					if (mc.theWorld.getBlockState(currentPos.add(0, 0, -1)).getBlock() instanceof BlockAir) {
-						
-					}else {
-						return facing;
-					}
-				}
-				if (currentFacing == EnumFacing.WEST) {
-					facing = EnumFacing.EAST;
-					if (mc.theWorld.getBlockState(currentPos.add(1, 0, 0)).getBlock() instanceof BlockAir) {
-						
-					}else {
-						return facing;
-					}
-				}
+				Random random = new Random();
 				
-			}
-			if (mc.thePlayer.moveForward < -0.01 && mc.thePlayer.moveStrafing == 0) {
+				float r = random.nextInt(30);
+				r = r / 100f;
+				if (random.nextBoolean()) {
+					r = r * -1;
+				}
+				Command.sendPrivateChatMessage(r + "");
 				
-				facing = mc.thePlayer.getHorizontalFacing();
-				
-				currentFacing = mc.thePlayer.getHorizontalFacing();
-				if (currentFacing == EnumFacing.NORTH) {
-					facing = EnumFacing.SOUTH;
-					if (mc.theWorld.getBlockState(currentPos.add(0, 0, -1)).getBlock() instanceof BlockAir) {
-						
-					}else {
-						return facing;
+				// North
+				if (!(mc.theWorld.getBlockState(currentPos.add(0, 0, 1)).getBlock() instanceof BlockAir)) {
+					
+					currentPos = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1, mc.thePlayer.posZ + 1);
+					currentFacing = EnumFacing.NORTH;
+					if (getRotations(currentPos.getX() + 0.25 + r, currentPos.getY() + 0.5 + r, currentPos.getZ() + r) == null) {
+						currentFacing = null;
+						return null;
 					}
-				}
-				if (currentFacing == EnumFacing.EAST) {
-					facing = EnumFacing.WEST;
-					if (mc.theWorld.getBlockState(currentPos.add(1, 0, 0)).getBlock() instanceof BlockAir) {
-						
-					}else {
-						event.setPitch(90);
-						event.setYaw(-90);
-						return facing;
-					}
-				}
-				if (currentFacing == EnumFacing.SOUTH) {
-					facing = EnumFacing.NORTH;
-					if (mc.theWorld.getBlockState(currentPos.add(0, 0, 1)).getBlock() instanceof BlockAir) {
-						
-					}else {
-						return facing;
-					}
-				}
-				if (currentFacing == EnumFacing.WEST) {
-					facing = EnumFacing.EAST;
-					if (mc.theWorld.getBlockState(currentPos.add(-1, 0, 0)).getBlock() instanceof BlockAir) {
-						
-					}else {
-						event.setPitch(90);
-						event.setYaw(90);
-						return facing;
-					}
+					
+					event.yaw = getRotations(currentPos.getX() + 0.25 + r, currentPos.getY() + 0.5, currentPos.getZ() + r)[0];
+					event.pitch = getRotations(currentPos.getX() + 0.25 + r, currentPos.getY() + 0.5, currentPos.getZ() + r)[1];
+					
 				}
 				
-			}
-			if (mc.thePlayer.moveForward == 0 && mc.thePlayer.moveStrafing > 0.01) {
+				// South
+				if (!(mc.theWorld.getBlockState(currentPos.add(0, 0, -1)).getBlock() instanceof BlockAir)) {
+					
+					currentPos = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1, mc.thePlayer.posZ - 1);
+					currentFacing = EnumFacing.SOUTH;
+					if (getRotations(currentPos.getX() + 0.5 + r, currentPos.getY(), currentPos.getZ() + 0.75 + r) == null) {
+						currentFacing = null;
+						return null;
+					}
+					event.yaw = getRotations(currentPos.getX() + 0.5 + r, currentPos.getY(), currentPos.getZ() + 0.75 + r)[0];
+					event.pitch = getRotations(currentPos.getX() + 0.5 + r, currentPos.getY(), currentPos.getZ() + 0.75 + r)[1];
+					
+				}
 				
-				currentFacing = mc.thePlayer.getHorizontalFacing();
-				if (currentFacing == EnumFacing.NORTH) {
-					facing = EnumFacing.EAST;
-					if (mc.theWorld.getBlockState(currentPos.add(1, 0, 0)).getBlock() instanceof BlockAir) {
-						
-					}else {
-						return facing;
+				// West
+				if (!(mc.theWorld.getBlockState(currentPos.add(1, 0, 0)).getBlock() instanceof BlockAir)) {
+					
+					currentPos = new BlockPos(mc.thePlayer.posX + 1, mc.thePlayer.posY - 1, mc.thePlayer.posZ);
+					currentFacing = EnumFacing.WEST;
+					if (getRotations(currentPos.getX() + 0.25 + r, currentPos.getY(), currentPos.getZ() + 0.5 + r) == null) {
+						currentFacing = null;
+						return null;
 					}
+					event.yaw = getRotations(currentPos.getX() + 0.25 + r, currentPos.getY(), currentPos.getZ() + 0.5 + r)[0];
+					event.pitch = getRotations(currentPos.getX() + 0.25 + r, currentPos.getY(), currentPos.getZ() + 0.5 + r)[1];
+					
 				}
-				if (currentFacing == EnumFacing.EAST) {
-					facing = EnumFacing.SOUTH;
-					if (mc.theWorld.getBlockState(currentPos.add(0, 0, 1)).getBlock() instanceof BlockAir) {
-						
-					}else {
-						return facing;
+				
+				// East
+				if (!(mc.theWorld.getBlockState(currentPos.add(-1, 0, 0)).getBlock() instanceof BlockAir)) {
+					
+					currentPos = new BlockPos(mc.thePlayer.posX - 1, mc.thePlayer.posY - 1, mc.thePlayer.posZ);
+					currentFacing = EnumFacing.EAST;
+					if (getRotations(currentPos.getX() + 0.75 + r, currentPos.getY() + 0.25, currentPos.getZ() + 0.5 + r) == null) {
+						currentFacing = null;
+						return null;
 					}
-				}
-				if (currentFacing == EnumFacing.SOUTH) {
-					facing = EnumFacing.WEST;
-					if (mc.theWorld.getBlockState(currentPos.add(-1, 0, 0)).getBlock() instanceof BlockAir) {
-						
-					}else {
-						return facing;
-					}
-				}
-				if (currentFacing == EnumFacing.WEST) {
-					facing = EnumFacing.NORTH;
-					if (mc.theWorld.getBlockState(currentPos.add(0, 0, -1)).getBlock() instanceof BlockAir) {
-						
-					}else {
-						return facing;
-					}
+					event.yaw = getRotations(currentPos.getX() + 0.75 + r, currentPos.getY() + 0.25, currentPos.getZ() + 0.5 + r)[0];
+					event.pitch = getRotations(currentPos.getX() + 0.75 + r, currentPos.getY() + 0.25, currentPos.getZ() + 0.5 + r)[1];
+					
 				}
 				
 			}
-			if (mc.thePlayer.moveForward == 0 && mc.thePlayer.moveStrafing < -0.01) {
-				
-				currentFacing = mc.thePlayer.getHorizontalFacing();
-				if (currentFacing == EnumFacing.NORTH) {
-					facing = EnumFacing.WEST;
-					if (mc.theWorld.getBlockState(currentPos.add(-1, 0, 0)).getBlock() instanceof BlockAir) {
-						
-					}else {
-						return facing;
-					}
-				}
-				if (currentFacing == EnumFacing.EAST) {
-					facing = EnumFacing.NORTH;
-					if (mc.theWorld.getBlockState(currentPos.add(0, 0, -1)).getBlock() instanceof BlockAir) {
-						
-					}else {
-						return facing;
-					}
-				}
-				if (currentFacing == EnumFacing.SOUTH) {
-					facing = EnumFacing.EAST;
-					if (mc.theWorld.getBlockState(currentPos.add(1, 0, 0)).getBlock() instanceof BlockAir) {
-						
-					}else {
-						return facing;
-					}
-				}
-				if (currentFacing == EnumFacing.WEST) {
-					facing = EnumFacing.SOUTH;
-					if (mc.theWorld.getBlockState(currentPos.add(0, 0, 1)).getBlock() instanceof BlockAir) {
-						
-					}else {
-						return facing;
-					}
-				}
-				
-			}
+			
+			return null;
 			
 		}
 		
 		return null;
 		
+		
 	}
-	
 }

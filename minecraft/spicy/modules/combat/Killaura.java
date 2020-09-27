@@ -3,10 +3,12 @@ package spicy.modules.combat;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.lwjgl.input.Keyboard;
 
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -57,6 +59,8 @@ public class Killaura extends Module {
 	public ModeSetting newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
 	public ModeSetting targetingMode = new ModeSetting("Targeting mode", "Single", "Single", "Switch");
 	public NumberSetting switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
+	
+	private static boolean blocking = false;
 	
 	// These settings are not used anymore but are still here so you can update old configs
 	private BooleanSetting autoblock = new BooleanSetting("Autoblock", false);
@@ -158,12 +162,7 @@ public class Killaura extends Module {
 				
 				if (targets.isEmpty()) {
 					
-                    if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
-                    	
-                        mc.gameSettings.keyBindUseItem.pressed = false;
-                        mc.playerController.onStoppedUsingItem(mc.thePlayer);
-                        
-                    }
+					stopBlocking();
 					
 					return;
 				}
@@ -221,14 +220,11 @@ public class Killaura extends Module {
 					targets.removeAll(targetsToRemove);
 					
 					if (targets.isEmpty()) {
-	                    if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
-	                    	
-	                        mc.gameSettings.keyBindUseItem.pressed = false;
-	                        mc.playerController.onStoppedUsingItem(mc.thePlayer);
-	                        
-	                    }
+						stopBlocking();
 						return;
 					}
+					
+					startBlocking(false);
 					
 					target = targets.get(0);
 					
@@ -256,14 +252,9 @@ public class Killaura extends Module {
 						
 					}
 					
-                    if (newAutoblock.is("Hypixel") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
-                    	mc.gameSettings.keyBindUseItem.pressed = true;
-                    	mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());
-                        //mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
-                    }
-                    else if (newAutoblock.is("Vanilla") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
-                        mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
-                    }
+					Random random = new Random();
+					
+					startBlocking(false);
 					
 					mc.thePlayer.rotationYawHead = getRotations(target)[0];
 					
@@ -273,13 +264,7 @@ public class Killaura extends Module {
 							mc.thePlayer.setSprinting(true);
 						}
 						
-                        if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
-                        	
-                            mc.gameSettings.keyBindUseItem.pressed = false;
-                            mc.playerController.onStoppedUsingItem(mc.thePlayer);
-                        	//mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-                        	
-                        }
+						stopBlocking();
 						
 						if (noSwing.enabled) {
 							mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
@@ -294,28 +279,27 @@ public class Killaura extends Module {
                             mc.thePlayer.onEnchantmentCritical(target);
                         }
                         
-                        if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword || mc.gameSettings.keyBindUseItem.pressed && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
-                        	mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
-                        	//mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, Action.INTERACT));
-                        }
-						
 						if (s.toggled) {
 							mc.thePlayer.setSprinting(true);
 						}
+						
+    					if (random.nextInt(100) <= 30) {
+    						
+    						startBlocking(false);
+    						
+    					}else {
+    						startBlocking(false);
+    					}
+                        
 						
 					}
 					
 				}else {
 					
-                    if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
-                    	
-                        mc.gameSettings.keyBindUseItem.pressed = false;
-                        mc.playerController.onStoppedUsingItem(mc.thePlayer);
-                        
-                    }
-                    
-		            return;
+					stopBlocking();
 					
+		            return;
+		            
 				}
 				
 			}
@@ -346,6 +330,39 @@ public class Killaura extends Module {
 		}
 		
 		return new float[] { yaw, pitch };
+		
+	}
+	
+	private void stopBlocking() {
+		
+        if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
+        	
+        	mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+            //mc.gameSettings.keyBindUseItem.pressed = false;
+            //mc.playerController.onStoppedUsingItem(mc.thePlayer);
+            
+        }
+		return;
+		
+	}
+	
+	private void startBlocking(boolean interactAutoblock) {
+		
+        if (newAutoblock.is("Hypixel") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
+        	
+        	if (target != null && interactAutoblock) {
+        		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity((Entity)target, C02PacketUseEntity.Action.INTERACT));
+        	}
+        	
+        	mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
+        	mc.thePlayer.setItemInUse(mc.thePlayer.getCurrentEquippedItem(), 10);
+        	//mc.gameSettings.keyBindUseItem.pressed = true;
+        	//mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());
+            //mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
+        }
+        else if (newAutoblock.is("Vanilla") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
+            mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
+        }
 		
 	}
 	

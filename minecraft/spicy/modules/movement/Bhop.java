@@ -132,7 +132,7 @@ public class Bhop extends Module {
 				
 				if (packetEvent.packet instanceof S08PacketPlayerPosLook) {
 					
-					if (lagbackCheck >= 4) {
+					if (lagbackCheck >= 3) {
 						
 						lagbackCheck = 0;
 						lastLagback = System.currentTimeMillis() - (5*1000);
@@ -295,8 +295,8 @@ public class Bhop extends Module {
 					}else {
 						mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 						event.onGround = true;
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.30F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.30F) * -1;
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.295F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.295F) * -1;
 			            event.setCanceled(true);
 					}
 					
