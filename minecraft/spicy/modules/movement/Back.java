@@ -71,8 +71,6 @@ public class Back extends Module {
 					//mc.thePlayer.posX = x;
 					//mc.thePlayer.posZ = z;
 					
-					this.toggle();
-					
 				}
 				
 			}

@@ -243,7 +243,7 @@ public class Killaura extends Module {
 					
 					lastTarget = target;
 					
-					// This removes a bug which would cause you get get kicked for invalid player movement
+					// This mostly removes a bug which would cause you get get kicked for invalid player movement
 					if (target.posX == mc.thePlayer.posX && target.posY == mc.thePlayer.posY && target.posZ == mc.thePlayer.posZ) {
 						
 					}else {
@@ -287,14 +287,10 @@ public class Killaura extends Module {
     					if (random.nextInt(100) <= 10) {
     						
     						// This was removed
-    						// startBlocking(true);
-    						startBlocking(false);
+    						//startBlocking(true);
     						
-    					}else {
-    						startBlocking(false);
     					}
-                        
-						
+    					
 					}
 					
 				}else {
