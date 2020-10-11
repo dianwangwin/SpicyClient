@@ -283,14 +283,10 @@ public class Killaura extends Module {
 						if (s.toggled) {
 							mc.thePlayer.setSprinting(true);
 						}
+						if (newAutoblock.is("Hypixel")) {
+							startBlocking(true);
+						}
 						
-    					if (random.nextInt(100) <= 10) {
-    						
-    						// This was removed
-    						//startBlocking(true);
-    						
-    					}
-    					
 					}
 					
 				}else {
@@ -351,18 +347,12 @@ public class Killaura extends Module {
 		
         if (newAutoblock.is("Hypixel") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
         	
-        	if (target != null && interactAutoblock && interactBlock == 0) {
-        		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, new Vec3(randomNumber(-50, 50) / 100.0, randomNumber(0, 200) / 100.0, randomNumber(-50, 50) / 100.0)));
+        	if (target != null && interactAutoblock) {
+        		//mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, new Vec3(randomNumber(-50, 50) / 100.0, randomNumber(0, 200) / 100.0, randomNumber(-50, 50) / 100.0)));
         		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.INTERACT));
-        		interactBlock++;
-        		Command.sendPrivateChatMessage("Interact packets sent :)");
-        	}
-        	else if (interactBlock < 3 && interactAutoblock) {
-        		interactBlock++;
-        	}
-        	else if (interactBlock == 3 && interactAutoblock) {
-        		interactBlock = 0;
-        		Command.sendPrivateChatMessage("Interact packets canceled :)");
+        		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.INTERACT));
+        		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.INTERACT));
+        		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.INTERACT));
         	}
         	
         	mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(getHypixelBlockpos(mc.getSession().getUsername()), 255, mc.thePlayer.inventory.getCurrentItem(), 0.0f, 0.0f, 0.0f));

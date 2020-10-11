@@ -46,6 +46,10 @@ public class Phase extends Module {
 				double y, y1;
 				mc.thePlayer.motionY = 0;
 				
+	            //float f = mc.thePlayer.rotationYaw * 0.017453292F;
+	            //mc.thePlayer.motionX -= (double)(MathHelper.sin(f) * 0.015F);
+	            //mc.thePlayer.motionZ += (double)(MathHelper.cos(f) * 0.015F);
+				
 				if (mc.thePlayer.ticksExisted % 3 ==0) {
 					
 					y = mc.thePlayer.posY - 1.0E-10D;
