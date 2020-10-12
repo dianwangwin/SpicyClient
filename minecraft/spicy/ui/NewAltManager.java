@@ -225,13 +225,16 @@ public class NewAltManager extends GuiScreen {
 			
 			// The for loops in these if statements are to limit the scroll speed
 			int speedLimit = 75;
+			
 			if (scrollOffset == scroll) {
 				
 			}
 			else if (scrollOffset > scroll) {
 				
+				speedLimit = (int) (scrollOffset - scroll);
+				
 				for (int i = 0; i < speedLimit; i++) {
-					scrollOffset -= 1;
+					scrollOffset -= 0.1;
 					if (scrollOffset == scroll) {
 						i = speedLimit;
 					}
@@ -240,17 +243,22 @@ public class NewAltManager extends GuiScreen {
 			}
 			else if (scrollOffset < scroll) {
 				
+				speedLimit = (int) (scrollOffset - scroll) * -1;
+				
 				for (int i = 0; i < speedLimit; i++) {
-					scrollOffset += 1;
+					scrollOffset += 0.1;
 					if (scrollOffset == scroll) {
 						i = speedLimit;
 					}
 				}
 				
 			}
+			
 			if (scrollOffset > 0) {
+				
 				scrollOffset = 0;
 				scroll = 0;
+				
 			}
 			else if (scrollOffset < (((altAmount * 80) + 10 - 90) * -1) + (((this.height / 90) * 90)) - 110 && altAmount >= (this.height / 90) && SpicyClient.altInfo.alts.size() != 5){
 				scrollOffset = (((altAmount * 80) + 10 - 90) * -1) + (((this.height / 90) * 90)) - 110;

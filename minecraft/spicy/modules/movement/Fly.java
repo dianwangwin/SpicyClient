@@ -98,6 +98,11 @@ public class Fly extends Module {
 			mc.thePlayer.capabilities.allowFlying = false;
 		}
 		
+		if (mode.getMode().equals("Vanilla")) {
+			mc.thePlayer.capabilities.isFlying = true;
+			mc.thePlayer.capabilities.setFlySpeed((float) speed.getValue());
+		}
+		
 		if (e instanceof EventMotion) {
 			
 			EventMotion event = (EventMotion) e;
@@ -111,11 +116,7 @@ public class Fly extends Module {
 				
 				this.additionalInformation = mode.getMode();
 				
-				if (mode.getMode().equals("Vanilla")) {
-					mc.thePlayer.capabilities.isFlying = true;
-					mc.thePlayer.capabilities.setFlySpeed((float) speed.getValue());
-				}
-				else if (mode.getMode().equals("Hypixel")) {
+				if (mode.getMode().equals("Hypixel")) {
 					
 					mc.thePlayer.onGround = true;
 					mc.thePlayer.motionY = 0;
