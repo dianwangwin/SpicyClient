@@ -6,6 +6,8 @@ import org.lwjgl.input.Keyboard;
 
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
+import net.minecraft.network.handshake.client.C00Handshake;
+import net.minecraft.network.login.client.C00PacketLoginStart;
 import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import spicy.events.Event;
@@ -40,7 +42,7 @@ public class Blink extends Module {
 			
 			if (e.isPre()) {
 				
-				if (((EventSendPacket)e).packet instanceof C00PacketKeepAlive) {
+				if (((EventSendPacket)e).packet instanceof C00PacketKeepAlive || ((EventSendPacket)e).packet instanceof C00Handshake || ((EventSendPacket)e).packet instanceof C00PacketLoginStart) {
 					return;
 				}
 				
