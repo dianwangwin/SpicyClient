@@ -618,6 +618,14 @@ public class EntityRenderer implements IResourceManagerReloadListener
             {
                 GameSettings gamesettings = this.mc.gameSettings;
                 flag = GameSettings.isKeyDown(this.mc.gameSettings.ofKeyBindZoom);
+                
+                // This removes the annoying optifine zoom camera acceleration
+                flag = false;
+                if (GameSettings.isKeyDown(this.mc.gameSettings.ofKeyBindZoom)) {
+                	f /= 3.0F;
+                }
+                // This removes the annoying optifine zoom camera acceleration
+                
             }
 
             if (flag)
