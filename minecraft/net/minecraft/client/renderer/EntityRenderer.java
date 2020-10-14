@@ -382,7 +382,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
         if (this.mc.gameSettings.smoothCamera)
         {
-            float f = this.mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
+            float f = this.mc.gameSettings.mouseSensitivity * 0.6F + 0.2F + 0.6F;
             float f1 = f * f * f * 8.0F;
             this.smoothCamFilterX = this.mouseFilterXAxis.smooth(this.smoothCamYaw, 0.05F * f1);
             this.smoothCamFilterY = this.mouseFilterYAxis.smooth(this.smoothCamPitch, 0.05F * f1);
@@ -618,14 +618,6 @@ public class EntityRenderer implements IResourceManagerReloadListener
             {
                 GameSettings gamesettings = this.mc.gameSettings;
                 flag = GameSettings.isKeyDown(this.mc.gameSettings.ofKeyBindZoom);
-                
-                // This removes the annoying optifine zoom camera acceleration
-                flag = false;
-                if (GameSettings.isKeyDown(this.mc.gameSettings.ofKeyBindZoom)) {
-                	f /= 3.0F;
-                }
-                // This removes the annoying optifine zoom camera acceleration
-                
             }
 
             if (flag)
@@ -639,6 +631,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 if (Config.zoomMode)
                 {
                     f /= 4.0F;
+                    this.mouseFilterXAxis = new MouseFilter();
+                    this.mouseFilterYAxis = new MouseFilter();
+                    this.mc.renderGlobal.displayListEntitiesDirty = true;
                 }
             }
             else if (Config.zoomMode)
