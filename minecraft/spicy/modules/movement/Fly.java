@@ -44,15 +44,18 @@ public class Fly extends Module {
 			original_fly_speed = mc.thePlayer.capabilities.getFlySpeed();
 		} else if (mode.getMode().equals("Hypixel")) {
 			hypixelStartTime = (long) (System.currentTimeMillis() + (3 * 1000));
-			mc.thePlayer.jump();
 			if (!SpicyClient.config.blink.isEnabled()) {
 				SpicyClient.config.blink.toggle();
 			}
+			mc.thePlayer.jump();
+			mc.thePlayer.stepHeight = 0;
 		}
 	}
 
 	public void onDisable() {
-
+		
+		mc.thePlayer.stepHeight = 0.5f;
+		
 		if (mode.getMode().equals("Vanilla")) {
 			mc.thePlayer.capabilities.setFlySpeed(original_fly_speed);
 			mc.thePlayer.capabilities.isFlying = false;
@@ -122,7 +125,6 @@ public class Fly extends Module {
 
 					float f = mc.thePlayer.rotationYaw * 0.017453292F;
 					int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);
-					System.out.println(time);
 					// mc.thePlayer.motionX += (double)(MathHelper.sin(f) * 0.008 * time);
 					// mc.thePlayer.motionZ -= (double)(MathHelper.cos(f) * 0.008 * time);
 					// System.out.println(20 * time * -1);

@@ -20,7 +20,7 @@ import spicy.modules.Module.Category;
 public class Phase extends Module {
 	
 	public Phase() {
-		super("Phase", Keyboard.KEY_NONE, Category.BETA);
+		super("Phase", Keyboard.KEY_NONE, Category.MOVEMENT);
 	}
 
 	
@@ -46,19 +46,15 @@ public class Phase extends Module {
 				double y, y1;
 				mc.thePlayer.motionY = 0;
 				
-	            //float f = mc.thePlayer.rotationYaw * 0.017453292F;
-	            //mc.thePlayer.motionX -= (double)(MathHelper.sin(f) * 0.015F);
-	            //mc.thePlayer.motionZ += (double)(MathHelper.cos(f) * 0.015F);
-				
-				if (mc.thePlayer.ticksExisted % 3 ==0) {
+				//if (mc.thePlayer.ticksExisted % 3 ==0) {
 					
-					y = mc.thePlayer.posY - 1.0E-10D;
-					mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, y, mc.thePlayer.posZ, true));
+					//y = mc.thePlayer.posY - 1.0E-10D;
+					//mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, y, mc.thePlayer.posZ, true));
 					
-				}
+				//}
 				
-				y1 = mc.thePlayer.posY + 1.0E-10D;
-				mc.thePlayer.setPosition(mc.thePlayer.posX, y1, mc.thePlayer.posZ);
+				//y1 = mc.thePlayer.posY + 1.0E-10D;
+				//mc.thePlayer.setPosition(mc.thePlayer.posX, y1, mc.thePlayer.posZ);
 				mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 				
 			}

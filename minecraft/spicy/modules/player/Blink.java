@@ -10,6 +10,7 @@ import net.minecraft.network.handshake.client.C00Handshake;
 import net.minecraft.network.login.client.C00PacketLoginStart;
 import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventSendPacket;
 import spicy.events.listeners.EventUpdate;
@@ -25,12 +26,24 @@ public class Blink extends Module {
 	
 	public void onEnable() {
 		packets.clear();
+		
+		if (mc.isSingleplayer()) {
+			Command.sendPrivateChatMessage("You cannot use blink in singleplayer!");
+			toggle();
+		}
+		
 	}
 	
 	public void onDisable() {
 		
 		for (Packet p : packets) {
-			mc.getNetHandler().addToSendQueue(p);
+			
+			if (mc.isSingleplayer()) {
+				
+			}else {
+				mc.getNetHandler().addToSendQueue(p);
+			}
+			
 		}
 		packets.clear();
 		

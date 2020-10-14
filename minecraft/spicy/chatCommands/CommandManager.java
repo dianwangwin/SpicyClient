@@ -16,6 +16,7 @@ public class CommandManager {
 		addCommand(new Name());
 		addCommand(new Config());
 		addCommand(new Say());
+		addCommand(new Damage());
 		
 	}
 	
