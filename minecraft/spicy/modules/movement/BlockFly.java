@@ -120,8 +120,6 @@ public class BlockFly extends Module {
 				
 				currentFacing = null;
 				
-				ItemStack itemstack = mc.thePlayer.inventory.getCurrentItem();
-				
 				playerPos = new BlockPos(event.getX(), event.getY(), event.getZ());
 				currentPos = new BlockPos(event.getX(), event.getY() - 1, event.getZ());
 				
@@ -164,6 +162,12 @@ public class BlockFly extends Module {
 					currentFacing = snapFacingAndRotation(event);
 					
 				}
+				
+				if (mc.thePlayer.inventory.getCurrentItem() == null) {
+					return;
+				}
+				
+				ItemStack itemstack = mc.thePlayer.inventory.getCurrentItem();
 				
 				if (currentFacing == null || currentPos == null || mc.thePlayer.getCurrentEquippedItem() == null || !(mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemBlock)) {
 					

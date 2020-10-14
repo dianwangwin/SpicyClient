@@ -89,9 +89,6 @@ public class Config {
 		this.bhop.glideEnabled = new BooleanSetting("Glide", false);
 		this.bhop.hypixelGlideAmount = new NumberSetting("Glide amount", 10, 4, 30, 1);
 		
-		this.jesus = new Jesus();
-		this.phase = new Phase();
-		
 		Config temp = new Config("temp");
 		if (this.version.equalsIgnoreCase(temp.version)) {
 			return false;

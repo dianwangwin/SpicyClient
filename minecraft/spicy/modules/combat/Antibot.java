@@ -67,7 +67,7 @@ public class Antibot extends Module {
 			
 			if (e.isPre()) {
 				
-				if (mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel")) {
+				if (!mc.isSingleplayer() && mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel")) {
 					this.additionalInformation = "Hypixel";
 				}else {
 					this.additionalInformation = "Advanced";

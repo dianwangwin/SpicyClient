@@ -32,6 +32,8 @@ public class Phase extends Module {
 		mc.thePlayer.motionY += 0.1;
 	}
 	
+	private transient int hypixelStage = 0;
+	
 	public void onEvent(Event e) {
 		
 		if (e instanceof EventGetBlockHitbox) {
@@ -55,6 +57,28 @@ public class Phase extends Module {
 				
 				//y1 = mc.thePlayer.posY + 1.0E-10D;
 				//mc.thePlayer.setPosition(mc.thePlayer.posX, y1, mc.thePlayer.posZ);
+				
+				switch (hypixelStage) {
+				case 0:
+					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+					hypixelStage++;
+					break;
+				case 1:
+					// mc.thePlayer.posY = mc.thePlayer.posY + 9.947598300641403E-14;
+					// mc.thePlayer.posY = mc.thePlayer.lastTickPosY + 0.0002000000000066393;
+					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
+							mc.thePlayer.posZ);
+					hypixelStage++;
+					break;
+				case 2:
+					// mc.thePlayer.posY = mc.thePlayer.posY + -9.947598300641403E-14;
+					// mc.thePlayer.posY = mc.thePlayer.lastTickPosY -0.0002000000000066393;
+					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
+							mc.thePlayer.posZ);
+					hypixelStage = 0;
+					break;
+				}
+				
 				mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 				
 			}
