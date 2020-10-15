@@ -93,10 +93,18 @@ public class Fly extends Module {
 			try {
 				mc.thePlayer.capabilities.setFlySpeed(original_fly_speed);
 			} catch (NullPointerException e2) {
-
+				e2.printStackTrace();
 			}
-			mc.thePlayer.capabilities.isFlying = false;
-			mc.thePlayer.capabilities.allowFlying = false;
+			try {
+				mc.thePlayer.capabilities.isFlying = false;
+			} catch (NullPointerException e2) {
+				e2.printStackTrace();
+			}
+			try {
+				mc.thePlayer.capabilities.allowFlying = false;
+			} catch (NullPointerException e2) {
+				e2.printStackTrace();
+			}
 		}
 
 		if (mode.getMode().equals("Vanilla")) {
