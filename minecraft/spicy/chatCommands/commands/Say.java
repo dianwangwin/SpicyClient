@@ -1,6 +1,5 @@
 package spicy.chatCommands.commands;
 
-import spicy.SpicyClient;
 import spicy.chatCommands.Command;
 
 public class Say extends Command {

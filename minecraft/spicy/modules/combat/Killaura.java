@@ -1,6 +1,5 @@
 package spicy.modules.combat;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
@@ -8,7 +7,6 @@ import java.util.stream.Collectors;
 
 import org.lwjgl.input.Keyboard;
 
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,33 +15,20 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.C02PacketUseEntity;
-import net.minecraft.network.play.client.C02PacketUseEntity.Action;
-import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C0APacketAnimation;
-import net.minecraft.network.play.client.C0BPacketEntityAction;
-import net.minecraft.network.play.client.C13PacketPlayerAbilities;
-import net.minecraft.network.play.server.S0CPacketSpawnPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
-import spicy.SpicyClient;
-import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventMotion;
-import spicy.events.listeners.EventPacket;
-import spicy.events.listeners.EventPlayerUseItem;
 import spicy.events.listeners.EventUpdate;
-import spicy.files.FileManager;
 import spicy.modules.Module;
-import spicy.modules.movement.BlockFly;
 import spicy.modules.movement.Sprint;
 import spicy.settings.BooleanSetting;
 import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
-import spicy.settings.Setting;
 import spicy.settings.SettingChangeEvent;
 import spicy.util.Timer;
 

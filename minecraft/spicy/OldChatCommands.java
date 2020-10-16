@@ -1,12 +1,7 @@
 package spicy;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.client.C01PacketChatMessage;
-import net.minecraft.network.play.server.S02PacketChat;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
 import spicy.events.listeners.EventChatmessage;
 import spicy.files.FileManager;
 import spicy.modules.Module;

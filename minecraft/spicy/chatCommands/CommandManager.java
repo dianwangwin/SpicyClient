@@ -1,6 +1,5 @@
 package spicy.chatCommands;
 
-import java.rmi.activation.ActivationGroupDesc.CommandEnvironment;
 import java.util.ArrayList;
 
 import spicy.chatCommands.commands.*;
@@ -17,6 +16,7 @@ public class CommandManager {
 		addCommand(new Config());
 		addCommand(new Say());
 		addCommand(new Damage());
+		addCommand(new Date());
 		
 	}
 	

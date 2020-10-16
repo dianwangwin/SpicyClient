@@ -1,8 +1,6 @@
 package spicy.files;
 
 import java.io.IOException;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import net.minecraft.client.Minecraft;
 import spicy.SpicyClient;
 import spicy.chatCommands.Command;

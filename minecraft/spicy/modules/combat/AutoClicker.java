@@ -1,36 +1,15 @@
 package spicy.modules.combat;
 
-import java.io.IOException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.lwjgl.input.Keyboard;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C02PacketUseEntity.Action;
-import net.minecraft.network.play.client.C03PacketPlayer;
-import net.minecraft.network.play.client.C0APacketAnimation;
-import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
-import spicy.SpicyClient;
 import spicy.events.Event;
-import spicy.events.listeners.EventMotion;
-import spicy.events.listeners.EventPlayerUseItem;
 import spicy.events.listeners.EventUpdate;
-import spicy.files.FileManager;
 import spicy.modules.Module;
-import spicy.modules.movement.BlockFly;
-import spicy.modules.movement.Sprint;
-import spicy.settings.BooleanSetting;
 import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
-import spicy.settings.Setting;
 import spicy.util.Timer;
 
 public class AutoClicker extends Module {

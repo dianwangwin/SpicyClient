@@ -2,11 +2,6 @@ package spicy.chatCommands.commands;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import spicy.SpicyClient;
 import spicy.chatCommands.Command;
 import spicy.files.FileManager;
 

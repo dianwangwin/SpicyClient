@@ -34,7 +34,7 @@ public class Command {
 	
 	// This shows a chat message to the player
 	public static void sendPrivateChatMessage(String text) {
-		Minecraft.getMinecraft().thePlayer.addChatComponentMessage(new ChatComponentText("ยง6[ ยงf" + SpicyClient.config.clientName + SpicyClient.config.clientVersion + " ยง6] ยงf" + text));
+		Minecraft.getMinecraft().thePlayer.addChatComponentMessage(new ChatComponentText("ง6[ งf" + SpicyClient.config.clientName + SpicyClient.config.clientVersion + " ง6] งf" + text));
 	}
 	
 	// This shows a chat message to the everyone

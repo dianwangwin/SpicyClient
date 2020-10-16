@@ -1,49 +1,31 @@
 package spicy;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
 import com.thealtening.AltService;
 import com.thealtening.AltService.EnumAltService;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.Session;
 import spicy.ClickGUI.Tab;
-import spicy.chatCommands.Command;
 import spicy.chatCommands.CommandManager;
 import spicy.events.Event;
 import spicy.events.EventType;
 import spicy.events.listeners.EventChatmessage;
 import spicy.events.listeners.EventKey;
-import spicy.events.listeners.EventMotion;
 import spicy.files.AltInfo;
 import spicy.files.Config;
 import spicy.files.FileManager;
 import spicy.modules.HudModule;
 import spicy.modules.Module;
 import spicy.modules.Module.Category;
-import spicy.modules.combat.*;
-import spicy.modules.memes.*;
-import spicy.modules.movement.*;
-import spicy.modules.player.*;
 import spicy.modules.render.*;
-import spicy.modules.world.*;
 import spicy.ui.HUD;
-import spicy.ui.NewAltManager;
-import spicy.ui.customOpenGLWidgets.TextBox;
 public class SpicyClient {
 	
 	public static CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<Module>();
@@ -152,6 +134,7 @@ public class SpicyClient {
 		
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public static void onEvent(Event e) {
 		
 		for (Module m : modules) {

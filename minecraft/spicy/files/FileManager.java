@@ -3,18 +3,12 @@ package spicy.files;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Comparator;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import com.google.gson.Gson;
 
-import net.minecraft.client.Minecraft;
 import spicy.SpicyClient;
-import spicy.modules.Module;
 
 /*
  * THIS IS NOT MY CODE, I FOUND IT ON A TUTORIAL VIDEO ON YOUTUBE
@@ -107,6 +101,23 @@ public class FileManager {
 	
 	public static boolean save_config(String name) throws IOException {
 		
+		File[] files = FileManager.configs.listFiles();
+		
+		if (files == null) {
+			
+		}else {
+			
+		}
+		
+		for (File file : files) {
+		    if (file.isFile()) {
+		    	
+		    	file.renameTo(new File(configs + 
+                        "\\" + file.getName().replaceAll(".SpicyClientConfig", ".con"))); 
+		    	
+		    }
+		}
+		
 		SpicyClient.config.saveConfig();
 		
 		File file = new File(getROOT_DIR(), "configs");
@@ -115,7 +126,7 @@ public class FileManager {
 		}
 		
 		try {
-			writeJsonToFile(new File(file, name + ".SpicyClientConfig"), SpicyClient.config);
+			writeJsonToFile(new File(file, name + ".con"), SpicyClient.config);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
@@ -127,6 +138,23 @@ public class FileManager {
 	
 	public static boolean load_config(String name) throws IOException {
 		
+		File[] files = FileManager.configs.listFiles();
+		
+		if (files == null) {
+			
+		}else {
+			
+		}
+		
+		for (File file : files) {
+		    if (file.isFile()) {
+		    	
+		    	file.renameTo(new File(configs + 
+                        "\\" + file.getName().replaceAll(".SpicyClientConfig", ".con"))); 
+		    	
+		    }
+		}
+		
 		Config temp = new Config("temp");
 		
 		File file = new File(getROOT_DIR(), "configs");
@@ -137,7 +165,7 @@ public class FileManager {
 		try {
 			
 			Gson g = new Gson();
-			temp = g.fromJson((String) readFromJson(new File(file, name + ".SpicyClientConfig"), temp), Config.class);
+			temp = g.fromJson((String) readFromJson(new File(file, name + ".con"), temp), Config.class);
 			
 			temp.loadConfig();
 			return true;

@@ -2,7 +2,6 @@ package spicy.chatCommands.commands;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.play.client.C03PacketPlayer;
-import spicy.SpicyClient;
 import spicy.chatCommands.Command;
 
 public class Damage extends Command {
