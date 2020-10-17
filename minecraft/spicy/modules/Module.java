@@ -32,9 +32,9 @@ public class Module {
 	public String name;
 	public String additionalInformation = "";
 	public boolean toggled = false;
-	public boolean expanded = false;
-	public boolean ClickGuiExpanded = false;
-	public int index;
+	public transient boolean expanded = false;
+	public transient boolean ClickGuiExpanded = false;
+	public transient int index;
 	
 	public boolean isToggled() {
 		return toggled;

@@ -62,7 +62,7 @@ public class Config extends Command {
 			for (File file : files) {
 			    if (file.isFile()) {
 			    	
-			    	sendPrivateChatMessage(" - " + file.getName().replace(".SpicyClientConfig", ""));
+			    	sendPrivateChatMessage(" - " + file.getName().replace(".con", ""));
 			    	
 			    }
 			}
