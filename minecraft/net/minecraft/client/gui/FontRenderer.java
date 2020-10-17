@@ -398,7 +398,33 @@ public class FontRenderer implements IResourceManagerReloadListener
 
         return i;
     }
-
+    
+    public int drawStringWithCustomShadow(String text, float x, float y, int color, float shadowDistance, boolean leftShadow, boolean downShadow)
+    {
+        this.enableAlpha();
+        this.resetStyles();
+        int i;
+        
+        float temp = shadowDistance;
+        if (temp < 0) {
+        	temp *= -1;
+        }
+        
+        i = this.renderString(text, x + temp * (leftShadow ? -1 : 1), y + temp * (downShadow ? -1 : 1), color, true);
+        i = Math.max(i, this.renderString(text, x, y, color, false));
+        
+        return i;
+    }
+    
+    public void drawStringWithQuadShadow(String text, float x, float y, int color, float shadowDistance) {
+    	
+    	drawStringWithCustomShadow(text, x, y, color, shadowDistance, true, true);
+    	drawStringWithCustomShadow(text, x, y, color, shadowDistance, true, false);
+    	drawStringWithCustomShadow(text, x, y, color, shadowDistance, false, true);
+    	drawStringWithCustomShadow(text, x, y, color, shadowDistance, false, false);
+    	
+    }
+    
     /**
      * Apply Unicode Bidirectional Algorithm to string and return a new possibly reordered string for visual rendering.
      */

@@ -58,7 +58,7 @@ public class TabGUI extends Module {
 					secondaryColor = secColor;
 				}
 				
-				Gui.drawRect(5, 30, 100, 50 + Module.Category.values().length*16, 0x90000000);
+				Gui.drawRect(5, 30, 100, 50 + Module.Category.values().length*16, 0x60000000);
 				//Gui.drawRect(left, down, right, top, color);
 				
 				int counter = 0;
@@ -70,7 +70,7 @@ public class TabGUI extends Module {
 					Gui.drawRect(7, 33 + fr.FONT_HEIGHT + 12 + (current_tab*18), 97, 33 + fr.FONT_HEIGHT + 12 + (current_tab*18) - 2, primaryColor);
 					Gui.drawRect(94.8, 33 + fr.FONT_HEIGHT + 12 + (current_tab*18), 97, 33 + fr.FONT_HEIGHT + 12 + (current_tab*18) - 19, primaryColor);
 					
-					fr.drawStringWithShadow(c.name, 15, 40 + counter*18, primaryColor);
+					fr.drawString(c.name, 15, 40 + counter*18, primaryColor);
 					counter++;
 					
 				}
@@ -81,7 +81,7 @@ public class TabGUI extends Module {
 					
 					List<Module> modules = spicy.SpicyClient.getModulesByCategory(Module.Category.values()[current_tab]);
 					
-					Gui.drawRect(5 + 100, 30, 150 + 100, 50 + modules.size()*16, 0x90000000);
+					Gui.drawRect(5 + 100, 30, 150 + 100, 50 + modules.size()*16, 0x60000000);
 					//Gui.drawRect(left, down, right, top, color);
 					
 					for (Module m : modules) {
@@ -91,7 +91,7 @@ public class TabGUI extends Module {
 						Gui.drawRect(7 + 100, 33 + fr.FONT_HEIGHT + 12 + (module_index*18), 147 + 100, 33 + fr.FONT_HEIGHT + 12 + (module_index*18) - 2, primaryColor);
 						Gui.drawRect(144.8 + 100, 33 + fr.FONT_HEIGHT + 12 + (module_index*18), 147 + 100, 33 + fr.FONT_HEIGHT + 12 + (module_index*18) - 19, primaryColor);
 						
-						fr.drawStringWithShadow(m.name, 15 + 100, 40 + counter*18, (m.isToggled() ? primaryColor : secondaryColor));
+						fr.drawString(m.name, 15 + 100, 40 + counter*18, (m.isToggled() ? primaryColor : secondaryColor));
 						
 						if (counter == module_index && m.expanded) {
 							
@@ -136,12 +136,12 @@ public class TabGUI extends Module {
 									
 								}
 								
-								//fr.drawStringWithShadow(setting.name, 15 + 100 + 150, 40 + index*18, primaryColor);
+								//fr.drawString(setting.name, 15 + 100 + 150, 40 + index*18, primaryColor);
 								index++;
 								
 							}
 							
-							Gui.drawRect(5 + 100 + 150, 30, 150 + 100 + maxLength, 50 + m.settings.size()*16, 0x90000000);
+							Gui.drawRect(5 + 100 + 150, 30, 150 + 100 + maxLength, 50 + m.settings.size()*16, 0x60000000);
 							
 							Gui.drawRect(7 + 100 + 150, 33 + m.index*18, 9 + 100 + 150, 33 + m.index*18 + 19, m.settings.get(m.index).focused ? secondaryColor : primaryColor);
 							Gui.drawRect(7 + 100 + 150, 33 + m.index*18, 147 + 100 + maxLength, 33 + m.index*18 + 2, m.settings.get(m.index).focused ? secondaryColor : primaryColor);
@@ -155,32 +155,32 @@ public class TabGUI extends Module {
 								if (setting instanceof BooleanSetting) {
 									
 									BooleanSetting bool = (BooleanSetting) setting;
-									fr.drawStringWithShadow(setting.name + ": " + (bool.enabled ? "Enabled" : "Disabled") , 15 + 100 + 150, 40 + index*18, primaryColor);
+									fr.drawString(setting.name + ": " + (bool.enabled ? "Enabled" : "Disabled") , 15 + 100 + 150, 40 + index*18, primaryColor);
 									
 								}
 								else if (setting instanceof NumberSetting) {
 									
 									NumberSetting number = (NumberSetting) setting;
 									
-									fr.drawStringWithShadow(setting.name + ": " + number.getValue() , 15 + 100 + 150, 40 + index*18, primaryColor);
+									fr.drawString(setting.name + ": " + number.getValue() , 15 + 100 + 150, 40 + index*18, primaryColor);
 									
 								}
 								else if (setting instanceof ModeSetting) {
 									
 									ModeSetting mode = (ModeSetting) setting;
 									
-									fr.drawStringWithShadow(setting.name + ": " + mode.getMode() , 15 + 100 + 150, 40 + index*18, primaryColor);
+									fr.drawString(setting.name + ": " + mode.getMode() , 15 + 100 + 150, 40 + index*18, primaryColor);
 									
 								}
 								else if (setting instanceof KeybindSetting) {
 									
 									KeybindSetting keybind  = (KeybindSetting) setting;
 									
-									fr.drawStringWithShadow(setting.name + ": " + Keyboard.getKeyName(keybind.code) , 15 + 100 + 150, 40 + index*18, primaryColor);
+									fr.drawString(setting.name + ": " + Keyboard.getKeyName(keybind.code) , 15 + 100 + 150, 40 + index*18, primaryColor);
 									
 								}
 								
-								//fr.drawStringWithShadow(setting.name, 15 + 100 + 150, 40 + index*18, primaryColor);
+								//fr.drawString(setting.name, 15 + 100 + 150, 40 + index*18, primaryColor);
 								index++;
 								
 							}

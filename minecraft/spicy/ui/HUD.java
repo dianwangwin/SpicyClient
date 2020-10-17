@@ -1,6 +1,8 @@
 package spicy.ui;
 
 import java.awt.Color;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,6 +11,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import spicy.SpicyClient;
@@ -40,7 +43,7 @@ public class HUD {
 		
 		float hue = System.currentTimeMillis() % (int)(rainbowTimer * 1000) / (float)(rainbowTimer * 1000);
 		int primColor = Color.HSBtoRGB(hue, 0.45f, 1);
-		int secColor = Color.HSBtoRGB(hue, 0.45f, 0.55f);
+		int secColor = Color.HSBtoRGB(hue, 0.45f, 0.6f);
 		
 		int primaryColor = -1, secondaryColor = 0x80ffffff;
 		
@@ -61,7 +64,37 @@ public class HUD {
 		GlStateManager.scale(2, 2, 1);
 		GlStateManager.translate(-4, -4, 0);
 		
-		fr.drawStringWithShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor);
+		//fr.drawStringWithShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor);
+		fr.drawStringWithQuadShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor, 0.3f);
+		
+		if (mc.currentScreen instanceof GuiChat) {
+			
+		}else {
+			GlStateManager.translate(4, 4, 0);
+			GlStateManager.scale(1.3, 1.3, 1);
+			GlStateManager.translate(-4, -4, 0);
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+			LocalDateTime now = LocalDateTime.now();
+			
+			String message = dtf.format(now);
+			
+			String[] times = message.split(":");
+			
+			if (Integer.valueOf(times[0]) >= 12 && Integer.valueOf(times[0]) < 24) {
+				message = message.replaceAll("13:", "01:").replaceAll("14:", "02:").replaceAll("15:", "03:").replaceAll("16:", "04:").replaceAll("17:", "05:").replaceAll("18:", "06:").replaceAll("19:", "07:").replaceAll("20:", "08:").replaceAll("21:", "09:").replaceAll("22:", "10:").replaceAll("23:", "11:").replaceAll("24:", "12:");
+				message += " PM";
+			}
+			else if (Integer.valueOf(times[0]) <= 0) {
+				message = message.replaceAll("00:", "12:");
+				message += " AM";
+			}
+			else if (Integer.valueOf(times[0]) <= 12) {
+				message += " AM";
+			}
+			
+			fr.drawString(message, 4,  (int) ((sr.getScaledHeight() - fr.FONT_HEIGHT) / 2.6 - 3), primaryColor);
+			
+		}
 		
 		GlStateManager.popMatrix();
 		
@@ -76,15 +109,15 @@ public class HUD {
 				
 				if (m.additionalInformation != "") {
 					Gui.drawRect(sr.getScaledWidth() - fr.getStringWidth(m.name + m.additionalInformation + separator) - 8, 0 + offset, sr.getScaledWidth() - fr.getStringWidth(m.name + m.additionalInformation + separator) - 6, fr.FONT_HEIGHT + 2 + offset, primaryColor);
-					Gui.drawRect(sr.getScaledWidth() - fr.getStringWidth(m.name + m.additionalInformation + separator) - 6, 0 + offset, sr.getScaledWidth(), fr.FONT_HEIGHT + 2 + offset, 0x90000000);
-					fr.drawStringWithShadow(m.name, sr.getScaledWidth() - fr.getStringWidth(m.name + m.additionalInformation + separator) - 4, (float) (2 + offset), -1);
-					fr.drawStringWithShadow(separator, sr.getScaledWidth() - fr.getStringWidth(m.additionalInformation + separator) - 4, (float) (2 + offset), -1);
+					Gui.drawRect(sr.getScaledWidth() - fr.getStringWidth(m.name + m.additionalInformation + separator) - 6, 0 + offset, sr.getScaledWidth(), fr.FONT_HEIGHT + 2 + offset, rainbowEnabled ? 0x0f000000 : 0x50000000);
+					fr.drawString(m.name, sr.getScaledWidth() - fr.getStringWidth(m.name + m.additionalInformation + separator) - 4, (int) (2 + offset), primaryColor);
+					fr.drawString(separator, sr.getScaledWidth() - fr.getStringWidth(m.additionalInformation + separator) - 4, (int) (2 + offset), primaryColor);
 					// fr.drawStringWithShadow("   " + m.additionalInformation, sr.getScaledWidth() - fr.getStringWidth(m.additionalInformation + separator) - 4, (float) (2 + offset), 0xff9c9c9c);
-					fr.drawStringWithShadow(m.additionalInformation, sr.getScaledWidth() - fr.getStringWidth(m.additionalInformation) - 4, (float) (2 + offset), 0xff9c9c9c);
+					fr.drawString(m.additionalInformation, sr.getScaledWidth() - fr.getStringWidth(m.additionalInformation) - 4, (int) (2 + offset), rainbowEnabled ? secondaryColor : 0xff9c9c9c);
 				}else {
 					Gui.drawRect(sr.getScaledWidth() - fr.getStringWidth(m.name + m.additionalInformation) - 8, 0 + offset, sr.getScaledWidth() - fr.getStringWidth(m.name + m.additionalInformation) - 6, fr.FONT_HEIGHT + 2 + offset, primaryColor);
-					Gui.drawRect(sr.getScaledWidth() - fr.getStringWidth(m.name + m.additionalInformation) - 6, 0 + offset, sr.getScaledWidth(), fr.FONT_HEIGHT + 2 + offset, 0x90000000);
-					fr.drawStringWithShadow(m.name, sr.getScaledWidth() - fr.getStringWidth(m.name + m.additionalInformation) - 4, (float) (2 + offset), -1);
+					Gui.drawRect(sr.getScaledWidth() - fr.getStringWidth(m.name + m.additionalInformation) - 6, 0 + offset, sr.getScaledWidth(), fr.FONT_HEIGHT + 2 + offset, rainbowEnabled ? 0x0f000000 : 0x50000000);
+					fr.drawString(m.name, sr.getScaledWidth() - fr.getStringWidth(m.name + m.additionalInformation) - 4, (int) (2 + offset), primaryColor);
 				}
 				
 				double bottemLines = 0;
