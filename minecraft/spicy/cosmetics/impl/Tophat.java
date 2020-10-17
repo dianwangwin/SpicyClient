@@ -41,9 +41,9 @@ public class Tophat extends CosmeticBase {
 			}
 			
 			float[] color = CosmeticController.getTophatColor(player);
-			GL11.glColor3f(color[0], color[1], color[2]);
+			//GL11.glColor3f(color[0], color[1], color[2]);
 			modelTophat.render(player, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, scale);
-			GL11.glColor3f(1, 1, 1);
+			//GL11.glColor3f(1, 1, 1);
 			GlStateManager.popMatrix();
 			
 		}

@@ -70,7 +70,7 @@ public class TabGUI extends Module {
 					Gui.drawRect(7, 33 + fr.FONT_HEIGHT + 12 + (current_tab*18), 97, 33 + fr.FONT_HEIGHT + 12 + (current_tab*18) - 2, primaryColor);
 					Gui.drawRect(94.8, 33 + fr.FONT_HEIGHT + 12 + (current_tab*18), 97, 33 + fr.FONT_HEIGHT + 12 + (current_tab*18) - 19, primaryColor);
 					
-					fr.drawString(c.name, 15, 40 + counter*18, primaryColor);
+					fr.drawStringWithShadow(c.name, 15, 40 + counter*18, primaryColor);
 					counter++;
 					
 				}
@@ -91,7 +91,7 @@ public class TabGUI extends Module {
 						Gui.drawRect(7 + 100, 33 + fr.FONT_HEIGHT + 12 + (module_index*18), 147 + 100, 33 + fr.FONT_HEIGHT + 12 + (module_index*18) - 2, primaryColor);
 						Gui.drawRect(144.8 + 100, 33 + fr.FONT_HEIGHT + 12 + (module_index*18), 147 + 100, 33 + fr.FONT_HEIGHT + 12 + (module_index*18) - 19, primaryColor);
 						
-						fr.drawString(m.name, 15 + 100, 40 + counter*18, (m.isToggled() ? primaryColor : secondaryColor));
+						fr.drawStringWithShadow(m.name, 15 + 100, 40 + counter*18, (m.isToggled() ? primaryColor : secondaryColor));
 						
 						if (counter == module_index && m.expanded) {
 							
@@ -136,7 +136,7 @@ public class TabGUI extends Module {
 									
 								}
 								
-								//fr.drawString(setting.name, 15 + 100 + 150, 40 + index*18, primaryColor);
+								//fr.drawStringWithShadow(setting.name, 15 + 100 + 150, 40 + index*18, primaryColor);
 								index++;
 								
 							}
@@ -155,32 +155,32 @@ public class TabGUI extends Module {
 								if (setting instanceof BooleanSetting) {
 									
 									BooleanSetting bool = (BooleanSetting) setting;
-									fr.drawString(setting.name + ": " + (bool.enabled ? "Enabled" : "Disabled") , 15 + 100 + 150, 40 + index*18, primaryColor);
+									fr.drawStringWithShadow(setting.name + ": " + (bool.enabled ? "Enabled" : "Disabled") , 15 + 100 + 150, 40 + index*18, primaryColor);
 									
 								}
 								else if (setting instanceof NumberSetting) {
 									
 									NumberSetting number = (NumberSetting) setting;
 									
-									fr.drawString(setting.name + ": " + number.getValue() , 15 + 100 + 150, 40 + index*18, primaryColor);
+									fr.drawStringWithShadow(setting.name + ": " + number.getValue() , 15 + 100 + 150, 40 + index*18, primaryColor);
 									
 								}
 								else if (setting instanceof ModeSetting) {
 									
 									ModeSetting mode = (ModeSetting) setting;
 									
-									fr.drawString(setting.name + ": " + mode.getMode() , 15 + 100 + 150, 40 + index*18, primaryColor);
+									fr.drawStringWithShadow(setting.name + ": " + mode.getMode() , 15 + 100 + 150, 40 + index*18, primaryColor);
 									
 								}
 								else if (setting instanceof KeybindSetting) {
 									
 									KeybindSetting keybind  = (KeybindSetting) setting;
 									
-									fr.drawString(setting.name + ": " + Keyboard.getKeyName(keybind.code) , 15 + 100 + 150, 40 + index*18, primaryColor);
+									fr.drawStringWithShadow(setting.name + ": " + Keyboard.getKeyName(keybind.code) , 15 + 100 + 150, 40 + index*18, primaryColor);
 									
 								}
 								
-								//fr.drawString(setting.name, 15 + 100 + 150, 40 + index*18, primaryColor);
+								//fr.drawStringWithShadow(setting.name, 15 + 100 + 150, 40 + index*18, primaryColor);
 								index++;
 								
 							}
