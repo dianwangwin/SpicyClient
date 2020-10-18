@@ -11,10 +11,10 @@ import spicy.util.Timer;
 
 public class Reach extends Module {
 	
-	private NumberSetting reach = new NumberSetting("Reach", 3, 3, 6, 0.1);
+	public NumberSetting reach = new NumberSetting("Reach", 3, 3, 6, 0.1);
 	
 	public Reach() {
-		super("Reach", Keyboard.KEY_NONE, Category.BETA);
+		super("Reach", Keyboard.KEY_NONE, Category.COMBAT);
 		resetSettings();
 	}
 	

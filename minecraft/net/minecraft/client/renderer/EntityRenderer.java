@@ -90,6 +90,7 @@ import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Project;
 import shadersmod.client.Shaders;
 import shadersmod.client.ShadersRender;
+import spicy.SpicyClient;
 import spicy.ui.MainMenu;
 
 public class EntityRenderer implements IResourceManagerReloadListener
@@ -479,7 +480,11 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 {
                     var5 = 3.0D;
                 }
-
+                
+                if (SpicyClient.config.reach.isEnabled()) {
+                	var5 = SpicyClient.config.reach.reach.getValue();
+                }
+                
                 var3 = var5;
             }
 
