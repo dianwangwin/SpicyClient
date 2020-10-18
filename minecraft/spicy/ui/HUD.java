@@ -129,10 +129,16 @@ public class HUD {
 					}
 				}
 				
-				if (enabledModules.indexOf(m) != enabledModules.size() - 1) {
-					bottemLines = (fr.getStringWidth(enabledModules.get(enabledModules.indexOf(m)).name)) - (fr.getStringWidth(enabledModules.get(enabledModules.indexOf(m) + 1).name + (enabledModules.get(enabledModules.indexOf(m) + 1).additionalInformation != "" ? enabledModules.get(enabledModules.indexOf(m) + 1).additionalInformation + separator : "")));
-				}else {
-					bottemLines = (fr.getStringWidth(enabledModules.get(enabledModules.indexOf(m)).name + (enabledModules.get(enabledModules.indexOf(m)).additionalInformation == "" ? enabledModules.get(enabledModules.indexOf(m)).additionalInformation + separator : ""))) + 10;
+				try {
+					
+					if (enabledModules.indexOf(m) != enabledModules.size() - 1) {
+						bottemLines = (fr.getStringWidth(enabledModules.get(enabledModules.indexOf(m)).name)) - (fr.getStringWidth(enabledModules.get(enabledModules.indexOf(m) + 1).name + (enabledModules.get(enabledModules.indexOf(m) + 1).additionalInformation != "" ? enabledModules.get(enabledModules.indexOf(m) + 1).additionalInformation + separator : "")));
+					}else {
+						bottemLines = (fr.getStringWidth(enabledModules.get(enabledModules.indexOf(m)).name + (enabledModules.get(enabledModules.indexOf(m)).additionalInformation == "" ? enabledModules.get(enabledModules.indexOf(m)).additionalInformation + separator : ""))) + 10;
+					}
+					
+				} catch (IndexOutOfBoundsException e) {
+					// TODO: handle exception
 				}
 				
 				Gui.drawRect(sr.getScaledWidth() - fr.getStringWidth(m.name + (m.additionalInformation != "" ? m.additionalInformation + separator : "")) - 8, (0 + offset) + (fr.FONT_HEIGHT + 2), (sr.getScaledWidth() - fr.getStringWidth(m.name) - 6) + (bottemLines), (2 + offset) + (fr.FONT_HEIGHT + 2), primaryColor);

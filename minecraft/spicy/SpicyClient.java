@@ -12,6 +12,7 @@ import com.thealtening.AltService;
 import com.thealtening.AltService.EnumAltService;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderManager;
 import spicy.ClickGUI.Tab;
 import spicy.chatCommands.CommandManager;
 import spicy.events.Event;
@@ -139,7 +140,7 @@ public class SpicyClient {
 		
 		for (Module m : modules) {
 			
-if (e instanceof EventChatmessage) {
+			if (e instanceof EventChatmessage) {
 				
 				// Will check if the message is a command and if it is a command then will run it
 				EventChatmessage chat = (EventChatmessage) e;

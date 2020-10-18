@@ -27,6 +27,7 @@ import spicy.settings.BooleanSetting;
 import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
 import spicy.settings.SettingChangeEvent;
+import spicy.util.MovementUtils;
 
 public class Bhop extends Module {
 	
@@ -118,9 +119,12 @@ public class Bhop extends Module {
 	
 	public void onDisable() {
 		mc.timer.ticksPerSecond = 20f;
+		this.mc.timer.timerSpeed = 1.00f;
+		status = 0;
 	}
 	
 	private int status = 0;
+	private boolean boosted = false;
 	
 	public void onEvent(Event e) {
 		
@@ -226,7 +230,9 @@ public class Bhop extends Module {
 					}
 					else if (mc.thePlayer.onGround) {
 						mc.thePlayer.setSprinting(true);
+						
 						mc.thePlayer.motionY += 0.5;
+						
 			            //mc.thePlayer.jump();
 					}
 					else if (mc.thePlayer.motionY <= -0.00001 && mc.thePlayer.fallDistance < 5 && glideEnabled.enabled) {
@@ -302,7 +308,41 @@ public class Bhop extends Module {
 					
 				}
 				else if (mode.is("Test") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
-
+					
+					this.mc.timer.timerSpeed = 1.18f;
+					
+					if (MovementUtils.isMoving()) {
+			            if (mc.thePlayer.onGround) {
+			            	mc.thePlayer.jump();
+			            	mc.thePlayer.jump();
+			            	mc.thePlayer.jump();
+			            	mc.thePlayer.jump();
+			            	mc.thePlayer.jump();
+			            	mc.thePlayer.jump();
+			            	mc.thePlayer.jump();
+			            	mc.thePlayer.jump();
+			            	mc.thePlayer.jump();
+			            	mc.thePlayer.jump();
+			                
+			                float speed = 0;
+			                
+			                if (MovementUtils.getSpeed() < 0.56f) {
+			                	speed = MovementUtils.getSpeed() * 1.045f;
+			                }else {
+			                	speed = 0.56f;
+			                }
+			                
+			                MovementUtils.strafe(speed);
+			                
+			            } else if (mc.thePlayer.motionY < 0.20) {
+			            	mc.thePlayer.motionY -= 0.02f;
+			            }
+			            MovementUtils.strafe(MovementUtils.getSpeed() * 1.01889f);
+			        } else {
+			            mc.thePlayer.motionZ = 0.0f;
+			            mc.thePlayer.motionX = mc.thePlayer.motionZ;
+			        }
+					
 				}
 				
 			}
@@ -310,21 +350,5 @@ public class Bhop extends Module {
 		}
 		
 	}
-	
-	
-	// Remove this later
-    public static double defaultSpeed() {
-    	
-        double normalSpeed = 0.2873D;
-        
-        if (Minecraft.getMinecraft().thePlayer.isPotionActive(Potion.moveSpeed)) {
-            int amplifier = Minecraft.getMinecraft().thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier();
-            normalSpeed *= (1.0D + 0.2D * (amplifier + 1));
-        }
-        
-        return normalSpeed;
-        
-    }
-
 	
 }
