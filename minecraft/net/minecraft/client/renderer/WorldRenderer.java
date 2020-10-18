@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import optifine.Config;
 import optifine.TextureUtils;
 
@@ -59,7 +60,7 @@ public class WorldRenderer
         this.rawFloatBuffer = this.byteBuffer.asFloatBuffer();
         SVertexBuilder.initVertexBuilder(this);
     }
-
+    
     private void func_181670_b(int p_181670_1_)
     {
         if (Config.isShaders())

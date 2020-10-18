@@ -12,7 +12,9 @@ import com.thealtening.AltService;
 import com.thealtening.AltService.EnumAltService;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.util.Vec3;
 import spicy.ClickGUI.Tab;
 import spicy.chatCommands.CommandManager;
 import spicy.events.Event;
@@ -27,6 +29,7 @@ import spicy.modules.Module;
 import spicy.modules.Module.Category;
 import spicy.modules.render.*;
 import spicy.ui.HUD;
+import spicy.util.RenderUtils;
 public class SpicyClient {
 	
 	public static CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<Module>();

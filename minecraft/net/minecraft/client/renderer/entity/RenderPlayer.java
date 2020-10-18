@@ -18,6 +18,7 @@ import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.ResourceLocation;
+import spicy.SpicyClient;
 import spicy.cosmetics.CosmeticController;
 import spicy.cosmetics.impl.Tophat;
 
@@ -59,6 +60,13 @@ public class RenderPlayer extends RendererLivingEntity<AbstractClientPlayer>
      */
     public void doRender(AbstractClientPlayer entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+    	
+    	boolean playerESP = SpicyClient.config.playerESP.isEnabled();
+    	
+    	if (playerESP) {
+    		GlStateManager.disableDepth();
+    	}
+    	
         if (!entity.isUser() || this.renderManager.livingPlayer == entity)
         {
             double d0 = y;
@@ -67,10 +75,15 @@ public class RenderPlayer extends RendererLivingEntity<AbstractClientPlayer>
             {
                 d0 = y - 0.125D;
             }
-
+            
             this.setModelVisibilities(entity);
             super.doRender(entity, x, d0, z, entityYaw, partialTicks);
         }
+        
+    	if (playerESP) {
+    		GlStateManager.enableDepth();
+    	}
+        
     }
 
     private void setModelVisibilities(AbstractClientPlayer clientPlayer)
