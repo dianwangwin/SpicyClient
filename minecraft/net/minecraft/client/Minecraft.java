@@ -204,7 +204,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private ServerData currentServerData;
 
     /** The RenderEngine instance used by Minecraft */
-    private TextureManager renderEngine;
+    public TextureManager renderEngine;
 
     /**
      * Set to 'this' in Minecraft constructor; used by some settings get methods
@@ -503,7 +503,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.mcResourceManager.registerReloadListener(this.mcSoundHandler);
         this.mcMusicTicker = new MusicTicker(this);
         this.fontRendererObj = new FontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii.png"), this.renderEngine, false);
-
+        
         if (this.gameSettings.language != null)
         {
             this.fontRendererObj.setUnicodeFlag(this.isUnicode());

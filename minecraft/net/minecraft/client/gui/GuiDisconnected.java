@@ -16,7 +16,6 @@ import spicy.SpicyClient;
 import spicy.TheAlteningAPI;
 import spicy.files.AltInfo.alt;
 import spicy.files.FileManager;
-import spicy.ui.AltManager;
 import spicy.ui.NewAltManager;
 
 public class GuiDisconnected extends GuiScreen
