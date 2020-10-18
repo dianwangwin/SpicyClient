@@ -18,6 +18,7 @@ import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.ResourceLocation;
+import spicy.cosmetics.CosmeticController;
 import spicy.cosmetics.impl.Tophat;
 
 public class RenderPlayer extends RendererLivingEntity<AbstractClientPlayer>
@@ -40,7 +41,9 @@ public class RenderPlayer extends RendererLivingEntity<AbstractClientPlayer>
         this.addLayer(new LayerDeadmau5Head(this));
         this.addLayer(new LayerCape(this));
         this.addLayer(new LayerCustomHead(this.getMainModel().bipedHead));
-        this.addLayer(new Tophat(this));
+        
+        // Used for custom cosmetics
+        CosmeticController.addModels(this);
     }
 
     public ModelPlayer getMainModel()

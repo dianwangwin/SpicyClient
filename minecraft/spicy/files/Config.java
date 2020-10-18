@@ -68,6 +68,7 @@ public class Config {
 	public FloofyFoxes floofyFoxes = new FloofyFoxes();
 	public Jesus jesus = new Jesus();
 	public Phase phase = new Phase();
+	public DougDimmadome dougDimmadome = new DougDimmadome();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -121,6 +122,7 @@ public class Config {
 			this.floofyFoxes = new FloofyFoxes();
 			this.jesus = new Jesus();
 			this.phase = new Phase();
+			this.dougDimmadome = new DougDimmadome();
 			
 			this.bhop.glideEnabled = new BooleanSetting("Glide", false);
 			this.bhop.hypixelGlideAmount = new NumberSetting("Glide amount", 10, 4, 30, 1);

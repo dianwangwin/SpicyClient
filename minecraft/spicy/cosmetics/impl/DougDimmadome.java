@@ -12,15 +12,15 @@ import spicy.cosmetics.CosmeticBase;
 import spicy.cosmetics.CosmeticController;
 import spicy.cosmetics.CosmeticModelBase;
 
-public class Tophat extends CosmeticBase {
+public class DougDimmadome extends CosmeticBase {
 	
-	private final ModelTophat modelTophat;
-	private static final ResourceLocation texture = new ResourceLocation("spicy/hat.png");
+	private final ModelDougDimmadomeHat modelDougDimmadomeHat;
+	private static final ResourceLocation texture = new ResourceLocation("spicy/DougDimmadomeHat.png");
 	
-	public Tophat(RenderPlayer renderPlayer) {
+	public DougDimmadome(RenderPlayer renderPlayer) {
 		
 		super(renderPlayer);
-		modelTophat = new ModelTophat(renderPlayer);
+		modelDougDimmadomeHat = new ModelDougDimmadomeHat(renderPlayer);
 		
 	}
 	
@@ -29,7 +29,7 @@ public class Tophat extends CosmeticBase {
 			float partialTicks, float ageInTicks, float headYaw, float headPitch, float scale) {
 		
 		
-		if (CosmeticController.shouldRenderTophat(player)) {
+		if (CosmeticController.shouldRenderDougDimmadomeHat(player)) {
 			
 			GlStateManager.pushMatrix();
 			playerRenderer.bindTexture(texture);
@@ -39,28 +39,28 @@ public class Tophat extends CosmeticBase {
 			}
 			
 			float[] color = CosmeticController.getTophatColor(player);
-			GL11.glColor3f(color[0], color[1], color[2]);
-			modelTophat.render(player, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, scale);
-			GL11.glColor3f(1, 1, 1);
+			//GL11.glColor3f(color[0], color[1], color[2]);
+			modelDougDimmadomeHat.render(player, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, scale);
+			//GL11.glColor3f(1, 1, 1);
 			GlStateManager.popMatrix();
 			
 		}
 		
 	}
 	
-	private class ModelTophat extends CosmeticModelBase{
+	private class ModelDougDimmadomeHat extends CosmeticModelBase{
 		
 		private ModelRenderer rim;
 		private ModelRenderer hatBody;
 		
-		public ModelTophat(RenderPlayer player) {
+		public ModelDougDimmadomeHat(RenderPlayer player) {
 			super(player);
 			
 			rim = new ModelRenderer(playerModel, 0, 0);
 			rim.addBox(-5.5f, -9f, -5.5f, 11, 2, 11);
 			
 			hatBody = new ModelRenderer(playerModel, 0, 13);
-			hatBody.addBox(-3.5f, -17f, -3.5f, 7, 8, 7);
+			hatBody.addBox(-3.5f, -52f, -3.5f, 7, (int) 44.4f, 7);
 			
 		}
 		

@@ -86,6 +86,12 @@ public abstract class AbstractClientPlayer extends EntityPlayer
     public ResourceLocation getLocationSkin()
     {
     	
+    	if (SpicyClient.config.dougDimmadome.isEnabled()) {
+    		
+    		return new ResourceLocation("spicy/doug_dimmadome.png");
+    		
+    	}
+    	
     	if (SpicyClient.config.floofyFoxes.isEnabled()) {
     		
     		return new ResourceLocation("spicy/fox.png");

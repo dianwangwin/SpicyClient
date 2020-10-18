@@ -139,7 +139,7 @@ public class SpicyClient {
 		
 		for (Module m : modules) {
 			
-			if (e instanceof EventChatmessage) {
+if (e instanceof EventChatmessage) {
 				
 				// Will check if the message is a command and if it is a command then will run it
 				EventChatmessage chat = (EventChatmessage) e;
@@ -179,6 +179,7 @@ public class SpicyClient {
 				m.onEvent(e);
 				
 			}
+			
 			
 		}
 		
@@ -255,6 +256,7 @@ public class SpicyClient {
 		modules.add(c.floofyFoxes);
 		modules.add(c.jesus);
 		modules.add(c.phase);
+		modules.add(c.dougDimmadome);
 		
 		// Hud modules
 		
