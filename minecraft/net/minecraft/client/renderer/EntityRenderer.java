@@ -91,7 +91,7 @@ import org.lwjgl.util.glu.Project;
 import shadersmod.client.Shaders;
 import shadersmod.client.ShadersRender;
 import spicy.SpicyClient;
-import spicy.ui.MainMenu;
+import spicy.ui.NewMainMenu;
 
 public class EntityRenderer implements IResourceManagerReloadListener
 {
@@ -2714,9 +2714,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
             }
         }
 
-        if (this.mc.currentScreen instanceof MainMenu)
+        if (this.mc.currentScreen instanceof NewMainMenu)
         {
-            this.updateMainMenu((MainMenu)this.mc.currentScreen);
+            this.updateMainMenu((NewMainMenu)this.mc.currentScreen);
         }
 
         if (this.updatedWorld != world)
@@ -2755,7 +2755,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         }
     }
 
-    private void updateMainMenu(MainMenu p_updateMainMenu_1_)
+    private void updateMainMenu(NewMainMenu p_updateMainMenu_1_)
     {
         try
         {
@@ -2780,7 +2780,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 return;
             }
 
-            Field[] afield = MainMenu.class.getDeclaredFields();
+            Field[] afield = NewMainMenu.class.getDeclaredFields();
 
             for (int k = 0; k < afield.length; ++k)
             {

@@ -22,7 +22,6 @@ import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
 import spicy.settings.SettingChangeEvent;
 import spicy.ui.HUD;
-import spicy.ui.MainMenu;
 import spicy.util.Timer;
 
 public class ClickGUI extends Module{

@@ -169,7 +169,7 @@ import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.WorldInfo;
 import spicy.SpicyClient;
 import spicy.files.Config;
-import spicy.ui.MainMenu;
+import spicy.ui.NewMainMenu;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
@@ -570,11 +570,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         
         if (this.serverName != null)
         {
-            this.displayGuiScreen(new GuiConnecting(new MainMenu(), this, this.serverName, this.serverPort));
+            this.displayGuiScreen(new GuiConnecting(new NewMainMenu(null), this, this.serverName, this.serverPort));
         }
         else
         {
-            this.displayGuiScreen(new MainMenu());
+            this.displayGuiScreen(new NewMainMenu(null));
         }
 
         this.renderEngine.deleteTexture(this.mojangLogo);
@@ -983,14 +983,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         if (guiScreenIn == null && this.theWorld == null)
         {
-            guiScreenIn = new MainMenu();
+            guiScreenIn = new NewMainMenu(null);
         }
         else if (guiScreenIn == null && this.thePlayer.getHealth() <= 0.0F)
         {
             guiScreenIn = new GuiGameOver();
         }
 
-        if (guiScreenIn instanceof MainMenu)
+        if (guiScreenIn instanceof NewMainMenu)
         {
             this.gameSettings.showDebugInfo = false;
             this.ingameGUI.getChatGUI().clearChatMessages();

@@ -217,7 +217,7 @@ import spicy.events.listeners.EventPacket;
 import spicy.events.listeners.EventReceivedKnockbackPacket;
 import spicy.events.listeners.EventServerSetYawAndPitch;
 import spicy.events.listeners.EventServerSettingWorldTime;
-import spicy.ui.MainMenu;
+import spicy.ui.NewMainMenu;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -836,7 +836,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         }
         else
         {
-            this.gameController.displayGuiScreen(new GuiDisconnected(new GuiMultiplayer(new MainMenu()), "disconnect.lost", reason));
+            this.gameController.displayGuiScreen(new GuiDisconnected(new GuiMultiplayer(new NewMainMenu(null)), "disconnect.lost", reason));
         }
     }
 

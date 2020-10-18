@@ -130,7 +130,7 @@ public class InventoryManager extends Module {
 					}
 					
 				}else {
-					System.out.println(e.setting);
+					
 				}
 				
 			}

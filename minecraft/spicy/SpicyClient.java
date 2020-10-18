@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.util.Vec3;
 import spicy.ClickGUI.Tab;
+import spicy.chatCommands.Command;
 import spicy.chatCommands.CommandManager;
 import spicy.events.Event;
 import spicy.events.EventType;

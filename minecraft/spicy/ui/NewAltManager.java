@@ -76,11 +76,12 @@ public class NewAltManager extends GuiScreen {
 		}
 		
 		if (firstTimeStartup) {
-			System.out.println("test");
+			
 			for (int e = SpicyClient.altInfo.alts.size(); e > 0; e--) {
 				alt a = SpicyClient.altInfo.alts.get(e - 1);
 				a.status = 0;
 			}
+			
 			firstTimeStartup = false;
 		}
 		
