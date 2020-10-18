@@ -56,7 +56,7 @@ public class PlayerESP extends Module {
 				
 				AbstractClientPlayer player = event.entity;
 				//RenderUtils.renderAxisAlignedBB(player.boundingBox);
-				RenderUtils.blockESPBox(player.posX, player.posY, player.posZ, player);
+				RenderUtils.drawPlayerBox(player.posX, player.posY, player.posZ, player);
 				
 				GlStateManager.enableDepth();
 				

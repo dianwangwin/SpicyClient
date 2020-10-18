@@ -18,7 +18,7 @@ public class RenderUtils {
 	public static WorldRenderer worldRenderer = Tessellator.getInstance().getWorldRenderer();
 	public static Tessellator tessellator = Tessellator.getInstance();
 	
-	public static void blockESPBox(Double posX, Double posY, Double posZ, AbstractClientPlayer player){
+	public static void drawPlayerBox(Double posX, Double posY, Double posZ, AbstractClientPlayer player){
 		double x =
 			posX - 0.5
 				- Minecraft.getMinecraft().getRenderManager().renderPosX;
