@@ -29,6 +29,7 @@ import spicy.settings.BooleanSetting;
 import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
 import spicy.ui.customOpenGLWidgets.Button;
+import spicy.util.Timer;
 
 public class NewMainMenu extends GuiScreen {
 	
@@ -44,6 +45,11 @@ public class NewMainMenu extends GuiScreen {
 	}
 	
 	public Button singleplayer, multiplayer, altManager, settings, language;
+	
+	// This is for the blinking warning text
+	private Timer timer = new Timer();
+	private boolean redOrWhite = true;
+	// This is for the blinking warning text
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -188,31 +194,67 @@ public class NewMainMenu extends GuiScreen {
         singleplayer = new Button(this.width / 20, this.height / 2, (this.width / 20) + 300, (this.height / 2) - 30, 0xff202225, 0xff7289da, -1, 2, this);
         singleplayer.setTextScale(1.5f);
         singleplayer.setText(I18n.format("menu.singleplayer"));
-        singleplayer.draw();
         
         multiplayer = new Button(this.width / 20, (this.height / 2) + 40, (this.width / 20) + 300, (this.height / 2) - 30 + 40, 0xff202225, 0xff7289da, -1, 2, this);
         multiplayer.setTextScale(1.5f);
         multiplayer.setText(I18n.format("menu.multiplayer"));
-        multiplayer.draw();
         
         altManager = new Button(this.width / 20, (this.height / 2) + 80, (this.width / 20) + 300, (this.height / 2) - 30 + 80, 0xff202225, 0xff7289da, -1, 2, this);
         altManager.setTextScale(1.5f);
         altManager.setText(I18n.format("Alt Manager"));
-        altManager.draw();
         
         settings = new Button(this.width / 20, (this.height / 2) + 120, (this.width / 20) + 300, (this.height / 2) - 30 + 120, 0xff202225, 0xff7289da, -1, 2, this);
         settings.setTextScale(1.5f);
         settings.setText(I18n.format("Settings"));
-        settings.draw();
         
         language = new Button(this.width / 20, (this.height / 2) + 160, (this.width / 20) + 300, (this.height / 2) - 30 + 160, 0xff202225, 0xff7289da, -1, 2, this);
         language.setTextScale(1.5f);
         language.setText(I18n.format("Language"));
-        language.draw();
         
+		if (mc.gameSettings.guiScale > 2 || mc.gameSettings.guiScale == 0) {
+			
+			if (timer.hasTimeElapsed(400, true)) {
+				redOrWhite = !redOrWhite;
+			}
+			
+			drawCenteredString(mc.fontRendererObj, "Some guis may be broken if your gui scale is not on normal mode", this.width / 2, this.height / 3, redOrWhite ? 0xffff0000 : 0xffffffff);
+		}
+		
+		// For the buttons
+		// For the singleplayer button
+		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < this.height / 2 && mouseY > (this.height / 2) - 30) {
+			singleplayer.insideColor = 0xff4d5c91;
+		}
+
+		// For the multiplayer button
+		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 40 && mouseY > (this.height / 2) - 30 + 40) {
+			multiplayer.insideColor = 0xff4d5c91;
+		}
+
+		// For the alt manager button
+		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 80 && mouseY > (this.height / 2) - 30 + 80) {
+			altManager.insideColor = 0xff4d5c91;
+		}
+
+		// For the settings button
+		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 120 && mouseY > (this.height / 2) - 30 + 120) {
+			settings.insideColor = 0xff4d5c91;
+		}
+
+		// For the language button
+		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 160 && mouseY > (this.height / 2) - 30 + 160) {
+			language.insideColor = 0xff4d5c91;
+		}
+		
+		singleplayer.draw();
+		multiplayer.draw();
+		altManager.draw();
+		settings.draw();
+		language.draw();
+		
 		// To prevent the text from blinking
 		// The max fps is 30
-		long fps = 15;
+		long fps = 18;
 		try {
 			Thread.sleep(1000 / fps);
 		} catch (InterruptedException e) {
