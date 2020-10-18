@@ -14,6 +14,7 @@ import com.thealtening.AltService.EnumAltService;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.util.Vec3;
 import spicy.ClickGUI.Tab;
 import spicy.chatCommands.CommandManager;
@@ -261,6 +262,7 @@ public class SpicyClient {
 		modules.add(c.jesus);
 		modules.add(c.phase);
 		modules.add(c.dougDimmadome);
+		modules.add(c.criticals);
 		
 		// Hud modules
 		

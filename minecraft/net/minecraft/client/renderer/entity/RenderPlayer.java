@@ -21,6 +21,8 @@ import net.minecraft.util.ResourceLocation;
 import spicy.SpicyClient;
 import spicy.cosmetics.CosmeticController;
 import spicy.cosmetics.impl.Tophat;
+import spicy.events.EventType;
+import spicy.events.listeners.EventPlayerRender;
 
 public class RenderPlayer extends RendererLivingEntity<AbstractClientPlayer>
 {
@@ -61,11 +63,9 @@ public class RenderPlayer extends RendererLivingEntity<AbstractClientPlayer>
     public void doRender(AbstractClientPlayer entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
     	
-    	boolean playerESP = SpicyClient.config.playerESP.isEnabled();
-    	
-    	if (playerESP) {
-    		GlStateManager.disableDepth();
-    	}
+    	EventPlayerRender event = new EventPlayerRender(entity);
+    	event.setType(EventType.PRE);
+    	SpicyClient.onEvent(event);
     	
         if (!entity.isUser() || this.renderManager.livingPlayer == entity)
         {
@@ -80,10 +80,9 @@ public class RenderPlayer extends RendererLivingEntity<AbstractClientPlayer>
             super.doRender(entity, x, d0, z, entityYaw, partialTicks);
         }
         
-    	if (playerESP) {
-    		GlStateManager.enableDepth();
-    	}
-        
+    	event.setType(EventType.POST);
+    	SpicyClient.onEvent(event);
+    	
     }
 
     private void setModelVisibilities(AbstractClientPlayer clientPlayer)

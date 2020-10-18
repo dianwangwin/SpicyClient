@@ -69,6 +69,7 @@ public class Config {
 	public Jesus jesus = new Jesus();
 	public Phase phase = new Phase();
 	public DougDimmadome dougDimmadome = new DougDimmadome();
+	public Criticals criticals = new Criticals();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -123,6 +124,8 @@ public class Config {
 			this.jesus = new Jesus();
 			this.phase = new Phase();
 			this.dougDimmadome = new DougDimmadome();
+			this.playerESP = new PlayerESP();
+			this.criticals = new Criticals();
 			
 			this.bhop.glideEnabled = new BooleanSetting("Glide", false);
 			this.bhop.hypixelGlideAmount = new NumberSetting("Glide amount", 10, 4, 30, 1);
