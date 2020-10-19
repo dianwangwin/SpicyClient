@@ -71,6 +71,7 @@ public class Config {
 	public DougDimmadome dougDimmadome = new DougDimmadome();
 	public Criticals criticals = new Criticals();
 	public Wtap wtap = new Wtap();
+	public TriggerBot triggerBot = new TriggerBot();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -84,6 +85,8 @@ public class Config {
 	}
 	
 	public boolean updateConfig() {
+		
+		this.triggerBot = new TriggerBot();
 		
 		this.killaura.targetsSetting.index = this.killaura.targetModeSetting.index;
 		
@@ -128,6 +131,7 @@ public class Config {
 			this.playerESP = new PlayerESP();
 			this.criticals = new Criticals();
 			this.wtap = new Wtap();
+			this.triggerBot = new TriggerBot();
 			
 			this.bhop.glideEnabled = new BooleanSetting("Glide", false);
 			this.bhop.hypixelGlideAmount = new NumberSetting("Glide amount", 10, 4, 30, 1);

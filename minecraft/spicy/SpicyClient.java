@@ -265,6 +265,7 @@ public class SpicyClient {
 		modules.add(c.dougDimmadome);
 		modules.add(c.criticals);
 		modules.add(c.wtap);
+		modules.add(c.triggerBot);
 		
 		// Hud modules
 		

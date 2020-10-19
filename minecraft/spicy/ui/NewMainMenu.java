@@ -94,6 +94,7 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ WTap");
         changeLogs.add("+ Criticals");
         changeLogs.add("+ Hud clock");
+        changeLogs.add("+ Trigger Bot");
         
         // Put the changed things here
         // changeLogs.add("* ");
