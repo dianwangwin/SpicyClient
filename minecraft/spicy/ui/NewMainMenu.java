@@ -92,6 +92,8 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ PlayerESP");
         changeLogs.add("+ Hypixel bhop");
         changeLogs.add("+ WTap");
+        changeLogs.add("+ Criticals");
+        changeLogs.add("+ Hud clock");
         
         // Put the changed things here
         // changeLogs.add("* ");
