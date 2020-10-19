@@ -31,7 +31,7 @@ public class RenderUtils {
 				- Minecraft.getMinecraft().getRenderManager().renderPosZ;
 		GL11.glBlendFunc(770, 771);
 		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glLineWidth(100.0F);
+		GL11.glLineWidth(2.0F);
 		GL11.glColor4d(0, 1, 0, 0.15F);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);

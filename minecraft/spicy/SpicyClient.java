@@ -264,6 +264,7 @@ public class SpicyClient {
 		modules.add(c.phase);
 		modules.add(c.dougDimmadome);
 		modules.add(c.criticals);
+		modules.add(c.wtap);
 		
 		// Hud modules
 		

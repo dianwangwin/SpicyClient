@@ -13,6 +13,7 @@ import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventGetBlockReach;
 import spicy.events.listeners.EventPacket;
+import spicy.events.listeners.EventSendPacket;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
 import spicy.settings.NumberSetting;
@@ -36,12 +37,15 @@ public class Criticals extends Module {
 	
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventPacket && e.isPre()) {
-			Packet packet = ((EventPacket)e).packet;
+		if (e instanceof EventSendPacket && e.isPre()) {
+			Packet packet = ((EventSendPacket)e).packet;
 			
 			if (packet instanceof C02PacketUseEntity) {
-				Command.sendPrivateChatMessage("sss");
-				Command.sendPrivateChatMessage(packet + "");
+				
+				if (!mc.thePlayer.onGround) {
+					return;
+				}
+				
 				C02PacketUseEntity attack = (C02PacketUseEntity) packet;
 				
 				if (attack.getAction() == Action.ATTACK) {

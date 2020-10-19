@@ -21,6 +21,7 @@ import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
+import spicy.SpicyClient;
 import spicy.events.Event;
 import spicy.events.listeners.EventMotion;
 import spicy.events.listeners.EventUpdate;
@@ -263,6 +264,12 @@ public class Killaura extends Module {
                         float sharpLevel = EnchantmentHelper.func_152377_a(mc.thePlayer.inventory.getCurrentItem(), target.getCreatureAttribute());
                         if (sharpLevel > 0.0F) {
                             mc.thePlayer.onEnchantmentCritical(target);
+                        }
+                        
+                        if (SpicyClient.config.criticals.isEnabled() && mc.thePlayer.onGround) {
+                        	
+                        	mc.thePlayer.onCriticalHit(target);
+                        	
                         }
                         
 						if (s.toggled) {

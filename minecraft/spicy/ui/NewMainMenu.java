@@ -78,24 +78,25 @@ public class NewMainMenu extends GuiScreen {
         Config temp = new Config("temp");
         String version = temp.clientVersion;
         
-        ArrayList<String> changeLogs1 = new ArrayList<String>();
-        changeLogs1.add("Change logs for SpicyClient " + version);
+        ArrayList<String> changeLogs = new ArrayList<String>();
+        changeLogs.add("Change logs for SpicyClient " + version);
         
         // Put the added things here
         // changeLogs.add("+ ");
-        changeLogs1.add("+ Hypixel fly");
-        changeLogs1.add("+ Payback mode for pvplands killsults");
-        changeLogs1.add("+ Vanilla nofall");
-        changeLogs1.add("+ Vanilla and packet autolog");
-        changeLogs1.add("+ Jesus");
-        changeLogs1.add("+ Phase");
-        changeLogs1.add("+ PlayerESP");
-        changeLogs1.add("+ Hypixel bhop");
+        changeLogs.add("+ Hypixel blink fly");
+        changeLogs.add("+ Payback mode for pvplands killsults");
+        changeLogs.add("+ Vanilla nofall");
+        changeLogs.add("+ Vanilla and packet autolog");
+        changeLogs.add("+ Jesus");
+        changeLogs.add("+ Phase");
+        changeLogs.add("+ PlayerESP");
+        changeLogs.add("+ Hypixel bhop");
+        changeLogs.add("+ WTap");
         
         // Put the changed things here
         // changeLogs.add("* ");
-        changeLogs1.add("* Improved killaura");
-        changeLogs1.add("* More meme modules");
+        changeLogs.add("* Improved killaura");
+        changeLogs.add("* More meme modules");
         
         // Put the removed things here
         // changeLogs.add("- ");
@@ -104,7 +105,7 @@ public class NewMainMenu extends GuiScreen {
         float maxSize1 = 0;
         float maxSize2 = 0;
         
-        for (String s : changeLogs1) {
+        for (String s : changeLogs) {
         	
         	if (line == 40) {
         		s = "[WARN]Too many changes to display";

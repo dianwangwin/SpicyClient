@@ -70,6 +70,7 @@ public class Config {
 	public Phase phase = new Phase();
 	public DougDimmadome dougDimmadome = new DougDimmadome();
 	public Criticals criticals = new Criticals();
+	public Wtap wtap = new Wtap();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -126,6 +127,7 @@ public class Config {
 			this.dougDimmadome = new DougDimmadome();
 			this.playerESP = new PlayerESP();
 			this.criticals = new Criticals();
+			this.wtap = new Wtap();
 			
 			this.bhop.glideEnabled = new BooleanSetting("Glide", false);
 			this.bhop.hypixelGlideAmount = new NumberSetting("Glide amount", 10, 4, 30, 1);
