@@ -86,8 +86,6 @@ public class Config {
 	
 	public boolean updateConfig() {
 		
-		this.triggerBot = new TriggerBot();
-		
 		this.killaura.targetsSetting.index = this.killaura.targetModeSetting.index;
 		
 		this.bhop.glideEnabled = new BooleanSetting("Glide", false);
