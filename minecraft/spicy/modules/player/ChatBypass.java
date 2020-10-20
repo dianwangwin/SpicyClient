@@ -12,7 +12,7 @@ import spicy.settings.ModeSetting;
 
 public class ChatBypass extends Module {
 	
-	private ModeSetting mode = new ModeSetting("Mode", "Russian", "Roblox", "Test1", "Test2", "Test3");
+	private ModeSetting mode = new ModeSetting("Mode", "Russian", "Russian", "Roblox", "Test2", "Test3");
 	
 	public ChatBypass() {
 		super("Chat Bypass", Keyboard.KEY_NONE, Category.PLAYER);
