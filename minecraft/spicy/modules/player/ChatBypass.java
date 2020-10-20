@@ -12,7 +12,7 @@ import spicy.settings.ModeSetting;
 
 public class ChatBypass extends Module {
 	
-	private ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "Test1", "Test2", "Test3");
+	private ModeSetting mode = new ModeSetting("Mode", "Russian", "Roblox", "Test1", "Test2", "Test3");
 	
 	public ChatBypass() {
 		super("Chat Bypass", Keyboard.KEY_NONE, Category.PLAYER);
@@ -54,11 +54,12 @@ public class ChatBypass extends Module {
 				
 				if (!chat.getMessage().startsWith("/")) {
 					
-					if (mode.getMode() == "Vanilla") {
+					if (mode.getMode() == "Russian") {
 						chat.setMessage(StringUtils.replaceChars(chat.getMessage(), "ABESZIKMHOPCTXWVYaekmotb3hpcyx", "АВЕЅZІКМНОРСТХШѴУаекмотвзнрсух"));
 					}
-					if (mode.getMode() == "Test1") {
-						chat.setMessage(StringUtils.replaceChars(chat.getMessage(), "", ""));
+					if (mode.getMode() == "Roblox") {
+						// https://instafonts.io/font/roblox-swear-bypass
+						chat.setMessage(StringUtils.replaceChars(chat.getMessage(), "qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM", "Ɋ山乇尺ㄒㄚㄩ丨ㄖ卩卂丂ᗪ千Ꮆ卄ﾌҜㄥ乙乂匚ᐯ乃几爪1234567890Ɋ山乇尺ㄒㄚㄩ丨ㄖ卩卂丂ᗪ千Ꮆ卄ﾌҜㄥ乙乂匚ᐯ乃几爪"));
 					}
 					if (mode.getMode() == "Test2") {
 						chat.setMessage(StringUtils.replaceChars(chat.getMessage(), "", ""));

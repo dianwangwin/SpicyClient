@@ -130,6 +130,7 @@ public class Config {
 			this.criticals = new Criticals();
 			this.wtap = new Wtap();
 			this.triggerBot = new TriggerBot();
+			this.chatBypass = new ChatBypass();
 			
 			this.bhop.glideEnabled = new BooleanSetting("Glide", false);
 			this.bhop.hypixelGlideAmount = new NumberSetting("Glide amount", 10, 4, 30, 1);
