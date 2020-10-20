@@ -8,7 +8,10 @@ import org.lwjgl.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.network.EnumPacketDirection;
+import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition;
+import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.potion.Potion;
@@ -42,6 +45,8 @@ public class Bhop extends Module {
 	
 	private static int lagbackCheck = 0;
 	private static long lastLagback = System.currentTimeMillis();
+	
+	private transient boolean toggle = true;
 	
 	public Bhop() {
 		super("Bhop", Keyboard.KEY_NONE, Category.MOVEMENT);
@@ -303,45 +308,32 @@ public class Bhop extends Module {
 						event.onGround = true;
 			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.295F);
 			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.295F) * -1;
+			            
+			            mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
+								mc.thePlayer.posZ);
+			            
 			            event.setCanceled(true);
 					}
 					
 				}
-				else if (mode.is("Test") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
+				else if (mode.is("Test") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed)) {	
 					
-					this.mc.timer.timerSpeed = 1.18f;
+					if (mc.thePlayer.onGround) {
+						
+						mc.thePlayer.jump();
+						
+					}else {
+						mc.thePlayer.motionY = -3;
+						
+						mc.timer.timerSpeed = 1.38f;
+						
+						float f = (float) MovementUtils.getDirection() + 180;
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.35F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.35F) * -1;
+					}
 					
-					if (MovementUtils.isMoving()) {
-			            if (mc.thePlayer.onGround) {
-			            	mc.thePlayer.jump();
-			            	mc.thePlayer.jump();
-			            	mc.thePlayer.jump();
-			            	mc.thePlayer.jump();
-			            	mc.thePlayer.jump();
-			            	mc.thePlayer.jump();
-			            	mc.thePlayer.jump();
-			            	mc.thePlayer.jump();
-			            	mc.thePlayer.jump();
-			            	mc.thePlayer.jump();
-			                
-			                float speed = 0;
-			                
-			                if (MovementUtils.getSpeed() < 0.56f) {
-			                	speed = MovementUtils.getSpeed() * 1.045f;
-			                }else {
-			                	speed = 0.56f;
-			                }
-			                
-			                MovementUtils.strafe(speed);
-			                
-			            } else if (mc.thePlayer.motionY < 0.20) {
-			            	mc.thePlayer.motionY -= 0.02f;
-			            }
-			            MovementUtils.strafe(MovementUtils.getSpeed() * 1.01889f);
-			        } else {
-			            mc.thePlayer.motionZ = 0.0f;
-			            mc.thePlayer.motionX = mc.thePlayer.motionZ;
-			        }
+				}
+				else if (mode.is("Test 3")) {
 					
 				}
 				

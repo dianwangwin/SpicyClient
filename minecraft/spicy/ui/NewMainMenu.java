@@ -96,6 +96,7 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ Hud clock");
         changeLogs.add("+ Trigger Bot");
         changeLogs.add("+ Roblox chat bypass");
+        changeLogs.add("+ Hypixel chat bypass");
         
         // Put the changed things here
         // changeLogs.add("* ");
