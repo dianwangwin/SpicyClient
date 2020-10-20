@@ -95,6 +95,7 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ Criticals");
         changeLogs.add("+ Hud clock");
         changeLogs.add("+ Trigger Bot");
+        changeLogs.add("+ Roblox chat bypass");
         
         // Put the changed things here
         // changeLogs.add("* ");
