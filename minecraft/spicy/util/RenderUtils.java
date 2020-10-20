@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
+import spicy.chatCommands.Command;
 
 public class RenderUtils {
 	
@@ -45,6 +46,16 @@ public class RenderUtils {
 		GL11.glDepthMask(true);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glColor4f(1, 1, 1, 1);
+	}
+	
+	public static void drawLine(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        worldrenderer.begin(3, DefaultVertexFormats.POSITION);
+        worldrenderer.pos(minX, minY, minZ).endVertex();
+        worldrenderer.pos(maxX, maxY, maxZ).endVertex();
+        tessellator.draw();
+		
 	}
 	
 }

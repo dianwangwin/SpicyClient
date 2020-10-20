@@ -58,7 +58,6 @@ public class Config {
 	public NoRotate noRotate = new NoRotate();
 	public SkyColor skyColor = new SkyColor();
 	public Reach reach = new Reach();
-	public ArmorHud armorHud = new ArmorHud();
 	public CsgoSpinbot csgoSpinbot = new CsgoSpinbot();
 	public YawAndPitchSpoof yawAndPitchSpoof = new YawAndPitchSpoof();
 	public Antibot antibot = new Antibot();
@@ -72,6 +71,7 @@ public class Config {
 	public Criticals criticals = new Criticals();
 	public Wtap wtap = new Wtap();
 	public TriggerBot triggerBot = new TriggerBot();
+	public Trail trail = new Trail();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -131,6 +131,7 @@ public class Config {
 			this.wtap = new Wtap();
 			this.triggerBot = new TriggerBot();
 			this.chatBypass = new ChatBypass();
+			this.trail = new Trail();
 			
 			this.bhop.glideEnabled = new BooleanSetting("Glide", false);
 			this.bhop.hypixelGlideAmount = new NumberSetting("Glide amount", 10, 4, 30, 1);

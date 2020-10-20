@@ -21,7 +21,6 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition;
 import net.minecraft.util.ResourceLocation;
 import spicy.SpicyClient;
-import spicy.modules.HudModule;
 import spicy.modules.Module;
 import spicy.modules.Module.Category;
 import spicy.settings.BooleanSetting;

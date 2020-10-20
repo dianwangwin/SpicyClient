@@ -1,6 +1,5 @@
 package net.minecraft.client.renderer;
 
-import com.google.common.base.Predicates;
 import com.google.gson.JsonSyntaxException;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -17,7 +16,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiDownloadTerrain;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.MapItemRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -58,7 +56,6 @@ import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.EnumWorldBlockLayer;
@@ -91,6 +88,8 @@ import org.lwjgl.util.glu.Project;
 import shadersmod.client.Shaders;
 import shadersmod.client.ShadersRender;
 import spicy.SpicyClient;
+import spicy.events.EventType;
+import spicy.events.listeners.EventRender3D;
 import spicy.ui.NewMainMenu;
 
 public class EntityRenderer implements IResourceManagerReloadListener
@@ -99,7 +98,32 @@ public class EntityRenderer implements IResourceManagerReloadListener
     private static final ResourceLocation locationRainPng = new ResourceLocation("textures/environment/rain.png");
     private static final ResourceLocation locationSnowPng = new ResourceLocation("textures/environment/snow.png");
     public static boolean anaglyphEnable;
+    
+	public void fireRenderer(float renderPartialTicks, int position) {
+		boolean extras = true;
+		GlStateManager.pushMatrix();
+		if (extras) {
+			GlStateManager.disableAlpha();
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.disableTexture2D();
+			// GlStateManager.disableDepth();
+		}
+		//((EventRender3D) EventSystem.getInstance(EventRender3D.class)).fire(renderPartialTicks, 0, 0, 0);
+		EventRender3D event = new EventRender3D(renderPartialTicks, 0, 0, 0);
+		event.setType(EventType.PRE);
+		SpicyClient.onEvent(event);
+		if (extras) {
+			GlStateManager.enableTexture2D();
+			// GlStateManager.enableDepth();
+			GlStateManager.disableBlend();
+			GlStateManager.enableAlpha();
+			GlStateManager.cullFace(GL11.GL_BACK);
+		}
+		GlStateManager.popMatrix();
+	}
 
+    
     /** Anaglyph field (0=R, 1=GB) */
     public static int anaglyphField;
 
@@ -1876,7 +1900,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
             this.mc.mcProfiler.endStartSection("aboveClouds");
             this.renderCloudsCheck(renderglobal, partialTicks, pass);
         }
-
+        
+        fireRenderer(partialTicks, pass);
+        
         if (Reflector.ForgeHooksClient_dispatchRenderLast.exists())
         {
             this.mc.mcProfiler.endStartSection("forge_render_last");

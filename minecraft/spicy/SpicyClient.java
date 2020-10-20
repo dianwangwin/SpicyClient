@@ -12,12 +12,7 @@ import com.thealtening.AltService;
 import com.thealtening.AltService.EnumAltService;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.util.Vec3;
 import spicy.ClickGUI.Tab;
-import spicy.chatCommands.Command;
 import spicy.chatCommands.CommandManager;
 import spicy.events.Event;
 import spicy.events.EventType;
@@ -26,16 +21,13 @@ import spicy.events.listeners.EventKey;
 import spicy.files.AltInfo;
 import spicy.files.Config;
 import spicy.files.FileManager;
-import spicy.modules.HudModule;
 import spicy.modules.Module;
 import spicy.modules.Module.Category;
 import spicy.modules.render.*;
 import spicy.ui.HUD;
-import spicy.util.RenderUtils;
 public class SpicyClient {
 	
 	public static CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<Module>();
-	public static CopyOnWriteArrayList<HudModule> hudModules = new CopyOnWriteArrayList<HudModule>();
 	
 	public static HUD hud = new HUD();
 	
@@ -189,14 +181,6 @@ public class SpicyClient {
 			
 		}
 		
-		for (HudModule m : hudModules) {
-			
-			if (m.toggled) {
-				m.onEvent(e);
-			}
-			
-		}
-		
 	}
 	
 	public static void onSettingChange(spicy.settings.SettingChangeEvent e) {
@@ -266,10 +250,7 @@ public class SpicyClient {
 		modules.add(c.criticals);
 		modules.add(c.wtap);
 		modules.add(c.triggerBot);
-		
-		// Hud modules
-		
-		hudModules.add(c.armorHud);
+		modules.add(c.trail);
 		
 		for (Module temp : SpicyClient.modules) {
 			
