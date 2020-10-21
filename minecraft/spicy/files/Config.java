@@ -87,11 +87,6 @@ public class Config {
 	
 	public boolean updateConfig() {
 		
-		this.killaura.targetsSetting.index = this.killaura.targetModeSetting.index;
-		
-		this.bhop.glideEnabled = new BooleanSetting("Glide", false);
-		this.bhop.hypixelGlideAmount = new NumberSetting("Glide amount", 10, 4, 30, 1);
-		
 		Config temp = new Config("temp");
 		if (this.version.equalsIgnoreCase(temp.version)) {
 			return false;
@@ -116,6 +111,7 @@ public class Config {
 			this.killaura.newAutoblock.cycle(false);
 			this.killaura.targetingMode = new ModeSetting("Targeting mode", "Single", "Single", "Switch");
 			this.killaura.switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
+			this.killaura.targetsSetting.index = this.killaura.targetModeSetting.index;
 			this.killaura.targetsSetting = this.killaura.targetModeSetting;
 			
 			this.nofall.noFallMode = new ModeSetting("NoFall Mode", "Vanilla", "Vanilla", "Packet");
@@ -134,9 +130,6 @@ public class Config {
 			this.chatBypass = new ChatBypass();
 			this.trail = new Trail();
 			this.reachNotify = new ReachNotify();
-			
-			this.bhop.glideEnabled = new BooleanSetting("Glide", false);
-			this.bhop.hypixelGlideAmount = new NumberSetting("Glide amount", 10, 4, 30, 1);
 			
 		}
 		

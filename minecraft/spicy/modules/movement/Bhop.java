@@ -168,19 +168,19 @@ public class Bhop extends Module {
 					}
 				}
 				else if (mode.is("Hypixel") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
-					
+
 					if (mc.thePlayer.onGround) {
 						
-						//mc.thePlayer.jump();
-						mc.thePlayer.motionY = 0.42f;
+						mc.thePlayer.jump();
+						//mc.thePlayer.motionY = 0.42f;
 						mc.timer.timerSpeed = 1.28f;
 						
 					}else {
 						
-						mc.timer.timerSpeed = 1.1f;
+						mc.timer.timerSpeed = 1.0f;
 						float f = (float) MovementUtils.getDirection() + 180 - 45;
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.265F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.265F) * -1;
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.26F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.26F) * -1;
 			            
 			            //mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
 								//mc.thePlayer.posZ);
@@ -215,8 +215,8 @@ public class Bhop extends Module {
 					
 					if (mc.thePlayer.onGround) {
 						
-						//mc.thePlayer.jump();
-						mc.thePlayer.motionY = 0.42f;
+						mc.thePlayer.jump();
+						//mc.thePlayer.motionY = 0.42f;
 						mc.timer.timerSpeed = 1.28f;
 						
 					}else {

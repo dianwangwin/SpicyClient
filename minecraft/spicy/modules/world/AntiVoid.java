@@ -27,8 +27,6 @@ public class AntiVoid extends Module {
 	
 	// Not used anymore
 	private ModeSetting mode = new ModeSetting("Mode", "Hypixel", "Hypixel");
-	private NumberSetting packetAmount = new NumberSetting("Packet Amount", 150, 1, 1000, 1);
-	private NumberSetting maxTimeInAir = new NumberSetting("Max time in air", 0.1, 0, 60, 0.1);
 	
 	public AntiVoid() {
 		super("Anti Void", Keyboard.KEY_NONE, Category.BETA);
@@ -38,7 +36,7 @@ public class AntiVoid extends Module {
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
-		this.addSettings(mode, packetAmount, maxTimeInAir);
+		this.addSettings(mode);
 	}
 	
 	public void onEnable() {
@@ -71,12 +69,35 @@ public class AntiVoid extends Module {
 				
 				if (mode.is("Hypixel") && !SpicyClient.config.fly.isEnabled()) {
 					
-			        if (!mc.thePlayer.onGround && mc.thePlayer.fallDistance >= 10.0f) {
+					this.additionalInformation = "Hypixel";
+					
+					boolean isOverVoid = true;
+					BlockPos block = mc.thePlayer.getPosition();
+					
+					for (int i = (int) mc.thePlayer.posY; i > 0; i--) {
+						
+						if (isOverVoid) {
+							
+							if (!(mc.theWorld.getBlockState(block).getBlock() instanceof BlockAir)) {
+								
+								isOverVoid = false;
+								
+							}
+							
+						}
+						
+						block = block.add(0, -1, 0);
+						
+					}
+					
+			        if (!mc.thePlayer.onGround && mc.thePlayer.fallDistance >= 6.0f && isOverVoid) {
 			        	
 			        	Random r = new Random();
 			        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
-			        	mc.thePlayer.motionY = 1;
-			            float f = mc.thePlayer.rotationYaw * 0.017453292F;
+			        	mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 6, mc.thePlayer.posZ);
+			        	mc.thePlayer.fallDistance = 0;
+			        	//mc.thePlayer.motionY = 1;
+			            //float f = mc.thePlayer.rotationYaw * 0.017453292F;
 			            //mc.thePlayer.motionX -= (double)(MathHelper.sin(f) * 0.035f);
 			           //c.thePlayer.motionZ += (double)(MathHelper.cos(f) * 0.035f);
 			            
