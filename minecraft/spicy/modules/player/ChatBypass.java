@@ -54,7 +54,13 @@ public class ChatBypass extends Module {
 				
 				EventChatmessage chat = (EventChatmessage) e;
 				
-				if (!chat.getMessage().startsWith("/")) {
+				if (!chat.getMessage().startsWith("/") || chat.getMessage().startsWith("/shout")) {
+					
+					boolean shout = chat.getMessage().startsWith("/shout");
+					
+					if (shout) {
+						chat.setMessage(chat.getMessage().replaceFirst("/shout", ""));
+					}
 					
 					if (mode.getMode() == "Russian" || mode.is("Russian")) {
 						chat.setMessage(StringUtils.replaceChars(chat.getMessage(), "ABESZIKMHOPCTXWVYaekmotb3hpcyx", "АВЕЅZІКМНОРСТХШѴУаекмотвзнрсух"));
@@ -68,6 +74,10 @@ public class ChatBypass extends Module {
 					}
 					if (mode.getMode() == "Test3" || mode.is("Test3")) {
 						chat.setMessage(StringUtils.replaceChars(chat.getMessage(), "", ""));
+					}
+					
+					if (shout) {
+						chat.setMessage("/shout " + chat.getMessage());
 					}
 					
 				}

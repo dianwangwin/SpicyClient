@@ -2,6 +2,7 @@ package spicy.modules.movement;
 
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
@@ -36,10 +37,6 @@ public class Bhop extends Module {
 	
 	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "PvpLands", "Hypixel", "Test", "Test 2", "Test 3");
 	
-	// For the hypixel glide
-	public BooleanSetting glideEnabled = new BooleanSetting("Glide", false);
-	public NumberSetting hypixelGlideAmount = new NumberSetting("Glide amount", 10, 4, 30, 1);
-	
 	private static double lastY;
 	private static float rotate = 180;
 	
@@ -56,66 +53,7 @@ public class Bhop extends Module {
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
-		this.addSettings(glideEnabled, hypixelGlideAmount, mode);
-	}
-	
-	@Override
-	public void onSettingChange(SettingChangeEvent e) {
-		
-		if (e.setting != null) {
-			
-			if (e.setting.equals(mode)) {
-				
-				if (mode.is("Hypixel")) {
-					
-					if (!settings.contains(glideEnabled)) {
-						settings.add(glideEnabled);
-						this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
-					}
-					
-					if (glideEnabled.enabled) {
-						if (!settings.contains(hypixelGlideAmount)) {
-							settings.add(hypixelGlideAmount);
-							this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
-						}
-					}
-					
-				}else {
-					
-					if (settings.contains(glideEnabled)) {
-						settings.remove(glideEnabled);
-						this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
-					}
-					if (settings.contains(hypixelGlideAmount)) {
-						settings.remove(hypixelGlideAmount);
-						this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
-					}
-					
-				}
-				
-			}
-			else if (e.setting.equals(glideEnabled)) {
-				
-				if (glideEnabled.enabled) {
-					
-					if (!settings.contains(hypixelGlideAmount)) {
-						settings.add(hypixelGlideAmount);
-						this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
-					}
-					
-				}else {
-					
-					if (settings.contains(hypixelGlideAmount)) {
-						settings.remove(hypixelGlideAmount);
-						this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
-					}
-					
-				}
-				
-			}
-			
-		}
-		
+		this.addSettings(mode);
 	}
 	
 	public void onEnable() {
@@ -130,6 +68,11 @@ public class Bhop extends Module {
 	
 	private int status = 0;
 	private boolean boosted = false;
+	
+    private double speed;
+    private double lastDist;
+    public static int stage;
+
 	
 	public void onEvent(Event e) {
 		
@@ -226,93 +169,28 @@ public class Bhop extends Module {
 				}
 				else if (mode.is("Hypixel") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
 					
-					mc.timer.ticksPerSecond = 23.2f;
-					
-					rotate = 180;
-					
-					if (!mc.gameSettings.keyBindForward.pressed && !mc.gameSettings.keyBindBack.pressed && mc.gameSettings.keyBindRight.pressed && mc.gameSettings.keyBindLeft.pressed) {
+					if (mc.thePlayer.onGround) {
 						
-					}
-					else if (mc.thePlayer.onGround) {
-						mc.thePlayer.setSprinting(true);
-						
-						mc.thePlayer.motionY += 0.5;
-						
-			            //mc.thePlayer.jump();
-					}
-					else if (mc.thePlayer.motionY <= -0.00001 && mc.thePlayer.fallDistance < 5 && glideEnabled.enabled) {
-						
-						mc.thePlayer.motionY -= mc.thePlayer.motionY / hypixelGlideAmount.getValue();
-						
-						// Debug crap
-						// Command.sendPrivateChatMessage(mc.thePlayer.motionY / 5 + "");
-						
-					}
-					
-					if (mc.gameSettings.keyBindLeft.pressed && !mc.gameSettings.keyBindRight.pressed) {
-						
-						if (!mc.gameSettings.keyBindForward.pressed && !mc.gameSettings.keyBindRight.pressed && !mc.gameSettings.keyBindBack.pressed) {
-							rotate -= 90;
-						}
-						else if (mc.gameSettings.keyBindForward.pressed) {
-							rotate -= 10;
-						}else {
-							rotate += 45;
-						}
-						
-					}
-					
-					if (mc.gameSettings.keyBindRight.pressed && !mc.gameSettings.keyBindLeft.pressed) {
-						
-						if (!mc.gameSettings.keyBindForward.pressed && !mc.gameSettings.keyBindLeft.pressed && !mc.gameSettings.keyBindBack.pressed) {
-							rotate += 90;
-						}
-						else if (mc.gameSettings.keyBindForward.pressed) {
-							rotate += 90;
-						}else {
-							rotate -= 45;
-						}
-						
-					}
-					
-					if (mc.gameSettings.keyBindBack.pressed) {
-						
-						if (mc.gameSettings.keyBindForward.pressed) {
-							rotate += 45;
-						}else {
-							rotate -= 180;
-						}
-						
-					}
-					
-					if (mc.gameSettings.keyBindForward.pressed) {
-						
-						if (rotate != 180) {
-							
-							if (rotate < 0) {
-								rotate += 45;
-							}else {
-								rotate -= 45;
-							}
-							
-						}
-						
-					}
-					
-					float f = (mc.thePlayer.rotationYaw + rotate) * 0.017453292F;
-					
-					if (!mc.gameSettings.keyBindForward.pressed && !mc.gameSettings.keyBindBack.pressed && mc.gameSettings.keyBindRight.pressed && mc.gameSettings.keyBindLeft.pressed) {
+						//mc.thePlayer.jump();
+						mc.thePlayer.motionY = 0.42f;
+						mc.timer.timerSpeed = 1.28f;
 						
 					}else {
-						mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
-						event.onGround = true;
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.295F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.295F) * -1;
+						
+						mc.timer.timerSpeed = 1.1f;
+						float f = (float) MovementUtils.getDirection() + 180 - 45;
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.265F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.265F) * -1;
 			            
-			            mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
-								mc.thePlayer.posZ);
+			            //mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
+								//mc.thePlayer.posZ);
+			            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 			            
-			            event.setCanceled(true);
+					}
+					
+					
+					if (mc.thePlayer.fallDistance > 5) {
+						mc.timer.timerSpeed = 1f;
 					}
 					
 				}
@@ -333,7 +211,31 @@ public class Bhop extends Module {
 					}
 					
 				}
-				else if (mode.is("Test 3")) {
+				else if (mode.is("Test 3") && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
+					
+					if (mc.thePlayer.onGround) {
+						
+						//mc.thePlayer.jump();
+						mc.thePlayer.motionY = 0.42f;
+						mc.timer.timerSpeed = 1.28f;
+						
+					}else {
+						
+						mc.timer.timerSpeed = 1.0f;
+						float f = (float) MovementUtils.getDirection() + 180 - 45;
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.26F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.26F) * -1;
+			            
+			            //mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
+								//mc.thePlayer.posZ);
+			            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
+			            
+					}
+					
+					
+					if (mc.thePlayer.fallDistance > 5) {
+						mc.timer.timerSpeed = 1f;
+					}
 					
 				}
 				

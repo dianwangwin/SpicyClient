@@ -251,6 +251,7 @@ public class SpicyClient {
 		modules.add(c.wtap);
 		modules.add(c.triggerBot);
 		modules.add(c.trail);
+		modules.add(c.reachNotify);
 		
 		for (Module temp : SpicyClient.modules) {
 			

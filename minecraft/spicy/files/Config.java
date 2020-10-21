@@ -72,6 +72,7 @@ public class Config {
 	public Wtap wtap = new Wtap();
 	public TriggerBot triggerBot = new TriggerBot();
 	public Trail trail = new Trail();
+	public ReachNotify reachNotify = new ReachNotify();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -132,6 +133,7 @@ public class Config {
 			this.triggerBot = new TriggerBot();
 			this.chatBypass = new ChatBypass();
 			this.trail = new Trail();
+			this.reachNotify = new ReachNotify();
 			
 			this.bhop.glideEnabled = new BooleanSetting("Glide", false);
 			this.bhop.hypixelGlideAmount = new NumberSetting("Glide amount", 10, 4, 30, 1);
@@ -155,11 +157,9 @@ public class Config {
 		
 		this.clientVersion.replaceAll("\\s+","");
 		
-		if (this.clientVersion != "") {
-			
+		if (this.clientVersion == this.version) {
 			this.clientName = "SpicyClient ";
 			this.clientVersion = "B3 Beta";
-			
 		}
 		
 		SpicyClient.loadConfig(this);

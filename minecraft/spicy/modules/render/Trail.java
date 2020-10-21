@@ -33,21 +33,8 @@ public class Trail extends Module {
 	public void onEvent(Event e) {
 		
 		
-		if (e instanceof EventPlayerRender) {
+		if (e instanceof EventRender3D) {
 			
-			EventPlayerRender event = (EventPlayerRender) e;
-			
-			AbstractClientPlayer player = event.entity;
-			
-			if (player == mc.thePlayer) {
-				
-				return;
-				
-			}
-			
-			RenderUtils.drawLine(mc.thePlayer.boundingBox.minX, mc.thePlayer.boundingBox.minY, mc.thePlayer.boundingBox.minZ, player.boundingBox.minX, player.boundingBox.minY, player.boundingBox.minZ);
-			
-			/*
 			//((EventRender3D) e).reset();
 			EventRender3D render3d = (EventRender3D) e;
 			
@@ -68,7 +55,7 @@ public class Trail extends Module {
 					lastLoc.reset();
 					Loc.reset();
 					//Command.sendPrivateChatMessage(lastLoc.getX() + lastLoc.getY() + lastLoc.getZ() + Loc.getX() + Loc.getY() + Loc.getZ() + "");
-					RenderUtils.drawLine(lastLoc.getX(), lastLoc.getY(), lastLoc.getZ(), Loc.getX(), Loc.getY(), Loc.getZ());
+					//RenderUtils.drawLine(lastLoc.getX(), lastLoc.getY(), lastLoc.getZ(), Loc.getX(), Loc.getY(), Loc.getZ());
 					lastLoc = Loc;
 				}
 				
@@ -76,7 +63,7 @@ public class Trail extends Module {
 			
 			//RenderUtils.drawLine(render3d.getX(), render3d.getY(), render3d.getZ(), render3d.getX(), render3d.getY() + 10, render3d.getZ());
 			//RenderUtils.drawLine(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, mc.thePlayer.posX, mc.thePlayer.posY + 100000, mc.thePlayer.posZ);
-			*/
+			
 		}
 		
 	}
