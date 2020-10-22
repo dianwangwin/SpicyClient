@@ -99,7 +99,7 @@ public class AntiVoid extends Module {
 			        	Random r = new Random();
 			        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 			        	mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 6, mc.thePlayer.posZ);
-			        	mc.thePlayer.fallDistance = 0;
+			        	mc.thePlayer.fallDistance = -1;
 			        	//mc.thePlayer.motionY = 1;
 			            //float f = mc.thePlayer.rotationYaw * 0.017453292F;
 			            //mc.thePlayer.motionX -= (double)(MathHelper.sin(f) * 0.035f);
