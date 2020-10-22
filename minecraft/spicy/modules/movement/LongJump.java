@@ -6,7 +6,6 @@ import net.minecraft.util.MathHelper;
 import spicy.SpicyClient;
 import spicy.events.Event;
 import spicy.events.listeners.EventMotion;
-import spicy.events.listeners.EventPlayerUseItem;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
 import spicy.modules.Module.Category;

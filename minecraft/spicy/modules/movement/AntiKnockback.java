@@ -7,7 +7,6 @@ import net.minecraft.util.MathHelper;
 import spicy.events.Event;
 import spicy.events.listeners.EventMotion;
 import spicy.events.listeners.EventPacket;
-import spicy.events.listeners.EventPlayerUseItem;
 import spicy.events.listeners.EventReceivedKnockbackPacket;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;

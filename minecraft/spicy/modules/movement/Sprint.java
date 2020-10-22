@@ -3,7 +3,6 @@ package spicy.modules.movement;
 import org.lwjgl.input.Keyboard;
 
 import spicy.events.Event;
-import spicy.events.listeners.EventPlayerUseItem;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
 

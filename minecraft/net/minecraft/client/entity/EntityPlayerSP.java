@@ -55,7 +55,6 @@ import spicy.SpicyClient;
 import spicy.events.EventType;
 import spicy.events.listeners.EventChatmessage;
 import spicy.events.listeners.EventMotion;
-import spicy.events.listeners.EventPlayerUseItem;
 import spicy.events.listeners.EventUpdate;
 
 public class EntityPlayerSP extends AbstractClientPlayer
@@ -818,20 +817,12 @@ public class EntityPlayerSP extends AbstractClientPlayer
         boolean flag2 = this.movementInput.moveForward >= f;
         this.movementInput.updatePlayerMoveState();
 
-        if (this.isUsingItem() && !this.isRiding())
+        if (this.isUsingItem() && !this.isRiding() && !SpicyClient.config.noSlow.isEnabled())
         {
         	
-        	EventPlayerUseItem playerUseItem = new EventPlayerUseItem();
-        	playerUseItem.setType(EventType.PRE);
-        	SpicyClient.onEvent(playerUseItem);
-        	
-        	if (playerUseItem.isCanceled()) {
-        		
-        	}else {
-        		this.movementInput.moveStrafe *= 0.2F;
-                this.movementInput.moveForward *= 0.2F;
-                this.sprintToggleTimer = 0;
-        	}
+    		this.movementInput.moveStrafe *= 0.2F;
+            this.movementInput.moveForward *= 0.2F;
+            this.sprintToggleTimer = 0;
         	
         }
 

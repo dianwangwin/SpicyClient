@@ -53,9 +53,13 @@ public class AntiVoid extends Module {
 			
 			if (e.isPre()) {
 				
-				if (((EventPacket) e).packet instanceof S08PacketPlayerPosLook) {
-					
-					mc.thePlayer.fallDistance = 0;
+				try {
+					if (((EventPacket) e).packet instanceof S08PacketPlayerPosLook) {
+						
+						mc.thePlayer.fallDistance = 0;
+						
+					}
+				} catch (NullPointerException e2) {
 					
 				}
 				

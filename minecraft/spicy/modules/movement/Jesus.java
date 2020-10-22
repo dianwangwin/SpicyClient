@@ -9,7 +9,6 @@ import net.minecraft.util.AxisAlignedBB;
 import spicy.events.Event;
 import spicy.events.listeners.EventGetLiquidHitbox;
 import spicy.events.listeners.EventMotion;
-import spicy.events.listeners.EventPlayerUseItem;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
 
