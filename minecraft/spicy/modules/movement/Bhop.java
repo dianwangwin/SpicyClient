@@ -194,20 +194,30 @@ public class Bhop extends Module {
 					}
 					
 				}
-				else if (mode.is("Test") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed)) {	
-					
+				else if (mode.is("Test") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {	
+
 					if (mc.thePlayer.onGround) {
 						
 						mc.thePlayer.jump();
+						//mc.thePlayer.motionY = 0.42f;
+						mc.timer.timerSpeed = 1.28f;
 						
 					}else {
-						mc.thePlayer.motionY = -3;
 						
-						mc.timer.timerSpeed = 1.38f;
-						
-						float f = (float) MovementUtils.getDirection() + 180;
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.35F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.35F) * -1;
+						mc.timer.timerSpeed = 1.0f;
+						float f = (float) MovementUtils.getDirection() + 180 - 45;
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.26F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.26F) * -1;
+			            
+			            //mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
+								//mc.thePlayer.posZ);
+			            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
+			            
+					}
+					
+					
+					if (mc.thePlayer.fallDistance > 5) {
+						mc.timer.timerSpeed = 1f;
 					}
 					
 				}

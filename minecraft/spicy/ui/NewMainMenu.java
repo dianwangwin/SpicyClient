@@ -104,6 +104,7 @@ public class NewMainMenu extends GuiScreen {
         // changeLogs.add("* ");
         changeLogs.add("* Improved killaura");
         changeLogs.add("* More meme modules");
+        changeLogs.add("* Improved the tabgui");
         
         // Put the removed things here
         // changeLogs.add("- ");

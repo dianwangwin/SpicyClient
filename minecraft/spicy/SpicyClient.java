@@ -135,6 +135,10 @@ public class SpicyClient {
 	@SuppressWarnings("rawtypes")
 	public static void onEvent(Event e) {
 		
+		if (Minecraft.getMinecraft().thePlayer == null) {
+			return;
+		}
+		
 		for (Module m : modules) {
 			
 			if (e instanceof EventChatmessage) {

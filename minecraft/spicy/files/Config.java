@@ -114,6 +114,7 @@ public class Config {
 			this.killaura.targetsSetting.index = this.killaura.targetModeSetting.index;
 			this.killaura.targetsSetting = this.killaura.targetModeSetting;
 			this.killaura.rotationSetting = new ModeSetting("Rotation setting", "lock", "lock", "smooth");
+			this.killaura.hitOnHurtTime = new BooleanSetting("Hit on hurt time", false);
 			
 			this.nofall.noFallMode = new ModeSetting("NoFall Mode", "Vanilla", "Vanilla", "Packet");
 			this.nofall.noFallMode.cycle(false);
@@ -131,6 +132,7 @@ public class Config {
 			this.chatBypass = new ChatBypass();
 			this.trail = new Trail();
 			this.reachNotify = new ReachNotify();
+			this.tabgui.mode = new ModeSetting("Mode", "compressed", "compressed", "original");
 			
 		}
 		

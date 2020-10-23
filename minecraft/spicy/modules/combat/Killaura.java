@@ -1,5 +1,6 @@
 package spicy.modules.combat;
 
+import java.awt.Color;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
@@ -7,6 +8,12 @@ import java.util.stream.Collectors;
 
 import org.lwjgl.input.Keyboard;
 
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,6 +33,7 @@ import spicy.SpicyClient;
 import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventMotion;
+import spicy.events.listeners.EventRenderGUI;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
 import spicy.modules.movement.Sprint;
@@ -50,6 +58,7 @@ public class Killaura extends Module {
 	public ModeSetting newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
 	public ModeSetting targetingMode = new ModeSetting("Targeting mode", "Single", "Single", "Switch");
 	public NumberSetting switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
+	public BooleanSetting hitOnHurtTime = new BooleanSetting("Hit on hurt time", false);
 	
 	private static boolean blocking = false;
 	
@@ -72,7 +81,7 @@ public class Killaura extends Module {
 	public void resetSettings() {
 		this.settings.clear();
 		targetsSetting.index = targetsSetting.modes.size() - 1;
-		this.addSettings(range, aps, noSwing, switchTime, disableOnDeath, dontHitDeadEntitys, targetsSetting, newAutoblock, targetingMode, rotationSetting);
+		this.addSettings(range, aps, noSwing, switchTime, disableOnDeath, dontHitDeadEntitys, targetsSetting, newAutoblock, targetingMode, rotationSetting, hitOnHurtTime);
 	}
 	
 	public void onEnable() {
@@ -113,6 +122,57 @@ public class Killaura extends Module {
 	}
 	
 	public void onEvent(Event e) {
+		
+		if (e instanceof EventRenderGUI && target != null) {
+			
+			/*
+			 * 
+			 * THIS TAKEN FROM GITHUB
+			 * This was made by KtntKot
+			 * https://github.com/KtntKot
+			 * 
+			 */
+			
+			ScaledResolution sr = new ScaledResolution(mc); 
+			FontRenderer fr = mc.fontRendererObj;
+			
+			Gui.drawRect((sr.getScaledWidth()/1.8f - 5) - 40, (sr.getScaledHeight()/1.5f - 5), (sr.getScaledWidth()/1.8f)+ 120, (sr.getScaledHeight()/1.5f)+40, 0x50000000);
+			//Gui.drawRect((sr.getScaledWidth()/1.8f - 6), (sr.getScaledHeight()/1.5f - 6), (sr.getScaledWidth()/1.8f)+ 121, (sr.getScaledHeight()/1.5f)+41, 0x50000000);
+			Gui.drawRect((sr.getScaledWidth()/1.8f - 4 ), (sr.getScaledHeight()/1.5f - 2), (sr.getScaledWidth()/1.8f - 3), (sr.getScaledHeight()/1.5f)+37, 0xffff0000);
+			
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+			GuiInventory.drawEntityOnScreen((int)(sr.getScaledWidth()/1.8f - 5 - 20), (int)(sr.getScaledHeight()/1.5f)+38, 19, 1f, 1f, target);
+			
+			fr.drawString(target.getName(), (sr.getScaledWidth()/1.8f), (sr.getScaledHeight()/1.5f), -1, false);
+			fr.drawString(" HP: " + (int)target.getHealth() + " HurtTime: " + target.hurtTime, (sr.getScaledWidth()/1.8f - 4.5f), (sr.getScaledHeight()/1.5f + fr.FONT_HEIGHT + 2), -1, false);
+			if(mc.thePlayer.getHealth() > target.getHealth())
+			{
+				fr.drawString(" Win chance: Winning ", (sr.getScaledWidth()/1.8f - 4.5f), (sr.getScaledHeight()/1.5f + fr.FONT_HEIGHT + 2 + 10), 0x1fff4e, false);
+			}else if (mc.thePlayer.getHealth() < target.getHealth())
+			{
+				if((target.getHealth() - mc.thePlayer.getHealth()) < 17)
+				{
+					fr.drawString(" Win chance: Losing ", (sr.getScaledWidth()/1.8f - 4.5f), (sr.getScaledHeight()/1.5f + fr.FONT_HEIGHT + 2 + 10), 0xff1f1f, false);
+				}
+				
+				if((target.getHealth() - mc.thePlayer.getHealth()) > 17)
+				{
+					fr.drawString(" Win chance: Lost ", (sr.getScaledWidth()/1.8f - 4.5f), (sr.getScaledHeight()/1.5f + fr.FONT_HEIGHT + 2 + 10), 0xff1f1f, false);
+				}
+			}else if (mc.thePlayer.getHealth() == target.getHealth())
+			{
+				fr.drawString(" Win chance: 50/50 ", (sr.getScaledWidth()/1.8f - 4.5f), (sr.getScaledHeight()/1.5f + fr.FONT_HEIGHT + 2 + 10), 0x1fff4e, false);
+			}
+			
+			/*
+			 * 
+			 * THAT TAKEN FROM GITHUB
+			 * That was made by KtntKot
+			 * https://github.com/KtntKot
+			 * 
+			 */
+			
+		}
 		
 		if (e instanceof EventUpdate) {
 			
@@ -284,6 +344,12 @@ public class Killaura extends Module {
                         
 					}
 					
+					if (hitOnHurtTime.isEnabled()) {
+						if (target.hurtTime > 2) {
+							return;
+						}
+					}
+					
 					if (timer.hasTimeElapsed((long) (1000/aps.getValue()), true)) {
 						
 						if (rotationSetting.is("smooth") || rotationSetting.getMode() == "smooth") {
@@ -438,8 +504,8 @@ public class Killaura extends Module {
     private void getSmoothRotations(EventMotion e) throws NullPointerException {
     	
     	// Value 0.25 to 10
-        float yawFactor = 60;
-        float pitchFactor = 60;
+        float yawFactor = 50;
+        float pitchFactor = 50;
         
         // Value 0.01 to 1
         double xz = 0;
