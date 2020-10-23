@@ -54,11 +54,15 @@ public class NewMainMenu extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		
+        Config temp = new Config("temp");
+        String name = temp.clientName;
+        String version = temp.clientVersion;
+		
 		drawRect(0, 0, this.width, this.height, 0xff36393f);
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(3.5, 3.5, 1);
-		drawCenteredString(mc.fontRendererObj, SpicyClient.config.clientName + SpicyClient.config.clientVersion, (this.width / 2) / 3.5f, (this.height / 10) / 3.5f, 0xff7289da);
+		drawCenteredString(mc.fontRendererObj, name + version, (this.width / 2) / 3.5f, (this.height / 10) / 3.5f, 0xff7289da);
 		GlStateManager.popMatrix();
 		
 		GlStateManager.pushMatrix();
@@ -75,22 +79,20 @@ public class NewMainMenu extends GuiScreen {
         
         drawRect((this.width / 2) - 20, (this.height / 2) - 30, this.width, (this.height / 2) + 160, 0xff202225);
         
-        Config temp = new Config("temp");
-        String version = temp.clientVersion;
-        
         ArrayList<String> changeLogs = new ArrayList<String>();
         changeLogs.add("Change logs for SpicyClient " + version);
         
         // Put the added things here
         // changeLogs.add("+ ");
         changeLogs.add("+ Hypixel blink fly");
+        changeLogs.add("+ Hypixel bhop");
+        changeLogs.add("+ Hypixel antivoid");
         changeLogs.add("+ Payback mode for pvplands killsults");
         changeLogs.add("+ Vanilla nofall");
         changeLogs.add("+ Vanilla and packet autolog");
         changeLogs.add("+ Jesus");
         changeLogs.add("+ Phase");
         changeLogs.add("+ PlayerESP");
-        changeLogs.add("+ Hypixel bhop");
         changeLogs.add("+ WTap");
         changeLogs.add("+ Criticals");
         changeLogs.add("+ Hud clock");

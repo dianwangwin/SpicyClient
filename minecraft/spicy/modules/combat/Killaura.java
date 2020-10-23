@@ -21,7 +21,9 @@ import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import spicy.SpicyClient;
+import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventMotion;
 import spicy.events.listeners.EventUpdate;
@@ -31,23 +33,27 @@ import spicy.settings.BooleanSetting;
 import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
 import spicy.settings.SettingChangeEvent;
+import spicy.util.RotationUtils;
 import spicy.util.Timer;
 
 public class Killaura extends Module {
 	
 	public static EntityLivingBase target = null;
 	
-	private NumberSetting range = new NumberSetting("Range", 4, 1, 6, 0.1);
+	public NumberSetting range = new NumberSetting("Range", 4, 1, 6, 0.1);
 	private NumberSetting aps = new NumberSetting("APS", 10, 0, 20, 1);
 	private BooleanSetting noSwing = new BooleanSetting("NoSwing", false);
 	private BooleanSetting disableOnDeath = new BooleanSetting("DisableOnDeath", false);
 	public BooleanSetting dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", true);
 	public ModeSetting targetsSetting = new ModeSetting("Targets", "Players", "Players", "Animals", "Mobs", "Everything");
+	public ModeSetting rotationSetting = new ModeSetting("Rotation setting", "lock", "lock", "smooth");
 	public ModeSetting newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
 	public ModeSetting targetingMode = new ModeSetting("Targeting mode", "Single", "Single", "Switch");
 	public NumberSetting switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
 	
 	private static boolean blocking = false;
+	
+	private static transient float lastSmoothYaw, lastSmoothPitch;
 	
 	// These settings are not used anymore but are still here so you can update old configs
 	private BooleanSetting autoblock = new BooleanSetting("Autoblock", false);
@@ -66,7 +72,7 @@ public class Killaura extends Module {
 	public void resetSettings() {
 		this.settings.clear();
 		targetsSetting.index = targetsSetting.modes.size() - 1;
-		this.addSettings(range, aps, noSwing, switchTime, disableOnDeath, dontHitDeadEntitys, targetsSetting, newAutoblock, targetingMode);
+		this.addSettings(range, aps, noSwing, switchTime, disableOnDeath, dontHitDeadEntitys, targetsSetting, newAutoblock, targetingMode, rotationSetting);
 	}
 	
 	public void onEnable() {
@@ -112,7 +118,7 @@ public class Killaura extends Module {
 			
 			if (e.isPre()) {
 				
-				this.additionalInformation = targetingMode.getMode();
+				this.additionalInformation = targetingMode.getMode() + SpicyClient.hud.separator + rotationSetting.getMode();
 				
 			}
 			
@@ -234,8 +240,34 @@ public class Killaura extends Module {
 						
 					}else {
 						
-						event.setYaw(getRotations(target)[0]+10);
-						event.setPitch(getRotations(target)[1]);
+						if (rotationSetting.is("lock") || rotationSetting.getMode() == "lock") {
+							
+							//event.setYaw(getRotations(target)[0]+10);
+							//event.setPitch(getRotations(target)[1]);
+							
+                            float[] rotations = RotationUtils.getRotations(target);
+                            event.setYaw(rotations[0]);
+                            event.setPitch(rotations[1]);
+							
+						}
+						else if (rotationSetting.is("smooth") || rotationSetting.getMode() == "smooth") {
+							
+							try {
+								getSmoothRotations(event);
+							} catch (NullPointerException e2) {
+								
+								this.lastSmoothPitch = event.getPitch();
+								this.lastSmoothYaw = event.getYaw();
+								
+								try {
+									getSmoothRotations(event);
+								} catch (NullPointerException e3) {
+									return;
+								}
+								
+							}
+							
+						}
 						
 					}
 					
@@ -243,9 +275,26 @@ public class Killaura extends Module {
 					
 					startBlocking(false);
 					
-					mc.thePlayer.rotationYawHead = getRotations(target)[0];
+					if (rotationSetting.is("lock") || rotationSetting.getMode() == "lock") {
+						
+                        float[] rotations = RotationUtils.getRotations(target);
+                        mc.thePlayer.rotationYawHead = rotations[0];
+                        
+						//mc.thePlayer.rotationYawHead = getRotations(target)[0];
+                        
+					}
 					
 					if (timer.hasTimeElapsed((long) (1000/aps.getValue()), true)) {
+						
+						if (rotationSetting.is("smooth") || rotationSetting.getMode() == "smooth") {
+							
+							if (mc.objectMouseOver.typeOfHit.equals(MovingObjectType.ENTITY)) {
+								
+								
+								
+							}
+							
+						}
 						
 						if (s.toggled) {
 							mc.thePlayer.setSprinting(true);
@@ -383,6 +432,53 @@ public class Killaura extends Module {
             val /= str.length();
         }
         return new BlockPos(val, -val % 255, val);
+    }
+    
+
+    private void getSmoothRotations(EventMotion e) throws NullPointerException {
+    	
+    	// Value 0.25 to 10
+        float yawFactor = 60;
+        float pitchFactor = 60;
+        
+        // Value 0.01 to 1
+        double xz = 0;
+        double y = 0;
+        float targetYaw = RotationUtils.getYawChange(target.posX + randomNumber() * xz, target.posZ + randomNumber() * xz, this.lastSmoothYaw, e.getX(), e.getZ());
+
+        if (targetYaw > 0 && targetYaw > yawFactor) {
+            //mc.thePlayer.rotationYaw += yawFactor;
+        	e.setYaw(this.lastSmoothYaw += yawFactor);
+        } else if (targetYaw < 0 && targetYaw < -yawFactor) {
+            //mc.thePlayer.rotationYaw -= yawFactor;
+        	e.setYaw(this.lastSmoothYaw -= yawFactor);
+        } else {
+            //mc.thePlayer.rotationYaw += targetYaw;
+            e.setYaw(this.lastSmoothYaw += targetYaw);
+        }
+
+        float targetPitch = RotationUtils.getPitchChange(target, target.posY + randomNumber() * y, this.lastSmoothPitch, e.getX(), e.getZ());
+
+        if (targetPitch > 0 && targetPitch > pitchFactor) {
+            //mc.thePlayer.rotationPitch += pitchFactor;
+        	e.setPitch(this.lastSmoothPitch += pitchFactor);
+        } else if (targetPitch < 0 && targetPitch < -pitchFactor) {
+            //mc.thePlayer.rotationPitch -= pitchFactor;
+        	e.setPitch(this.lastSmoothPitch -= pitchFactor);
+        } else {
+            //mc.thePlayer.rotationPitch += targetPitch;
+        	e.setPitch(this.lastSmoothPitch += targetPitch);
+        }
+        
+        this.lastSmoothYaw = e.yaw;
+        this.lastSmoothPitch = e.pitch;
+        
+        //mc.thePlayer.rotationYawHead = e.yaw;
+        
+    }
+    
+    private int randomNumber() {
+        return -1 + (int) (Math.random() * ((1 - (-1)) + 1));
     }
     
 }

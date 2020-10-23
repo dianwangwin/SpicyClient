@@ -113,6 +113,7 @@ public class Config {
 			this.killaura.switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
 			this.killaura.targetsSetting.index = this.killaura.targetModeSetting.index;
 			this.killaura.targetsSetting = this.killaura.targetModeSetting;
+			this.killaura.rotationSetting = new ModeSetting("Rotation setting", "lock", "lock", "smooth");
 			
 			this.nofall.noFallMode = new ModeSetting("NoFall Mode", "Vanilla", "Vanilla", "Packet");
 			this.nofall.noFallMode.cycle(false);

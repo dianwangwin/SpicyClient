@@ -211,30 +211,39 @@ public class Bhop extends Module {
 					}
 					
 				}
-				else if (mode.is("Test 3") && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
+				else if (mode.is("Test 3") && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed)) {
 					
 					if (mc.thePlayer.onGround) {
 						
 						mc.thePlayer.jump();
+						mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 						//mc.thePlayer.motionY = 0.42f;
-						mc.timer.timerSpeed = 1.28f;
 						
 					}else {
 						
-						mc.timer.timerSpeed = 1.0f;
+						mc.timer.timerSpeed = 1f;
+						//mc.thePlayer.moveStrafing *= 10;
 						float f = (float) MovementUtils.getDirection() + 180 - 45;
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.26F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.26F) * -1;
-			            
+			            mc.thePlayer.motionX += (double)(MathHelper.sin(f) * 0.006F);
+			            mc.thePlayer.motionZ += (double)(MathHelper.cos(f) * 0.006F) * -1;
+			            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer());
+			            double d = mc.thePlayer.motionX + mc.thePlayer.motionZ;
+			            if (d < 0) {
+			            	d *= -1;
+			            }
+			            //Command.sendPrivateChatMessage(d + "");
+			             
 			            //mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
 								//mc.thePlayer.posZ);
 			            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
+						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
+								//mc.thePlayer.posZ);
 			            
 					}
 					
 					
-					if (mc.thePlayer.fallDistance > 5) {
-						mc.timer.timerSpeed = 1f;
+					if (mc.thePlayer.fallDistance > 0.01 && mc.thePlayer.fallDistance < 3) {
+						
 					}
 					
 				}

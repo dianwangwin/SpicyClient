@@ -38,11 +38,14 @@ public class Fly extends Module {
 	public static int fly_keybind = Keyboard.KEY_F;
 
 	public static transient int hypixelStage = 0;
-
+	public static transient boolean hypixelDamaged = false;
+	public static transient float lastPlayerHealth;
+	
 	public void onEnable() {
 		if (mode.getMode().equals("Vanilla")) {
 			original_fly_speed = mc.thePlayer.capabilities.getFlySpeed();
 		} else if (mode.getMode().equals("Hypixel")) {
+			
 			hypixelStartTime = (long) (System.currentTimeMillis() + (3 * 1000));
 			if (!SpicyClient.config.blink.isEnabled()) {
 				SpicyClient.config.blink.toggle();
@@ -173,5 +176,25 @@ public class Fly extends Module {
 		}
 
 	}
-
+	
+	// Found on github
+	
+    //Damage method. It can only take 1 heart of damage.
+    //2020/2/3 Jump Potion supported.
+    public void damage(){
+        double fallDistance = 0;
+        double offset = 0.41999998688698;
+        while (fallDistance < 4)
+        {
+            sendPacket(offset,false);
+            sendPacket(0, fallDistance + offset >= 4);
+            fallDistance += offset;
+        }
+    }
+    void sendPacket(double addY,boolean ground){
+        mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(
+                mc.thePlayer.posX,mc.thePlayer.posY+addY,mc.thePlayer.posZ,ground
+        ));
+    }
+	
 }
