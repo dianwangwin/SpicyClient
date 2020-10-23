@@ -132,7 +132,7 @@ public class Config {
 			this.chatBypass = new ChatBypass();
 			this.trail = new Trail();
 			this.reachNotify = new ReachNotify();
-			this.tabgui.mode = new ModeSetting("Mode", "compressed", "compressed", "original");
+			this.tabgui.mode = new ModeSetting("Mode", "original", "compressed", "original");
 			
 		}
 		

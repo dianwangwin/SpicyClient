@@ -1,18 +1,23 @@
 package spicy.modules.movement;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 
 import com.ibm.icu.math.BigDecimal;
 
+import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition;
+import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook;
 import net.minecraft.util.MathHelper;
 import spicy.SpicyClient;
 import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventMotion;
+import spicy.events.listeners.EventSendPacket;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
 import spicy.settings.ModeSetting;
@@ -23,7 +28,10 @@ public class Fly extends Module {
 
 	public NumberSetting speed = new NumberSetting("Speed", 0.1f, 0.01, 2, 0.1);
 	private ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "Hypixel");
-
+	
+	
+	public static ArrayList<Packet> hypixelPackets = new ArrayList<Packet>();
+	
 	public Fly() {
 		super("Fly", Keyboard.KEY_NONE, Category.MOVEMENT);
 		resetSettings();
@@ -48,7 +56,7 @@ public class Fly extends Module {
 			
 			hypixelStartTime = (long) (System.currentTimeMillis() + (3 * 1000));
 			if (!SpicyClient.config.blink.isEnabled()) {
-				SpicyClient.config.blink.toggle();
+				//SpicyClient.config.blink.toggle();
 			}
 			mc.thePlayer.jump();
 			mc.thePlayer.stepHeight = 0;
@@ -64,9 +72,20 @@ public class Fly extends Module {
 			mc.thePlayer.capabilities.isFlying = false;
 			mc.thePlayer.capabilities.allowFlying = false;
 		} else if (mode.getMode().equals("Hypixel")) {
-
+			
+			for (Packet p : hypixelPackets) {
+				
+				if (mc.isSingleplayer()) {
+					
+				}else {
+					mc.getNetHandler().addToSendQueue(p);
+				}
+				
+			}
+			hypixelPackets.clear();
+			
 			if (SpicyClient.config.blink.isEnabled()) {
-				SpicyClient.config.blink.toggle();
+				//SpicyClient.config.blink.toggle();
 			}
 
 			mc.timer.ticksPerSecond = 20f;
@@ -83,7 +102,21 @@ public class Fly extends Module {
 	private transient Timer timer = new Timer();
 
 	public void onEvent(Event e) {
-
+		
+		if (e instanceof EventSendPacket && mode.getMode().equals("Hypixel")) {
+			
+			if (e.isPre()) {
+				
+				if (((EventSendPacket)e).packet instanceof C04PacketPlayerPosition || ((EventSendPacket)e).packet instanceof C06PacketPlayerPosLook) {
+					EventSendPacket sendPacket = (EventSendPacket) e;
+					hypixelPackets.add(sendPacket.packet);
+					sendPacket.setCanceled(true);
+				}
+				
+			}
+			
+		}
+		
 		if (e instanceof EventUpdate && e.isPre()) {
 
 			if (timer.hasTimeElapsed(2000 + new Random().nextInt(500), true)) {
