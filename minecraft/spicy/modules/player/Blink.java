@@ -29,7 +29,7 @@ public class Blink extends Module {
 		
 		if (mc.isSingleplayer()) {
 			Command.sendPrivateChatMessage("You cannot use blink in singleplayer!");
-			toggle();
+			this.toggle();
 		}
 		
 	}

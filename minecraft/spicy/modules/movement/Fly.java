@@ -9,6 +9,9 @@ import org.lwjgl.input.Keyboard;
 import com.ibm.icu.math.BigDecimal;
 
 import net.minecraft.network.Packet;
+import net.minecraft.network.handshake.client.C00Handshake;
+import net.minecraft.network.login.client.C00PacketLoginStart;
+import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition;
 import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook;
@@ -53,6 +56,11 @@ public class Fly extends Module {
 		if (mode.getMode().equals("Vanilla")) {
 			original_fly_speed = mc.thePlayer.capabilities.getFlySpeed();
 		} else if (mode.getMode().equals("Hypixel")) {
+			
+			if (mc.isSingleplayer()) {
+				Command.sendPrivateChatMessage("You cannot use blink in singleplayer!");
+				this.toggle();
+			}
 			
 			hypixelStartTime = (long) (System.currentTimeMillis() + (3 * 1000));
 			if (!SpicyClient.config.blink.isEnabled()) {
@@ -107,11 +115,13 @@ public class Fly extends Module {
 			
 			if (e.isPre()) {
 				
-				if (((EventSendPacket)e).packet instanceof C04PacketPlayerPosition || ((EventSendPacket)e).packet instanceof C06PacketPlayerPosLook) {
-					EventSendPacket sendPacket = (EventSendPacket) e;
-					hypixelPackets.add(sendPacket.packet);
-					sendPacket.setCanceled(true);
+				if (((EventSendPacket)e).packet instanceof C00PacketKeepAlive || ((EventSendPacket)e).packet instanceof C00Handshake || ((EventSendPacket)e).packet instanceof C00PacketLoginStart) {
+					return;
 				}
+				
+				EventSendPacket sendPacket = (EventSendPacket) e;
+				hypixelPackets.add(sendPacket.packet);
+				sendPacket.setCanceled(true);
 				
 			}
 			
