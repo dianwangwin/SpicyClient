@@ -6,12 +6,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
 import com.thealtening.AltService;
 import com.thealtening.AltService.EnumAltService;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiChat;
 import spicy.ClickGUI.Tab;
 import spicy.chatCommands.CommandManager;
 import spicy.events.Event;
@@ -151,6 +153,15 @@ public class SpicyClient {
 					commandManager.runCommands(chat);
 					chat.setCanceled(true);
 				}
+			}
+			
+			if (e instanceof EventKey) {
+				
+				EventKey key = (EventKey) e;
+				if (key.key == Keyboard.KEY_PERIOD) {
+					Minecraft.getMinecraft().displayGuiScreen(new GuiChat("."));
+				}
+				
 			}
 			
 			//if (!m.toggled)
