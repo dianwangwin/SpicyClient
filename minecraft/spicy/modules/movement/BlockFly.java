@@ -29,6 +29,7 @@ import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
 import spicy.settings.SettingChangeEvent;
 import spicy.settings.SettingChangeEvent.type;
+import spicy.util.RotationUtils;
 
 public class BlockFly extends Module {
 	
@@ -135,6 +136,9 @@ public class BlockFly extends Module {
 				
 				if (keepRotations.enabled) {
 					keepRotations(event);
+					
+					//getSmoothRotations(event, event.yaw, event.pitch);
+					
 				}
 				
 				if (rotationMode.is("90 degree snap")) {
@@ -142,19 +146,28 @@ public class BlockFly extends Module {
 					if (event.yaw != mc.thePlayer.rotationYaw) {
 						event.yaw = event.yaw + 180;
 					}
+					//Command.sendPrivateChatMessage("Yaw: " + event.yaw + " | Pitch: " + event.pitch);
 					Random random = new Random();
-					int r = random.nextInt(4);
+					int r = random.nextInt(10);
 					if (random.nextBoolean()) {
 						r *= -1;
 					}
-					event.pitch += r;
+					//event.pitch += r;
 					
-					r = random.nextInt(4);
+					int w = random.nextInt(2);
 					if (random.nextBoolean()) {
-						r *= -1;
+						w *= -1;
 					}
 					
-					event.yaw += r;
+					getSmoothRotations(event, event.yaw + r, (float) (event.pitch + pitch.getValue()));
+					
+					//Command.sendPrivateChatMessage("Yaw: " + event.yaw + " | Pitch: " + event.pitch);
+					//Command.sendPrivateChatMessage(" ");
+					lastSmoothPitch = 0;
+					lastSmoothYaw = 0;
+					//mc.thePlayer.rotationYaw = event.yaw;
+					//mc.thePlayer.rotationPitch = event.pitch;
+					
 					
 				}
 				else if (rotationMode.is("test")) {
@@ -434,4 +447,46 @@ public class BlockFly extends Module {
 		
 		
 	}
+	
+	private static transient float lastSmoothYaw, lastSmoothPitch;
+	
+	private void getSmoothRotations(EventMotion e, float targetYaw, float targetPitch) throws NullPointerException {
+    	
+    	// Value 0.25 to 10
+        float yawFactor = 36000000;
+        float pitchFactor = 90;
+        
+        // Value 0.01 to 1
+        double xz = 0;
+        double y = 0;
+        
+        if (targetYaw > 0 && targetYaw > yawFactor) {
+            //mc.thePlayer.rotationYaw += yawFactor;
+        	e.setYaw(this.lastSmoothYaw += yawFactor);
+        } else if (targetYaw < 0 && targetYaw < -yawFactor) {
+            //mc.thePlayer.rotationYaw -= yawFactor;
+        	e.setYaw(this.lastSmoothYaw -= yawFactor);
+        } else {
+            //mc.thePlayer.rotationYaw += targetYaw;
+            e.setYaw(this.lastSmoothYaw += targetYaw);
+        }
+        
+        if (targetPitch > 0 && targetPitch > pitchFactor) {
+            //mc.thePlayer.rotationPitch += pitchFactor;
+        	e.setPitch(this.lastSmoothPitch += pitchFactor);
+        } else if (targetPitch < 0 && targetPitch < -pitchFactor) {
+            //mc.thePlayer.rotationPitch -= pitchFactor;
+        	e.setPitch(this.lastSmoothPitch -= pitchFactor);
+        } else {
+            //mc.thePlayer.rotationPitch += targetPitch;
+        	e.setPitch(this.lastSmoothPitch += targetPitch);
+        }
+        
+        this.lastSmoothYaw = e.yaw;
+        this.lastSmoothPitch = e.pitch;
+        
+        //mc.thePlayer.rotationYawHead = e.yaw;
+        
+    }
+	
 }

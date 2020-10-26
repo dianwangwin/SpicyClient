@@ -14,6 +14,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 import spicy.SpicyClient;
 import spicy.events.EventType;
 import spicy.events.listeners.EventRenderGUI;
@@ -65,7 +66,16 @@ public class HUD {
 		GlStateManager.translate(-4, -4, 0);
 		
 		//fr.drawStringWithShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor);
-		fr.drawStringWithQuadShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor, 0.3f);
+		//fr.drawStringWithQuadShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor, 0.3f);
+		
+		// We enable blending so there is a transparent background on the logo
+		GlStateManager.enableBlend();
+		GlStateManager.color(1, 1, 1);
+		mc.getTextureManager().bindTexture(new ResourceLocation("spicy/SpicyClient.png"));
+		int imageWidth = 500, imageHeight = 122;
+		imageWidth /= 4;
+		imageHeight /= 4;
+		Gui.drawModalRectWithCustomSizedTexture(-13, -6, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
 		
 		if (mc.currentScreen instanceof GuiChat) {
 			

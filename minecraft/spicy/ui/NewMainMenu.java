@@ -3,7 +3,9 @@ package spicy.ui;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.gui.Gui;
@@ -41,7 +43,7 @@ public class NewMainMenu extends GuiScreen {
 	
 	@Override
 	public void initGui() {
-		
+		//drawRect(0, 0, this.width, this.height, 0xff36393f);
 	}
 	
 	public Button singleplayer, multiplayer, altManager, settings, language;
@@ -57,13 +59,13 @@ public class NewMainMenu extends GuiScreen {
         Config temp = new Config("temp");
         String name = temp.clientName;
         String version = temp.clientVersion;
-		
+        
 		drawRect(0, 0, this.width, this.height, 0xff36393f);
 		
-		GlStateManager.pushMatrix();
-		GlStateManager.scale(3.5, 3.5, 1);
-		drawCenteredString(mc.fontRendererObj, name + version, (this.width / 2) / 3.5f, (this.height / 10) / 3.5f, 0xff7289da);
-		GlStateManager.popMatrix();
+		//GlStateManager.pushMatrix();
+		//GlStateManager.scale(3.5, 3.5, 1);
+		//drawCenteredString(mc.fontRendererObj, name + version, (this.width / 2) / 3.5f, (this.height / 10) / 3.5f, 0xff7289da);
+		//GlStateManager.popMatrix();
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(1.5, 1.5, 1);
@@ -72,6 +74,16 @@ public class NewMainMenu extends GuiScreen {
 		
 		String s1 = "Source code and downloads available at https://SpicyClient.info";
         this.drawString(this.fontRendererObj, s1, this.width - this.fontRendererObj.getStringWidth(s1) - 2, this.height - 10, 0xff7289da);
+        
+		// Logo
+		GlStateManager.enableBlend();
+		GlStateManager.color(1, 1, 1);
+		//GlStateManager.clearColor(1, 1, 1, 1);
+		int imageWidth = 500, imageHeight = 122;
+		imageWidth /= 1.1;
+		imageHeight /= 1.1;
+		mc.getTextureManager().bindTexture(new ResourceLocation("spicy/SpicyClient.png"));
+		drawModalRectWithCustomSizedTexture((int) ((width / 2) / 1.8f), -10, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
         
         //drawRect(this.width / 2 + 100, this.height / 2 - 40, this.width / 2 + 220, this.height / 2 + 80, 0xff202225);
         //drawRect(this.width / 2 - 60, this.height / 2 - 40, this.width / 2 + 60, this.height / 2 + 80, 0xff202225);
@@ -87,7 +99,9 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ Hypixel blink fly");
         changeLogs.add("+ Hypixel bhop");
         changeLogs.add("+ Hypixel antivoid");
-        changeLogs.add("+ Payback mode for pvplands killsults");
+        changeLogs.add("+ Hypixel chat bypass");
+        changeLogs.add("+ Hypixel autoblock");
+        changeLogs.add("+ Payback for pvplands killsults");
         changeLogs.add("+ Vanilla nofall");
         changeLogs.add("+ Vanilla and packet autolog");
         changeLogs.add("+ Jesus");
@@ -95,16 +109,16 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ PlayerESP");
         changeLogs.add("+ WTap");
         changeLogs.add("+ Criticals");
-        changeLogs.add("+ Hud clock");
         changeLogs.add("+ Trigger Bot");
         changeLogs.add("+ Roblox chat bypass");
-        changeLogs.add("+ Hypixel chat bypass");
         
         // Put the changed things here
         // changeLogs.add("* ");
         changeLogs.add("* Improved killaura");
         changeLogs.add("* More meme modules");
         changeLogs.add("* Improved the tabgui");
+        changeLogs.add("* Improved the hud");
+        changeLogs.add("* Improved alt manager");
         
         // Put the removed things here
         // changeLogs.add("- ");
@@ -277,7 +291,8 @@ public class NewMainMenu extends GuiScreen {
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		
 		if (Keyboard.KEY_ESCAPE == keyCode) {
-			mc.displayGuiScreen(previousScreen);
+			// Removed due to a crash
+			//mc.displayGuiScreen(previousScreen);
 		}
 		
 	}

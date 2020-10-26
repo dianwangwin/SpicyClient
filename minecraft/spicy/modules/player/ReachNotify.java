@@ -46,13 +46,19 @@ public class ReachNotify extends Module {
 		
 		if (e instanceof EventRenderGUI) {
 			
-			if (mc.objectMouseOver.typeOfHit.equals(MovingObjectType.ENTITY)) {
+			try {
 				
-				ScaledResolution sr = new ScaledResolution(mc);
+				if (mc.objectMouseOver.typeOfHit.equals(MovingObjectType.ENTITY)) {
+					
+					ScaledResolution sr = new ScaledResolution(mc);
+					
+					Gui.drawRect((sr.getScaledWidth()/2) - 4, (sr.getScaledHeight()/2) - 0, (sr.getScaledWidth()/2) + 5, (sr.getScaledHeight()/2) + 1, 0xffff0000);
+					Gui.drawRect((sr.getScaledWidth()/2) - 0, (sr.getScaledHeight()/2) - 4, (sr.getScaledWidth()/2) + 1, (sr.getScaledHeight()/2) + 5, 0xffff0000);
+					
+				}
 				
-				Gui.drawRect((sr.getScaledWidth()/2) - 4, (sr.getScaledHeight()/2) - 0, (sr.getScaledWidth()/2) + 5, (sr.getScaledHeight()/2) + 1, 0xffff0000);
-				Gui.drawRect((sr.getScaledWidth()/2) - 0, (sr.getScaledHeight()/2) - 4, (sr.getScaledWidth()/2) + 1, (sr.getScaledHeight()/2) + 5, 0xffff0000);
-				
+			} catch (NullPointerException e2) {
+				// TODO: handle exception
 			}
 			
 		}

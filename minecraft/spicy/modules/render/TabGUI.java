@@ -364,7 +364,7 @@ public class TabGUI extends Module {
 									BooleanSetting bool = (BooleanSetting) setting;
 									
 									if (maxLength < fr.getStringWidth(setting.name + ": " + (bool.enabled ? "Enabled" : "Disabled"))) {
-										maxLength = fr.getStringWidth(setting.name + ": " + (bool.enabled ? "Enabled" : "Disabled")) + 30;
+										maxLength = fr.getStringWidth(setting.name + ": " + (bool.enabled ? "Enabled" : "Disabled")) + 40;
 									}
 									
 								}
@@ -505,7 +505,7 @@ public class TabGUI extends Module {
 				
 				for (Category c : CategoryList) {
 					
-					float offset = ((catNum*11) + 30);
+					float offset = ((catNum*11) + 40);
 					
 					//Gui.drawRect(0, 0 + offset, maxCatSize, 20 + offset, 0x90000000);
 					Gui.drawRect(0, 0 + offset, maxCatSize, fr.FONT_HEIGHT + 2 + offset, 0x60000000);
@@ -516,11 +516,11 @@ public class TabGUI extends Module {
 				
 				catNum = 0;
 				
-				Gui.drawRect(0, 0 + ((current_tab*11) + 30), maxCatSize, fr.FONT_HEIGHT + 2 + ((current_tab*11) + 30), 0x60ffffff);
+				Gui.drawRect(0, 0 + ((current_tab*11) + 40), maxCatSize, fr.FONT_HEIGHT + 2 + ((current_tab*11) + 40), 0x60ffffff);
 				
 				for (Category c : CategoryList) {
 					
-					float offset = ((catNum*11) + 30);
+					float offset = ((catNum*11) + 40);
 					
 					fr.drawStringWithShadow(c.name, 2, (int) (2 + offset), primaryColor);
 					
@@ -542,7 +542,7 @@ public class TabGUI extends Module {
 						
 						for (Module m : SpicyClient.modules) {
 							
-							float offset = ((moduleNum*11) + 30);
+							float offset = ((moduleNum*11) + 40);
 							
 							if (m.category == cat) {
 								
@@ -552,7 +552,7 @@ public class TabGUI extends Module {
 							
 							if (m.category == cat && !renderedModuleIndex && moduleNum == module_index) {
 								
-								Gui.drawRect(maxCatSize, 0 + ((module_index*11) + 30), maxCatSize + maxModSize, fr.FONT_HEIGHT + 2 + ((module_index*11) + 30), 0x60ffffff);
+								Gui.drawRect(maxCatSize, 0 + ((module_index*11) + 40), maxCatSize + maxModSize, fr.FONT_HEIGHT + 2 + ((module_index*11) + 40), 0x60ffffff);
 								renderedModuleIndex = true;
 								
 							}
@@ -615,7 +615,7 @@ public class TabGUI extends Module {
 									
 									for (Setting s : m.settings) {
 										
-										float settingOffset = ((maxSettingNum*11) + 30);
+										float settingOffset = ((maxSettingNum*11) + 40);
 										
 										Gui.drawRect(maxCatSize + maxModSize, 0 + settingOffset, maxModSize + maxCatSize + maxSettingSize, fr.FONT_HEIGHT + 2 + settingOffset, 0x60000000);
 										

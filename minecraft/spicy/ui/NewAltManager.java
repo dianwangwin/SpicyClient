@@ -86,7 +86,11 @@ public class NewAltManager extends GuiScreen {
 		}
 		
 		drawRect(0, 0, this.width, this.height, 0xff36393f);
+		
+		// For the scroll bar
 		drawRect(6, 6, 14, this.height - 6, 0xff2e3338);
+		// Does not work, I will find another way later
+		//drawRect(8, 8, 12, ((this.height - 8) / ((((SpicyClient.altInfo.alts.size() * 80) + 10 - 90) * -1) + (((this.height / 90) * 90)) - 110)) * scroll, 0xff747f8d);
 		
 		int altAmount = 0;
 		for (int e = SpicyClient.altInfo.alts.size(); e > 0; e--) {
@@ -145,11 +149,23 @@ public class NewAltManager extends GuiScreen {
 		drawRect(this.width / 1.6 + 10, this.height - 10, this.width - 10, this.height - 40, 0xff7289da);
 		drawRect(this.width / 1.6 + 10, this.height - 45, this.width - 10, this.height - 75, 0xff7289da);
 		drawRect(this.width / 1.6 + 10, this.height - 80, this.width - 10, this.height - 110, 0xff7289da);
+		
+		// For the api key label
 		drawRect(this.width / 1.6 + 10, this.height - 115, this.width - 10, this.height - 145, 0xff7289da);
 		drawRect(this.width / 1.6 + 10 + 2, this.height - 115 - 2, this.width - 10 - 2, this.height - 145 + 2, 0xff36393f);
 		
+		// For the alt amount label
+		drawRect(this.width / 1.6 + 10, this.height - 150, this.width - 10, this.height - 180, 0xff7289da);
+		drawRect(this.width / 1.6 + 10 + 2, this.height - 150 - 2, this.width - 10 - 2, this.height - 180 + 2, 0xff36393f);
+		
+		// For the current alt label
+		drawRect(this.width / 1.6 + 10, this.height - 185, this.width - 10, this.height - 215, 0xff7289da);
+		drawRect(this.width / 1.6 + 10 + 2, this.height - 185 - 2, this.width - 10 - 2, this.height - 215 + 2, 0xff36393f);
+		
 		GlStateManager.scale(2, 2, 1);
 		
+		drawString(fr, "Current Alt: " + mc.getSession().getUsername(), ((this.width + (this.width / 1.6 + 20)) / 2 - fr.getStringWidth("Current Alt: " + mc.getSession().getUsername()) - 10) / 2, (this.height - 208.5) / 2, -1);
+		drawString(fr, "Alt Amount: " + SpicyClient.altInfo.alts.size(), ((this.width + (this.width / 1.6 + 20)) / 2 - fr.getStringWidth("Alt Amount: " + SpicyClient.altInfo.alts.size()) - 10) / 2, (this.height - 173.5) / 2, -1);
 		drawString(fr, "Api Key: " + SpicyClient.altInfo.API_Key, ((this.width + (this.width / 1.6 + 20)) / 2 - fr.getStringWidth("Api Key: " + SpicyClient.altInfo.API_Key) - 10) / 2, (this.height - 138.5) / 2, -1);
 		drawString(fr, "Set API Key", ((this.width + (this.width / 1.6 + 20)) / 2 - fr.getStringWidth("Set API Key") - 10) / 2, (this.height - 103.5) / 2, -1);
 		drawString(fr, "Generate Account", ((this.width + (this.width / 1.6 + 20)) / 2 - fr.getStringWidth("Generate Account") - 10) / 2, (this.height - 68.5) / 2, -1);

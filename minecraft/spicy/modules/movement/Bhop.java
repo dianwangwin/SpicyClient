@@ -3,6 +3,7 @@ package spicy.modules.movement;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 
@@ -10,10 +11,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition;
 import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
+import net.minecraft.network.play.client.C14PacketTabComplete;
+import net.minecraft.network.play.client.C15PacketClientSettings;
+import net.minecraft.network.play.client.C16PacketClientStatus;
+import net.minecraft.network.play.client.C16PacketClientStatus.EnumState;
+import net.minecraft.network.play.client.C17PacketCustomPayload;
+import net.minecraft.network.play.client.C18PacketSpectate;
+import net.minecraft.network.play.client.C19PacketResourcePackStatus;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.EnumFacing;
@@ -32,6 +41,7 @@ import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
 import spicy.settings.SettingChangeEvent;
 import spicy.util.MovementUtils;
+import spicy.util.Timer;
 
 public class Bhop extends Module {
 	
@@ -72,8 +82,9 @@ public class Bhop extends Module {
     private double speed;
     private double lastDist;
     public static int stage;
-
-	
+    
+    private transient Timer timer = new Timer();
+    
 	public void onEvent(Event e) {
 		
 		if (e instanceof EventPacket) {
@@ -171,26 +182,20 @@ public class Bhop extends Module {
 
 					if (mc.thePlayer.onGround) {
 						
-						mc.thePlayer.jump();
-						//mc.thePlayer.motionY = 0.42f;
-						mc.timer.timerSpeed = 1.28f;
+						mc.thePlayer.motionY = 0.399999f;
+						e.setCanceled(true);
 						
 					}else {
 						
 						mc.timer.timerSpeed = 1.0f;
 						float f = (float) MovementUtils.getDirection() + 180 - 45;
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.26F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.26F) * -1;
+			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.3F);
+			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.3F) * -1;
 			            
 			            //mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
 								//mc.thePlayer.posZ);
 			            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 			            
-					}
-					
-					
-					if (mc.thePlayer.fallDistance > 5) {
-						mc.timer.timerSpeed = 1f;
 					}
 					
 				}

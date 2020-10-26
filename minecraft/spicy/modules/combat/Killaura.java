@@ -20,15 +20,20 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.C02PacketUseEntity;
+import net.minecraft.network.play.client.C02PacketUseEntity.Action;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldSettings;
 import spicy.SpicyClient;
 import spicy.chatCommands.Command;
 import spicy.events.Event;
@@ -64,6 +69,9 @@ public class Killaura extends Module {
 	
 	private static transient float lastSmoothYaw, lastSmoothPitch;
 	
+	private int[] randoms = {0,1,0};
+	public static float sYaw, sPitch, aacB;
+	
 	// These settings are not used anymore but are still here so you can update old configs
 	private BooleanSetting autoblock = new BooleanSetting("Autoblock", false);
 	public ModeSetting targetModeSetting = new ModeSetting("Targets", "Players", "Players", "Animals", "Mobs", "Everything");
@@ -85,7 +93,7 @@ public class Killaura extends Module {
 	}
 	
 	public void onEnable() {
-		
+		aacB = 0;
 	}
 	
 	public void onDisable() {
@@ -178,7 +186,8 @@ public class Killaura extends Module {
 			
 			if (e.isPre()) {
 				
-				this.additionalInformation = targetingMode.getMode() + SpicyClient.hud.separator + rotationSetting.getMode();
+				//this.additionalInformation = targetingMode.getMode() + SpicyClient.hud.separator + rotationSetting.getMode();
+				this.additionalInformation = "R: " + range.getValue() + SpicyClient.hud.separator + "APS: " + aps.getValue();
 				
 			}
 			
@@ -312,6 +321,10 @@ public class Killaura extends Module {
 						}
 						else if (rotationSetting.is("smooth") || rotationSetting.getMode() == "smooth") {
 							
+                    		aacB/=2;
+                    		customRots(event, target);
+							
+							/*
 							try {
 								getSmoothRotations(event);
 							} catch (NullPointerException e2) {
@@ -326,6 +339,7 @@ public class Killaura extends Module {
 								}
 								
 							}
+							*/
 							
 						}
 						
@@ -352,16 +366,13 @@ public class Killaura extends Module {
 					
 					if (timer.hasTimeElapsed((long) (1000/aps.getValue()), true)) {
 						
-						if (rotationSetting.is("smooth") || rotationSetting.getMode() == "smooth") {
-							
-							if (mc.objectMouseOver.typeOfHit.equals(MovingObjectType.ENTITY)) {
-								
-								
-								
-							}
-							
-						}
-						
+            			int XR = randomNumber(1, -1);
+                    	int YR = randomNumber(1, -1);
+                    	int ZR = randomNumber(1, -1);
+                    	randoms[0] = XR;
+                    	randoms[1] = YR;
+                    	randoms[2] = ZR;
+                    	
 						if (s.toggled) {
 							mc.thePlayer.setSprinting(true);
 						}
@@ -390,8 +401,13 @@ public class Killaura extends Module {
 						if (s.toggled) {
 							mc.thePlayer.setSprinting(true);
 						}
-						if (newAutoblock.is("Hypixel")) {
-							startBlocking(true);
+						if (newAutoblock.is("Hypixel") && mc.thePlayer.isSwingInProgress && mc.thePlayer.isBlocking()) {
+							
+							blockHypixel(target);
+							
+							//startBlocking(true);
+							//Random r = new Random();
+							//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.410153517, -0.4083644, -0.4186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
 						}
 						
 					}
@@ -409,6 +425,67 @@ public class Killaura extends Module {
 		}
 		
 	}
+	
+	private void blockHypixel(EntityLivingBase ent) {
+		//isBlocking = true;
+		
+		if (ent == null) {
+			return;
+		}
+		
+		sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());
+		
+		//mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(ent, new Vec3((double)randomNumber(-50, 50)/100, (double)randomNumber(0, 200)/100, (double)randomNumber(-50, 50)/100)));
+		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(ent, Action.INTERACT));
+		mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.410153517, -0.4083644, -0.4186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
+		//Command.sendPrivateChatMessage("Old: " + getHypixelBlockpos(mc.getSession().getUsername()) + " New: " + getHypixelBlockpos(mc.getSession().getUsername()).add(0, -0.1083644, 0));
+		//Command.sendPrivateChatMessage("Old: " + getHypixelBlockpos(mc.getSession().getUsername()) + " New: " + target.getPosition());
+		//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(getHypixelBlockpos(mc.getSession().getUsername()), 255, mc.thePlayer.inventory.getCurrentItem(), 0,0,0));
+		//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(getHypixelBlockpos(mc.getSession().getUsername()), 255, mc.thePlayer.inventory.getCurrentItem(), 0,0,0));
+	}
+	
+    public boolean sendUseItem(EntityPlayer playerIn, World worldIn, ItemStack itemStackIn)
+    {
+        if (mc.playerController.currentGameType == WorldSettings.GameType.SPECTATOR)
+        {
+            return false;
+        }
+        else
+        {
+            mc.playerController.syncCurrentPlayItem();
+            int i = itemStackIn.stackSize;
+            ItemStack itemstack = itemStackIn.useItemRightClick(worldIn, playerIn);
+
+            if (itemstack != itemStackIn || itemstack != null && itemstack.stackSize != i)
+            {
+                playerIn.inventory.mainInventory[playerIn.inventory.currentItem] = itemstack;
+
+                if (itemstack.stackSize == 0)
+                {
+                    playerIn.inventory.mainInventory[playerIn.inventory.currentItem] = null;
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+	
+	public static BlockPos getHypixelBlockpos(String str){
+    	int val = 89;
+    	if(str != null && str.length() > 1){
+    		char[] chs = str.toCharArray();
+        	
+        	int lenght = chs.length;
+        	for(int i = 0; i < lenght; i++)
+        		val += (int)chs[i] * str.length()* str.length() + (int)str.charAt(0) + (int)str.charAt(1);
+        	val/=str.length();
+    	}
+    	return new BlockPos(val, -val%255, val);
+    }
 	
 	public float[] getRotations(Entity e) {
 		
@@ -454,6 +531,9 @@ public class Killaura extends Module {
 		
         if (newAutoblock.is("Hypixel") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
         	
+        	blockHypixel(target);
+        	
+        	/*
         	if (target != null && interactAutoblock) {
         		//mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, new Vec3(randomNumber(-50, 50) / 100.0, randomNumber(0, 200) / 100.0, randomNumber(-50, 50) / 100.0)));
         		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.INTERACT));
@@ -469,6 +549,8 @@ public class Killaura extends Module {
         	//mc.gameSettings.keyBindUseItem.pressed = true;
         	//mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());
             //mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
+             * 
+             */
         }
         else if (newAutoblock.is("Vanilla") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
         	if (target != null && interactAutoblock) {
@@ -488,24 +570,11 @@ public class Killaura extends Module {
         return Math.round(min + Math.random() * (max - min));
     }
     
-    public static BlockPos getHypixelBlockpos(final String str) {
-        int val = 89;
-        if (str != null && str.length() > 1) {
-            final char[] chs = str.toCharArray();
-            for (int lenght = chs.length, i = 0; i < lenght; ++i) {
-                val += chs[i] * str.length() * str.length() + str.charAt(0) + str.charAt(1);
-            }
-            val /= str.length();
-        }
-        return new BlockPos(val, -val % 255, val);
-    }
-    
-
     private void getSmoothRotations(EventMotion e) throws NullPointerException {
     	
     	// Value 0.25 to 10
-        float yawFactor = 50;
-        float pitchFactor = 50;
+        float yawFactor = 80;
+        float pitchFactor = 80;
         
         // Value 0.01 to 1
         double xz = 0;
@@ -545,6 +614,54 @@ public class Killaura extends Module {
     
     private int randomNumber() {
         return -1 + (int) (Math.random() * ((1 - (-1)) + 1));
+    }
+    
+    public float[] getCustomRotsChange(float yaw, float pitch, double x, double y, double z){
+    	
+        double xDiff = x - mc.thePlayer.posX;
+        double zDiff = z - mc.thePlayer.posZ;
+        double yDiff = y - mc.thePlayer.posY;
+        
+        double dist = MathHelper.sqrt_double(xDiff * xDiff + zDiff * zDiff);
+    	double mult =  (1/(dist+0.0001)) * 2;
+    	if(mult > 0.2)
+    		mult = 0.2;
+    	if(!mc.theWorld.getEntitiesWithinAABBExcludingEntity(mc.thePlayer, mc.thePlayer.boundingBox).contains(target)){
+        	x += 0.3 * randoms[0];
+        	y -= 0.4 + mult * randoms[1];
+        	z += 0.3 * randoms[2];
+    	}
+    	xDiff = x - mc.thePlayer.posX;
+        zDiff = z - mc.thePlayer.posZ;
+        yDiff = y - mc.thePlayer.posY;
+        float yawToEntity = (float) (Math.atan2(zDiff, xDiff) * 180.0D / 3.141592653589793D) - 90.0F;
+        float pitchToEntity = (float) -(Math.atan2(yDiff, dist) * 180.0D / 3.141592653589793D);
+        return new float[]{MathHelper.wrapAngleTo180_float(-(yaw- (float) yawToEntity)), -MathHelper.wrapAngleTo180_float(pitch - (float) pitchToEntity) - 2.5F};
+    }
+    
+    public void customRots(EventMotion em, EntityLivingBase ent) {
+        double randomYaw = 0.05;
+		double randomPitch = 0.05;
+		float[] rotsN = getCustomRotsChange(sYaw, sPitch, target.posX + randomNumber(1,-1) * randomYaw, target.posY+ randomNumber(1,-1) * randomPitch, target.posZ+ randomNumber(1,-1) * randomYaw);
+		float targetYaw = rotsN[0];
+		float yawFactor = targetYaw*targetYaw/(4.7f * targetYaw);
+		if(targetYaw < 5){
+			yawFactor = targetYaw*targetYaw/(3.7f * targetYaw);
+		}
+		if(Math.abs(yawFactor) > 7){
+			aacB = yawFactor*7;
+			yawFactor = targetYaw*targetYaw/(3.7f * targetYaw);
+		}else{
+			yawFactor = targetYaw*targetYaw/(6.7f * targetYaw) + aacB;
+		}
+		
+	
+		em.setYaw(sYaw + yawFactor);
+		sYaw += yawFactor;
+		float targetPitch = rotsN[1];
+		float pitchFactor = targetPitch / 3.7F;
+		em.setPitch(sPitch + pitchFactor);
+		sPitch += pitchFactor;
     }
     
 }

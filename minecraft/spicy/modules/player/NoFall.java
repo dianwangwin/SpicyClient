@@ -3,6 +3,7 @@ package spicy.modules.player;
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventMotion;

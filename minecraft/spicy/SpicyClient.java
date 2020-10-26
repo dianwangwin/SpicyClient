@@ -41,6 +41,8 @@ public class SpicyClient {
 	
 	public static CommandManager commandManager = new CommandManager();
 	
+	public static int originalGuiScale = Minecraft.getMinecraft().gameSettings.guiScale;
+	
 	public static void StartUp() {
 		
 		// Creates a new config with the default values

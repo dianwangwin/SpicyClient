@@ -58,7 +58,7 @@ public class Fly extends Module {
 		} else if (mode.getMode().equals("Hypixel")) {
 			
 			if (mc.isSingleplayer()) {
-				Command.sendPrivateChatMessage("You cannot use blink in singleplayer!");
+				Command.sendPrivateChatMessage("You cannot use hypixel fly in singleplayer!");
 				this.toggle();
 			}
 			
@@ -73,7 +73,7 @@ public class Fly extends Module {
 
 	public void onDisable() {
 		
-		mc.thePlayer.stepHeight = 0.5f;
+		mc.thePlayer.stepHeight = 0.6f;
 		
 		if (mode.getMode().equals("Vanilla")) {
 			mc.thePlayer.capabilities.setFlySpeed(original_fly_speed);
