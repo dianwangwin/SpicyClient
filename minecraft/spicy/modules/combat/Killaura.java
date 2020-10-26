@@ -132,6 +132,7 @@ public class Killaura extends Module {
 	
 	public void onEvent(Event e) {
 		
+		// For the target hud
 		if (e instanceof EventRenderGUI && target != null) {
 			
 			if (target == null) {
@@ -141,11 +142,14 @@ public class Killaura extends Module {
 			ScaledResolution sr = new ScaledResolution(mc);
 			FontRenderer fr = mc.fontRendererObj;
 			
+			GlStateManager.color(1, 1, 1);
 			Gui.drawRect(sr.getScaledWidth() / 2 - 110, sr.getScaledHeight() / 2 + 100, sr.getScaledWidth() / 2 + 110, sr.getScaledHeight() / 2 + 170, 0x50000000);
+			GlStateManager.color(1, 1, 1);
+			RenderHelper.enableGUIStandardItemLighting();
 			Gui.drawRect(sr.getScaledWidth() / 2 - 110, sr.getScaledHeight() / 2 + 100, sr.getScaledWidth() / 2 - 110 + (((220) / (target.getMaxHealth())) * (target.getHealth())), sr.getScaledHeight() / 2 + 96, 0xff00ff00);
 			GlStateManager.enableBlend();
 			GlStateManager.color(1, 1, 1);
-			GuiInventory.drawEntityOnScreen(sr.getScaledWidth() / 2 - 75, sr.getScaledHeight() / 2 + 165, 28, 1, 1f, target);
+			GuiInventory.drawEntityOnScreen(sr.getScaledWidth() / 2 - 75, sr.getScaledHeight() / 2 + 165, 25, 1, 1f, target);
 			fr.drawString(target.getName(), sr.getScaledWidth() / 2 - 40, sr.getScaledHeight() / 2 + 110, -1);
 			fr.drawString("HP: §a" + target.getHealth() + "§f/§a" + target.getMaxHealth(), sr.getScaledWidth() / 2 - 40, sr.getScaledHeight() / 2 + 125, -1);
 			RenderHelper.enableGUIStandardItemLighting();
@@ -415,7 +419,7 @@ public class Killaura extends Module {
 		
 		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(ent, new Vec3((double)randomNumber(-50, 50)/100, (double)randomNumber(0, 200)/100, (double)randomNumber(-50, 50)/100)));
 		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(ent, Action.INTERACT));
-		mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.410153517, -0.5083644, -0.4186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
+		mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.410153517, -0.7083644, -0.4186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
 		//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.410153517, -0.4083644, -0.4186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
 		//Command.sendPrivateChatMessage("Old: " + getHypixelBlockpos(mc.getSession().getUsername()) + " New: " + getHypixelBlockpos(mc.getSession().getUsername()).add(0, -0.1083644, 0));
 		//Command.sendPrivateChatMessage("Old: " + getHypixelBlockpos(mc.getSession().getUsername()) + " New: " + target.getPosition());

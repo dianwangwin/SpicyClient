@@ -77,11 +77,11 @@ public class OldHitting extends Module {
 				}
 				else if (animationSetting.getMode() == "Multi Tap") {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
-					ir.transformFirstPersonItem(0, -swingProgress * 2);
+					ir.transformFirstPersonItem(0, swingProgress - 2.5f);
 				}
 				else if (animationSetting.getMode() == "Tap") {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
-					ir.transformFirstPersonItem(0, -swingProgress);
+					ir.transformFirstPersonItem(0, swingProgress - 1);
 				}
 				else if (animationSetting.getMode() == "Spin") {
 					
