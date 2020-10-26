@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -133,52 +134,29 @@ public class Killaura extends Module {
 		
 		if (e instanceof EventRenderGUI && target != null) {
 			
-			/*
-			 * 
-			 * THIS TAKEN FROM GITHUB
-			 * This was made by KtntKot
-			 * https://github.com/KtntKot
-			 * 
-			 */
-			
-			ScaledResolution sr = new ScaledResolution(mc); 
-			FontRenderer fr = mc.fontRendererObj;
-			
-			Gui.drawRect((sr.getScaledWidth()/1.8f - 5) - 40, (sr.getScaledHeight()/1.5f - 5), (sr.getScaledWidth()/1.8f)+ 120, (sr.getScaledHeight()/1.5f)+40, 0x50000000);
-			//Gui.drawRect((sr.getScaledWidth()/1.8f - 6), (sr.getScaledHeight()/1.5f - 6), (sr.getScaledWidth()/1.8f)+ 121, (sr.getScaledHeight()/1.5f)+41, 0x50000000);
-			Gui.drawRect((sr.getScaledWidth()/1.8f - 4 ), (sr.getScaledHeight()/1.5f - 2), (sr.getScaledWidth()/1.8f - 3), (sr.getScaledHeight()/1.5f)+37, 0xffff0000);
-			
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			GuiInventory.drawEntityOnScreen((int)(sr.getScaledWidth()/1.8f - 5 - 20), (int)(sr.getScaledHeight()/1.5f)+38, 19, 1f, 1f, target);
-			
-			fr.drawString(target.getName(), (sr.getScaledWidth()/1.8f), (sr.getScaledHeight()/1.5f), -1, false);
-			fr.drawString(" HP: " + (int)target.getHealth() + " HurtTime: " + target.hurtTime, (sr.getScaledWidth()/1.8f - 4.5f), (sr.getScaledHeight()/1.5f + fr.FONT_HEIGHT + 2), -1, false);
-			if(mc.thePlayer.getHealth() > target.getHealth())
-			{
-				fr.drawString(" Win chance: Winning ", (sr.getScaledWidth()/1.8f - 4.5f), (sr.getScaledHeight()/1.5f + fr.FONT_HEIGHT + 2 + 10), 0x1fff4e, false);
-			}else if (mc.thePlayer.getHealth() < target.getHealth())
-			{
-				if((target.getHealth() - mc.thePlayer.getHealth()) < 17)
-				{
-					fr.drawString(" Win chance: Losing ", (sr.getScaledWidth()/1.8f - 4.5f), (sr.getScaledHeight()/1.5f + fr.FONT_HEIGHT + 2 + 10), 0xff1f1f, false);
-				}
-				
-				if((target.getHealth() - mc.thePlayer.getHealth()) > 17)
-				{
-					fr.drawString(" Win chance: Lost ", (sr.getScaledWidth()/1.8f - 4.5f), (sr.getScaledHeight()/1.5f + fr.FONT_HEIGHT + 2 + 10), 0xff1f1f, false);
-				}
-			}else if (mc.thePlayer.getHealth() == target.getHealth())
-			{
-				fr.drawString(" Win chance: 50/50 ", (sr.getScaledWidth()/1.8f - 4.5f), (sr.getScaledHeight()/1.5f + fr.FONT_HEIGHT + 2 + 10), 0x1fff4e, false);
+			if (target == null) {
+				return;
 			}
 			
-			/*
-			 * 
-			 * THAT TAKEN FROM GITHUB
-			 * That was made by KtntKot
-			 * https://github.com/KtntKot
-			 * 
-			 */
+			ScaledResolution sr = new ScaledResolution(mc);
+			FontRenderer fr = mc.fontRendererObj;
+			
+			Gui.drawRect(sr.getScaledWidth() / 2 - 110, sr.getScaledHeight() / 2 + 100, sr.getScaledWidth() / 2 + 110, sr.getScaledHeight() / 2 + 170, 0x50000000);
+			Gui.drawRect(sr.getScaledWidth() / 2 - 110, sr.getScaledHeight() / 2 + 100, sr.getScaledWidth() / 2 - 110 + (((220) / (target.getMaxHealth())) * (target.getHealth())), sr.getScaledHeight() / 2 + 96, 0xff00ff00);
+			GlStateManager.enableBlend();
+			GlStateManager.color(1, 1, 1);
+			GuiInventory.drawEntityOnScreen(sr.getScaledWidth() / 2 - 75, sr.getScaledHeight() / 2 + 165, 28, 1, 1f, target);
+			fr.drawString(target.getName(), sr.getScaledWidth() / 2 - 40, sr.getScaledHeight() / 2 + 110, -1);
+			fr.drawString("HP: §a" + target.getHealth() + "§f/§a" + target.getMaxHealth(), sr.getScaledWidth() / 2 - 40, sr.getScaledHeight() / 2 + 125, -1);
+			RenderHelper.enableGUIStandardItemLighting();
+			mc.getRenderItem().renderItemAndEffectIntoGUI(target.getHeldItem(), sr.getScaledWidth() / 2 - 40, sr.getScaledHeight() / 2 + 143);
+			mc.getRenderItem().renderItemAndEffectIntoGUI(target.getCurrentArmor(3), sr.getScaledWidth() / 2 - 10, sr.getScaledHeight() / 2 + 143);
+			mc.getRenderItem().renderItemAndEffectIntoGUI(target.getCurrentArmor(2), sr.getScaledWidth() / 2 + 20, sr.getScaledHeight() / 2 + 143);
+			mc.getRenderItem().renderItemAndEffectIntoGUI(target.getCurrentArmor(1), sr.getScaledWidth() / 2 + 50, sr.getScaledHeight() / 2 + 143);
+			mc.getRenderItem().renderItemAndEffectIntoGUI(target.getCurrentArmor(0), sr.getScaledWidth() / 2 + 80, sr.getScaledHeight() / 2 + 143);
+			
+			
+			//Gui.drawRect(sr.getScaledWidth() / 2, sr.getScaledHeight() / 2 + 100, sr.getScaledWidth() / 2 + 10, sr.getScaledHeight() / 2 + 150, 0x50000000);
 			
 		}
 		
