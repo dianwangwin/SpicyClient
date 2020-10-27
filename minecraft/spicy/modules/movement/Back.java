@@ -11,6 +11,7 @@ import spicy.modules.Module;
 import spicy.modules.combat.Killaura;
 import spicy.modules.render.TabGUI;
 import spicy.settings.NumberSetting;
+import spicy.util.RotationUtils;
 
 public class Back extends Module {
 	
@@ -61,10 +62,10 @@ public class Back extends Module {
 					event.x = x2;
 					event.z = z2;
 					
-					event.setYaw(k.getRotations(k.target)[0]+10);
-					event.setPitch(k.getRotations(k.target)[1]);
+					event.setYaw(RotationUtils.getRotations(k.target)[0]+10);
+					event.setPitch(RotationUtils.getRotations(k.target)[1]);
 					
-					mc.thePlayer.rotationYawHead = k.getRotations(k.target)[0];
+					mc.thePlayer.rotationYawHead = RotationUtils.getRotations(k.target)[0];
 					
 					k.target = null;
 					//mc.thePlayer.posX = x;
