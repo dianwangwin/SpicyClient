@@ -79,7 +79,6 @@ public class Killaura extends Module {
 	
 	public Killaura() {
 		super("Killaura", Keyboard.KEY_NONE, Category.COMBAT);
-		targetsSetting.index = targetsSetting.modes.size() - 1;
 		resetSettings();
 	}
 	
@@ -89,7 +88,6 @@ public class Killaura extends Module {
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
-		targetsSetting.index = targetsSetting.modes.size() - 1;
 		this.addSettings(range, aps, noSwing, switchTime, disableOnDeath, dontHitDeadEntitys, targetsSetting, newAutoblock, targetingMode, rotationSetting, hitOnHurtTime);
 	}
 	
