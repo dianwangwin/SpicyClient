@@ -1,6 +1,12 @@
 package spicy;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +20,7 @@ import com.thealtening.AltService.EnumAltService;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.util.Session;
 import spicy.ClickGUI.Tab;
 import spicy.chatCommands.CommandManager;
 import spicy.events.Event;
@@ -45,7 +52,65 @@ public class SpicyClient {
 	
 	public static int originalGuiScale = Minecraft.getMinecraft().gameSettings.guiScale;
 	
+	public static String originalUsername = "Not Set";
+	public static Boolean originalAccountOnline = false;
+	
 	public static void StartUp() {
+		
+		if (Minecraft.getMinecraft().getSession().getSessionType().equals(Session.Type.LEGACY)) {
+			System.out.println("Not pinging server, this is an offline account");
+			originalAccountOnline = false;
+		}else {
+			System.out.println("Pinging the server, this is an online account");
+			originalAccountOnline = true;
+			originalUsername = Minecraft.getMinecraft().getSession().getUsername();
+			
+			String url = "http://spicyclient.info/api/api.php?username=" + originalUsername + "&stat_type=ping";
+		     URL obj = null;
+			try {
+				obj = new URL(url);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		     HttpURLConnection con = null;
+			try {
+				con = (HttpURLConnection) obj.openConnection();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		     //add request header
+		     con.setRequestProperty("User-Agent", "Mozilla/5.0");
+		     int responseCode = 0;
+			try {
+				responseCode = con.getResponseCode();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		     System.out.println("\nSending 'GET' request to URL : " + url);
+		     System.out.println("Response Code : " + responseCode);
+		     BufferedReader in = null;
+		     try {
+				in = new BufferedReader(
+				         new InputStreamReader(con.getInputStream()));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		     String inputLine;
+		     StringBuffer response = new StringBuffer();
+		     try {
+				in.close();
+			} catch (NullPointerException e) {
+				// TODO: handle exception
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 		
 		// Creates a new config with the default values
 		config = new Config("Default");
