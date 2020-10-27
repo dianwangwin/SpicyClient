@@ -59,31 +59,31 @@ public class OldHitting extends Module {
 				float f = 1.0F - (mc.getItemRenderer().prevEquippedProgress + (ir.equippedProgress - ir.prevEquippedProgress) * partialTicks);
 				float swingProgress = mc.thePlayer.getSwingProgress(partialTicks);
 				
-				if (animationSetting.getMode() == "1.7") {
+				if (this.animationSetting.getMode() == "1.7" || this.animationSetting.is("1.7")) {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
 					ir.transformFirstPersonItem(f, swingProgress);
 				}
-				else if (animationSetting.getMode() == "Spaz") {
+				else if (this.animationSetting.getMode() == "Spaz" || this.animationSetting.is("Spaz")) {
 					GlStateManager.translate(0.0f, 0.25f, 0.05f);
 					ir.transformFirstPersonItem(0.0f, (0.3f * partialTicks) * swingProgress);
 				}
-				else if (animationSetting.getMode() == "Spaz 2") {
+				else if (this.animationSetting.getMode() == "Spaz 2" || this.animationSetting.is("Spaz 2")) {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
 					ir.transformFirstPersonItem(0, (swingProgress == 0) ? 0 : partialTicks);
 				}
-				else if (animationSetting.getMode() == "Jitter") {
+				else if (this.animationSetting.getMode() == "Jitter" || this.animationSetting.is("Jitter")) {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
 					ir.transformFirstPersonItem(0, (swingProgress == 0) ? 0 : partialTicks / 100);
 				}
-				else if (animationSetting.getMode() == "Multi Tap") {
+				else if (this.animationSetting.getMode() == "Multi Tap" || this.animationSetting.is("Multi Tap")) {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
 					ir.transformFirstPersonItem(0, swingProgress - 2.5f);
 				}
-				else if (animationSetting.getMode() == "Tap") {
+				else if (this.animationSetting.getMode() == "Tap" || this.animationSetting.is("Tap")) {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
 					ir.transformFirstPersonItem(0, swingProgress - 1);
 				}
-				else if (animationSetting.getMode() == "Spin") {
+				else if (this.animationSetting.getMode() == "Spin" || this.animationSetting.is("Spin")) {
 					
 					ir.renderItem(mc.thePlayer, mc.thePlayer.getHeldItem(), TransformType.FIRST_PERSON);
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
@@ -91,7 +91,7 @@ public class OldHitting extends Module {
 					GlStateManager.rotate(swingProgress * 360, 1, 0, -1);
 					
 				}
-				else if (animationSetting.getMode() == "Scale") {
+				else if (this.animationSetting.getMode() == "Scale" || this.animationSetting.is("Scale")) {
 					
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
 					ir.transformFirstPersonItem(0, 0);
@@ -99,7 +99,7 @@ public class OldHitting extends Module {
 					GlStateManager.scale(1 / (swingProgress + 1.4), 1 / (swingProgress + 1.4) , 1 / (swingProgress + 1.4));
 					
 				}
-				else if (animationSetting.getMode() == "Spicy") {
+				else if (animationSetting.getMode() == "Spicy" || this.animationSetting.is("Spicy")) {
 					
 					GlStateManager.translate(-0.15f, 0.2f, -0.2f);
 					

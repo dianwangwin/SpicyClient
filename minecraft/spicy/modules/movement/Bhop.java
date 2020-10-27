@@ -205,25 +205,24 @@ public class Bhop extends Module {
 						
 						mc.thePlayer.jump();
 						//mc.thePlayer.motionY = 0.42f;
-						mc.timer.timerSpeed = 1.28f;
+						e.setCanceled(true);
 						
 					}else {
 						
-						mc.timer.timerSpeed = 1.0f;
-						float f = (float) MovementUtils.getDirection() + 180 - 45;
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.26F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.26F) * -1;
+						//mc.timer.timerSpeed = 1.0f;
+						//float f = (float) MovementUtils.getDirection() + 180 - 45;
+			            //mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.26F);
+			            //mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.26F) * -1;
 			            
 			            //mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
 								//mc.thePlayer.posZ);
-			            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
+			            //mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 			            
 					}
 					
-					
-					if (mc.thePlayer.fallDistance > 5) {
-						mc.timer.timerSpeed = 1f;
-					}
+					float f = (float) MovementUtils.getDirection() + 180 - 45;
+		            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.2999999F);
+		            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.2999999F) * -1;
 					
 				}
 				else if (mode.is("Test 3") && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed)) {
@@ -231,8 +230,8 @@ public class Bhop extends Module {
 					if (mc.thePlayer.onGround) {
 						
 						mc.thePlayer.jump();
-						mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
-						//mc.thePlayer.motionY = 0.42f;
+						//mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
+						mc.thePlayer.motionY = 0.4f;
 						
 					}else {
 						

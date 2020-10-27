@@ -417,12 +417,8 @@ public class Killaura extends Module {
 		
 		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(ent, new Vec3((double)randomNumber(-50, 50)/100, (double)randomNumber(0, 200)/100, (double)randomNumber(-50, 50)/100)));
 		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(ent, Action.INTERACT));
-		mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.410153517, -0.4583644, -0.4186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
-		//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.410153517, -0.4083644, -0.4186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
-		//Command.sendPrivateChatMessage("Old: " + getHypixelBlockpos(mc.getSession().getUsername()) + " New: " + getHypixelBlockpos(mc.getSession().getUsername()).add(0, -0.1083644, 0));
-		//Command.sendPrivateChatMessage("Old: " + getHypixelBlockpos(mc.getSession().getUsername()) + " New: " + target.getPosition());
-		//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(getHypixelBlockpos(mc.getSession().getUsername()), 255, mc.thePlayer.inventory.getCurrentItem(), 0,0,0));
-		//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(getHypixelBlockpos(mc.getSession().getUsername()), 255, mc.thePlayer.inventory.getCurrentItem(), 0,0,0));
+		//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.410153517, -0.4583644, -0.4186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
+		mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.910153517, -0.9083644, -0.9186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
 	}
 	
     public boolean sendUseItem(EntityPlayer playerIn, World worldIn, ItemStack itemStackIn)
