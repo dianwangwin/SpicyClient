@@ -408,6 +408,10 @@ public class Killaura extends Module {
 		
 	}
 	
+	private static transient Timer change = new Timer();
+	private static transient Random random = new Random();
+	private static transient float hypixelBlockRandom = ((float)(random.nextInt(9999))) / 100000;
+	
 	private void blockHypixel(EntityLivingBase ent) {
 		//isBlocking = true;
 		
@@ -417,9 +421,13 @@ public class Killaura extends Module {
 		
 		sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());
 		
+		if (change.hasTimeElapsed(10000, true)) {
+			hypixelBlockRandom = ((float)(random.nextInt(9999))) / 100000;
+		}
+		
 		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(ent, new Vec3((double)randomNumber(-50, 50)/100, (double)randomNumber(0, 200)/100, (double)randomNumber(-50, 50)/100)));
 		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(ent, Action.INTERACT));
-		mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.410153517, -0.4583644, -0.4186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
+		mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.410153517, -0.4083644 + hypixelBlockRandom, -0.4186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
 		//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.410153517, -0.4083644, -0.4186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
 		//Command.sendPrivateChatMessage("Old: " + getHypixelBlockpos(mc.getSession().getUsername()) + " New: " + getHypixelBlockpos(mc.getSession().getUsername()).add(0, -0.1083644, 0));
 		//Command.sendPrivateChatMessage("Old: " + getHypixelBlockpos(mc.getSession().getUsername()) + " New: " + target.getPosition());
