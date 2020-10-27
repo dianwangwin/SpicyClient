@@ -86,7 +86,7 @@ public class Config {
 	}
 	
 	public boolean updateConfig() {
-		Command.sendPrivateChatMessage(this.killaura.targetsSetting.index + "");
+		
 		Config temp = new Config("temp");
 		if (this.version.equalsIgnoreCase(temp.version)) {
 			return false;

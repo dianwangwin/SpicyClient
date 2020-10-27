@@ -15,6 +15,7 @@ import spicy.events.listeners.EventMotion;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
 import spicy.modules.Module.Category;
+import spicy.util.MovementUtils;
 
 public class Phase extends Module {
 	
@@ -43,6 +44,15 @@ public class Phase extends Module {
 				event.setCanceled(true);
 				mc.thePlayer.motionY = 0;
 				mc.thePlayer.onGround = true;
+				//mc.thePlayer.noClip = true;
+				
+				if (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed) {
+					
+					float f = (float) MovementUtils.getDirection() + 180 - 45;
+		            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.3F);
+		            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.3F) * -1;
+					
+				}
 				
 				double y, y1;
 				mc.thePlayer.motionY = 0;
