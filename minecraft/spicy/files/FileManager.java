@@ -20,7 +20,9 @@ public class FileManager {
 	
 	public static File ROOT_DIR = new File("SpicyClient_V1");
 	public static File configs = new File(ROOT_DIR, "configs");
-	public static File skins = new File(ROOT_DIR, "skins");
+	
+	// Removed
+	//public static File skins = new File(ROOT_DIR, "skins");
 	
 	public static void init() {
 		
@@ -34,11 +36,15 @@ public class FileManager {
 			configs.mkdirs();
 			
 		}
+		
+		// Removed
+		/*
 		if (!skins.exists()) {
 			
 			skins.mkdirs();
 			
 		}
+		*/
 	}
 
 	public static Gson getGson() {
@@ -53,9 +59,12 @@ public class FileManager {
 		return configs;
 	}
 	
+	// Removed
+	/*
 	public static File getSkins() {
 		return skins;
 	}
+	*/
 	
 	public static boolean writeJsonToFile(File file, Object obj) throws IOException {
 		

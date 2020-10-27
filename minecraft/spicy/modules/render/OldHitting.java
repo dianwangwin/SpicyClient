@@ -16,7 +16,7 @@ import spicy.settings.ModeSetting;
 
 public class OldHitting extends Module {
 	
-	public static ModeSetting animationSetting = new ModeSetting("Animation", "1.7", "1.7", "Spaz", "Spaz 2", "Jitter", "Tap", "Multi Tap", "Spin", "Scale");
+	public ModeSetting animationSetting = new ModeSetting("Animation", "1.7", "1.7", "Spaz", "Spaz 2", "Jitter", "Tap", "Multi Tap", "Spin", "Scale", "Spicy");
 	
 	public OldHitting() {
 		super("OldHitting", Keyboard.KEY_NONE, Category.RENDER);
@@ -92,10 +92,26 @@ public class OldHitting extends Module {
 					
 				}
 				else if (animationSetting.getMode() == "Scale") {
+					
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
 					ir.transformFirstPersonItem(0, 0);
 					GlStateManager.scale(1.2, 1.2, 1.2);
 					GlStateManager.scale(1 / (swingProgress + 1.4), 1 / (swingProgress + 1.4) , 1 / (swingProgress + 1.4));
+					
+				}
+				else if (animationSetting.getMode() == "Spicy") {
+					
+					GlStateManager.translate(-0.15f, 0.2f, -0.2f);
+					
+					GlStateManager.translate(0, 0, -0.2f);
+					if (-swingProgress > -0.5) {
+						GlStateManager.translate(0, -swingProgress, 0);
+					}else {
+						GlStateManager.translate(0, swingProgress - 1f, 0);
+					}
+					
+					ir.transformFirstPersonItem(f, swingProgress);
+					
 				}
 				
 				ir.func_178103_d();

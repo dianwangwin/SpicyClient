@@ -454,45 +454,7 @@ public class Killaura extends Module {
             }
         }
     }
-	
-	public static BlockPos getHypixelBlockpos(String str){
-    	int val = 89;
-    	if(str != null && str.length() > 1){
-    		char[] chs = str.toCharArray();
-        	
-        	int lenght = chs.length;
-        	for(int i = 0; i < lenght; i++)
-        		val += (int)chs[i] * str.length()* str.length() + (int)str.charAt(0) + (int)str.charAt(1);
-        	val/=str.length();
-    	}
-    	return new BlockPos(val, -val%255, val);
-    }
-	
-	public float[] getRotations(Entity e) {
-		
-		double deltaX = e.posX + (e.posX - e.lastTickPosX) - mc.thePlayer.posX,
-				deltaY = e.posY - 3.5 + e.getEyeHeight() - mc.thePlayer.posY + mc.thePlayer.getEyeHeight(),
-				deltaZ = e.posZ + (e.posZ - e.lastTickPosZ) - mc.thePlayer.posZ,
-				distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaZ, 2));
-		
-		float yaw = (float) Math.toDegrees(-Math.atan(deltaX / deltaZ)),
-				pitch = (float) -Math.toDegrees(Math.atan(deltaY / distance));
-		
-		
-		if (deltaX < 0 && deltaZ < 0) {
-			
-			yaw = (float) (90 + Math.toDegrees(Math.atan(deltaZ/deltaX)));
-			
-		}else if (deltaX > 0 && deltaZ < 0) {
-			
-			yaw = (float) (-90 + Math.toDegrees(Math.atan(deltaZ/deltaX)));
-			
-		}
-		
-		return new float[] { yaw, pitch };
-		
-	}
-	
+    
 	private void stopBlocking() {
 		
         if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
@@ -546,51 +508,6 @@ public class Killaura extends Module {
 	// I found these methods on github somewhere
     public static int randomNumber(final int max, final int min) {
         return Math.round(min + (float)Math.random() * (max - min));
-    }
-    public static Long randomNumber(final Long max, final Long min) {
-        return Math.round(min + Math.random() * (max - min));
-    }
-    
-    private void getSmoothRotations(EventMotion e) throws NullPointerException {
-    	
-    	// Value 0.25 to 10
-        float yawFactor = 80;
-        float pitchFactor = 80;
-        
-        // Value 0.01 to 1
-        double xz = 0;
-        double y = 0;
-        float targetYaw = RotationUtils.getYawChange(target.posX + randomNumber() * xz, target.posZ + randomNumber() * xz, this.lastSmoothYaw, e.getX(), e.getZ());
-
-        if (targetYaw > 0 && targetYaw > yawFactor) {
-            //mc.thePlayer.rotationYaw += yawFactor;
-        	e.setYaw(this.lastSmoothYaw += yawFactor);
-        } else if (targetYaw < 0 && targetYaw < -yawFactor) {
-            //mc.thePlayer.rotationYaw -= yawFactor;
-        	e.setYaw(this.lastSmoothYaw -= yawFactor);
-        } else {
-            //mc.thePlayer.rotationYaw += targetYaw;
-            e.setYaw(this.lastSmoothYaw += targetYaw);
-        }
-
-        float targetPitch = RotationUtils.getPitchChange(target, target.posY + randomNumber() * y, this.lastSmoothPitch, e.getX(), e.getZ());
-
-        if (targetPitch > 0 && targetPitch > pitchFactor) {
-            //mc.thePlayer.rotationPitch += pitchFactor;
-        	e.setPitch(this.lastSmoothPitch += pitchFactor);
-        } else if (targetPitch < 0 && targetPitch < -pitchFactor) {
-            //mc.thePlayer.rotationPitch -= pitchFactor;
-        	e.setPitch(this.lastSmoothPitch -= pitchFactor);
-        } else {
-            //mc.thePlayer.rotationPitch += targetPitch;
-        	e.setPitch(this.lastSmoothPitch += targetPitch);
-        }
-        
-        this.lastSmoothYaw = e.yaw;
-        this.lastSmoothPitch = e.pitch;
-        
-        //mc.thePlayer.rotationYawHead = e.yaw;
-        
     }
     
     private int randomNumber() {
