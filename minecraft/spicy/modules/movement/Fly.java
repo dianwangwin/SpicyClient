@@ -68,6 +68,7 @@ public class Fly extends Module {
 			}
 			mc.thePlayer.jump();
 			mc.thePlayer.stepHeight = 0;
+			
 		}
 	}
 
@@ -183,11 +184,15 @@ public class Fly extends Module {
 					// mc.thePlayer.motionZ -= (double)(MathHelper.cos(f) * 0.008 * time);
 					// System.out.println(20 * time * -1);
 					if (time < 0) {
-						mc.timer.ticksPerSecond = 20 * time * -1;
+						mc.timer.ticksPerSecond = 20f * time * -1;
+						//mc.timer.ticksPerSecond = 21 * time * -1;
 					} else {
 						mc.timer.ticksPerSecond = 20f;
 					}
-
+					
+					//double offset = 9.947598300641403E-14D;
+					double offset = 9.947598300641403E-14D;
+					
 					switch (hypixelStage) {
 					case 0:
 						event.setY(mc.thePlayer.posY);
@@ -197,7 +202,9 @@ public class Fly extends Module {
 					case 1:
 						// mc.thePlayer.posY = mc.thePlayer.posY + 9.947598300641403E-14;
 						// mc.thePlayer.posY = mc.thePlayer.lastTickPosY + 0.0002000000000066393;
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
+						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
+								//mc.thePlayer.posZ);
+						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset,
 								mc.thePlayer.posZ);
 						event.setY(mc.thePlayer.posY);
 						hypixelStage++;
@@ -205,13 +212,18 @@ public class Fly extends Module {
 					case 2:
 						// mc.thePlayer.posY = mc.thePlayer.posY + -9.947598300641403E-14;
 						// mc.thePlayer.posY = mc.thePlayer.lastTickPosY -0.0002000000000066393;
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
+						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
+								//mc.thePlayer.posZ);
+						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -offset,
 								mc.thePlayer.posZ);
 						event.setY(mc.thePlayer.posY);
 						hypixelStage = 0;
 						break;
 					}
-
+					
+					DecimalFormat dec = new DecimalFormat("#.##########################################");
+					//Command.sendPrivateChatMessage(dec.format(offset));
+					
 				}
 
 			}

@@ -12,6 +12,8 @@ import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C00PacketKeepAlive;
+import net.minecraft.network.play.client.C02PacketUseEntity;
+import net.minecraft.network.play.client.C02PacketUseEntity.Action;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition;
 import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook;
@@ -24,6 +26,7 @@ import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.network.play.client.C18PacketSpectate;
 import net.minecraft.network.play.client.C19PacketResourcePackStatus;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+import net.minecraft.network.status.client.C00PacketServerQuery;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
@@ -221,9 +224,10 @@ public class Bhop extends Module {
 					}
 					
 					float f = (float) MovementUtils.getDirection() + 180 - 45;
-		            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.2999999F);
-		            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.2999999F) * -1;
-					
+		            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.35F);
+		            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.35F) * -1;
+		            Command.sendPrivateChatMessage(mc.thePlayer.motionX + " - " + mc.thePlayer.motionZ);
+		            
 				}
 				else if (mode.is("Test 3") && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed)) {
 					
