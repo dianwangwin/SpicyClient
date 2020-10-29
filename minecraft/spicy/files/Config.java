@@ -73,6 +73,7 @@ public class Config {
 	public TriggerBot triggerBot = new TriggerBot();
 	public Trail trail = new Trail();
 	public ReachNotify reachNotify = new ReachNotify();
+	public HideName hideName = new HideName();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -133,6 +134,7 @@ public class Config {
 			this.trail = new Trail();
 			this.reachNotify = new ReachNotify();
 			this.oldHitting = new OldHitting();
+			this.hideName = new HideName();
 			
 			this.tabgui.mode = new ModeSetting("Mode", "original", "compressed", "original");
 			
