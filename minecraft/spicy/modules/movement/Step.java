@@ -2,6 +2,7 @@ package spicy.modules.movement;
 
 import org.lwjgl.input.Keyboard;
 
+import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventMotion;
 import spicy.events.listeners.EventUpdate;
@@ -74,20 +75,19 @@ public class Step extends Module {
 			if (e.isPre() && mode.is("Vanilla")) {
 				mc.thePlayer.stepHeight = 1f;
 			}
-			else if (e.isPre() && mode.is("NCP")) {
-				
-				if (mc.thePlayer.isCollidedHorizontally && mc.thePlayer.onGround) {
-					mc.timer.ticksPerSecond = 40f;
-					mc.thePlayer.jump();
-					stepped = true;
-					mc.thePlayer.setSprinting(true);
-				}
-				else if (stepped && !mc.thePlayer.isCollidedHorizontally) {
-					mc.timer.ticksPerSecond = 20f;
-					mc.thePlayer.motionY = 0;
-					stepped = false;
-					mc.thePlayer.setSprinting(true);
-				}
+			
+			else if (e.isBeforePre() && mode.is("NCP")) {
+            	if (mc.thePlayer.isCollidedHorizontally && mc.thePlayer.onGround) {
+            		mc.timer.timerSpeed = 1.5f;
+            		mc.thePlayer.onGround = true;
+            		mc.thePlayer.jump();
+            		stepped = true;
+            	}
+            	else if (stepped && mc.thePlayer.onGround) {
+            		mc.timer.timerSpeed = 1.0f;
+            		mc.thePlayer.motionY = 0;
+            		stepped = false;
+            	}
 				
 			}
 			
