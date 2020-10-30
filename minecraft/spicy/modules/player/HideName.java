@@ -6,6 +6,7 @@ import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.util.ChatComponentText;
 import spicy.events.Event;
 import spicy.events.listeners.EventPacket;
+import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
 import spicy.settings.ModeSetting;
 
@@ -27,6 +28,10 @@ public class HideName extends Module {
 	@Override
 	public void onEvent(Event e) {
 		
+		if (e instanceof EventUpdate && e.isPre()) {
+			this.additionalInformation = mode.getMode();
+		}
+		
 		if (e instanceof EventPacket && e.isPre()) {
 			
 			EventPacket packetEvent = (EventPacket) e;
@@ -34,8 +39,8 @@ public class HideName extends Module {
 				
 				S02PacketChat packet = (S02PacketChat) packetEvent.packet;
 				
-				if (packet.getChatComponent().getUnformattedText().contains(mc.getSession().getUsername())) {
-					mc.thePlayer.addChatComponentMessage(new ChatComponentText(packet.getChatComponent().getFormattedText().replaceAll(mc.getSession().getUsername(), mode.getMode())));
+				if (packet.getChatComponent().getUnformattedText().replaceAll("׼", "").contains(mc.getSession().getUsername())) {
+					mc.thePlayer.addChatComponentMessage(new ChatComponentText(packet.getChatComponent().getFormattedText().replaceAll("׼", "").replaceAll(mc.getSession().getUsername(), mode.getMode())));
 					e.setCanceled(true);
 				}
 				
