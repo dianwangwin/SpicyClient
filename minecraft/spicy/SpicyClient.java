@@ -204,10 +204,9 @@ public class SpicyClient {
 		
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public static void onEvent(Event e) {
 		
-		if (Minecraft.getMinecraft().thePlayer == null) {
+		if (Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null) {
 			return;
 		}
 		

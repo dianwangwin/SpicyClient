@@ -17,7 +17,7 @@ public abstract class ModelBase
     private Map<String, TextureOffset> modelTextureMap = Maps.<String, TextureOffset>newHashMap();
     public int textureWidth = 64;
     public int textureHeight = 32;
-
+    
     /**
      * Sets the models various rotation angles then renders the model.
      */

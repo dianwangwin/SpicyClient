@@ -3,8 +3,7 @@ package spicy.cosmetics;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import spicy.SpicyClient;
-import spicy.cosmetics.impl.DougDimmadome;
-import spicy.cosmetics.impl.Tophat;
+import spicy.cosmetics.impl.*;
 
 public class CosmeticController {
 	
