@@ -424,7 +424,7 @@ public class Killaura extends Module {
 		
 		// New autoblock
 		//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.610153517F, -0.8153644002160668F, -0.7186343F), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
-		mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.999999999999999999999999999f, -0.999999999999999999999999999f, -0.999999999999999999999999999f), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
+		mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.0095f, -0.0095f, -0.0095f), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
 		
 		//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.910153517, -0.9083644, -0.9186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
 	}
