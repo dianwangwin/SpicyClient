@@ -191,7 +191,7 @@ public class Fly extends Module {
 					}
 					
 					//double offset = 9.947598300641403E-14D;
-					double offset = 9.947598300641403E-14D;
+					double offset = 9.947599900641403E-14D;
 					
 					switch (hypixelStage) {
 					case 0:
