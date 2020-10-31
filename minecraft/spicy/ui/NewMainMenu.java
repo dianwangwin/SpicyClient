@@ -101,6 +101,7 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ Hypixel antivoid");
         changeLogs.add("+ Hypixel chat bypass");
         changeLogs.add("+ Hypixel autoblock");
+        changeLogs.add("+ Hypixel killsults");
         changeLogs.add("+ Payback for pvplands killsults");
         changeLogs.add("+ Vanilla nofall");
         changeLogs.add("+ Vanilla and packet autolog");

@@ -12,7 +12,7 @@ import spicy.settings.ModeSetting;
 
 public class HideName extends Module {
 	
-	private ModeSetting mode = new ModeSetting("Name", "You", "You", "MooshroomMashUp", "Fox_of_floof", "lavaflowglow", "_Floofy_Fox_");
+	public ModeSetting mode = new ModeSetting("Name", "You", "You", "MooshroomMashUp", "Fox_of_floof", "lavaflowglow", "_Floofy_Fox_");
 	
 	public HideName() {
 		super("HideName", Keyboard.KEY_NONE, Category.PLAYER);

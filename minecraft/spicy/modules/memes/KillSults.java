@@ -2,12 +2,14 @@ package spicy.modules.memes;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.lwjgl.input.Keyboard;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -16,6 +18,7 @@ import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.network.play.client.C02PacketUseEntity.Action;
+import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventChatmessage;
 import spicy.events.listeners.EventMotion;
@@ -29,7 +32,7 @@ import spicy.settings.SettingChangeEvent;
 public class KillSults extends Module {
 	
 	private ModeSetting messageMode = new ModeSetting("Message Type", "Furry", "Furry", "Retarded Furry", "Annoying", "SpicyClient Ads");
-	private ModeSetting serverMode = new ModeSetting("Server Mode", "PvpLands", "PvpLands", "Test");
+	private ModeSetting serverMode = new ModeSetting("Server Mode", "PvpLands", "PvpLands", "Hypixel", "Test");
 	
 	public BooleanSetting pvplandsPayback = new BooleanSetting("Payback", false);
 	
@@ -78,6 +81,16 @@ public class KillSults extends Module {
 					}
 					
 				}
+				else if (serverMode.is("Hypixel")) {
+					
+					if (this.settings.contains(pvplandsPayback)) {
+						
+						settings.remove(pvplandsPayback);
+						this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
+						
+					}
+					
+				}
 				
 			}
 			
@@ -108,7 +121,7 @@ public class KillSults extends Module {
 		
 		if (e instanceof EventPacket) {
 			
-			if (e.isPre()) {
+			if (e.isBeforePre()) {
 				
 				if (e.isIncoming()) {
 					
@@ -151,7 +164,7 @@ public class KillSults extends Module {
 							
 						}
 						
-						if (serverMode.is("PvpLands")) {
+						if (serverMode.is("PvpLands") || serverMode.getMode() == "PvpLands") {
 							
 							sendMessage = true;
 							
@@ -169,6 +182,101 @@ public class KillSults extends Module {
 							}else {
 								return;
 							}
+							
+						}
+						else if (serverMode.is("Hypixel") || serverMode.getMode() == "Hypixel") {
+							
+							sendMessage = false;
+							String message = packet.getChatComponent().getUnformattedText();
+							
+							if (message == null) {
+								return;
+							}
+							
+							String[] strings = packet.getChatComponent().getFormattedText().split(" ");
+							
+							if (strings == null) {
+								return;
+							}
+							
+				        	//if((message.toLowerCase().contains("you won! want to play again? click here!") || message.toLowerCase().contains("coins! (win)")) || message.toLowerCase().contains("experience! (win)")){
+							if((message.toLowerCase().contains("queued! use the bed to return to lobby!")) || message.toLowerCase().contains("coins! (win)") || message.toLowerCase().contains("experience! (win)")){
+				        		
+								if (messageMode.is("Annoying") || messageMode.getMode() == "Annoying") {
+									Command.sendPublicChatMessage("E׼Z");
+								}else {
+									Command.sendPublicChatMessage("GG");
+								}
+								
+				        		return;
+				        	}
+							
+							if(message.toLowerCase().contains("was killed by " + mc.thePlayer.getName().toLowerCase()) || message.toLowerCase().contains("was thrown into the void by " + mc.thePlayer.getName().toLowerCase()) || message.toLowerCase().contains("was knocked into the void by " + mc.thePlayer.getName().toLowerCase()) || message.toLowerCase().contains("was thrown off a cliff by " + mc.thePlayer.getName().toLowerCase())){
+								
+								// Counts the amount of players in the game
+								int players = 0;
+								
+								ArrayList<EntityPlayer> playersLeft = new ArrayList<EntityPlayer>();
+								
+								try{
+			        				for(Object o : mc.theWorld.loadedEntityList){
+			            				Entity t = (Entity)o;
+			            				if(t instanceof EntityPlayer){
+			            					EntityPlayer p = (EntityPlayer)t;
+			            					
+			            					if(p != null && !p.isInvisible()){
+			            						players++;
+			            						playersLeft.add(p);
+			            					}
+			            				}
+			            			}
+			        			}catch(ConcurrentModificationException y){
+			        				
+			        			}
+								
+			        			if(players != 0 && players != 1 && players != 2 && playersLeft != null && strings != null){
+			        				
+			        				Random random = new Random();
+									message = killsults.get(random.nextInt(killsults.size()));
+									
+									playerName = "";
+									
+									for (String s : strings) {
+										
+										for (EntityPlayer p : playersLeft) {
+											
+											if (p != null && p != mc.thePlayer && s != null && s.toLowerCase().contains((p.getName()).toLowerCase())) {
+												
+												playerName = p.getName();
+												
+											}
+											
+										}
+										
+									}
+									
+									if (playerName == "") {
+										return;
+									}
+									
+									message = message.replaceAll("<PlayerName>", playerName);
+									if (messageMode.is("Retarded Furry") || messageMode.getMode() == "Retarded Furry" || messageMode.is("Annoying") || messageMode.getMode() == "Annoying" || messageMode.is("SpicyClient Ads") || messageMode.getMode() == "SpicyClient Ads") {
+										mc.thePlayer.sendChatMessage(message);
+									}else {
+										Command.sendPublicChatMessage(message);
+									}
+									return;
+			        				
+			        			}else {
+			        				return;
+			        			}
+								
+							}else {
+								return;
+							}
+							
+						}
+						else if (serverMode.is("Test") || serverMode.getMode() == "Test") {
 							
 						}else {
 							

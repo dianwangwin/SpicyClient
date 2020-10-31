@@ -25,14 +25,24 @@ import spicy.events.listeners.EventPlayerRender;
 import spicy.events.listeners.EventRenderGUI;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
+import spicy.settings.BooleanSetting;
 import spicy.settings.NumberSetting;
 import spicy.util.RenderUtils;
 
 public class PlayerESP extends Module {
 	
+	public BooleanSetting boxes = new BooleanSetting("Boxes", true);
+	public BooleanSetting chams = new BooleanSetting("Chams", false);
+	
 	public PlayerESP() {
 		super("PlayerESP", Keyboard.KEY_NONE, Category.RENDER);
-		
+		resetSettings();
+	}
+	
+	@Override
+	public void resetSettings() {
+		this.settings.clear();
+		this.addSettings(boxes, chams);
 	}
 	
 	public void onEnable() {
@@ -45,26 +55,35 @@ public class PlayerESP extends Module {
 	
 	public void onEvent(Event e) {
 		
-		
 		if (e instanceof EventPlayerRender) {
 			
 			if (e.isPre()) {
 				
-				GlStateManager.disableDepth();
+				//GlStateManager.disableDepth();
+				if (chams.isEnabled()) {
+	                GL11.glEnable(32823);
+	                GL11.glPolygonOffset(1.0f, -1100000.0f);
+				}
 				
 				EventPlayerRender event = (EventPlayerRender) e;
 				
-				AbstractClientPlayer player = event.entity;
-				//RenderUtils.renderAxisAlignedBB(player.boundingBox);
-				RenderUtils.drawPlayerBox(player.posX, player.posY, player.posZ, player);
+				if (boxes.isEnabled()) {
+					AbstractClientPlayer player = event.entity;
+					//RenderUtils.renderAxisAlignedBB(player.boundingBox);
+					RenderUtils.drawPlayerBox(player.posX, player.posY, player.posZ, player);
+				}
 				
-				GlStateManager.enableDepth();
+				//GlStateManager.enableDepth();
 				
 			}
 			
 			if (e.isPost()) {
 				
 				//GlStateManager.enableDepth();
+				if (chams.isEnabled()) {
+	                GL11.glDisable(32823);
+	                GL11.glPolygonOffset(1.0f, 1100000.0f);
+				}
 				
 			}
 			

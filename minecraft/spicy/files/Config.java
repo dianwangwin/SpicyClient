@@ -105,7 +105,6 @@ public class Config {
 		}
 		else if (this.version.equalsIgnoreCase("B2")) {
 			
-			this.killSults.pvplandsPayback = new BooleanSetting("Payback", false);
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
 			this.killaura.newAutoblock.cycle(false);
@@ -135,6 +134,7 @@ public class Config {
 			this.reachNotify = new ReachNotify();
 			this.oldHitting = new OldHitting();
 			this.hideName = new HideName();
+			this.killSults = new KillSults();
 			
 			this.tabgui.mode = new ModeSetting("Mode", "original", "compressed", "original");
 			
