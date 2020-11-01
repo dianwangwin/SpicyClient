@@ -109,7 +109,6 @@ public class YawAndPitchSpoof extends Module {
 			}
 			
 			if (event.packet instanceof C08PacketPlayerBlockPlacement || event.packet instanceof C02PacketUseEntity || event.packet instanceof C0APacketAnimation || event.packet instanceof C07PacketPlayerDigging) {
-				Command.sendPrivateChatMessage(event.packet.toString());
 				mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C05PacketPlayerLook(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch, mc.thePlayer.onGround));
 			}
 			
