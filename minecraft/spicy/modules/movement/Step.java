@@ -32,10 +32,7 @@ public class Step extends Module {
 		
 		if (e.setting.equals(mode)) {
 			
-			if (mc.thePlayer == null) {
-				
-			}
-			else if (mode.is("Vanilla") && this.isToggled()) {
+			if (mode.is("Vanilla") && this.isToggled()) {
 				mc.thePlayer.stepHeight = 1f;
 				mc.timer.ticksPerSecond = 20f;
 			}

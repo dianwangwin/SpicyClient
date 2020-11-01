@@ -210,8 +210,7 @@ public class KillSults extends Module {
 								
 				        		return;
 				        	}
-							
-							if(message.toLowerCase().contains("was killed by " + mc.thePlayer.getName().toLowerCase()) || message.toLowerCase().contains("was thrown into the void by " + mc.thePlayer.getName().toLowerCase()) || message.toLowerCase().contains("was knocked into the void by " + mc.thePlayer.getName().toLowerCase()) || message.toLowerCase().contains("was thrown off a cliff by " + mc.thePlayer.getName().toLowerCase())){
+							if(message.toLowerCase().contains("was killed by " + mc.thePlayer.getName().toLowerCase()) || message.toLowerCase().contains("was thrown into the void by " + mc.thePlayer.getName().toLowerCase()) || message.toLowerCase().contains("was knocked into the void by " + mc.thePlayer.getName().toLowerCase()) || message.toLowerCase().contains("was thrown off a cliff by " + mc.thePlayer.getName().toLowerCase()) || packet.getChatComponent().getUnformattedText().toLowerCase().contains("§a§lkill!")){
 								
 								// Counts the amount of players in the game
 								int players = 0;

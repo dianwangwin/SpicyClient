@@ -4,8 +4,20 @@ import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 
+import net.minecraft.network.play.client.C02PacketUseEntity;
+import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C07PacketPlayerDigging;
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import net.minecraft.network.play.client.C0APacketAnimation;
+import net.minecraft.network.play.client.C0BPacketEntityAction;
+import net.minecraft.network.play.client.C0CPacketInput;
+import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
+import spicy.SpicyClient;
+import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventMotion;
+import spicy.events.listeners.EventPacket;
+import spicy.events.listeners.EventSendPacket;
 import spicy.modules.Module;
 import spicy.settings.BooleanSetting;
 import spicy.settings.ModeSetting;
@@ -35,20 +47,22 @@ public class YawAndPitchSpoof extends Module {
 	@Override
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventMotion) {
+		if (e instanceof EventSendPacket && e.isBeforePre() && !SpicyClient.config.killaura.isEnabled()) {
 			
-			EventMotion event = (EventMotion) e;
+			EventSendPacket event = (EventSendPacket) e;
 			
-			if (e.isBeforePre()) {
+			if (event.packet instanceof C03PacketPlayer.C05PacketPlayerLook) {
+				
+				C03PacketPlayer.C05PacketPlayerLook packet = (C03PacketPlayer.C05PacketPlayerLook) event.packet;
 				
 				if (pitchMode.is("Down")) {
-					event.setPitch(90);
+					packet.setPitch(90);
 				}
 				else if (pitchMode.is("Up")) {
-					event.setPitch(-90);
+					packet.setPitch(-90);
 				}
 				else if (pitchMode.is("Middle")) {
-					event.setPitch(0);
+					packet.setPitch(0);
 				}
 				else if (pitchMode.is("No Spoof")) {
 					
@@ -58,12 +72,45 @@ public class YawAndPitchSpoof extends Module {
 					
 				}
 				else if (yawMode.is("Reversed")) {
-					event.setYaw(mc.thePlayer.rotationYaw + 180);
+					packet.setYaw(mc.thePlayer.rotationYaw + 180);
 				}
 				else if (yawMode.is("No Spoof")) {
 					
 				}
 				
+			}
+			else if (event.packet instanceof C03PacketPlayer.C06PacketPlayerPosLook) {
+				
+				C03PacketPlayer.C06PacketPlayerPosLook packet = (C03PacketPlayer.C06PacketPlayerPosLook) event.packet;
+				
+				if (pitchMode.is("Down")) {
+					packet.setPitch(90);
+				}
+				else if (pitchMode.is("Up")) {
+					packet.setPitch(-90);
+				}
+				else if (pitchMode.is("Middle")) {
+					packet.setPitch(0);
+				}
+				else if (pitchMode.is("No Spoof")) {
+					
+				}
+				
+				if (yawMode.is("Forward")) {
+					
+				}
+				else if (yawMode.is("Reversed")) {
+					packet.setYaw(mc.thePlayer.rotationYaw + 180);
+				}
+				else if (yawMode.is("No Spoof")) {
+					
+				}
+				
+			}
+			
+			if (event.packet instanceof C08PacketPlayerBlockPlacement || event.packet instanceof C02PacketUseEntity || event.packet instanceof C0APacketAnimation || event.packet instanceof C07PacketPlayerDigging) {
+				Command.sendPrivateChatMessage(event.packet.toString());
+				mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C05PacketPlayerLook(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch, mc.thePlayer.onGround));
 			}
 			
 		}
