@@ -167,7 +167,7 @@ public class KillSults extends Module {
 						if (serverMode.is("PvpLands") || serverMode.getMode() == "PvpLands") {
 							
 							sendMessage = true;
-							Command.sendPrivateChatMessage(packet.getChatComponent().getFormattedText().replace("§", "|"));
+							
 							if (packet.getChatComponent().getFormattedText().toLowerCase().contains("§r§ayou've killed") && packet.getChatComponent().getFormattedText().contains(" received ")) {
 								
 								String[] strings = packet.getChatComponent().getFormattedText().split(" ");
