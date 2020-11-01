@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.lwjgl.input.Keyboard;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -39,6 +40,7 @@ import spicy.SpicyClient;
 import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventMotion;
+import spicy.events.listeners.EventPlayerRenderUtilRender;
 import spicy.events.listeners.EventRenderGUI;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
@@ -323,20 +325,16 @@ public class Killaura extends Module {
 							
 						}
 						
+                        float[] rotations = RotationUtils.getRotations(target);
+                        //mc.thePlayer.rotationYawHead = rotations[0];
+                		Minecraft.getMinecraft().thePlayer.renderYawOffset = rotations[0];
+                		Minecraft.getMinecraft().thePlayer.setRotationYawHead(rotations[0]);
+						
 					}
 					
 					Random random = new Random();
 					
 					startBlocking(false);
-					
-					if (rotationSetting.is("lock") || rotationSetting.getMode() == "lock") {
-						
-                        float[] rotations = RotationUtils.getRotations(target);
-                        mc.thePlayer.rotationYawHead = rotations[0];
-                        
-						//mc.thePlayer.rotationYawHead = getRotations(target)[0];
-                        
-					}
 					
 					if (hitOnHurtTime.isEnabled()) {
 						if (target.hurtTime > 2) {

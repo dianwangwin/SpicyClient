@@ -34,6 +34,7 @@ import spicy.events.Event;
 import spicy.events.EventType;
 import spicy.events.listeners.EventChatmessage;
 import spicy.events.listeners.EventKey;
+import spicy.events.listeners.EventPlayerRenderUtilRender;
 import spicy.events.listeners.EventUpdate;
 import spicy.files.AltInfo;
 import spicy.files.Config;
@@ -270,7 +271,33 @@ public class SpicyClient {
 				m.onEvent(e);
 				
 			}
-			
+			else if (!m.toggled || m instanceof ClickGUI) {
+				
+				boolean sendTwice = false;
+				
+				if (e.isPre()) {
+					e.setType(EventType.BEFOREPRE);
+					sendTwice = true;
+				}
+				else if (e.isPost()) {
+					e.setType(EventType.BEFOREPOST);
+					sendTwice = true;
+				}
+				
+				if (sendTwice) {
+					m.onEventWhenDisabled(e);
+				}
+				
+				if (e.isBeforePre()) {
+					e.setType(EventType.PRE);
+				}
+				else if (e.isBeforePost()) {
+					e.setType(EventType.POST);
+				}
+				
+				m.onEventWhenDisabled(e);
+				
+			}
 			
 		}
 		

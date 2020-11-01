@@ -95,6 +95,10 @@ public class Module {
 		
 	}
 	
+	public void onEventWhenDisabled(Event e) {
+		
+	}
+	
 	public void onSettingChange(SettingChangeEvent e) {
 		
 	}
