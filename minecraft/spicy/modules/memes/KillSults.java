@@ -167,12 +167,12 @@ public class KillSults extends Module {
 						if (serverMode.is("PvpLands") || serverMode.getMode() == "PvpLands") {
 							
 							sendMessage = true;
-							
-							if (packet.getChatComponent().getFormattedText().contains("§r§aYou've killed") && packet.getChatComponent().getFormattedText().contains(" for ")) {
+							Command.sendPrivateChatMessage(packet.getChatComponent().getFormattedText().replace("§", "|"));
+							if (packet.getChatComponent().getFormattedText().toLowerCase().contains("§r§ayou've killed") && packet.getChatComponent().getFormattedText().contains(" received ")) {
 								
 								String[] strings = packet.getChatComponent().getFormattedText().split(" ");
 								
-								playerName = strings[3];
+								playerName = strings[2];
 								String moneyBack = strings[5];
 								moneyBack = moneyBack.replace("§", "");
 								if (pvplandsPayback.enabled) {
