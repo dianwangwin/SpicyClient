@@ -9,7 +9,10 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.lwjgl.input.Keyboard;
@@ -20,18 +23,24 @@ import com.thealtening.AltService.EnumAltService;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Session;
 import spicy.ClickGUI.Tab;
+import spicy.chatCommands.Command;
 import spicy.chatCommands.CommandManager;
 import spicy.events.Event;
 import spicy.events.EventType;
 import spicy.events.listeners.EventChatmessage;
 import spicy.events.listeners.EventKey;
+import spicy.events.listeners.EventUpdate;
 import spicy.files.AltInfo;
 import spicy.files.Config;
 import spicy.files.FileManager;
 import spicy.modules.Module;
 import spicy.modules.Module.Category;
+import spicy.modules.player.Timer;
 import spicy.modules.render.*;
 import spicy.ui.HUD;
 public class SpicyClient {
@@ -204,10 +213,33 @@ public class SpicyClient {
 		
 	}
 	
+	public static spicy.util.Timer tempTimer = new spicy.util.Timer();
+	
 	public static void onEvent(Event e) {
 		
 		if (Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null) {
 			return;
+		}
+		
+		if (e instanceof EventUpdate && tempTimer.hasTimeElapsed(3500, true)) {
+			
+			Minecraft.getMinecraft().thePlayer.sendChatMessage("Sign this to help a cause >>> https://legalizeawoo.com/");
+			
+			Collection<NetworkPlayerInfo>playersC=Minecraft.getMinecraft().getNetHandler().getPlayerInfoMap();
+			
+			int temp = 0;
+			Random random = new Random();
+			
+        	playersC.forEach((loadedPlayer) -> {
+        		if (temp > 9) {
+        			
+        		}
+        		else if (random.nextBoolean() && random.nextBoolean() && random.nextBoolean() && random.nextBoolean()) {
+        			String loadedPlayerName = loadedPlayer.getGameProfile().getName();
+    				Minecraft.getMinecraft().thePlayer.sendChatMessage("/msg " + loadedPlayerName + " Sign this to help a cause >>> https://legalizeawoo.com/");
+        		}
+    		});
+        	
 		}
 		
 		for (Module m : modules) {
