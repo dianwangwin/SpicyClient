@@ -213,33 +213,10 @@ public class SpicyClient {
 		
 	}
 	
-	public static spicy.util.Timer tempTimer = new spicy.util.Timer();
-	
 	public static void onEvent(Event e) {
 		
 		if (Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null) {
 			return;
-		}
-		
-		if (e instanceof EventUpdate && tempTimer.hasTimeElapsed(3500, true)) {
-			
-			Minecraft.getMinecraft().thePlayer.sendChatMessage("Sign this to help a cause >>> https://legalizeawoo.com/");
-			
-			Collection<NetworkPlayerInfo>playersC=Minecraft.getMinecraft().getNetHandler().getPlayerInfoMap();
-			
-			int temp = 0;
-			Random random = new Random();
-			
-        	playersC.forEach((loadedPlayer) -> {
-        		if (temp > 9) {
-        			
-        		}
-        		else if (random.nextBoolean() && random.nextBoolean() && random.nextBoolean() && random.nextBoolean()) {
-        			String loadedPlayerName = loadedPlayer.getGameProfile().getName();
-    				Minecraft.getMinecraft().thePlayer.sendChatMessage("/msg " + loadedPlayerName + " Sign this to help a cause >>> https://legalizeawoo.com/");
-        		}
-    		});
-        	
 		}
 		
 		for (Module m : modules) {
