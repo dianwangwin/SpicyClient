@@ -168,7 +168,7 @@ public class KillSults extends Module {
 							
 							sendMessage = true;
 							
-							if (packet.getChatComponent().getFormattedText().contains("§r§aYou have killed ") && packet.getChatComponent().getFormattedText().contains(" for ")) {
+							if (packet.getChatComponent().getFormattedText().contains("§r§aYou've killed") && packet.getChatComponent().getFormattedText().contains(" for ")) {
 								
 								String[] strings = packet.getChatComponent().getFormattedText().split(" ");
 								
