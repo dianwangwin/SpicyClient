@@ -210,7 +210,7 @@ public class KillSults extends Module {
 								
 				        		return;
 				        	}
-							if(message.toLowerCase().contains("was killed by " + mc.thePlayer.getName().toLowerCase()) || message.toLowerCase().contains("was thrown into the void by " + mc.thePlayer.getName().toLowerCase()) || message.toLowerCase().contains("was knocked into the void by " + mc.thePlayer.getName().toLowerCase()) || message.toLowerCase().contains("was thrown off a cliff by " + mc.thePlayer.getName().toLowerCase()) || packet.getChatComponent().getUnformattedText().toLowerCase().contains("§a§lkill!")){
+							if(message.toLowerCase().contains("was killed by " + mc.thePlayer.getName().toLowerCase()) || message.toLowerCase().contains("was thrown into the void by " + mc.thePlayer.getName().toLowerCase()) || (message.toLowerCase().contains("was knocked into the void by") && message.toLowerCase().contains(mc.thePlayer.getName().toLowerCase())) || message.toLowerCase().contains("was thrown off a cliff by " + mc.thePlayer.getName().toLowerCase()) || packet.getChatComponent().getUnformattedText().toLowerCase().contains("§a§lkill!")){
 								
 								// Counts the amount of players in the game
 								int players = 0;
@@ -323,11 +323,14 @@ public class KillSults extends Module {
 		furryKillsults.add("<PlayerName> OwO");
 		furryKillsults.add("<PlayerName> UwU");
 		furryKillsults.add("<PlayerName> Awoo");
+		furryKillsults.add("<PlayerName> OwO?");
+		furryKillsults.add("<PlayerName> UwU?");
+		furryKillsults.add("<PlayerName> Awoo?");
 		furryKillsults.add("OwO <PlayerName>");
 		furryKillsults.add("UwU <PlayerName>");
-		furryKillsults.add("Hello <PlayerName> would you like to OwO with me");
-		furryKillsults.add("Hello <PlayerName> would you like to UwU with me");
-		furryKillsults.add("Hello <PlayerName> would you like to Awoo with me");
+		furryKillsults.add("Hello <PlayerName> would you like to OwO with me?");
+		furryKillsults.add("Hello <PlayerName> would you like to UwU with me?");
+		furryKillsults.add("Hello <PlayerName> would you like to Awoo with me?");
 		furryKillsults.add("<PlayerName> Should legalize awoo");
 		furryKillsults.add("<PlayerName> Help me legalize awoo");
 		furryKillsults.add("<PlayerName> #LegalizeAwoo");

@@ -25,6 +25,8 @@ import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
 import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
+import spicy.util.MovementUtils;
+import spicy.util.RotationUtils;
 import spicy.util.Timer;
 
 public class Fly extends Module {
@@ -63,9 +65,11 @@ public class Fly extends Module {
 			}
 			
 			hypixelStartTime = (long) (System.currentTimeMillis() + (3 * 1000));
+			
 			if (!SpicyClient.config.blink.isEnabled()) {
 				//SpicyClient.config.blink.toggle();
 			}
+			
 			mc.thePlayer.jump();
 			mc.thePlayer.stepHeight = 0;
 			
@@ -177,18 +181,30 @@ public class Fly extends Module {
 
 					mc.thePlayer.onGround = true;
 					mc.thePlayer.motionY = 0;
-
-					float f = mc.thePlayer.rotationYaw * 0.017453292F;
+					
+					//MovementUtils.setMotion(0.2);
+					MovementUtils.strafe(0.17f);
+					
+					
 					int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);
 					// mc.thePlayer.motionX += (double)(MathHelper.sin(f) * 0.008 * time);
 					// mc.thePlayer.motionZ -= (double)(MathHelper.cos(f) * 0.008 * time);
 					// System.out.println(20 * time * -1);
+					
+					// mc.thePlayer.motionX += (double)(MathHelper.sin(f) * 0.008 * time);
+					// mc.thePlayer.motionZ -= (double)(MathHelper.cos(f) * 0.008 * time);
+					// System.out.println(20 * time * -1);
+					
+					mc.timer.ticksPerSecond = 27f;
+					
+					/*
 					if (time < 0) {
 						mc.timer.ticksPerSecond = 20f * time * -1;
 						//mc.timer.ticksPerSecond = 21 * time * -1;
 					} else {
 						mc.timer.ticksPerSecond = 20f;
 					}
+					*/
 					
 					//double offset = 9.947598300641403E-14D;
 					double offset = 9.947599900641403E-14D;

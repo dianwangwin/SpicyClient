@@ -83,6 +83,5 @@ public class MovementUtils {
             mc.thePlayer.motionZ = forward * speed * Math.sin(Math.toRadians(yaw + 90.0F)) - strafe * speed * Math.cos(Math.toRadians(yaw + 90.0F));
         }
     }
-    // Found on github
     
 }
