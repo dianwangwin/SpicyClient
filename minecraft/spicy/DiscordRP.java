@@ -5,14 +5,19 @@ import net.arikia.dev.drpc.DiscordRPC;
 import net.arikia.dev.drpc.DiscordRichPresence;
 import net.arikia.dev.drpc.DiscordUser;
 import net.arikia.dev.drpc.callbacks.ReadyCallback;
+import spicy.chatCommands.Command;
+import spicy.modules.Module;
+import spicy.modules.render.ClickGUI;
 
 public class DiscordRP {
 	
-	private boolean running = true;
+	public boolean running = false;
+	public String lastLine = "";
 	private long created = 0;
 	
 	public void start() {
 		
+		this.running = true;
 		this.created = System.currentTimeMillis();
 		
 		DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().setReadyEventHandler(new ReadyCallback() {
@@ -49,11 +54,34 @@ public class DiscordRP {
 		
 	}
 	
-	public void update(String firstline, String secondline) {
+	public void refresh() {
+		
+		update(lastLine);
+		
+	}
+	
+	public void update(String secondline) {
+		
+		lastLine = secondline;
+		
+		int toggled = 0;
+		
+		for (Module m : SpicyClient.modules) {
+			
+			if (m.isEnabled() && !(m instanceof ClickGUI)) {
+				toggled++;
+			}
+			
+		}
 		
 		DiscordRichPresence.Builder b = new DiscordRichPresence.Builder(secondline);
 		b.setBigImage("profile4", "Hacking in minecraft with " + SpicyClient.config.clientName + SpicyClient.config.clientVersion);
-		b.setDetails("Client Name: " + firstline);
+		
+		if (SpicyClient.config.floofyFoxes.isEnabled() || (SpicyClient.config.hideName.isEnabled() && SpicyClient.config.hideName.mode.getMode().toLowerCase().contains("floof"))){
+			b.setSmallImage("floofyfox1", "This person is probably a furry...");
+		}
+		
+		b.setDetails(toggled + "/" + (SpicyClient.modules.size() - 2) + " Modules enabled");
 		b.setStartTimestamps(created);
 		
 		DiscordRPC.discordUpdatePresence(b.build());

@@ -120,6 +120,11 @@ public class Module {
 			}
 			
 		}
+		
+		if (SpicyClient.discord != null && SpicyClient.discord.running) {
+			SpicyClient.discord.refresh();
+		}
+		
 	}
 	
 	public void onEnable() {

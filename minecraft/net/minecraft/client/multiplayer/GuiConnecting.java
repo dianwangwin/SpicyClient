@@ -52,7 +52,7 @@ public class GuiConnecting extends GuiScreen
     {
         logger.info("Connecting to " + ip + ", " + port);
         
-        SpicyClient.discord.update(SpicyClient.config.clientName + SpicyClient.config.clientVersion, "Hacking on " + ip + (port != 25565 ? ":" + port : ""));
+        SpicyClient.discord.update("Hacking on " + ip + (port != 25565 ? ":" + port : ""));
         Display.setTitle(SpicyClient.config.clientName + SpicyClient.config.clientVersion + " - on the server " + ip + (port != 25565 ? ":" + port : ""));
         
         (new Thread("Server Connector #" + CONNECTION_ID.incrementAndGet())

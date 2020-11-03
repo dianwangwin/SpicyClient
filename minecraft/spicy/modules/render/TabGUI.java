@@ -48,6 +48,8 @@ public class TabGUI extends Module {
 	public transient int current_tab, module_index;
 	public transient boolean expanded;
 	
+	public int primaryColor = -1, secondaryColor = Color.HSBtoRGB(1, 0, 0.5f);
+	
 	public void onEvent(Event e) {
 		
 		if (mode.is("compressed") || mode.getMode() == "compressed") {
@@ -310,9 +312,6 @@ public class TabGUI extends Module {
 				int primColor = Color.HSBtoRGB(hue, 0.45f, 1);
 				int secColor = Color.HSBtoRGB(hue, 0.45f, 0.45f);
 				
-				int primaryColor = -1;
-				int secondaryColor = Color.HSBtoRGB(1, 0, 0.5f);
-				
 				if (rainbowEnabled) {
 					primaryColor = primColor;
 					secondaryColor = secColor;
@@ -469,9 +468,6 @@ public class TabGUI extends Module {
 				float hue = System.currentTimeMillis() % (int)(rainbowTimer * 1000) / (float)(rainbowTimer * 1000);
 				int primColor = Color.HSBtoRGB(hue, 0.45f, 1);
 				int secColor = Color.HSBtoRGB(hue, 0.45f, 0.45f);
-				
-				int primaryColor = -1;
-				int secondaryColor = Color.HSBtoRGB(1, 0, 0.5f);
 				
 				if (rainbowEnabled) {
 					primaryColor = primColor;

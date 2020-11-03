@@ -179,19 +179,19 @@ public class SpicyClient {
 		// Sets up the clickGui
 		float catOffset = Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 7;
 		for (Module.Category c : Module.CategoryList) {
-			
+
 			System.out.println("Setting up the " + c.name + " category for the click gui...");
 			Tab temp = new Tab();
 			temp.setName(c.name);
 			temp.setCategory(c);
-			temp.setX(Display.getWidth() / 5 - 50);
-			temp.setY((Display.getHeight() / 5) + catOffset);
+			temp.setX(30);
+			temp.setY(10 + catOffset);
 			temp.setOffsetX(0);
 			temp.setOffsetY(0);
 			spicy.ClickGUI.ClickGUI.tabs.add(temp);
-			catOffset += Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 7;
+			catOffset += Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 20;
 			System.out.println("The " + c.name + " category has been set up");
-			
+
 		}
 		
 	}
@@ -373,6 +373,7 @@ public class SpicyClient {
 		modules.add(c.trail);
 		modules.add(c.reachNotify);
 		modules.add(c.hideName);
+		modules.add(c.discordRichPresence);
 		
 		for (Module temp : SpicyClient.modules) {
 			

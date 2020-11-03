@@ -35,6 +35,8 @@ public class ClickGUI extends GuiScreen {
 		last = this.last;
 	}
 	
+	public static int accentColor = 0xffff0000;
+	
 	public static FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 	
 	public static ArrayList<Tab> tabs = new ArrayList<Tab>();
@@ -68,7 +70,7 @@ public class ClickGUI extends GuiScreen {
 			
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(4, 4, 0);
-			GlStateManager.scale(1.5, 1.5, 1);
+			GlStateManager.scale(1, 1, 1);
 			GlStateManager.translate(-4, -4, 0);
 			
 			maxWidth = fr.getStringWidth(t.getName());
@@ -88,15 +90,15 @@ public class ClickGUI extends GuiScreen {
 				//changedX = maxWidth - ((mouseX*0.67f) + offsetX - maxWidth);
 				//changedY = ((mouseY*0.67f));
 				
-				t.setX(mouseX*0.67f);
-				t.setY(mouseY*0.67f);
-				changedX = (mouseX*0.67f);
-				changedY = (mouseY*0.67f);
+				t.setX(mouseX - offsetX);
+				t.setY(mouseY - offsetY);
+				changedX = (mouseX - offsetX);
+				changedY = (mouseY - offsetY);
 				
 			}
 			
 			Gui.drawRect(t.x - 2, t.y - 2, t.x + maxWidth + 2, fr.FONT_HEIGHT + t.y + 2, (t.extended) ? 0xff1c1c1c : 0xff2e2e2e);
-			Gui.drawRect(t.x - 2, t.y - 2, t.x - 4, fr.FONT_HEIGHT + t.y + 2, 0xffff0000);
+			Gui.drawRect(t.x - 2, t.y - 2, t.x - 4, fr.FONT_HEIGHT + t.y + 2, accentColor);
 			fr.drawString(t.name, t.x, t.y, -1, false);
 			
 			if (t.extended) {
@@ -108,12 +110,12 @@ public class ClickGUI extends GuiScreen {
 					if (m.category == t.category) {
 						
 						Gui.drawRect(t.x - 2, (t.y - 2) + modNum, t.x + maxWidth + 2, (fr.FONT_HEIGHT + t.y + 2) + modNum, m.toggled ? 0xb9171717 : 0xbf2e2e2e);
-						Gui.drawRect(t.x - 2, (t.y - 2) + modNum, t.x - 4, (fr.FONT_HEIGHT + t.y + 2) + modNum, 0xffff0000);
+						Gui.drawRect(t.x - 2, (t.y - 2) + modNum, t.x - 4, (fr.FONT_HEIGHT + t.y + 2) + modNum, accentColor);
 						fr.drawString(m.name, t.x, t.y + modNum, -1, false);
 						
 						if (m.ClickGuiExpanded) {
 							
-							Gui.drawRect((t.x + maxWidth + 2) - 2, (t.y - 1) + modNum, t.x + maxWidth + 1, (fr.FONT_HEIGHT + t.y + 1) + modNum, 0xffff0000);
+							Gui.drawRect((t.x + maxWidth + 2) - 2, (t.y - 1) + modNum, t.x + maxWidth + 1, (fr.FONT_HEIGHT + t.y + 1) + modNum, accentColor);
 							
 							float maxSettingsWidth = 0;
 							for (Setting s : m.settings) {
@@ -172,17 +174,17 @@ public class ClickGUI extends GuiScreen {
 									
 									if (b.ClickGuiSelected) {
 										
-										if (mouseX < (t.x + maxWidth + 2 + maxSettingsWidth) * 1.5f && mouseX > (t.x + maxWidth + 2) * 1.5f) {
+										if (mouseX < (t.x + maxWidth + 2 + maxSettingsWidth) * 1f && mouseX > (t.x + maxWidth + 2) * 1f) {
 											float percentage = 0;
-											percentage = (mouseX - ((t.x + maxWidth) * 1.5f) / ((t.x + maxWidth + 2 + maxSettingsWidth + 2) * 1.5f) - ((t.x + maxWidth) * 1.5f));
-											percentage = percentage / (maxSettingsWidth / 0.66f);
+											percentage = (mouseX - ((t.x + maxWidth) * 1f) / ((t.x + maxWidth + 2 + maxSettingsWidth + 2) * 1f) - ((t.x + maxWidth) * 1f));
+											percentage = percentage / (maxSettingsWidth);
 											b.setValue(b.getMaximum() * percentage);
 										}
-										else if (mouseX > (t.x + maxWidth + 2 + maxSettingsWidth) * 1.5f) {
+										else if (mouseX > (t.x + maxWidth + 2 + maxSettingsWidth) * 1f) {
 											b.setValue(b.getMaximum());
 											//System.out.println("Defaulted to the maximum value");
 										}
-										else if (mouseX < (t.x + maxWidth) * 1.5f) {
+										else if (mouseX < (t.x + maxWidth) * 1f) {
 											b.setValue(b.getMinimum());
 											//System.out.println("Defaulted to the minimum value");
 										}
@@ -204,7 +206,7 @@ public class ClickGUI extends GuiScreen {
 								}
 								
 								if (m.settings.indexOf(s) != m.settings.size() - 1) {
-									Gui.drawRect(t.x + maxWidth + 2, ((fr.FONT_HEIGHT + t.y + 1) + modNum) + settingNum, t.x + maxWidth + 2 + maxSettingsWidth + 2, ((fr.FONT_HEIGHT + t.y + 2) + modNum) + settingNum, 0xffff0000);
+									Gui.drawRect(t.x + maxWidth + 2, ((fr.FONT_HEIGHT + t.y + 1) + modNum) + settingNum, t.x + maxWidth + 2 + maxSettingsWidth + 2, ((fr.FONT_HEIGHT + t.y + 2) + modNum) + settingNum, accentColor);
 								}
 								
 								settingNum += 13;
@@ -276,8 +278,8 @@ public class ClickGUI extends GuiScreen {
 				
 				if (m.category == t.category) {
 					
-					if (mouseX > (t.x - 2) * 1.5f && mouseX < (t.x + maxWidth + 2) * 1.5f) {
-						if (mouseY > ((t.y - 2) + modNum) * 1.5f && mouseY < ((fr.FONT_HEIGHT + t.y + 2) + modNum) * 1.5f){
+					if (mouseX > (t.x - 2) * 1f && mouseX < (t.x + maxWidth + 2) * 1f) {
+						if (mouseY > ((t.y - 2) + modNum) * 1f && mouseY < ((fr.FONT_HEIGHT + t.y + 2) + modNum) * 1f){
 							
 							if (t.extended) {
 								if (mouseButton == 1) {
@@ -332,8 +334,8 @@ public class ClickGUI extends GuiScreen {
 							
 							if (s instanceof BooleanSetting) {
 								BooleanSetting b = (BooleanSetting) s;
-								if (mouseX > (t.x + maxWidth + 2) * 1.5f && mouseX < (t.x + maxWidth + 2 + maxSettingsWidth + 2) * 1.5f) {
-									if (mouseY > (((t.y - 2) + modNum) + settingNum) * 1.5f && mouseY < (((fr.FONT_HEIGHT + t.y + 2) + modNum) + settingNum) * 1.5f) {
+								if (mouseX > (t.x + maxWidth + 2) * 1f && mouseX < (t.x + maxWidth + 2 + maxSettingsWidth + 2) * 1f) {
+									if (mouseY > (((t.y - 2) + modNum) + settingNum) * 1f && mouseY < (((fr.FONT_HEIGHT + t.y + 2) + modNum) + settingNum) * 1f) {
 										b.toggle();
 										return;
 									}
@@ -341,8 +343,8 @@ public class ClickGUI extends GuiScreen {
 							}
 							else if (s instanceof NumberSetting) {
 								NumberSetting b = (NumberSetting) s;
-								if (mouseX > (t.x + maxWidth + 2) * 1.5f && mouseX < (t.x + maxWidth + 2 + maxSettingsWidth + 2) * 1.5f) {
-									if (mouseY > (((t.y - 2) + modNum) + settingNum) * 1.5f && mouseY < (((fr.FONT_HEIGHT + t.y + 2) + modNum) + settingNum) * 1.5f) {
+								if (mouseX > (t.x + maxWidth + 2) * 1f && mouseX < (t.x + maxWidth + 2 + maxSettingsWidth + 2) * 1f) {
+									if (mouseY > (((t.y - 2) + modNum) + settingNum) * 1f && mouseY < (((fr.FONT_HEIGHT + t.y + 2) + modNum) + settingNum) * 1f) {
 										b.ClickGuiSelected = true;
 										return;
 									}
@@ -350,8 +352,8 @@ public class ClickGUI extends GuiScreen {
 							}
 							else if (s instanceof ModeSetting) {
 								ModeSetting b = (ModeSetting) s;
-								if (mouseX > (t.x + maxWidth + 2) * 1.5f && mouseX < (t.x + maxWidth + 2 + maxSettingsWidth + 2) * 1.5f) {
-									if (mouseY > (((t.y - 2) + modNum) + settingNum) * 1.5f && mouseY < (((fr.FONT_HEIGHT + t.y + 2) + modNum) + settingNum) * 1.5f) {
+								if (mouseX > (t.x + maxWidth + 2) * 1f && mouseX < (t.x + maxWidth + 2 + maxSettingsWidth + 2) * 1f) {
+									if (mouseY > (((t.y - 2) + modNum) + settingNum) * 1f && mouseY < (((fr.FONT_HEIGHT + t.y + 2) + modNum) + settingNum) * 1f) {
 										if (mouseButton == 0) {
 											b.cycle(false);
 										}else {
@@ -364,8 +366,8 @@ public class ClickGUI extends GuiScreen {
 							else if (s instanceof KeybindSetting) {
 								KeybindSetting b = (KeybindSetting) s;
 								// t.x + maxWidth + 2, ((t.y - 2) + modNum) + settingNum, t.x + maxWidth + 2 + maxSettingsWidth + 2, ((fr.FONT_HEIGHT + t.y + 2) + modNum) + settingNum
-								if (mouseX > (t.x + maxWidth + 2) * 1.5f && mouseX < (t.x + maxWidth + 2 + maxSettingsWidth + 2) * 1.5f) {
-									if (mouseY > (((t.y - 2) + modNum) + settingNum) * 1.5f && mouseY < (((fr.FONT_HEIGHT + t.y + 2) + modNum) + settingNum) * 1.5f) {
+								if (mouseX > (t.x + maxWidth + 2) * 1f && mouseX < (t.x + maxWidth + 2 + maxSettingsWidth + 2) * 1f) {
+									if (mouseY > (((t.y - 2) + modNum) + settingNum) * 1f && mouseY < (((fr.FONT_HEIGHT + t.y + 2) + modNum) + settingNum) * 1f) {
 										b.ClickGuiSelected = true;
 										this.currentlySettingKeybind = true;
 										return;
@@ -385,8 +387,8 @@ public class ClickGUI extends GuiScreen {
 				
 			}
 			
-			if (mouseX > (t.x - 4) * 1.5 && mouseX < (t.x + maxWidth + 2) * 1.5) {
-				if (mouseY > (t.y - 4) * 1.5 && mouseY < (fr.FONT_HEIGHT + t.y + 2) * 1.5) {
+			if (mouseX > (t.x - 4) * 1 && mouseX < (t.x + maxWidth + 2) * 1) {
+				if (mouseY > (t.y - 4) * 1 && mouseY < (fr.FONT_HEIGHT + t.y + 2) * 1) {
 					
 					// Left click is 0, right click is 1 and scrollwheel click is 2
 					if (mouseButton == 1) {

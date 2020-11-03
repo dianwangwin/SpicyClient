@@ -4,11 +4,13 @@ import org.lwjgl.input.Keyboard;
 
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.util.ChatComponentText;
+import spicy.SpicyClient;
 import spicy.events.Event;
 import spicy.events.listeners.EventPacket;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
 import spicy.settings.ModeSetting;
+import spicy.settings.SettingChangeEvent;
 
 public class HideName extends Module {
 	

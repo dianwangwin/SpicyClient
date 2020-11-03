@@ -37,6 +37,8 @@ public class HUD {
 	
 	public static boolean ClickGUI = false;
 	
+	public static int primaryColor = -1, secondaryColor = 0x80ffffff;
+	
 	public void draw() {
 		
 		ScaledResolution sr = new ScaledResolution(mc); 
@@ -45,8 +47,6 @@ public class HUD {
 		float hue = System.currentTimeMillis() % (int)(rainbowTimer * 1000) / (float)(rainbowTimer * 1000);
 		int primColor = Color.HSBtoRGB(hue, 0.45f, 1);
 		int secColor = Color.HSBtoRGB(hue, 0.45f, 0.6f);
-		
-		int primaryColor = -1, secondaryColor = 0x80ffffff;
 		
 		if (rainbowEnabled) {
 			primaryColor = primColor;
@@ -65,17 +65,27 @@ public class HUD {
 		GlStateManager.scale(2, 2, 1);
 		GlStateManager.translate(-4, -4, 0);
 		
-		//fr.drawStringWithShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor);
-		//fr.drawStringWithQuadShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor, 0.3f);
-		
-		// We enable blending so there is a transparent background on the logo
-		GlStateManager.enableBlend();
-		GlStateManager.color(1, 1, 1);
-		mc.getTextureManager().bindTexture(new ResourceLocation("spicy/SpicyClient.png"));
-		int imageWidth = 500, imageHeight = 122;
-		imageWidth /= 4;
-		imageHeight /= 4;
-		Gui.drawModalRectWithCustomSizedTexture(-13, -6, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+		if (SpicyClient.config.clientVersion != SpicyClient.config.version) {
+			
+			//fr.drawStringWithShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor);
+			fr.drawStringWithQuadShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor, 0.3f);
+			
+		}else {
+			// We enable blending so there is a transparent background on the logo
+			GlStateManager.enableBlend();
+			GlStateManager.color(1, 1, 1);
+			mc.getTextureManager().bindTexture(new ResourceLocation("spicy/SpicyClient.png"));
+			int imageWidth = 500, imageHeight = 122;
+			imageWidth /= 4;
+			imageHeight /= 4;
+			Gui.drawModalRectWithCustomSizedTexture(-13, -6, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(4, 4, 0);
+			GlStateManager.scale(0.7, 0.7, 1);
+			GlStateManager.translate(-4, -4, 0);
+			fr.drawStringWithQuadShadow(SpicyClient.config.clientVersion, 135, 3.5f, primaryColor, 0.3f);
+			GlStateManager.popMatrix();
+		}
 		
 		if (mc.currentScreen instanceof GuiChat) {
 			
@@ -123,7 +133,7 @@ public class HUD {
 					fr.drawString(m.name, sr.getScaledWidth() - fr.getStringWidth(m.name + m.additionalInformation + separator) - 4, (int) (2 + offset), primaryColor);
 					fr.drawString(separator, sr.getScaledWidth() - fr.getStringWidth(m.additionalInformation + separator) - 4, (int) (2 + offset), primaryColor);
 					// fr.drawStringWithShadow("   " + m.additionalInformation, sr.getScaledWidth() - fr.getStringWidth(m.additionalInformation + separator) - 4, (float) (2 + offset), 0xff9c9c9c);
-					fr.drawString(m.additionalInformation, sr.getScaledWidth() - fr.getStringWidth(m.additionalInformation) - 4, (int) (2 + offset), rainbowEnabled ? secondaryColor : 0xff9c9c9c);
+					fr.drawString(m.additionalInformation, sr.getScaledWidth() - fr.getStringWidth(m.additionalInformation) - 4, (int) (2 + offset), secondaryColor);
 				}else {
 					Gui.drawRect(sr.getScaledWidth() - fr.getStringWidth(m.name + m.additionalInformation) - 8, 0 + offset, sr.getScaledWidth() - fr.getStringWidth(m.name + m.additionalInformation) - 6, fr.FONT_HEIGHT + 2 + offset, primaryColor);
 					Gui.drawRect(sr.getScaledWidth() - fr.getStringWidth(m.name + m.additionalInformation) - 6, 0 + offset, sr.getScaledWidth(), fr.FONT_HEIGHT + 2 + offset, rainbowEnabled ? 0x0f000000 : 0x50000000);

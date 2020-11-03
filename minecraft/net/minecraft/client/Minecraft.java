@@ -2332,7 +2332,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         networkmanager.sendPacket(new C00PacketLoginStart(this.getSession().getProfile()));
         this.myNetworkManager = networkmanager;
         
-        SpicyClient.discord.update(SpicyClient.config.clientName + SpicyClient.config.clientVersion, "Playing singleplayer");
+        SpicyClient.discord.update("Playing singleplayer");
         Display.setTitle(SpicyClient.config.clientName + SpicyClient.config.clientVersion + " - Playing singleplayer");
         
     }

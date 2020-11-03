@@ -29,7 +29,7 @@ public class AntiVoid extends Module {
 	private ModeSetting mode = new ModeSetting("Mode", "Hypixel", "Hypixel");
 	
 	public AntiVoid() {
-		super("Anti Void", Keyboard.KEY_NONE, Category.BETA);
+		super("Anti Void", Keyboard.KEY_NONE, Category.PLAYER);
 		resetSettings();
 	}
 	

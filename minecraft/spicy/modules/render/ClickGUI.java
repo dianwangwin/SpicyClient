@@ -1,5 +1,6 @@
 package spicy.modules.render;
 
+import java.awt.Color;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
@@ -32,6 +33,9 @@ public class ClickGUI extends Module{
 	public BooleanSetting sound = new BooleanSetting("Sound", true);
 	public NumberSetting volume = new NumberSetting("Volume", 0.5, 0.1, 1.0, 0.1);
 	public ModeSetting mode = new ModeSetting("Separator Mode", " | ", " | ", " OwO ", " UwU ", " |OwO| ", " |UwU| ", "Switch between OwO and UwU", "Switch between :OwO: and :UwU:", " - ");
+	public NumberSetting colorSettingRed = new NumberSetting("Red", 255, 0, 255, 1);
+	public NumberSetting colorSettingGreen = new NumberSetting("Green", 255, 0, 255, 1);
+	public NumberSetting colorSettingBlue = new NumberSetting("Blue", 255, 0, 255, 1);
 	
 	public ClickGUI() {
 		super("ClickGUI", Keyboard.KEY_RSHIFT, Category.RENDER);
@@ -41,7 +45,7 @@ public class ClickGUI extends Module{
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
-		this.addSettings(sound, volume, mode);
+		this.addSettings(sound, volume, mode, colorSettingRed, colorSettingGreen, colorSettingBlue);
 	}
 	
 	@Override
@@ -96,6 +100,23 @@ public class ClickGUI extends Module{
 			
 			if (e.isPre()) {
 				
+				String hex = String.format("#%02X%02X%02X", ((int)colorSettingRed.getValue()), ((int)colorSettingGreen.getValue()), ((int)colorSettingBlue.getValue()));
+				
+				float[] hsb = Color.RGBtoHSB(((int)colorSettingRed.getValue()), ((int)colorSettingGreen.getValue()), ((int)colorSettingBlue.getValue()), null);
+				 
+				float hue = hsb[0];
+				 
+				float saturation = hsb[1];
+				 
+				float brightness = hsb[2];
+				
+				spicy.ClickGUI.ClickGUI.accentColor = Color.HSBtoRGB(hue, saturation, 1);
+				SpicyClient.hud.primaryColor = Color.HSBtoRGB(hue, saturation, 1);
+				SpicyClient.hud.secondaryColor = Color.HSBtoRGB(hue, saturation, 0.6f);
+				SpicyClient.config.tabgui.primaryColor = Color.HSBtoRGB(hue, saturation, 1);
+				SpicyClient.config.tabgui.secondaryColor = Color.HSBtoRGB(hue, saturation, 0.6f);
+				
+				// For the separator
 				if (mode.is("Switch between OwO and UwU") || mode.is("Switch between :OwO: and :UwU:")) {
 					
 					if (timer.hasTimeElapsed(750L, true)) {

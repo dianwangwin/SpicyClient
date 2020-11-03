@@ -74,6 +74,7 @@ public class Config {
 	public Trail trail = new Trail();
 	public ReachNotify reachNotify = new ReachNotify();
 	public HideName hideName = new HideName();
+	public DiscordRichPresence discordRichPresence = new DiscordRichPresence();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -87,6 +88,8 @@ public class Config {
 	}
 	
 	public boolean updateConfig() {
+		
+		this.discordRichPresence = new DiscordRichPresence();
 		
 		Config temp = new Config("temp");
 		if (this.version.equalsIgnoreCase(temp.version)) {
@@ -119,6 +122,10 @@ public class Config {
 			this.nofall.noFallMode = new ModeSetting("NoFall Mode", "Vanilla", "Vanilla", "Packet");
 			this.nofall.noFallMode.cycle(false);
 			
+			this.clickgui.colorSettingRed = new NumberSetting("Red", 255, 0, 255, 1);
+			this.clickgui.colorSettingGreen = new NumberSetting("Red", 255, 0, 255, 1);
+			this.clickgui.colorSettingBlue = new NumberSetting("Red", 255, 0, 255, 1);
+			
 			this.noClip = new NoClip();
 			this.autoLog = new AutoLog();
 			this.floofyFoxes = new FloofyFoxes();
@@ -135,12 +142,17 @@ public class Config {
 			this.oldHitting = new OldHitting();
 			this.hideName = new HideName();
 			this.killSults = new KillSults();
+			this.discordRichPresence = new DiscordRichPresence();
 			
 			this.tabgui.mode = new ModeSetting("Mode", "original", "compressed", "original");
 			
 		}
 		
 		this.version = temp.version;
+		System.out.println(this.clientVersion);
+		if (this.clientVersion != "") {
+			this.clientVersion = temp.clientVersion;
+		}
 		
 		Command.sendPrivateChatMessage("Config updated :)");
 		
