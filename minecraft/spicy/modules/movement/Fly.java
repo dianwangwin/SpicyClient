@@ -69,7 +69,7 @@ public class Fly extends Module {
 			if (!SpicyClient.config.blink.isEnabled()) {
 				//SpicyClient.config.blink.toggle();
 			}
-			
+
 			mc.thePlayer.jump();
 			mc.thePlayer.stepHeight = 0;
 			
@@ -183,7 +183,7 @@ public class Fly extends Module {
 					mc.thePlayer.motionY = 0;
 					
 					//MovementUtils.setMotion(0.2);
-					MovementUtils.strafe(0.17f);
+					MovementUtils.strafe(0.16f);
 					
 					
 					int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);

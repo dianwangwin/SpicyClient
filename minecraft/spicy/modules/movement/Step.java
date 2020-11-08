@@ -46,7 +46,7 @@ public class Step extends Module {
 	
 	public void onEnable() {
 		if (mode.is("Vanilla")) {
-			mc.thePlayer.stepHeight = 1f;
+			mc.thePlayer.stepHeight = 20f;
 		}
 	}
 	
@@ -70,7 +70,7 @@ public class Step extends Module {
 		if (e instanceof EventUpdate) {
 			
 			if (e.isPre() && mode.is("Vanilla")) {
-				mc.thePlayer.stepHeight = 1f;
+				mc.thePlayer.stepHeight = 20f;
 			}
 			
 			else if (e.isBeforePre() && mode.is("NCP")) {

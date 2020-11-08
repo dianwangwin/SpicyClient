@@ -16,6 +16,8 @@ public class Damage extends Command {
 		
 		Minecraft mc = Minecraft.getMinecraft();
 		
+		sendPrivateChatMessage("You have been damaged");
+		
 		if (mc.getCurrentServerData().serverIP.contains("hypixel")) {
 			SpicyClient.config.fly.damage();
 		}else {

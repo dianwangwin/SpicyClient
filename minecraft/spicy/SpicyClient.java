@@ -1,5 +1,6 @@
 package spicy;
 
+import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,7 +14,10 @@ import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -35,6 +39,7 @@ import spicy.events.EventType;
 import spicy.events.listeners.EventChatmessage;
 import spicy.events.listeners.EventKey;
 import spicy.events.listeners.EventPlayerRenderUtilRender;
+import spicy.events.listeners.EventRenderGUI;
 import spicy.events.listeners.EventUpdate;
 import spicy.files.AltInfo;
 import spicy.files.Config;
@@ -44,6 +49,7 @@ import spicy.modules.Module.Category;
 import spicy.modules.player.Timer;
 import spicy.modules.render.*;
 import spicy.ui.HUD;
+
 public class SpicyClient {
 	
 	public static CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<Module>();

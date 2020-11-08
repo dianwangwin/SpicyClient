@@ -94,11 +94,11 @@ public class AntiVoid extends Module {
 						
 					}
 					
-			        if (!mc.thePlayer.onGround && mc.thePlayer.fallDistance >= 12.0f && isOverVoid) {
+			        if (!mc.thePlayer.onGround && mc.thePlayer.fallDistance >= 8.0f && isOverVoid) {
 			        	
 			        	Random r = new Random();
 			        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
-			        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 7, mc.thePlayer.posZ, false));
+			        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 8, mc.thePlayer.posZ, true));
 			        	//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 6, mc.thePlayer.posZ);
 			        	mc.thePlayer.fallDistance = -1;
 			        	//mc.thePlayer.motionY = 1;

@@ -81,7 +81,8 @@ public class DiscordRP {
 			b.setSmallImage("gabe_thumbs_up", "Normal SpicyClient Developer");
 		}
 		else if (SpicyClient.originalAccountOnline && SpicyClient.originalUsername.toLowerCase().equals("_floofy_fox_")){
-			b.setSmallImage("floofyfox1", "Furry SpicyClient Developer");
+			//b.setSmallImage("floofyfox1", "Furry SpicyClient Developer");
+			b.setSmallImage("gabe_thumbs_up", "Furry SpicyClient Developer");
 		}
 		else if (SpicyClient.config.floofyFoxes.isEnabled() || (SpicyClient.config.hideName.isEnabled() && SpicyClient.config.hideName.mode.getMode().toLowerCase().contains("floof"))){
 			b.setSmallImage("floofyfox1", "This person is probably a furry...");

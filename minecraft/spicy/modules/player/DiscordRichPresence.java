@@ -46,10 +46,16 @@ public class DiscordRichPresence extends Module {
 	@Override
 	public void onSettingChange(SettingChangeEvent e) {
 		
-		if (SpicyClient.discord != null && SpicyClient.discord.running) {
+		try {
 			
-			SpicyClient.discord.refresh();
+			if (SpicyClient.discord != null && SpicyClient.discord.running) {
+				
+				SpicyClient.discord.refresh();
+				
+			}
 			
+		} catch (ExceptionInInitializerError e2) {
+			e2.printStackTrace();
 		}
 		
 	}

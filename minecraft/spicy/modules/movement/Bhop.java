@@ -185,19 +185,21 @@ public class Bhop extends Module {
 
 					if (mc.thePlayer.onGround) {
 						
-						mc.thePlayer.motionY = 0.399999f;
+						//mc.thePlayer.motionY = 0.399999f;
+						mc.thePlayer.jump();
 						e.setCanceled(true);
 						
 					}else {
 						
 						mc.timer.timerSpeed = 1.0f;
 						float f = (float) MovementUtils.getDirection() + 180 - 45;
-			            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.3F);
-			            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.3F) * -1;
+			            //mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.3F);
+			            //mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.3F) * -1;
+			            MovementUtils.strafe(0.30f);
 			            
 			            //mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
 								//mc.thePlayer.posZ);
-			            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
+			            //mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 			            
 					}
 					
@@ -224,9 +226,9 @@ public class Bhop extends Module {
 					}
 					
 					float f = (float) MovementUtils.getDirection() + 180 - 45;
-		            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.35F);
-		            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.35F) * -1;
-		            Command.sendPrivateChatMessage(mc.thePlayer.motionX + " - " + mc.thePlayer.motionZ);
+		            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 2.50F);
+		            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 2.50F) * -1;
+		            //Command.sendPrivateChatMessage(mc.thePlayer.motionX + " - " + mc.thePlayer.motionZ);
 		            
 				}
 				else if (mode.is("Test 3") && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed)) {
