@@ -1,7 +1,3 @@
-# IMPORTANT NOTICE
-## From now on if you take any of this source code you must also give out your clients source code with the same copyleft license
-## If you already put the source code in your program then you are free to use and code the program without doing this BUT if you take ANY of the updated code then this will apply to you
-
 # SpicyClient
 
 ## Introduction
