@@ -13,8 +13,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockLiquid;
@@ -71,8 +69,7 @@ public abstract class World implements IBlockAccess
      */
     protected boolean scheduledUpdatesAreImmediate;
     //public final List<Entity> loadedEntityList = Lists.<Entity>newArrayList();
-    // If crashes start to happen a lot then replace the line below with this one // public final List loadedEntityList = Lists.newArrayList();
-    public final CopyOnWriteArrayList loadedEntityList = new CopyOnWriteArrayList();
+    public final List loadedEntityList = Lists.newArrayList();
     protected final List<Entity> unloadedEntityList = Lists.<Entity>newArrayList();
     public final List<TileEntity> loadedTileEntityList = Lists.<TileEntity>newArrayList();
     public final List<TileEntity> tickableTileEntities = Lists.<TileEntity>newArrayList();
@@ -3127,7 +3124,7 @@ public abstract class World implements IBlockAccess
         return (Entity)this.entitiesById.lookup(id);
     }
 
-    public CopyOnWriteArrayList<Entity> getLoadedEntityList()
+    public List<Entity> getLoadedEntityList()
     {
         return this.loadedEntityList;
     }

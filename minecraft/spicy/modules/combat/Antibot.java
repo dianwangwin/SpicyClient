@@ -1,6 +1,7 @@
 package spicy.modules.combat;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -38,35 +39,17 @@ public class Antibot extends Module {
 	
 	public void onEnable() {
 		
+		removeThese.clear();
+		dontRemove.clear();
+		
 	}
 	
 	public void onDisable() {
 		
-		for (S0CPacketSpawnPlayer packet : packets) {
-			
-			try {
-				packet.processPacket(mc.getNetHandler());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-		}
-		packets.clear();
+		removeThese.clear();
+		dontRemove.clear();
 		
-		for (Entity entity : entities) {
-			
-			try {
-				mc.theWorld.spawnEntityInWorld(entity);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-		}
-		entities.clear();
 	}
-	
-	public static transient ArrayList<S0CPacketSpawnPlayer> packets = new ArrayList<S0CPacketSpawnPlayer>();
-	public static transient ArrayList<Entity> entities = new ArrayList<Entity>();
 	
 	public void onEvent(Event e) {
 		
@@ -110,27 +93,6 @@ public class Antibot extends Module {
 	                }
 					
 				}
-				else if (packet.packet instanceof S0CPacketSpawnPlayer && mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel")) {
-					
-					hypixelAntibot();
-					
-					/*
-					S0CPacketSpawnPlayer p = (S0CPacketSpawnPlayer) packet.packet;
-					Entity entity = mc.theWorld.getEntityByID(p.getEntityID());
-					
-					if (entity == null) {
-						return;
-					}
-					
-	                if (entity.getDisplayName().getFormattedText().startsWith("\u00a7") && !entity.isInvisible() && !entity.getDisplayName().getFormattedText().toLowerCase().contains("npc")) {
-	                	
-	                }else {
-	                	Command.sendPrivateChatMessage("The " + entity.getDisplayName().getFormattedText() + " bot was removed from your game");
-	                	packets.add(p);
-	                	packet.setCanceled(true);
-	                }
-	                */
-				}
 				
 			}
 			
@@ -153,17 +115,54 @@ public class Antibot extends Module {
 				}
 				
 			}
+			else if (mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel")) {
+				
+				if (e.isPre()) {
+					hypixelAntibot();
+				}
+				else if (e.isPost()) {
+					
+					for (EntityPlayer ent : removeThese) {
+						
+						try {
+							mc.theWorld.removeEntity(ent);
+						} catch (ConcurrentModificationException e2) {
+							Command.sendPrivateChatMessage("Could not remove bot due to ConcurrentModificationException, please report this to a dev");
+						} catch (Exception e2) {
+							Command.sendPrivateChatMessage("Could not remove bot due to an unknown error, please report this to a dev");
+						}
+						
+					}
+					
+				}
+				
+				/*
+				S0CPacketSpawnPlayer p = (S0CPacketSpawnPlayer) packet.packet;
+				Entity entity = mc.theWorld.getEntityByID(p.getEntityID());
+				
+				if (entity == null) {
+					return;
+				}
+				
+                if (entity.getDisplayName().getFormattedText().startsWith("\u00a7") && !entity.isInvisible() && !entity.getDisplayName().getFormattedText().toLowerCase().contains("npc")) {
+                	
+                }else {
+                	Command.sendPrivateChatMessage("The " + entity.getDisplayName().getFormattedText() + " bot was removed from your game");
+                	packets.add(p);
+                	packet.setCanceled(true);
+                }
+                */
+			}
 			
 		}
 		
 	}
 	
 	// Prevents non bots from being removed
-	private static List<EntityPlayer> dontRemove = new ArrayList<>();
+	private static transient List<EntityPlayer> dontRemove = new ArrayList<>();
+	private static transient CopyOnWriteArrayList<EntityPlayer> removeThese = new CopyOnWriteArrayList<EntityPlayer>();
 	
 	private void hypixelAntibot() {
-		
-		CopyOnWriteArrayList<EntityPlayer> removeThese = new CopyOnWriteArrayList<EntityPlayer>();
 		
 		for (Object o : mc.theWorld.getLoadedEntityList()) {
 			
@@ -243,12 +242,6 @@ public class Antibot extends Module {
             }
             
         }
-		
-		for (EntityPlayer ent : removeThese) {
-			
-			mc.theWorld.removeEntity(ent);
-			
-		}
 		
 	}
 	
