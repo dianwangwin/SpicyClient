@@ -2,6 +2,7 @@ package spicy.modules.combat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.lwjgl.input.Keyboard;
 
@@ -162,7 +163,7 @@ public class Antibot extends Module {
 	
 	private void hypixelAntibot() {
 		
-		ArrayList<EntityPlayer> removeThese = new ArrayList<EntityPlayer>();
+		CopyOnWriteArrayList<EntityPlayer> removeThese = new CopyOnWriteArrayList<EntityPlayer>();
 		
 		for (Object o : mc.theWorld.getLoadedEntityList()) {
 			
@@ -189,7 +190,7 @@ public class Antibot extends Module {
     						
     						if(!list.contains(ent)){
     							
-    							Command.sendPrivateChatMessage("The bot " + name + " was removed from your game");
+    							Command.sendPrivateChatMessage("The bot " + name + " bot was removed from your game");
                           		removeThese.add(ent);
                           		
     						}
@@ -201,15 +202,22 @@ public class Antibot extends Module {
                     if(ent.isInvisible()){
                     	
                     	if(!customName.equalsIgnoreCase("") && customName.toLowerCase().contains("§c§c") && name.contains("§c")){
-                    		Command.sendPrivateChatMessage("The bot " + name + " was removed from your game");
+                    		Command.sendPrivateChatMessage("The bot " + name + " bot was removed from your game");
                     		removeThese.add(ent);
                     	}
                     	
                     }
                     
+	                if (formattedName.startsWith("\u00a7") && !ent.isInvisible() && !formattedName.toLowerCase().contains("npc")) {
+	                	
+	                }else {
+	                	Command.sendPrivateChatMessage("The " + ent.getDisplayName().getFormattedText() + " bot was removed from your game");
+	                	removeThese.add(ent);
+	                }
+                    
                     // Watchdog bots
                     if(!customName.equalsIgnoreCase("") && customName.toLowerCase().contains("§c") && customName.toLowerCase().contains("§r")){
-                    	Command.sendPrivateChatMessage("The bot " + name + " was removed from your game");
+                    	Command.sendPrivateChatMessage("The bot " + name + " bot was removed from your game");
                     	removeThese.add(ent);
                     }
                     
