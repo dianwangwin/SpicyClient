@@ -69,8 +69,11 @@ public class Fly extends Module {
 			if (!SpicyClient.config.blink.isEnabled()) {
 				//SpicyClient.config.blink.toggle();
 			}
-
-			mc.thePlayer.jump();
+			
+			if (mc.thePlayer.onGround) {
+				mc.thePlayer.jump();
+			}
+			
 			mc.thePlayer.stepHeight = 0;
 			
 		}
@@ -125,6 +128,11 @@ public class Fly extends Module {
 				}
 				
 				EventSendPacket sendPacket = (EventSendPacket) e;
+				
+				if (sendPacket.packet instanceof C03PacketPlayer) {
+					((C03PacketPlayer)sendPacket.packet).setIsOnGround(false);
+				}
+				
 				hypixelPackets.add(sendPacket.packet);
 				sendPacket.setCanceled(true);
 				
@@ -162,7 +170,7 @@ public class Fly extends Module {
 			mc.thePlayer.capabilities.isFlying = true;
 			mc.thePlayer.capabilities.setFlySpeed((float) speed.getValue());
 		}
-
+		
 		if (e instanceof EventMotion) {
 
 			EventMotion event = (EventMotion) e;
@@ -183,7 +191,7 @@ public class Fly extends Module {
 					mc.thePlayer.motionY = 0;
 					
 					//MovementUtils.setMotion(0.2);
-					MovementUtils.strafe(0.16f);
+					MovementUtils.strafe(0.195f);
 					
 					
 					int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);
@@ -207,6 +215,7 @@ public class Fly extends Module {
 					*/
 					
 					//double offset = 9.947598300641403E-14D;
+					//double offset = 9.947599900641403E-14D;
 					double offset = 9.947599900641403E-14D;
 					
 					switch (hypixelStage) {

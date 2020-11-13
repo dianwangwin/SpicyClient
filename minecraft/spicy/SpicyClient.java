@@ -44,6 +44,8 @@ import spicy.events.listeners.EventUpdate;
 import spicy.files.AltInfo;
 import spicy.files.Config;
 import spicy.files.FileManager;
+import spicy.fonts.FontManager;
+import spicy.fonts.FontRenderer;
 import spicy.modules.Module;
 import spicy.modules.Module.Category;
 import spicy.modules.player.Timer;
@@ -130,6 +132,11 @@ public class SpicyClient {
 			}
 			
 		}
+		
+		// Creates the font manager
+		FontManager.getFontManager();
+		// Sets the font renderer's font to the default font
+		FontRenderer.setCurrentFont(FontManager.getFontManager().getUniFont("opensans"));
 		
 		// Creates a new config with the default values
 		config = new Config("Default");
@@ -226,26 +233,26 @@ public class SpicyClient {
 			return;
 		}
 		
+		if (e instanceof EventChatmessage) {
+			
+			// Will check if the message is a command and if it is a command then will run it
+			EventChatmessage chat = (EventChatmessage) e;
+			if (chat.message.startsWith(commandManager.prefix)) {
+				commandManager.runCommands(chat);
+				chat.setCanceled(true);
+			}
+		}
+		
+		if (e instanceof EventKey) {
+			
+			EventKey key = (EventKey) e;
+			if (key.key == Keyboard.KEY_PERIOD) {
+				Minecraft.getMinecraft().displayGuiScreen(new GuiChat("."));
+			}
+			
+		}
+		
 		for (Module m : modules) {
-			
-			if (e instanceof EventChatmessage) {
-				
-				// Will check if the message is a command and if it is a command then will run it
-				EventChatmessage chat = (EventChatmessage) e;
-				if (chat.message.startsWith(commandManager.prefix)) {
-					commandManager.runCommands(chat);
-					chat.setCanceled(true);
-				}
-			}
-			
-			if (e instanceof EventKey) {
-				
-				EventKey key = (EventKey) e;
-				if (key.key == Keyboard.KEY_PERIOD) {
-					Minecraft.getMinecraft().displayGuiScreen(new GuiChat("."));
-				}
-				
-			}
 			
 			//if (!m.toggled)
 			//	continue;
@@ -380,6 +387,8 @@ public class SpicyClient {
 		modules.add(c.reachNotify);
 		modules.add(c.hideName);
 		modules.add(c.discordRichPresence);
+		modules.add(c.autoArmor);
+		modules.add(c.antiLava);
 		
 		for (Module temp : SpicyClient.modules) {
 			

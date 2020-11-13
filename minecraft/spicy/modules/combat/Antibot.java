@@ -39,12 +39,24 @@ public class Antibot extends Module {
 	public void onDisable() {
 		
 		for (S0CPacketSpawnPlayer packet : packets) {
-			packet.processPacket(mc.getNetHandler());
+			
+			try {
+				packet.processPacket(mc.getNetHandler());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 		}
 		packets.clear();
 		
 		for (Entity entity : entities) {
-			mc.theWorld.spawnEntityInWorld(entity);
+			
+			try {
+				mc.theWorld.spawnEntityInWorld(entity);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 		}
 		entities.clear();
 	}

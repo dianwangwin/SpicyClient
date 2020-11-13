@@ -1,5 +1,7 @@
 package spicy.modules.combat;
 
+import java.util.Random;
+
 import org.apache.commons.lang3.RandomUtils;
 import org.lwjgl.input.Keyboard;
 
@@ -35,9 +37,11 @@ public class Criticals extends Module {
 	
 	public Timer timer = new Timer();
 	
+	private static transient int stage = 1;
+	
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventSendPacket && e.isPre()) {
+		if (e instanceof EventSendPacket) {
 			Packet packet = ((EventSendPacket)e).packet;
 			
 			if (packet instanceof C02PacketUseEntity) {
@@ -50,7 +54,22 @@ public class Criticals extends Module {
 				
 				if (attack.getAction() == Action.ATTACK) {
 					
-					Crit(new Double[] { 0.0, 0.419999986886978, 0.3331999936342235, 0.2481359985909455, 0.164773281826067, 0.083077817806467, 0.0, -0.078400001525879, -0.155232004516602, -0.230527368912964, -0.304316827457544, -0.376630498238655, -0.104080378093037 });
+					//Crit(new Double[] { 0.0, 0.419999986886978, 0.3331999936342235, 0.2481359985909455, 0.164773281826067, 0.083077817806467, 0.0, -0.078400001525879, -0.155232004516602, -0.230527368912964, -0.304316827457544, -0.376630498238655, -0.104080378093037 });
+					//Crit(new Double[] {0.0, 0.3199989889898899898989898989, 0.2199989889898899898989898989, 0.0, -0.3199989889898899898989898989, -0.2199989889898899898989898989});
+					//Crit2(new Double[] {0.11, 0.1100013579, 0.0000013579});
+					
+					if (e.isPre()) {
+						Random r = new Random();
+						mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.06240000745751 + (r.nextFloat() / 1000000000), mc.thePlayer.posZ, false));
+						mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.00000000436867 + (r.nextFloat() / 1000000000), mc.thePlayer.posZ, false));
+						mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0624000072227 + (r.nextFloat() / 1000000000), mc.thePlayer.posZ, false));
+						mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.00000000676927 + (r.nextFloat() / 1000000000), mc.thePlayer.posZ, true));
+						Command.sendPrivateChatMessage((r.nextFloat() / 1000000000));
+	                    //mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0000013579, mc.thePlayer.posZ, false));
+					}
+					else if (e.isPost()) {
+						
+					}
 					
 				}
 				

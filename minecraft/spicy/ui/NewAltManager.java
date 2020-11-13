@@ -488,7 +488,7 @@ public class NewAltManager extends GuiScreen {
         			
             		try {
         				JSONObject account = TheAlteningAPI.call_me();
-        				alt a = new alt(account.getString("token"), account.getString("password"), true);
+        				alt a = new alt(account.getString("token"), "fur", true);
         				a.username = account.getString("username");
         				SpicyClient.altInfo.addCreatedAlt(a);
         			} catch (Exception e) {

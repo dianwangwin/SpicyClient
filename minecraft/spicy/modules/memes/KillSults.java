@@ -335,9 +335,9 @@ public class KillSults extends Module {
 		furryKillsults.add("<PlayerName> Help me legalize awoo");
 		furryKillsults.add("<PlayerName> #LegalizeAwoo");
 		furryKillsults.add("<PlayerName> is a furry confirmed?!?!?!?!!");
-		furryKillsults.add("<PlayerName> should visit http://spicyclient.info/furry1.gif");
-		furryKillsults.add("<PlayerName> really likes this meme http://spicyclient.info/furry2.jpg");
-		furryKillsults.add("<PlayerName> Should check out http://spicyclient.info/furry3.png");
+		furryKillsults.add("<PlayerName> should visit ht׼tp:׼//׼spi׼cyc׼lient׼.in׼fo/fu׼rry1.g׼if");
+		furryKillsults.add("<PlayerName> really likes this meme htt׼p:/׼/׼spicy׼clie׼nt.i׼nfo׼/furry׼2.jpg");
+		furryKillsults.add("<PlayerName> Should check out ht׼tp׼:/׼/spicy׼client׼.i׼nfo/fur׼ry3׼.׼png׼");
 		furryKillsults.add("<PlayerName> browses furaffinity");
 		furryKillsults.add("<PlayerName> joined r/furryirl");
 		// Removed the youtube channel names because they probably don't want to me mentioned in this client
@@ -357,7 +357,7 @@ public class KillSults extends Module {
 		retardedFurryKillsults.add("waww x3 nuzzwes pounces on <PlayerName> uwu <PlayerName> so wawm>");
 		// Ok so maybe I made more...
 		retardedFurryKillsults.add("hey <PlayerName> Want to browse e621 with me?");
-		retardedFurryKillsults.add("<PlayerName> Do you also enjoy gay furry vore");
+		retardedFurryKillsults.add("<PlayerName> Do you also enjoy gay furry vore?");
 		retardedFurryKillsults.add("Sorry <PlayerName>, but I only like the kinky furry shit");
 		retardedFurryKillsults.add("Wait, <PlayerName> wants to mursuit with me?!?!?!?");
 		retardedFurryKillsults.add("<PlayerName> Enjoys e621 confirmed?!?!?!?!?!?!?!");

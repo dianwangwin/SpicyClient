@@ -33,13 +33,13 @@ public class Command {
 	}
 	
 	// This shows a chat message to the player
-	public static void sendPrivateChatMessage(String text) {
-		Minecraft.getMinecraft().thePlayer.addChatComponentMessage(new ChatComponentText("§6[ §f" + SpicyClient.config.clientName + SpicyClient.config.clientVersion + " §6] §f" + text));
+	public static void sendPrivateChatMessage(Object text) {
+		Minecraft.getMinecraft().thePlayer.addChatComponentMessage(new ChatComponentText("§6[ §f" + SpicyClient.config.clientName + SpicyClient.config.clientVersion + " §6] §f" + text.toString()));
 	}
 	
 	// This shows a chat message to the everyone
-	public static void sendPublicChatMessage(String text) {
-		Minecraft.getMinecraft().thePlayer.sendQueue.addToSendQueue(new C01PacketChatMessage(text));
+	public static void sendPublicChatMessage(Object text) {
+		Minecraft.getMinecraft().thePlayer.sendQueue.addToSendQueue(new C01PacketChatMessage(text.toString()));
 	}
 	
 }

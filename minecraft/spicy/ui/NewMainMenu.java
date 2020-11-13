@@ -7,6 +7,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiLanguage;
@@ -19,6 +20,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import spicy.SpicyClient;
 import spicy.files.Config;
+import spicy.fonts.FontManager;
+import spicy.fonts.FontRenderer;
 import spicy.modules.combat.Criticals;
 import spicy.modules.memes.DougDimmadome;
 import spicy.modules.memes.FloofyFoxes;
@@ -73,8 +76,9 @@ public class NewMainMenu extends GuiScreen {
 		GlStateManager.popMatrix();
 		
 		String s1 = "Source code and downloads available at https://SpicyClient.info";
-        this.drawString(this.fontRendererObj, s1, this.width - this.fontRendererObj.getStringWidth(s1) - 2, this.height - 10, 0xff7289da);
-        
+        //this.drawString(this.fontRendererObj, s1, this.width - this.fontRendererObj.getStringWidth(s1) - 2, this.height - 10, 0xff7289da);
+		FontRenderer.drawstring(s1, this.width - this.fontRendererObj.getStringWidth(s1) + 12, this.height - 10, new Color(114, 137, 218, 255));
+		
 		// Logo
 		GlStateManager.enableBlend();
 		GlStateManager.color(1, 1, 1);
@@ -102,6 +106,7 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ Hypixel chat bypass");
         changeLogs.add("+ Hypixel autoblock");
         changeLogs.add("+ Hypixel killsults");
+        changeLogs.add("+ Hypixel interact autoblock");
         changeLogs.add("+ Payback for pvplands killsults");
         changeLogs.add("+ Vanilla nofall");
         changeLogs.add("+ Vanilla and packet autolog");
@@ -120,7 +125,8 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("* More meme modules");
         changeLogs.add("* Improved the tabgui");
         changeLogs.add("* Improved the hud");
-        changeLogs.add("* Improved alt manager");
+        changeLogs.add("* Improved the alt manager");
+        changeLogs.add("* Bug fixes");
         
         // Put the removed things here
         // changeLogs.add("- ");

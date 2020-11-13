@@ -182,89 +182,83 @@ public class Bhop extends Module {
 					}
 				}
 				else if (mode.is("Hypixel") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
-
-					if (mc.thePlayer.onGround) {
-						
-						//mc.thePlayer.motionY = 0.399999f;
-						mc.thePlayer.jump();
-						e.setCanceled(true);
-						
-					}else {
-						
-						mc.timer.timerSpeed = 1.0f;
-						float f = (float) MovementUtils.getDirection() + 180 - 45;
-			            //mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.3F);
-			            //mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.3F) * -1;
-			            MovementUtils.strafe(0.30f);
-			            
-			            //mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
-								//mc.thePlayer.posZ);
-			            //mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
-			            
-					}
 					
-				}
-				else if (mode.is("Test") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {	
-
+					mc.gameSettings.keyBindJump.pressed = false;
+					
+					mc.thePlayer.noClip = true;
+					
 					if (mc.thePlayer.onGround) {
 						
 						mc.thePlayer.jump();
 						//mc.thePlayer.motionY = 0.42f;
 						e.setCanceled(true);
 						
-					}else {
-						
-						//mc.timer.timerSpeed = 1.0f;
-						//float f = (float) MovementUtils.getDirection() + 180 - 45;
-			            //mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.26F);
-			            //mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.26F) * -1;
-			            
-			            //mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
-								//mc.thePlayer.posZ);
-			            //mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
-			            
 					}
 					
-					float f = (float) MovementUtils.getDirection() + 180 - 45;
-		            mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 2.50F);
-		            mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 2.50F) * -1;
-		            //Command.sendPrivateChatMessage(mc.thePlayer.motionX + " - " + mc.thePlayer.motionZ);
-		            
+					mc.thePlayer.setSprinting(true);
+					MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + 0.01f);
+					
 				}
-				else if (mode.is("Test 3") && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed)) {
+				else if (mode.is("Test") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
+					
+					mc.gameSettings.keyBindJump.pressed = false;
 					
 					if (mc.thePlayer.onGround) {
 						
 						mc.thePlayer.jump();
-						//mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
-						mc.thePlayer.motionY = 0.4f;
-						
-					}else {
-						
-						mc.timer.timerSpeed = 1f;
-						//mc.thePlayer.moveStrafing *= 10;
-						float f = (float) MovementUtils.getDirection() + 180 - 45;
-			            mc.thePlayer.motionX += (double)(MathHelper.sin(f) * 0.006F);
-			            mc.thePlayer.motionZ += (double)(MathHelper.cos(f) * 0.006F) * -1;
-			            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer());
-			            double d = mc.thePlayer.motionX + mc.thePlayer.motionZ;
-			            if (d < 0) {
-			            	d *= -1;
-			            }
-			            //Command.sendPrivateChatMessage(d + "");
-			             
-			            //mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
-								//mc.thePlayer.posZ);
-			            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
-						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
-								//mc.thePlayer.posZ);
-			            
-					}
-					
-					
-					if (mc.thePlayer.fallDistance > 0.01 && mc.thePlayer.fallDistance < 3) {
+						//mc.thePlayer.motionY = 0.42f;
+						e.setCanceled(true);
 						
 					}
+					
+					mc.thePlayer.setSprinting(true);
+					MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + 0.005511111f);
+					
+				}
+				else if (mode.is("Test 3") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
+					
+					if (mc.thePlayer.onGround) {
+						
+						mc.thePlayer.jump();
+						//mc.thePlayer.motionY = 0.42f;
+						e.setCanceled(true);
+						
+					}
+					
+					mc.gameSettings.keyBindJump.pressed = false;
+					
+					mc.thePlayer.onGround = true;
+					mc.thePlayer.noClip = true;
+					
+					if (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed) {
+						
+						MovementUtils.strafe(0.5F);
+						
+					}
+					
+					/*
+					switch (stage) {
+					case 0:
+						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+						stage++;
+						break;
+					case 1:
+						// mc.thePlayer.posY = mc.thePlayer.posY + 9.947598300641403E-14;
+						// mc.thePlayer.posY = mc.thePlayer.lastTickPosY + 0.0002000000000066393;
+						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
+								mc.thePlayer.posZ);
+						stage++;
+						break;
+					case 2:
+						// mc.thePlayer.posY = mc.thePlayer.posY + -9.947598300641403E-14;
+						// mc.thePlayer.posY = mc.thePlayer.lastTickPosY -0.0002000000000066393;
+						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
+								mc.thePlayer.posZ);
+						stage = 0;
+						break;
+					}
+					*/
+					//mc.thePlayer.motionY = 0;
 					
 				}
 				

@@ -75,6 +75,8 @@ public class Config {
 	public ReachNotify reachNotify = new ReachNotify();
 	public HideName hideName = new HideName();
 	public DiscordRichPresence discordRichPresence = new DiscordRichPresence();
+	public AutoArmor autoArmor = new AutoArmor();
+	public AntiLava antiLava = new AntiLava();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -88,8 +90,6 @@ public class Config {
 	}
 	
 	public boolean updateConfig() {
-		
-		this.discordRichPresence = new DiscordRichPresence();
 		
 		Config temp = new Config("temp");
 		if (this.version.equalsIgnoreCase(temp.version)) {
@@ -143,6 +143,7 @@ public class Config {
 			this.hideName = new HideName();
 			this.killSults = new KillSults();
 			this.discordRichPresence = new DiscordRichPresence();
+			this.autoArmor = new AutoArmor();
 			
 			this.tabgui.mode = new ModeSetting("Mode", "original", "compressed", "original");
 			
