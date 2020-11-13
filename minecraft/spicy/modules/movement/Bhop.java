@@ -190,7 +190,6 @@ public class Bhop extends Module {
 					if (mc.thePlayer.onGround) {
 						
 						mc.thePlayer.jump();
-						//mc.thePlayer.motionY = 0.42f;
 						e.setCanceled(true);
 						
 					}
@@ -206,7 +205,6 @@ public class Bhop extends Module {
 					if (mc.thePlayer.onGround) {
 						
 						mc.thePlayer.jump();
-						//mc.thePlayer.motionY = 0.42f;
 						e.setCanceled(true);
 						
 					}
