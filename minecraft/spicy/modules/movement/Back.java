@@ -41,7 +41,7 @@ public class Back extends Module {
 		if (e instanceof EventMotion) {
 			
 			if (e.isPre()) {
-			Killaura k = (Killaura) this.findModule(this.getModuleName(new Killaura()));
+			Killaura k = SpicyClient.config.killaura;
 				
 				if (k.target == null) {
 					

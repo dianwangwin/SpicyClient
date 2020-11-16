@@ -39,6 +39,9 @@ import spicy.events.listeners.EventOnLadder;
 import spicy.events.listeners.EventPacket;
 import spicy.events.listeners.EventSendPacket;
 import spicy.modules.Module;
+import spicy.notifications.Color;
+import spicy.notifications.NotificationManager;
+import spicy.notifications.Type;
 import spicy.settings.BooleanSetting;
 import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
@@ -49,6 +52,8 @@ import spicy.util.Timer;
 public class Bhop extends Module {
 	
 	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "PvpLands", "Hypixel", "Test", "Test 2", "Test 3");
+	
+	public NumberSetting hypixelSpeed = new NumberSetting("Speed", 0.01, 0.0001, 0.03, 0.0001);
 	
 	private static double lastY;
 	private static float rotate = 180;
@@ -66,7 +71,30 @@ public class Bhop extends Module {
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
-		this.addSettings(mode);
+		this.addSettings(mode, hypixelSpeed);
+	}
+	
+	@Override
+	public void onSettingChange(SettingChangeEvent e) {
+		if (e.setting.getSetting() == mode) {
+			
+			if (mode.is("Hypixel") || mode.getMode() == "Hypixel") {
+				
+				if (!this.settings.contains(hypixelSpeed)) {
+					this.settings.add(hypixelSpeed);
+				}
+				reorderSettings();
+				
+			}else {
+				
+				if (this.settings.contains(hypixelSpeed)) {
+					this.settings.remove(hypixelSpeed);
+				}
+				reorderSettings();
+				
+			}
+			
+		}
 	}
 	
 	public void onEnable() {
@@ -103,7 +131,9 @@ public class Bhop extends Module {
 						lagbackCheck = 0;
 						lastLagback = System.currentTimeMillis() - (5*1000);
 						this.toggle();
-						Command.sendPrivateChatMessage(this.name + " has been disabled due to lagbacks");
+						//Command.sendPrivateChatMessage(this.name + " has been disabled due to lagbacks");
+						
+						NotificationManager.getNotificationManager().createNotification(this.name + " has been disabled", "", true, 1000, Type.WARNING, Color.RED);
 						
 					}else {
 						
@@ -132,7 +162,7 @@ public class Bhop extends Module {
 			
 		}
 		
-		BlockFly b = (BlockFly) this.findModule(this.getModuleName(new BlockFly()));
+		BlockFly b = SpicyClient.config.blockFly;
 		
 		if (e instanceof EventUpdate) {
 			if (e.isPre()) {
@@ -190,12 +220,14 @@ public class Bhop extends Module {
 					if (mc.thePlayer.onGround) {
 						
 						mc.thePlayer.jump();
+						
 						e.setCanceled(true);
 						
 					}
 					
 					mc.thePlayer.setSprinting(true);
-					MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + 0.01f);
+					//MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + 0.01f);
+					MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + ((float)hypixelSpeed.getValue()));
 					
 				}
 				else if (mode.is("Test") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {

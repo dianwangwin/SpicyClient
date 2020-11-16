@@ -93,6 +93,25 @@ public class Antibot extends Module {
 	                }
 					
 				}
+				else if (packet.packet instanceof S0CPacketSpawnPlayer && !mc.isSingleplayer() && mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel")) {
+
+					//hypixelAntibot();
+					/*
+					S0CPacketSpawnPlayer p = (S0CPacketSpawnPlayer) packet.packet;
+					Entity entity = mc.theWorld.getEntityByID(p.getEntityID());
+					
+					if (entity == null) {
+						return;
+					}
+					
+	                if (entity.getDisplayName().getFormattedText().startsWith("\u00a7") && !entity.isInvisible() && !entity.getDisplayName().getFormattedText().toLowerCase().contains("npc")) {
+	                	
+	                }else {
+	                	Command.sendPrivateChatMessage("The " + entity.getDisplayName().getFormattedText() + " bot was removed from your game");
+	                	packet.setCanceled(true);
+	                }
+					*/
+				}
 				
 			}
 			
@@ -100,7 +119,7 @@ public class Antibot extends Module {
 		
 		if (e instanceof EventUpdate) {
 			
-			if (e.isPre() && AntibotMode.is("Advanced") && !(mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel"))) {
+			if (e.isPre() && AntibotMode.is("Advanced") && !mc.isSingleplayer() && !(mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel"))) {
 				
 				for (Object entity : mc.theWorld.loadedEntityList) {
 					
@@ -115,7 +134,7 @@ public class Antibot extends Module {
 				}
 				
 			}
-			else if (mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel")) {
+			else if (!mc.isSingleplayer() && mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel")) {
 				
 				if (e.isPre()) {
 					hypixelAntibot();
@@ -170,6 +189,8 @@ public class Antibot extends Module {
             	
                 EntityPlayer ent = (EntityPlayer) o;
                 
+                
+                
                 if (ent != mc.thePlayer && !dontRemove.contains(ent)) {
                 	
                 	String customName = ent.getCustomNameTag();
@@ -189,7 +210,7 @@ public class Antibot extends Module {
     						
     						if(!list.contains(ent)){
     							
-    							Command.sendPrivateChatMessage("The bot " + name + " bot was removed from your game");
+    							//Command.sendPrivateChatMessage("The bot " + name + " bot was removed from your game");
                           		removeThese.add(ent);
                           		
     						}
@@ -201,7 +222,7 @@ public class Antibot extends Module {
                     if(ent.isInvisible()){
                     	
                     	if(!customName.equalsIgnoreCase("") && customName.toLowerCase().contains("§c§c") && name.contains("§c")){
-                    		Command.sendPrivateChatMessage("The bot " + name + " bot was removed from your game");
+                    		//Command.sendPrivateChatMessage("The bot " + name + " bot was removed from your game");
                     		removeThese.add(ent);
                     	}
                     	
@@ -210,13 +231,13 @@ public class Antibot extends Module {
 	                if (formattedName.startsWith("\u00a7") && !ent.isInvisible() && !formattedName.toLowerCase().contains("npc")) {
 	                	
 	                }else {
-	                	Command.sendPrivateChatMessage("The " + ent.getDisplayName().getFormattedText() + " bot was removed from your game");
+	                	//Command.sendPrivateChatMessage("The " + ent.getDisplayName().getFormattedText() + " bot was removed from your game");
 	                	removeThese.add(ent);
 	                }
                     
                     // Watchdog bots
                     if(!customName.equalsIgnoreCase("") && customName.toLowerCase().contains("§c") && customName.toLowerCase().contains("§r")){
-                    	Command.sendPrivateChatMessage("The bot " + name + " bot was removed from your game");
+                    	Command.sendPrivateChatMessage("A watchdog bot named " + name + "was removed from your game");
                     	removeThese.add(ent);
                     }
                     

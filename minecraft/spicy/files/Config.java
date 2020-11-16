@@ -108,24 +108,6 @@ public class Config {
 		}
 		else if (this.version.equalsIgnoreCase("B2")) {
 			
-			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
-			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
-			this.killaura.newAutoblock.cycle(false);
-			this.killaura.newAutoblock.cycle(false);
-			this.killaura.targetingMode = new ModeSetting("Targeting mode", "Single", "Single", "Switch");
-			this.killaura.switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
-			this.killaura.targetsSetting.index = this.killaura.targetModeSetting.index;
-			this.killaura.targetsSetting = this.killaura.targetModeSetting;
-			this.killaura.rotationSetting = new ModeSetting("Rotation setting", "lock", "lock", "smooth");
-			this.killaura.hitOnHurtTime = new BooleanSetting("Hit on hurt time", false);
-			
-			this.nofall.noFallMode = new ModeSetting("NoFall Mode", "Vanilla", "Vanilla", "Packet");
-			this.nofall.noFallMode.cycle(false);
-			
-			this.clickgui.colorSettingRed = new NumberSetting("Red", 255, 0, 255, 1);
-			this.clickgui.colorSettingGreen = new NumberSetting("Red", 255, 0, 255, 1);
-			this.clickgui.colorSettingBlue = new NumberSetting("Red", 255, 0, 255, 1);
-			
 			this.noClip = new NoClip();
 			this.autoLog = new AutoLog();
 			this.floofyFoxes = new FloofyFoxes();
@@ -144,8 +126,32 @@ public class Config {
 			this.killSults = new KillSults();
 			this.discordRichPresence = new DiscordRichPresence();
 			this.autoArmor = new AutoArmor();
+			this.antiLava = new AntiLava();
+			
+			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
+			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
+			this.killaura.newAutoblock.cycle(false);
+			this.killaura.newAutoblock.cycle(false);
+			this.killaura.targetingMode = new ModeSetting("Targeting mode", "Single", "Single", "Switch");
+			this.killaura.switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
+			this.killaura.targetsSetting.index = this.killaura.targetModeSetting.index;
+			this.killaura.targetsSetting = this.killaura.targetModeSetting;
+			this.killaura.rotationSetting = new ModeSetting("Rotation setting", "lock", "lock", "smooth");
+			this.killaura.hitOnHurtTime = new BooleanSetting("Hit on hurt time", false);
 			
 			this.tabgui.mode = new ModeSetting("Mode", "original", "compressed", "original");
+			
+			this.nofall.noFallMode = new ModeSetting("NoFall Mode", "Vanilla", "Vanilla", "Packet");
+			this.nofall.noFallMode.cycle(false);
+			
+			this.clickgui.colorSettingRed = new NumberSetting("Red", 255, 0, 255, 1);
+			this.clickgui.colorSettingGreen = new NumberSetting("Red", 255, 0, 255, 1);
+			this.clickgui.colorSettingBlue = new NumberSetting("Red", 255, 0, 255, 1);
+			
+			this.fly.hypixelTimerBoost = new BooleanSetting("Hypixel timer boost", true);
+			this.fly.hypixelSpeed = new NumberSetting("Speed", 0.195, 0.05, 0.2, 0.005);
+			
+			this.bhop.hypixelSpeed = new NumberSetting("Speed", 0.01, 0.0001, 0.03, 0.0001);
 			
 		}
 		

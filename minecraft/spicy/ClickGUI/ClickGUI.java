@@ -52,7 +52,7 @@ public class ClickGUI extends GuiScreen {
 	}
 	
 	public void onGuiClosed() {
-		spicy.modules.render.ClickGUI c = (spicy.modules.render.ClickGUI) Module.findModule(Module.getModuleName(new spicy.modules.render.ClickGUI()));
+		spicy.modules.render.ClickGUI c = SpicyClient.config.clickgui;
 		c.toggled = false;
 	}
 	
@@ -248,7 +248,7 @@ public class ClickGUI extends GuiScreen {
 			}
 			currentlySettingKeybind = false;
 		}else {
-			spicy.modules.render.ClickGUI tempClickGui = (spicy.modules.render.ClickGUI) Module.findModule(Module.getModuleName(new spicy.modules.render.ClickGUI()));
+			spicy.modules.render.ClickGUI tempClickGui = SpicyClient.config.clickgui;
 			if (keyCode == Keyboard.KEY_ESCAPE || keyCode == tempClickGui.getKey()) {
 				mc.displayGuiScreen(this.last);
 			}

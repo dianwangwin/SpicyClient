@@ -47,7 +47,7 @@ public class NoFall extends Module {
 			
 			if (e.isPre()) {
 				
-				if (mc.thePlayer.fallDistance > 2 && noFallMode.is("Packet")) {
+				if (mc.thePlayer.fallDistance > 3 && noFallMode.is("Packet")) {
 					
 					mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 					

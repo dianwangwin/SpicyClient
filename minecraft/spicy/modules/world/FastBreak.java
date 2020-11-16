@@ -34,6 +34,19 @@ public class FastBreak extends Module {
 	
 	public void onEvent(Event e) {
 		
+		if (e instanceof EventUpdate && e.isPre()) {
+			
+			if (mc.playerController.curBlockDamageMP >= 1.0) {
+				mc.playerController.curBlockDamageMP = 1.0f;
+				return;
+			}
+			
+	        mc.playerController.curBlockDamageMP += speed.getValue() / 100;
+	        
+		}
+		
+		// Removed
+		/*
 		if (e instanceof EventAddBlockDamage) {
 			
 			if (e.isPre()) {
@@ -44,7 +57,7 @@ public class FastBreak extends Module {
 			}
 			
 		}
-		
+		*/
 	}
 	
 }

@@ -23,17 +23,24 @@ import spicy.events.listeners.EventMotion;
 import spicy.events.listeners.EventSendPacket;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
+import spicy.notifications.Color;
+import spicy.notifications.NotificationManager;
+import spicy.notifications.Type;
+import spicy.settings.BooleanSetting;
 import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
+import spicy.settings.SettingChangeEvent;
 import spicy.util.MovementUtils;
 import spicy.util.RotationUtils;
 import spicy.util.Timer;
 
 public class Fly extends Module {
 
-	public NumberSetting speed = new NumberSetting("Speed", 0.1f, 0.01, 2, 0.1);
+	public NumberSetting speed = new NumberSetting("Speed", 0.1, 0.01, 2, 0.1);
 	private ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "Hypixel");
 	
+	public BooleanSetting hypixelTimerBoost = new BooleanSetting("Hypixel timer boost", true);
+	public NumberSetting hypixelSpeed = new NumberSetting("Speed", 0.195, 0.05, 0.2, 0.005);
 	
 	public static ArrayList<Packet> hypixelPackets = new ArrayList<Packet>();
 	
@@ -45,9 +52,49 @@ public class Fly extends Module {
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
-		this.addSettings(speed, mode);
+		this.addSettings(speed, mode, hypixelTimerBoost, hypixelSpeed);
 	}
-
+	
+	@Override
+	public void onSettingChange(SettingChangeEvent e) {
+		
+		if (e.setting.getSetting() == mode) {
+			
+			if (mode.is("Hypixel") || mode.getMode() == "Hypixel") {
+				
+				if (this.settings.contains(speed)) {
+					this.settings.remove(speed);
+				}
+				
+				if (!this.settings.contains(hypixelTimerBoost)) {
+					this.settings.add(hypixelTimerBoost);
+				}
+				
+				if (!this.settings.contains(hypixelSpeed)) {
+					this.settings.add(hypixelSpeed);
+				}
+				reorderSettings();
+			}
+			else {
+				
+				if (!this.settings.contains(speed)) {
+					this.settings.add(speed);
+				}
+				
+				if (this.settings.contains(hypixelTimerBoost)) {
+					this.settings.remove(hypixelTimerBoost);
+				}
+				
+				if (this.settings.contains(hypixelSpeed)) {
+					this.settings.remove(hypixelSpeed);
+				}
+				reorderSettings();
+			}
+			
+		}
+		
+	}
+	
 	public static int fly_keybind = Keyboard.KEY_F;
 
 	public static transient int hypixelStage = 0;
@@ -60,7 +107,8 @@ public class Fly extends Module {
 		} else if (mode.getMode().equals("Hypixel")) {
 			
 			if (mc.isSingleplayer()) {
-				Command.sendPrivateChatMessage("You cannot use hypixel fly in singleplayer!");
+				//Command.sendPrivateChatMessage("You cannot use hypixel fly in singleplayer!");
+				NotificationManager.getNotificationManager().createNotification("You cannot use hypixel fly in singleplayer!", "", true, 1000, Type.WARNING, Color.RED);
 				this.toggle();
 			}
 			
@@ -78,7 +126,7 @@ public class Fly extends Module {
 			
 		}
 	}
-
+	
 	public void onDisable() {
 		
 		mc.thePlayer.stepHeight = 0.6f;
@@ -109,7 +157,7 @@ public class Fly extends Module {
 		}
 
 	}
-
+	
 	private static float original_fly_speed;
 	private static int NCP_Status = 0;
 
@@ -176,13 +224,7 @@ public class Fly extends Module {
 			EventMotion event = (EventMotion) e;
 
 			if (e.isPost()) {
-
-				// double d = 9.94759830064103-14D;
-				// DecimalFormat dec = new
-				// DecimalFormat("0.00000000000000000000000000000000000000000000000");
-				// 0.00000000000009947598300641403
-				// System.out.println(dec.format(d) + "");
-
+				
 				this.additionalInformation = mode.getMode();
 
 				if (mode.getMode().equals("Hypixel")) {
@@ -191,32 +233,19 @@ public class Fly extends Module {
 					mc.thePlayer.motionY = 0;
 					
 					//MovementUtils.setMotion(0.2);
-					MovementUtils.strafe(0.195f);
+					//MovementUtils.strafe(0.195f);
+					MovementUtils.setMotion(((float)hypixelSpeed.getValue()));
 					
 					
 					int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);
-					// mc.thePlayer.motionX += (double)(MathHelper.sin(f) * 0.008 * time);
-					// mc.thePlayer.motionZ -= (double)(MathHelper.cos(f) * 0.008 * time);
-					// System.out.println(20 * time * -1);
 					
-					// mc.thePlayer.motionX += (double)(MathHelper.sin(f) * 0.008 * time);
-					// mc.thePlayer.motionZ -= (double)(MathHelper.cos(f) * 0.008 * time);
-					// System.out.println(20 * time * -1);
-					
-					mc.timer.ticksPerSecond = 27f;
-					
-					/*
-					if (time < 0) {
-						mc.timer.ticksPerSecond = 20f * time * -1;
-						//mc.timer.ticksPerSecond = 21 * time * -1;
-					} else {
-						mc.timer.ticksPerSecond = 20f;
+					if (hypixelTimerBoost.isEnabled()) {
+						mc.timer.ticksPerSecond = 27f;
 					}
-					*/
 					
 					//double offset = 9.947598300641403E-14D;
 					//double offset = 9.947599900641403E-14D;
-					double offset = 9.947599900641403E-14D;
+					double offset = 9.274936900641403E-14D;
 					
 					switch (hypixelStage) {
 					case 0:

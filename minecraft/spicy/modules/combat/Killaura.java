@@ -68,7 +68,7 @@ public class Killaura extends Module {
 	public NumberSetting switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
 	public BooleanSetting hitOnHurtTime = new BooleanSetting("Hit on hurt time", false);
 	
-	private static boolean blocking = false;
+	private static transient boolean blocking = false;
 	
 	private static transient float lastSmoothYaw, lastSmoothPitch;
 	
@@ -104,12 +104,15 @@ public class Killaura extends Module {
 	public void onDisable() {
 		
         if (mc.thePlayer != null && newAutoblock.is("Hypixel")) {
-            if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
-            	
-                mc.gameSettings.keyBindUseItem.pressed = false;
-                mc.playerController.onStoppedUsingItem(mc.thePlayer);
-                
-            }
+        	try {
+                if (blocking && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
+                    mc.gameSettings.keyBindUseItem.pressed = false;
+                    mc.playerController.onStoppedUsingItem(mc.thePlayer);
+                }
+			} catch (NullPointerException e) {
+				// TODO: handle exception
+			}
+        	
         }
 
 	}
@@ -182,7 +185,7 @@ public class Killaura extends Module {
 			
 			if (e.isPre()) {
 				
-				Sprint s = (Sprint) this.findModule(this.getModuleName(new Sprint()));
+				Sprint s = SpicyClient.config.sprint;
 				
 				if (mc.thePlayer.isDead && disableOnDeath.isEnabled()) {
 					
@@ -271,9 +274,23 @@ public class Killaura extends Module {
 						return;
 					}
 					
-					startBlocking(false);
+					startBlocking();
 					
 					target = targets.get(0);
+					
+					if (target instanceof EntityPlayer && SpicyClient.config.antibot.isEnabled() && !mc.isSingleplayer() && mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel")) {
+						
+	                    try {
+	                        if (mc.getNetHandler().getPlayerInfo(((EntityPlayer)target).getUniqueID()).responseTime > 1) {
+	                        	Command.sendPrivateChatMessage("A watchdog bot was removed from your game");
+	                        	mc.theWorld.removeEntity(target);
+	                        	return;
+	                        }
+						} catch (NullPointerException e1) {
+							e1.printStackTrace();
+						}
+						
+					}
 					
 					if (targetingMode.is("Switch")) {
 						
@@ -286,6 +303,24 @@ public class Killaura extends Module {
 						}
 						
 					}
+					
+					if (target != lastTarget) {
+						/*
+						Command.sendPrivateChatMessage("F: " + target.getDisplayName().getFormattedText());
+						Command.sendPrivateChatMessage("U: " + target.getDisplayName().getUnformattedText());
+						Command.sendPrivateChatMessage("UC: " + target.getDisplayName().getUnformattedTextForChat());
+						Command.sendPrivateChatMessage("C: " + target.getCustomNameTag());
+						
+						if (target instanceof EntityPlayer) {
+							
+							Command.sendPrivateChatMessage("Ping: " + mc.getNetHandler().getPlayerInfo(((EntityPlayer)target).getUniqueID()).responseTime);
+							
+						}
+						*/
+					}
+					
+					// if (mc.netHandler.getPlayerInfo(entity.asEntityPlayer().uniqueID)?.responseTime == 0)
+	                // return true
 					
 					lastTarget = target;
 					
@@ -337,7 +372,7 @@ public class Killaura extends Module {
 					
 					Random random = new Random();
 					
-					startBlocking(false);
+					startBlocking();
 					
 					if (hitOnHurtTime.isEnabled()) {
 						if (target.hurtTime > 2) {
@@ -420,8 +455,8 @@ public class Killaura extends Module {
 		//mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(ent, new Vec3((double)randomNumber(-50, 50)/100, (double)randomNumber(0, 200)/100, (double)randomNumber(-50, 50)/100)));
 		
 		float[] rotations = RotationUtils.getRotations(target);
-		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(ent, RotationUtils.getVectorForRotation(rotations[0], rotations[1])));
-		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(ent, Action.INTERACT));
+		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(ent, RotationUtils.getVectorForRotation(rotations[0], rotations[1])));
+		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(ent, Action.INTERACT));
 		
 		// Command.sendPrivateChatMessage(RotationUtils.getVectorForRotation(rotations[0], rotations[1]) + "");
 		
@@ -435,7 +470,7 @@ public class Killaura extends Module {
 		
 		//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.910153517, -0.9083644, -0.9186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
 		//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.30153517, -0.9983644, -0.7186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
-		mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
+		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
 	}
 	
     public boolean sendUseItem(EntityPlayer playerIn, World worldIn, ItemStack itemStackIn)
@@ -470,20 +505,37 @@ public class Killaura extends Module {
     
 	private void stopBlocking() {
 		
-        if (mc.thePlayer.isBlocking() && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
-        	
-        	mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-            //mc.gameSettings.keyBindUseItem.pressed = false;
-            //mc.playerController.onStoppedUsingItem(mc.thePlayer);
-            
-        }
+		try {
+			if (blocking && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
+	        	
+	        	mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+	            //mc.gameSettings.keyBindUseItem.pressed = false;
+	            //mc.playerController.onStoppedUsingItem(mc.thePlayer);
+	            
+	        }
+		} catch (NullPointerException e) {
+			blocking = false;
+		}
+        
+        blocking = false;
+        
 		return;
 		
 	}
 	
 	private int interactBlock = 0;
 	
-	private void startBlocking(boolean interactAutoblock) {
+	private void startBlocking() {
+		
+		if (blocking) {
+			if ((mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
+				sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());
+			}
+			
+			return;
+		}
+		
+		blocking = true;
 		
         if (newAutoblock.is("Hypixel") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
         	
@@ -509,13 +561,9 @@ public class Killaura extends Module {
              */
         }
         else if (newAutoblock.is("Vanilla") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
-        	if (target != null && interactAutoblock) {
-        		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, new Vec3(randomNumber(-50, 50) / 100.0, randomNumber(0, 200) / 100.0, randomNumber(-50, 50) / 100.0)));
-        		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.INTERACT));
-        	}
             mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
         }
-		
+        
 	}
 	
 	// I found these methods on github somewhere

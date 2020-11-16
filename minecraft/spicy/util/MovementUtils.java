@@ -1,6 +1,7 @@
 package spicy.util;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class MovementUtils {
 	
@@ -81,6 +82,22 @@ public class MovementUtils {
             }
             mc.thePlayer.motionX = forward * speed * Math.cos(Math.toRadians(yaw + 90.0F)) + strafe * speed * Math.sin(Math.toRadians(yaw + 90.0F)); 
             mc.thePlayer.motionZ = forward * speed * Math.sin(Math.toRadians(yaw + 90.0F)) - strafe * speed * Math.cos(Math.toRadians(yaw + 90.0F));
+        }
+    }
+    
+    public static boolean isOnGround(double height) {
+        if (!mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().offset(0.0D, -height, 0.0D)).isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public static boolean isOnGround(double height, EntityPlayer player) {
+        if (!mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(0.0D, -height, 0.0D)).isEmpty()) {
+            return true;
+        } else {
+            return false;
         }
     }
     

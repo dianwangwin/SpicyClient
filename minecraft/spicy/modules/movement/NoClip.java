@@ -6,14 +6,20 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C13PacketPlayerAbilities;
+import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+import net.minecraft.network.play.server.S18PacketEntityTeleport;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import spicy.events.Event;
+import spicy.events.listeners.EventGetBlockHitbox;
 import spicy.events.listeners.EventMotion;
+import spicy.events.listeners.EventPacket;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
 import spicy.modules.Module.Category;
+import spicy.util.MovementUtils;
 
 public class NoClip extends Module {
 	
@@ -30,36 +36,49 @@ public class NoClip extends Module {
 
 	
 	public void onEnable() {
-		
+		mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0784001, mc.thePlayer.posZ);
 	}
 	
 	public void onDisable() {
-		mc.thePlayer.noClip = false;
+		
 	}
 	
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventUpdate) {
+		if (e instanceof EventGetBlockHitbox) {
 			
 			if (e.isPre()) {
 				
-                final double mx = Math.cos(Math.toRadians(mc.thePlayer.rotationYaw + 90.0f));
-                final double mz = Math.sin(Math.toRadians(mc.thePlayer.rotationYaw + 90.0f));
-                final double x = mc.thePlayer.movementInput.moveForward * 1.75 * mx + mc.thePlayer.movementInput.moveStrafe * 1.75 * mz;
-                final double z = mc.thePlayer.movementInput.moveForward * 1.75 * mz - mc.thePlayer.movementInput.moveStrafe * 1.75 * mx;
-
+				EventGetBlockHitbox event = (EventGetBlockHitbox) e;
+				event.setCanceled(true);
+				mc.thePlayer.motionY = 0;
+				mc.thePlayer.onGround = true;
+				mc.thePlayer.noClip = true;
 				
-                if (mc.thePlayer.isCollidedHorizontally && !mc.thePlayer.isOnLadder() && !isInsideBlock()) {
-                    mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX + x, mc.thePlayer.posY, mc.thePlayer.posZ + z, false));
-                    final double posX2 = mc.thePlayer.posX;
-                    final double posY2 = mc.thePlayer.posY;
-                    mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(posX2, posY2 - (1), mc.thePlayer.posZ, false));
-                    mc.thePlayer.setPosition(mc.thePlayer.posX + x, mc.thePlayer.posY, mc.thePlayer.posZ + z);
-                    return;
-                }
-                return;
-
-                
+				if (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed) {
+					
+					float f = (float) MovementUtils.getDirection() + 180 - 45;
+					MovementUtils.forward(0.01f);
+		            //mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.1F);
+		            //mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.1F) * -1;
+					
+				}
+				
+				double y, y1;
+				mc.thePlayer.motionY = 0;
+				
+				//if (mc.thePlayer.ticksExisted % 3 ==0) {
+					
+					//y = mc.thePlayer.posY - 1.0E-10D;
+					//mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, y, mc.thePlayer.posZ, true));
+					
+				//}
+				
+				//y1 = mc.thePlayer.posY + 1.0E-10D;
+				//mc.thePlayer.setPosition(mc.thePlayer.posX, y1, mc.thePlayer.posZ);
+				
+				//mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
+				
 			}
 			
 		}

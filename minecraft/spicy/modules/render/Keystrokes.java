@@ -44,7 +44,7 @@ public class Keystrokes extends Module {
 				FontRenderer fr = mc.fontRendererObj;
 				
 				// this variable is in reverse because i don't want too rewrite code
-				TabGUI t = (TabGUI) this.findModule(this.getModuleName(new TabGUI()));
+				TabGUI t = SpicyClient.config.tabgui;
 				if (t.isEnabled()) {
 					tabgui_toggled = false;
 				}else {

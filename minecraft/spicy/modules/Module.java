@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.sound.sampled.AudioInputStream;
@@ -19,6 +20,9 @@ import org.lwjgl.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import spicy.SpicyClient;
 import spicy.events.Event;
+import spicy.notifications.Color;
+import spicy.notifications.NotificationManager;
+import spicy.notifications.Type;
 import spicy.settings.BooleanSetting;
 import spicy.settings.KeybindSetting;
 import spicy.settings.ModeSetting;
@@ -104,8 +108,12 @@ public class Module {
 	}
 	
 	public void toggle() {
+		
 		toggled = !toggled;
 		if (toggled) {
+			
+			NotificationManager.getNotificationManager().createNotification("Toggled: " + name, "", true, 1500, Type.INFO, Color.GREEN);
+			
 			onEnable();
 			
 			if (SpicyClient.config.clickgui.sound.isEnabled()) {
@@ -113,6 +121,9 @@ public class Module {
 			}
 			
 		}else {
+			
+			NotificationManager.getNotificationManager().createNotification("Toggled: " + name, "", true, 1500, Type.INFO, Color.RED);
+			
 			onDisable();
 			
 			if (SpicyClient.config.clickgui.sound.isEnabled()) {
@@ -135,21 +146,8 @@ public class Module {
 		
 	}
 	
-	public static Object findModule(String name) {
-		for (Module m : SpicyClient.modules) {
-			
-			if (m.name.toLowerCase().equals(name.toLowerCase())) {
-				return m;
-			}
-			
-		}
-		
-		return null;
-		
-	}
-	
-	public static String getModuleName(Module m) {
-		return m.name.replaceAll("\\s+","");
+	public void reorderSettings() {
+		this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
 	}
 	
 	public void resetSettings() {

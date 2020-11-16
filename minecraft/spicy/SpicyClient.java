@@ -50,6 +50,7 @@ import spicy.modules.Module;
 import spicy.modules.Module.Category;
 import spicy.modules.player.Timer;
 import spicy.modules.render.*;
+import spicy.notifications.NotificationManager;
 import spicy.ui.HUD;
 
 public class SpicyClient {

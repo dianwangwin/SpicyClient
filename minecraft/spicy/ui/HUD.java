@@ -21,6 +21,7 @@ import spicy.SpicyClient;
 import spicy.events.EventType;
 import spicy.events.listeners.EventRenderGUI;
 import spicy.modules.Module;
+import spicy.notifications.NotificationManager;
 
 public class HUD {
 	public boolean rainbowEnabled = false;
@@ -43,7 +44,9 @@ public class HUD {
 	
 	public void draw() {
 		
-		ScaledResolution sr = new ScaledResolution(mc); 
+		NotificationManager.getNotificationManager().onRender();
+		
+		ScaledResolution sr = new ScaledResolution(mc);
 		FontRenderer fr = mc.fontRendererObj;
 		
 		float hue = System.currentTimeMillis() % (int)(rainbowTimer * 1000) / (float)(rainbowTimer * 1000);

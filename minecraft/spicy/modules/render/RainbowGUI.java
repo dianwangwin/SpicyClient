@@ -27,13 +27,13 @@ public class RainbowGUI extends Module {
 	}
 	
 	public void onEnable() {
-		TabGUI t = (TabGUI) this.findModule(this.getModuleName(new TabGUI()));
+		TabGUI t = SpicyClient.config.tabgui;
 		t.rainbowEnabled = true;
 		SpicyClient.hud.rainbowEnabled = true;
 	}
 	
 	public void onDisable() {
-		TabGUI t = (TabGUI) this.findModule(this.getModuleName(new TabGUI()));
+		TabGUI t = SpicyClient.config.tabgui;
 		t.rainbowEnabled = false;
 		SpicyClient.hud.rainbowEnabled = false;
 	}
@@ -48,7 +48,7 @@ public class RainbowGUI extends Module {
 			
 			if (e.isPre()) {
 				
-				TabGUI t = (TabGUI) this.findModule(this.getModuleName(new TabGUI()));
+				TabGUI t = SpicyClient.config.tabgui;
 				
 				t.rainbowEnabled = true;
 				t.rainbowTimer = 100.5f - speed.getValue();

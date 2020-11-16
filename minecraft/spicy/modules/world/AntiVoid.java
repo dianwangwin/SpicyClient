@@ -18,6 +18,9 @@ import spicy.events.listeners.EventMotion;
 import spicy.events.listeners.EventPacket;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
+import spicy.notifications.Color;
+import spicy.notifications.NotificationManager;
+import spicy.notifications.Type;
 import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
 import spicy.util.Timer;
@@ -98,9 +101,10 @@ public class AntiVoid extends Module {
 			        	
 			        	Random r = new Random();
 			        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
-			        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 8, mc.thePlayer.posZ, true));
+			        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY - 5, mc.thePlayer.posZ, true));
 			        	//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 6, mc.thePlayer.posZ);
 			        	mc.thePlayer.fallDistance = -1;
+			        	NotificationManager.getNotificationManager().createNotification("Antivoid saved you", "", true, 2000, Type.INFO, Color.BLUE);
 			        	//mc.thePlayer.motionY = 1;
 			            //float f = mc.thePlayer.rotationYaw * 0.017453292F;
 			            //mc.thePlayer.motionX -= (double)(MathHelper.sin(f) * 0.035f);
