@@ -127,6 +127,7 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("* Improved the hud");
         changeLogs.add("* Improved the alt manager");
         changeLogs.add("* Improved hypixel antibot");
+        changeLogs.add("* Can now toggle discord rp");
         changeLogs.add("* Bug fixes");
         
         // Put the removed things here

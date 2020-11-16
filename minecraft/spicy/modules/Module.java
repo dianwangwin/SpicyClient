@@ -34,7 +34,7 @@ import spicy.settings.SettingChangeEvent.type;
 public class Module {
 	
 	public String name;
-	public String additionalInformation = "";
+	public transient String additionalInformation = "";
 	public boolean toggled = false;
 	public transient boolean expanded = false;
 	public transient boolean ClickGuiExpanded = false;

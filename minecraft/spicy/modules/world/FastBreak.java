@@ -11,7 +11,7 @@ import spicy.settings.NumberSetting;
 
 public class FastBreak extends Module {
 	
-	private NumberSetting speed = new NumberSetting("Speed", 2, 1, 20, 1);
+	private NumberSetting speed = new NumberSetting("Speed", 20, 1, 20, 1);
 	
 	public FastBreak() {
 		super("Fast Break", Keyboard.KEY_NONE, Category.WORLD);

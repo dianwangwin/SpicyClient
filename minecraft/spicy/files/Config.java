@@ -77,6 +77,8 @@ public class Config {
 	public DiscordRichPresence discordRichPresence = new DiscordRichPresence();
 	public AutoArmor autoArmor = new AutoArmor();
 	public AntiLava antiLava = new AntiLava();
+	public InvWalk invWalk = new InvWalk();
+	public Mike mike = new Mike();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -127,6 +129,8 @@ public class Config {
 			this.discordRichPresence = new DiscordRichPresence();
 			this.autoArmor = new AutoArmor();
 			this.antiLava = new AntiLava();
+			this.invWalk = new InvWalk();
+			this.mike = new Mike();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");

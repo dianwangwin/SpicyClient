@@ -1,4 +1,4 @@
-package spicy.modules.world;
+package spicy.modules.player;
 
 import java.util.Random;
 
@@ -100,8 +100,9 @@ public class AntiVoid extends Module {
 			        if (!mc.thePlayer.onGround && mc.thePlayer.fallDistance >= 8.0f && isOverVoid) {
 			        	
 			        	Random r = new Random();
+			        	
 			        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
-			        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY - 5, mc.thePlayer.posZ, true));
+			        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 8, mc.thePlayer.posZ, true));
 			        	//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 6, mc.thePlayer.posZ);
 			        	mc.thePlayer.fallDistance = -1;
 			        	NotificationManager.getNotificationManager().createNotification("Antivoid saved you", "", true, 2000, Type.INFO, Color.BLUE);

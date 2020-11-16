@@ -390,6 +390,8 @@ public class SpicyClient {
 		modules.add(c.discordRichPresence);
 		modules.add(c.autoArmor);
 		modules.add(c.antiLava);
+		modules.add(c.invWalk);
+		modules.add(c.mike);
 		
 		for (Module temp : SpicyClient.modules) {
 			
