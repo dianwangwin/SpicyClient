@@ -1,21 +1,9 @@
 package spicy.modules;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-
-import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
 import spicy.SpicyClient;
@@ -31,7 +19,7 @@ import spicy.settings.Setting;
 import spicy.settings.SettingChangeEvent;
 import spicy.settings.SettingChangeEvent.type;
 
-public class Module {
+public abstract class Module {
 	
 	public String name;
 	public transient String additionalInformation = "";

@@ -3,6 +3,7 @@ package spicy;
 import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -30,6 +31,7 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
 import spicy.ClickGUI.Tab;
 import spicy.chatCommands.Command;
@@ -432,6 +434,35 @@ public class SpicyClient {
 		}
 		
 		return modules;
+		
+	}
+	
+	public static void setWindowIcons(InputStream in0, InputStream in1) {
+		
+		Class cls = null;
+		try {
+			cls = Class.forName("spicy.fonts.FontUtils");
+		} catch (ClassNotFoundException e3) {
+			e3.printStackTrace();
+			return;
+		}
+		
+		/*
+		
+		From the Minecraft source code
+		
+		inputstream = this.mcDefaultResourcePack.getInputStreamAssets(new ResourceLocation("icons/icon_16x16.png"));
+        inputstream1 = this.mcDefaultResourcePack.getInputStreamAssets(new ResourceLocation("icons/icon_32x32.png"));
+        
+		 */
+		
+		System.out.println("Setting the icons...");
+		
+		// Add logos later
+		in0 = cls.getResourceAsStream("/assets/minecraft/spicy/SpicyClientLogo128x128.png");
+		in1 = cls.getResourceAsStream("/assets/minecraft/spicy/SpicyClientLogo256x256.png");
+		
+		System.out.println("Icons set");
 		
 	}
 	
