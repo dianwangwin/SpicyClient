@@ -923,7 +923,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         {
             inputstream = this.mcDefaultResourcePack.getInputStream(locationMojangPng);
             this.mojangLogo = textureManagerInstance.getDynamicTextureLocation("logo", new DynamicTexture(ImageIO.read(inputstream)));
-            SpicyClient.setMojangLogo();
+            SpicyClient.setMojangSplashScreen();
             textureManagerInstance.bindTexture(this.mojangLogo);
         }
         catch (IOException ioexception)
