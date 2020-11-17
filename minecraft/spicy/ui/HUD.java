@@ -81,14 +81,14 @@ public class HUD {
 			GlStateManager.color(1, 1, 1);
 			mc.getTextureManager().bindTexture(new ResourceLocation("spicy/SpicyClient.png"));
 			int imageWidth = 500, imageHeight = 122;
-			imageWidth /= 4;
-			imageHeight /= 4;
-			Gui.drawModalRectWithCustomSizedTexture(-13, -6, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+			imageWidth /= 6;
+			imageHeight /= 6;
+			Gui.drawModalRectWithCustomSizedTexture(4, 4, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(4, 4, 0);
 			GlStateManager.scale(0.7, 0.7, 1);
 			GlStateManager.translate(-4, -4, 0);
-			fr.drawStringWithQuadShadow(SpicyClient.config.clientVersion, 135, 3.5f, primaryColor, 0.3f);
+			fr.drawStringWithQuadShadow(SpicyClient.config.clientVersion, 122, 3.5f, primaryColor, 0.3f);
 			GlStateManager.popMatrix();
 		}
 		

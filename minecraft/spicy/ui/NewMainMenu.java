@@ -84,10 +84,10 @@ public class NewMainMenu extends GuiScreen {
 		GlStateManager.color(1, 1, 1);
 		//GlStateManager.clearColor(1, 1, 1, 1);
 		int imageWidth = 500, imageHeight = 122;
-		imageWidth /= 1.1;
-		imageHeight /= 1.1;
+		imageWidth /= 1.5;
+		imageHeight /= 1.5;
 		mc.getTextureManager().bindTexture(new ResourceLocation("spicy/SpicyClient.png"));
-		drawModalRectWithCustomSizedTexture((int) ((width / 2) / 1.8f), -10, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+		drawModalRectWithCustomSizedTexture((int) ((width / 2) / 1.7f), 8, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
         
         //drawRect(this.width / 2 + 100, this.height / 2 - 40, this.width / 2 + 220, this.height / 2 + 80, 0xff202225);
         //drawRect(this.width / 2 - 60, this.height / 2 - 40, this.width / 2 + 60, this.height / 2 + 80, 0xff202225);
@@ -118,6 +118,8 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ Trigger Bot");
         changeLogs.add("+ Roblox chat bypass");
         changeLogs.add("+ Added spicy sword animation");
+        changeLogs.add("+ Basic anti lava");
+        changeLogs.add("+ Inventory Move");
         
         // Put the changed things here
         // changeLogs.add("* ");
