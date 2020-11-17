@@ -688,7 +688,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 
                 // So i can set custom icons
                 SpicyClient.setWindowIcons(inputstream, inputstream1);
-             // So i can set custom icons
+                // So i can set custom icons
                 
                 if (inputstream != null && inputstream1 != null)
                 {
