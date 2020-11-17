@@ -477,7 +477,7 @@ public class SpicyClient {
 		
 	}
 	
-	// This is the big screen that says moojang on startup
+	// This is the big screen that says Mojang on startup
 	public static void setMojangSplashScreen() {
 		
 		System.out.println("Setting the logo...");
