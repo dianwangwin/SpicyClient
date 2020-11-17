@@ -477,32 +477,13 @@ public class SpicyClient {
 		
 	}
 	
-	public static void setMojangLogo(InputStream in0) {
-		
-		Class cls = null;
-		try {
-			cls = Class.forName("spicy.SpicyClient");
-		} catch (ClassNotFoundException e3) {
-			e3.printStackTrace();
-			return;
-		}
-		
-		InputStream temp0 = in0;
+	// This is the big screen that says moojang on startup
+	public static void setMojangSplashScreen() {
 		
 		System.out.println("Setting the logo...");
-		
-		in0 = cls.getResourceAsStream("/assets/minecraft/spicy/SpicyClient");
-		
-		if (in0 == null) {
-			System.out.println("Failed to set logo");
-			System.out.println("Restoring original logo...");
-			
-			in0 = temp0;
-			
-			System.out.println("Original logo restored");
-		}else {
-			System.out.println("logo set");
-		}
+		// Create a 1920x1080 background later
+		Minecraft.getMinecraft().mojangLogo = new ResourceLocation("spicy/SpicyClient.png");
+		System.out.println("logo set");
 		
 	}
 	

@@ -324,7 +324,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private TextureMap textureMapBlocks;
     private SoundHandler mcSoundHandler;
     private MusicTicker mcMusicTicker;
-    private ResourceLocation mojangLogo;
+    public ResourceLocation mojangLogo;
     private final MinecraftSessionService sessionService;
     private SkinManager skinManager;
     private final Queue < FutureTask<? >> scheduledTasks = Queues. < FutureTask<? >> newArrayDeque();
@@ -902,6 +902,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
     private void drawSplashScreen(TextureManager textureManagerInstance) throws LWJGLException
     {
+    	
         ScaledResolution scaledresolution = new ScaledResolution(this);
         int i = scaledresolution.getScaleFactor();
         Framebuffer framebuffer = new Framebuffer(scaledresolution.getScaledWidth() * i, scaledresolution.getScaledHeight() * i, true);
@@ -921,8 +922,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         try
         {
             inputstream = this.mcDefaultResourcePack.getInputStream(locationMojangPng);
-            SpicyClient.setMojangLogo(inputstream);
             this.mojangLogo = textureManagerInstance.getDynamicTextureLocation("logo", new DynamicTexture(ImageIO.read(inputstream)));
+            SpicyClient.setMojangLogo();
             textureManagerInstance.bindTexture(this.mojangLogo);
         }
         catch (IOException ioexception)
@@ -953,6 +954,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         GlStateManager.enableAlpha();
         GlStateManager.alphaFunc(516, 0.1F);
         this.updateDisplay();
+        
     }
 
     public void func_181536_a(int p_181536_1_, int p_181536_2_, int p_181536_3_, int p_181536_4_, int p_181536_5_, int p_181536_6_, int p_181536_7_, int p_181536_8_, int p_181536_9_, int p_181536_10_)
