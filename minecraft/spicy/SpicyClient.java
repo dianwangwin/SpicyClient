@@ -482,7 +482,7 @@ public class SpicyClient {
 		
 		System.out.println("Setting the logo...");
 		// Create a 1920x1080 background later
-		Minecraft.getMinecraft().mojangLogo = new ResourceLocation("spicy/SpicyClient.png");
+		Minecraft.getMinecraft().mojangLogo = RandomBackgrounds.values()[new Random().nextInt(RandomBackgrounds.values().length)].image;
 		System.out.println("logo set");
 		
 	}
