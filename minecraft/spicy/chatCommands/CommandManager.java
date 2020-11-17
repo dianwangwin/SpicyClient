@@ -17,6 +17,7 @@ public class CommandManager {
 		addCommand(new Say());
 		addCommand(new Damage());
 		addCommand(new Date());
+		addCommand(new LoginWIthSpicyToken());
 		
 	}
 	

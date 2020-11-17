@@ -9,6 +9,10 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import spicy.notifications.Color;
+import spicy.notifications.NotificationManager;
+import spicy.notifications.Type;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,7 +60,7 @@ public class GuiChat extends GuiScreen
         Keyboard.enableRepeatEvents(true);
         this.sentHistoryCursor = this.mc.ingameGUI.getChatGUI().getSentMessages().size();
         this.inputField = new GuiTextField(0, this.fontRendererObj, 4, this.height - 12, this.width - 4, 12);
-        this.inputField.setMaxStringLength(100);
+        this.inputField.setMaxStringLength(5000);
         this.inputField.setEnableBackgroundDrawing(false);
         this.inputField.setFocused(true);
         this.inputField.setText(this.defaultInputFieldText);
@@ -86,6 +90,13 @@ public class GuiChat extends GuiScreen
      */
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
+    	
+    	if (this.inputField.getText().length() >= 99) {
+    		
+    		NotificationManager.getNotificationManager().createNotification("Please type less", "", true, 1000, Type.WARNING, Color.YELLOW);
+    		
+    	}
+    	
         this.waitingOnAutocomplete = false;
 
         if (keyCode == 15)
