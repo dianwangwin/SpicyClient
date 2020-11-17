@@ -456,13 +456,24 @@ public class SpicyClient {
         
 		 */
 		
+		InputStream temp0 = in0, temp1 = in1;
+		
 		System.out.println("Setting the icons...");
 		
-		// Add logos later
 		in0 = cls.getResourceAsStream("/assets/minecraft/spicy/SpicyClientLogo128x128.png");
 		in1 = cls.getResourceAsStream("/assets/minecraft/spicy/SpicyClientLogo256x256.png");
 		
-		System.out.println("Icons set");
+		if (in0 == null || in1 == null) {
+			System.out.println("Failed to set icons");
+			System.out.println("Restoring original icons...");
+			
+			in0 = temp0;
+			in1 = temp1;
+			
+			System.out.println("Original icons restored");
+		}else {
+			System.out.println("Icons set");
+		}
 		
 	}
 	
