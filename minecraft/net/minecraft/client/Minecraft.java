@@ -686,7 +686,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 inputstream = this.mcDefaultResourcePack.getInputStreamAssets(new ResourceLocation("icons/icon_16x16.png"));
                 inputstream1 = this.mcDefaultResourcePack.getInputStreamAssets(new ResourceLocation("icons/icon_32x32.png"));
                 
+                // So i can set custom icons
                 SpicyClient.setWindowIcons(inputstream, inputstream1);
+             // So i can set custom icons
                 
                 if (inputstream != null && inputstream1 != null)
                 {
