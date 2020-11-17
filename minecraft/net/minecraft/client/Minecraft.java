@@ -921,6 +921,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         try
         {
             inputstream = this.mcDefaultResourcePack.getInputStream(locationMojangPng);
+            SpicyClient.setMojangLogo(inputstream);
             this.mojangLogo = textureManagerInstance.getDynamicTextureLocation("logo", new DynamicTexture(ImageIO.read(inputstream)));
             textureManagerInstance.bindTexture(this.mojangLogo);
         }

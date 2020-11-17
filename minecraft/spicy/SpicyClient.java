@@ -441,7 +441,7 @@ public class SpicyClient {
 		
 		Class cls = null;
 		try {
-			cls = Class.forName("spicy.fonts.FontUtils");
+			cls = Class.forName("spicy.SpicyClient");
 		} catch (ClassNotFoundException e3) {
 			e3.printStackTrace();
 			return;
@@ -473,6 +473,35 @@ public class SpicyClient {
 			System.out.println("Original icons restored");
 		}else {
 			System.out.println("Icons set");
+		}
+		
+	}
+	
+	public static void setMojangLogo(InputStream in0) {
+		
+		Class cls = null;
+		try {
+			cls = Class.forName("spicy.SpicyClient");
+		} catch (ClassNotFoundException e3) {
+			e3.printStackTrace();
+			return;
+		}
+		
+		InputStream temp0 = in0;
+		
+		System.out.println("Setting the logo...");
+		
+		in0 = cls.getResourceAsStream("/assets/minecraft/spicy/SpicyClient");
+		
+		if (in0 == null) {
+			System.out.println("Failed to set logo");
+			System.out.println("Restoring original logo...");
+			
+			in0 = temp0;
+			
+			System.out.println("Original logo restored");
+		}else {
+			System.out.println("logo set");
 		}
 		
 	}
