@@ -686,14 +686,15 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 inputstream = this.mcDefaultResourcePack.getInputStreamAssets(new ResourceLocation("icons/icon_16x16.png"));
                 inputstream1 = this.mcDefaultResourcePack.getInputStreamAssets(new ResourceLocation("icons/icon_32x32.png"));
                 
-                // So i can set custom icons
-                SpicyClient.setWindowIcons(inputstream, inputstream1);
-                // So i can set custom icons
-                
                 if (inputstream != null && inputstream1 != null)
                 {
                     Display.setIcon(new ByteBuffer[] {this.readImageToBuffer(inputstream), this.readImageToBuffer(inputstream1)});
                 }
+                
+                // So i can set custom icons
+                SpicyClient.setWindowIcons();
+                // So i can set custom icons
+                
             }
             catch (IOException ioexception)
             {
@@ -832,7 +833,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         }
     }
 
-    private ByteBuffer readImageToBuffer(InputStream imageStream) throws IOException
+    public ByteBuffer readImageToBuffer(InputStream imageStream) throws IOException
     {
         BufferedImage bufferedimage = ImageIO.read(imageStream);
         int[] aint = bufferedimage.getRGB(0, 0, bufferedimage.getWidth(), bufferedimage.getHeight(), (int[])null, 0, bufferedimage.getWidth());
@@ -900,7 +901,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.displayHeight = displaymode.getHeight();
     }
 
-    private void drawSplashScreen(TextureManager textureManagerInstance) throws LWJGLException
+    public void drawSplashScreen(TextureManager textureManagerInstance) throws LWJGLException
     {
     	
         ScaledResolution scaledresolution = new ScaledResolution(this);

@@ -87,7 +87,7 @@ public class NewMainMenu extends GuiScreen {
 		imageWidth /= 1.5;
 		imageHeight /= 1.5;
 		mc.getTextureManager().bindTexture(new ResourceLocation("spicy/SpicyClient.png"));
-		drawModalRectWithCustomSizedTexture((int) ((width / 2) / 1.7f), 8, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+		drawModalRectWithCustomSizedTexture((width / 2) - (imageWidth / 2), 8, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
         
         //drawRect(this.width / 2 + 100, this.height / 2 - 40, this.width / 2 + 220, this.height / 2 + 80, 0xff202225);
         //drawRect(this.width / 2 - 60, this.height / 2 - 40, this.width / 2 + 60, this.height / 2 + 80, 0xff202225);
@@ -117,7 +117,7 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ Criticals");
         changeLogs.add("+ Trigger Bot");
         changeLogs.add("+ Roblox chat bypass");
-        changeLogs.add("+ Added spicy sword animation");
+        changeLogs.add("+ spicy sword animation");
         changeLogs.add("+ Basic anti lava");
         changeLogs.add("+ Inventory Move");
         
@@ -127,9 +127,9 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("* More meme modules");
         changeLogs.add("* Improved the tabgui");
         changeLogs.add("* Improved the hud");
-        changeLogs.add("* Improved the alt manager");
-        changeLogs.add("* Improved hypixel antibot");
-        changeLogs.add("* Can now toggle discord rp");
+        changeLogs.add("* Improved  alt manager");
+        changeLogs.add("* Hypixel antibot");
+        changeLogs.add("* Discord rp toggle");
         changeLogs.add("* Bug fixes");
         
         // Put the removed things here

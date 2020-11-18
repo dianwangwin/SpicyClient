@@ -172,7 +172,7 @@ public class BlockFly extends Module {
 				}
 				else if (rotationMode.is("test")) {
 					
-					currentFacing = snapFacingAndRotation(event);
+					getCoords(event);
 					
 				}
 				

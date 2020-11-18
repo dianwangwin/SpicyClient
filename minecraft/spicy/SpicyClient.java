@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,6 +21,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import org.apache.commons.io.IOUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
@@ -437,7 +439,7 @@ public class SpicyClient {
 		
 	}
 	
-	public static void setWindowIcons(InputStream in0, InputStream in1) {
+	public static void setWindowIcons() {
 		
 		Class cls = null;
 		try {
@@ -456,23 +458,27 @@ public class SpicyClient {
         
 		 */
 		
-		InputStream temp0 = in0, temp1 = in1;
-		
 		System.out.println("Setting the icons...");
 		
-		in0 = cls.getResourceAsStream("/assets/minecraft/spicy/SpicyClientLogo128x128.png");
-		in1 = cls.getResourceAsStream("/assets/minecraft/spicy/SpicyClientLogo256x256.png");
+		// Use a 32 by 32 image
+		InputStream inputstream = cls.getResourceAsStream("/assets/minecraft/spicy/icons/SpicyClientLogo32x32.png");
+		InputStream inputstream1 = cls.getResourceAsStream("/assets/minecraft/spicy/icons/SpicyClientLogo32x32.png");
+		// Use a 32 by 32 image
 		
-		if (in0 == null || in1 == null) {
-			System.out.println("Failed to set icons");
-			System.out.println("Restoring original icons...");
+		if (inputstream != null && inputstream1 != null) {
 			
-			in0 = temp0;
-			in1 = temp1;
+			try {
+				Display.setIcon(new ByteBuffer[] {Minecraft.getMinecraft().readImageToBuffer(inputstream), Minecraft.getMinecraft().readImageToBuffer(inputstream1)});
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-			System.out.println("Original icons restored");
-		}else {
+            IOUtils.closeQuietly(inputstream);
+            IOUtils.closeQuietly(inputstream1);
+			
 			System.out.println("Icons set");
+			
 		}
 		
 	}
@@ -480,10 +486,16 @@ public class SpicyClient {
 	// This is the big screen that says Mojang on startup
 	public static void setMojangSplashScreen() {
 		
-		System.out.println("Setting the logo...");
-		// Create a 1920x1080 background later
-		Minecraft.getMinecraft().mojangLogo = RandomBackgrounds.values()[new Random().nextInt(RandomBackgrounds.values().length)].image;
-		System.out.println("logo set");
+		System.out.println("Setting the splash screen...");
+		// Uses 512x512 images
+		
+		// Use this to select a random image
+		//Minecraft.getMinecraft().mojangLogo = RandomBackgrounds.values()[new Random().nextInt(RandomBackgrounds.values().length)].image;
+		
+		Minecraft.getMinecraft().mojangLogo = RandomBackgrounds.SPICYCLIENT.image;
+		
+		// Uses 512x512 images
+		System.out.println("Splash screen set");
 		
 	}
 	
