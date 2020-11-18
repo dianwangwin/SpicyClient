@@ -27,10 +27,8 @@ public class Mike extends Module {
 			GlStateManager.enableBlend();
 			GlStateManager.color(1, 1, 1);
 			mc.getTextureManager().bindTexture(mike1);
-			int imageWidth = 620, imageHeight = 525;
-			imageWidth /= 8;
-			imageHeight /= 8;
-			Gui.drawModalRectWithCustomSizedTexture((new ScaledResolution(mc).getScaledWidth() / 2) - (imageWidth / 2), 0, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+			int imageWidth = new ScaledResolution(mc).getScaledWidth(), imageHeight = new ScaledResolution(mc).getScaledHeight();
+			Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
 			
 		}
 	}

@@ -73,7 +73,7 @@ public class Notification {
 		fr.drawString(title, (int) ((startingX + 45) / 1.1), (int) ((int) ((startingY + 15 - (fr.FONT_HEIGHT / 2))) / 1.1), color.color);
 		GlStateManager.popMatrix();
 		
-		mc.getTextureManager().bindTexture(new ResourceLocation("spicy/" + type.filePrefix + color.fileSuffix + ".png"));
+		mc.getTextureManager().bindTexture(new ResourceLocation("spicy/notifications/" + type.filePrefix + color.fileSuffix + ".png"));
 		int size = 30;
 		Gui.drawModalRectWithCustomSizedTexture(startingX + 4, startingY + 5, 0, 0, size, size, size, size);
 		
