@@ -35,11 +35,13 @@ public class Notification {
 	public final Color color;
 	public int targetX, targetY, startingX, startingY, speed;
 	
-	// Just so notifications don't get stuck
-	public boolean leaving = false;
-	public boolean left = false;
+	// So notifications don't get stuck
+	public boolean leaving = false, left = false;
 	
-	public void onRender() {
+	// So notifications don't overlap
+	public boolean setDefaultY = false;
+	
+	public void onRender(int Num) {
 		
 		Minecraft mc = Minecraft.getMinecraft();
 		FontRenderer fr = mc.fontRendererObj;
@@ -48,6 +50,10 @@ public class Notification {
 		if (System.currentTimeMillis() >= timeOnScreen) {
 			leaving = true;
 			targetY = sr.getScaledHeight() + 10;
+		}
+		
+		if (!leaving && !left && setDefaultY) {
+			targetY = sr.getScaledHeight() - 54 - (54 * Num);
 		}
 		
 		if (startingX < targetX) {
@@ -64,7 +70,15 @@ public class Notification {
 			startingY -= speed;
 		}
 		
-		Gui.drawRect(startingX, startingY, startingX + 170, startingY + 45, 0xff202225);
+		double notWidth = 170, orgX = startingX;
+		if ((fr.getStringWidth(title) * 1.4) >= 170) {
+			
+			notWidth = (fr.getStringWidth(title) * 1.4);
+			startingX -= (fr.getStringWidth(title) * 1.4) - 170;
+			
+		}
+		
+		Gui.drawRect(startingX, startingY, startingX + notWidth, startingY + 45, 0xff202225);
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(4, 4, 0);
@@ -79,7 +93,7 @@ public class Notification {
 		
 		if (showTimer && timeOnScreen - System.currentTimeMillis() > 0) {
 			
-			Gui.drawRect(startingX, startingY + 40, startingX + ((((double)170) / originalTime) * ((timeOnScreen - System.currentTimeMillis()))), startingY + 45, color.color);
+			Gui.drawRect(startingX, startingY + 40, startingX + ((notWidth / originalTime) * ((timeOnScreen - System.currentTimeMillis()))), startingY + 45, color.color);
 			
 		}
 		
@@ -88,6 +102,8 @@ public class Notification {
 			left = true;
 			NotificationManager.getNotificationManager().notifications.remove(this);
 		}
+		
+		startingX = (int) orgX;
 		
 	}
 	

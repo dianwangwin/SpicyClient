@@ -15,6 +15,9 @@ import spicy.events.Event;
 import spicy.events.listeners.EventSendPacket;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
+import spicy.notifications.Color;
+import spicy.notifications.NotificationManager;
+import spicy.notifications.Type;
 
 public class Blink extends Module {
 	
@@ -28,7 +31,7 @@ public class Blink extends Module {
 		packets.clear();
 		
 		if (mc.isSingleplayer()) {
-			Command.sendPrivateChatMessage("You cannot use blink in singleplayer!");
+			NotificationManager.getNotificationManager().createNotification("Don't use blink in singleplayer!", "", true, 5000, Type.WARNING, Color.RED);
 			this.toggle();
 		}
 		

@@ -108,7 +108,7 @@ public class Fly extends Module {
 			
 			if (mc.isSingleplayer()) {
 				//Command.sendPrivateChatMessage("You cannot use hypixel fly in singleplayer!");
-				NotificationManager.getNotificationManager().createNotification("You cannot use hypixel fly in singleplayer!", "", true, 1000, Type.WARNING, Color.RED);
+				NotificationManager.getNotificationManager().createNotification("Don't use hypixel fly in singleplayer!", "", true, 5000, Type.WARNING, Color.RED);
 				this.toggle();
 			}
 			

@@ -11,18 +11,22 @@ import spicy.chatCommands.Command;
 public class NotificationManager {
 	
 	public CopyOnWriteArrayList<Notification> notifications = new CopyOnWriteArrayList<Notification>();
+	public CopyOnWriteArrayList<Notification> notificationQueue = new CopyOnWriteArrayList<Notification>();
 	
 	private int defaultTargetX = 0, defaultTargetY = 0, defaultStartingX = 0, defaultStartingY = 0, defaultSpeed = 2;
 	
 	public void createNotification(String title, String text, boolean showTimer, long timeOnScreen, Type type, Color color) {
 		
-		notifications.add(new Notification(title, text, showTimer, timeOnScreen, type, color, defaultTargetX, defaultTargetY, defaultStartingX, defaultStartingY, defaultSpeed));
+		Notification n = new Notification(title, text, showTimer, timeOnScreen, type, color, defaultTargetX, defaultTargetY, defaultStartingX, defaultStartingY, defaultSpeed);
+		ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
+		n.setDefaultY = true;
+		notificationQueue.add(n);
 		
 	}
 	
 	public void createNotification(Notification notification) {
 		
-		notifications.add(notification);
+		notificationQueue.add(notification);
 		
 	}
 	
@@ -32,6 +36,12 @@ public class NotificationManager {
 		FontRenderer fr = mc.fontRendererObj;
 		ScaledResolution sr = new ScaledResolution(mc);
 		
+		for (Notification n : notificationQueue) {
+			n.targetY = sr.getScaledHeight() - 54 - (54 * notifications.size());
+			notifications.add(n);
+			notificationQueue.remove(n);
+		}
+		
 		defaultStartingX = sr.getScaledWidth();
 		defaultStartingY = sr.getScaledHeight();
 		defaultTargetX = sr.getScaledWidth() - 180;
@@ -39,7 +49,7 @@ public class NotificationManager {
 		defaultTargetY = sr.getScaledHeight() - 54 - (54 * notifications.size());
 		
 		for (Notification not : notifications) {
-			not.onRender();
+			not.onRender(notifications.indexOf(not));
 		}
 		
 	}
