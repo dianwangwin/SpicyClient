@@ -73,7 +73,8 @@ public class HUD {
 		if (SpicyClient.config.clientVersion != SpicyClient.config.version) {
 			
 			//fr.drawStringWithShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor);
-			fr.drawStringWithQuadShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor, 0.3f);
+			//fr.drawStringWithQuadShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor, 0.3f);
+			fr.drawStringWithQuadShadow(SpicyClient.config.clientName, 4, 4, primaryColor, 0.3f);
 			
 		}else {
 			// We enable blending so there is a transparent background on the logo

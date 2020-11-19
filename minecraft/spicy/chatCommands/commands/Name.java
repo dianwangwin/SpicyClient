@@ -6,7 +6,7 @@ import spicy.chatCommands.Command;
 public class Name extends Command {
 
 	public Name() {
-		super("name", "name <clientName>", 1);
+		super("name", "name <clientName/reset>", 1);
 	}
 	
 	@Override
@@ -21,8 +21,17 @@ public class Name extends Command {
 		
 		clientName = clientName.replaceFirst(".name ", "");
 		
+		if (clientName.toLowerCase().contains("reset")) {
+			spicy.files.Config temp = new spicy.files.Config("temp");
+			SpicyClient.config.clientName = temp.clientName;
+			SpicyClient.config.clientVersion = SpicyClient.config.version;
+			sendPrivateChatMessage("Reset the client name");
+			return;
+		}
+		
 		SpicyClient.config.clientName = clientName.substring(0, clientName.length() - 1);
-		SpicyClient.config.clientVersion = "";
+		SpicyClient.config.clientVersion = "GET_CHANGED_ON_STEAM";
+		sendPrivateChatMessage("Set the client name to " + clientName);
 		
 	}
 	

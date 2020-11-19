@@ -95,6 +95,7 @@ public class Config {
 	public boolean updateConfig() {
 		
 		Config temp = new Config("temp");
+		
 		if (this.version.equalsIgnoreCase(temp.version)) {
 			return false;
 		}
@@ -179,11 +180,12 @@ public class Config {
 			return;
 		}
 		
-		this.clientVersion.replaceAll("\\s+","");
+		// This does not work because the gson lib is shit
 		
-		if (this.clientVersion == this.version) {
-			this.clientName = "SpicyClient ";
-			this.clientVersion = "B3 Beta";
+		if (this.clientVersion.toLowerCase().replace(this.version.toLowerCase(), "").length() == 0) {
+			Config temp = new Config("temp");
+			this.clientName = temp.clientName;
+			this.clientVersion = this.version;
 		}
 		
 		SpicyClient.loadConfig(this);
