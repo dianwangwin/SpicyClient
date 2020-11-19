@@ -17,6 +17,7 @@ public class Notification {
 		this.showTimer = showTimer;
 		this.timeOnScreen = System.currentTimeMillis() + timeOnScreen;
 		this.originalTime = timeOnScreen;
+		this.originalTimeOnScreen = timeOnScreen;
 		this.type = type;
 		this.color = color;
 		this.targetX = targetX;
@@ -30,6 +31,7 @@ public class Notification {
 	public String title = "", text = "";
 	public boolean showTimer;
 	public long timeOnScreen;
+	public long originalTimeOnScreen;
 	public long originalTime;
 	public final Type type;
 	public final Color color;
@@ -37,6 +39,9 @@ public class Notification {
 	
 	// So notifications don't get stuck
 	public boolean leaving = false, left = false;
+	
+	// So notifications don't leave before they reach their location
+	public boolean joined = false;
 	
 	// So notifications don't overlap
 	public boolean setDefaultY = false;
@@ -47,6 +52,14 @@ public class Notification {
 		FontRenderer fr = mc.fontRendererObj;
 		ScaledResolution sr = new ScaledResolution(mc);
 		
+		if (speed < 0) {
+			speed *= -1;
+		}
+		
+		if (speed == 0) {
+			speed = 2;
+		}
+		
 		if (System.currentTimeMillis() >= timeOnScreen) {
 			leaving = true;
 			targetY = sr.getScaledHeight() + 10;
@@ -54,6 +67,44 @@ public class Notification {
 		
 		if (!leaving && !left && setDefaultY) {
 			targetY = sr.getScaledHeight() - 54 - (54 * Num);
+		}
+		
+		int orgSpeed = speed;
+		
+		if ((targetX - startingX) < 0 && (startingX != targetX)) {
+			
+			if ((targetX - startingX) * -1 < speed) {
+				speed = (targetX - startingX) * -1;
+			}
+			
+		}else if ((startingX != targetX)) {
+			
+			if ((targetX - startingX) * 1 < speed) {
+				speed = (targetX - startingX) * -1;
+			}
+			
+		}
+		
+		if ((targetY - startingY) < 0 && (startingY != targetY)) {
+			
+			if ((targetY - startingY) * -1 < speed && speed >= (targetY - startingY) * -1) {
+				speed = (targetY - startingY) * -1;
+			}
+			
+		}else if ((startingY != targetY)) {
+			
+			if ((targetY - startingY) * -1 < speed && speed >= (targetY - startingY) * -1) {
+				speed = (targetY - startingY) * -1;
+			}
+			
+		}
+		
+		if (speed <= 0) {
+			//speed = 2;
+		}
+		
+		if (speed <= 0) {
+			speed = orgSpeed;
 		}
 		
 		if (startingX < targetX) {
@@ -68,6 +119,14 @@ public class Notification {
 		}
 		else if (startingY > targetY) {
 			startingY -= speed;
+		}
+		
+		if (startingX == targetX && startingY == targetY && !left && !leaving && !joined) {
+			joined = true;
+		}
+		
+		if (!joined) {
+			this.timeOnScreen = System.currentTimeMillis() + originalTimeOnScreen;
 		}
 		
 		double notWidth = 170, orgX = startingX;
@@ -104,7 +163,7 @@ public class Notification {
 		}
 		
 		startingX = (int) orgX;
-		
+		speed = orgSpeed;
 	}
 	
 }

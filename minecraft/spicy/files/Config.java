@@ -11,6 +11,7 @@ import spicy.modules.movement.*;
 import spicy.modules.player.*;
 import spicy.modules.render.*;
 import spicy.modules.world.*;
+import spicy.notifications.NotificationManager;
 import spicy.settings.BooleanSetting;
 import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
@@ -196,6 +197,8 @@ public class Config {
 		}
 		
 		SpicyClient.config = this;
+		
+		NotificationManager.getNotificationManager().notificationQueue.clear();
 		
 		try {
 			FileManager.save_config(this.name);
