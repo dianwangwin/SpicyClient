@@ -120,6 +120,8 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ spicy sword animation");
         changeLogs.add("+ Basic anti lava");
         changeLogs.add("+ Inventory Move");
+        changeLogs.add("+ Hide name");
+        changeLogs.add("+ Hypixel inventory manager");
         
         // Put the changed things here
         // changeLogs.add("* ");

@@ -30,6 +30,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import shadersmod.client.Shaders;
+import spicy.util.RenderUtils;
 
 public abstract class RendererLivingEntity<T extends EntityLivingBase> extends Render<T>
 {
@@ -118,7 +119,6 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 float f = this.interpolateRotation(entity.prevRenderYawOffset, entity.renderYawOffset, partialTicks);
                 float f1 = this.interpolateRotation(entity.prevRotationYawHead, entity.rotationYawHead, partialTicks);
                 float f2 = f1 - f;
-
                 if (this.mainModel.isRiding && entity.ridingEntity instanceof EntityLivingBase)
                 {
                     EntityLivingBase entitylivingbase = (EntityLivingBase)entity.ridingEntity;
@@ -143,8 +143,17 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                         f += f3 * 0.2F;
                     }
                 }
-
                 float f8 = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
+                
+                if (RenderUtils.SetCustomPitch && entity == Minecraft.getMinecraft().thePlayer) {
+                	f8 = RenderUtils.getCustomPitch();
+                	Minecraft.getMinecraft().thePlayer.renderYawOffset = RenderUtils.getCustomYaw();
+                }
+                
+                if (RenderUtils.SetCustomYaw && entity == Minecraft.getMinecraft().thePlayer) {
+                	f2 = RenderUtils.getCustomYaw();
+                }
+                
                 this.renderLivingAt(entity, x, y, z);
                 float f7 = this.handleRotationFloat(entity, partialTicks);
                 this.rotateCorpse(entity, f7, f, partialTicks);

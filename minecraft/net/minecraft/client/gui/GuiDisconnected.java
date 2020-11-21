@@ -52,15 +52,16 @@ public class GuiDisconnected extends GuiScreen
         this.field_175353_i = this.multilineMessage.size() * this.fontRendererObj.FONT_HEIGHT;
         
         GuiButton altManager = new GuiButton(1, this.width / 2 - 100, this.height / 2 + this.field_175353_i / 2 + this.fontRendererObj.FONT_HEIGHT, "Alt manager");
-        GuiButton genAlt = new GuiButton(2, (this.width / 2 - 100), this.height / 2 + this.field_175353_i / 2 + this.fontRendererObj.FONT_HEIGHT, "Generate alt");
+        GuiButton genAlt = new GuiButton(2, (this.width / 2 - 100), this.height / 2 + this.field_175353_i / 2 + this.fontRendererObj.FONT_HEIGHT, "Generate and reconnect");
         
-        altManager.width = altManager.width / 2;
-        genAlt.width = genAlt.width / 2;
-        genAlt.xPosition = genAlt.xPosition + genAlt.width;
+        //altManager.width = altManager.width / 2;
+        altManager.yPosition += altManager.height + 5;
+        //genAlt.width = genAlt.width / 2;
+        //genAlt.xPosition = genAlt.xPosition + genAlt.width;
         
         this.buttonList.add(altManager);
         this.buttonList.add(genAlt);
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 2 + this.field_175353_i / 2 + this.fontRendererObj.FONT_HEIGHT + 25, I18n.format("gui.toMenu", new Object[0])));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 2 + this.field_175353_i / 2 + this.fontRendererObj.FONT_HEIGHT + 50, I18n.format("gui.toMenu", new Object[0])));
     }
 
     /**
@@ -155,7 +156,17 @@ public class GuiDisconnected extends GuiScreen
         		}
         		FileManager.saveAltInfo(SpicyClient.altInfo);
     		}
-        	
+    		
+    		if (loginSuccess) {
+    			
+	        	if (parentScreen instanceof GuiMultiplayer) {
+	        		
+	        		((GuiMultiplayer)parentScreen).connectToSelected();
+	        		
+	        	}
+    			
+    		}
+    		
         }
     }
 

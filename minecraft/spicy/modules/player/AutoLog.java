@@ -18,6 +18,9 @@ import spicy.events.listeners.EventMotion;
 import spicy.events.listeners.EventServerSetYawAndPitch;
 import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
+import spicy.notifications.Color;
+import spicy.notifications.NotificationManager;
+import spicy.notifications.Type;
 import spicy.settings.BooleanSetting;
 import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
@@ -87,7 +90,9 @@ public class AutoLog extends Module {
 	
 	private void notifyPlayer() {
 		
-		Command.sendPrivateChatMessage("Disconnected from the server so you wouldn't die, autolog has been disabled");
+		//Command.sendPrivateChatMessage("Disconnected from the server so you wouldn't die, autolog has been disabled");
+		NotificationManager.getNotificationManager().createNotification("Autolog was disabled", "", true, 5000, Type.INFO, Color.PINK);
+		NotificationManager.getNotificationManager().createNotification("Disconnected from the server due to autolog", "", true, 5000, Type.INFO, Color.PINK);
 		this.toggle();
 		
 	}

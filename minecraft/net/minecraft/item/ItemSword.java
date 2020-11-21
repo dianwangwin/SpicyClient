@@ -25,7 +25,11 @@ public class ItemSword extends Item
         this.setCreativeTab(CreativeTabs.tabCombat);
         this.attackDamage = 4.0F + material.getDamageVsEntity();
     }
-
+    
+    public float getDamage() {
+        return attackDamage;
+    }
+    
     /**
      * Returns the amount of damage this item will deal. One heart of damage is equal to 2 damage points.
      */

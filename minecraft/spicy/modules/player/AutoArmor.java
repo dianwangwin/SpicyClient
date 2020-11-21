@@ -33,7 +33,7 @@ public class AutoArmor extends Module {
 			this.additionalInformation = "Hypixel";
 			
 	        if(mc.currentScreen == null || mc.currentScreen instanceof GuiInventory || mc.currentScreen instanceof GuiChat){
-	        	if(timer.hasTimeElapsed(1000, true)){
+	        	if(timer.hasTimeElapsed(500, false)){
 	        		getBestArmor();
 	        	}
 	        }
@@ -49,6 +49,7 @@ public class AutoArmor extends Module {
     				continue;
     			}else{
     				if (!(mc.currentScreen instanceof GuiInventory)) {
+    					timer.reset();
         				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
         				mc.thePlayer.sendQueue.addToSendQueue(p);
     				}

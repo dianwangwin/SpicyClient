@@ -100,7 +100,7 @@ public abstract class Module {
 		toggled = !toggled;
 		if (toggled) {
 			
-			NotificationManager.getNotificationManager().createNotification("Toggled: " + name, "", true, 1500, Type.INFO, Color.GREEN);
+			NotificationManager.getNotificationManager().createNotification("Enabled: " + name, "", true, 1500, Type.INFO, Color.GREEN);
 			
 			onEnable();
 			
@@ -110,7 +110,7 @@ public abstract class Module {
 			
 		}else {
 			
-			NotificationManager.getNotificationManager().createNotification("Toggled: " + name, "", true, 1500, Type.INFO, Color.RED);
+			NotificationManager.getNotificationManager().createNotification("Disabled: " + name, "", true, 1500, Type.INFO, Color.RED);
 			
 			onDisable();
 			

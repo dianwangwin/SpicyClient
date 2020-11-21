@@ -49,6 +49,7 @@ import spicy.settings.BooleanSetting;
 import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
 import spicy.settings.SettingChangeEvent;
+import spicy.util.RenderUtils;
 import spicy.util.RotationUtils;
 import spicy.util.Timer;
 
@@ -102,6 +103,9 @@ public class Killaura extends Module {
 	}
 	
 	public void onDisable() {
+		
+		RenderUtils.resetPlayerYaw();
+		RenderUtils.resetPlayerPitch();
 		
         if (mc.thePlayer != null && newAutoblock.is("Hypixel")) {
         	try {
@@ -213,7 +217,8 @@ public class Killaura extends Module {
 				if (targets.isEmpty()) {
 					
 					stopBlocking();
-					
+					RenderUtils.resetPlayerYaw();
+					RenderUtils.resetPlayerPitch();
 					return;
 				}
 				
@@ -270,6 +275,8 @@ public class Killaura extends Module {
 					targets.removeAll(targetsToRemove);
 					
 					if (targets.isEmpty()) {
+						RenderUtils.resetPlayerYaw();
+						RenderUtils.resetPlayerPitch();
 						stopBlocking();
 						return;
 					}
@@ -337,7 +344,7 @@ public class Killaura extends Module {
                             float[] rotations = RotationUtils.getRotations(target);
                             event.setYaw(rotations[0]);
                             event.setPitch(rotations[1]);
-							
+                            
 						}
 						else if (rotationSetting.is("smooth") || rotationSetting.getMode() == "smooth") {
 							
@@ -363,10 +370,7 @@ public class Killaura extends Module {
 							
 						}
 						
-                        float[] rotations = RotationUtils.getRotations(target);
-                        //mc.thePlayer.rotationYawHead = rotations[0];
-                		Minecraft.getMinecraft().thePlayer.renderYawOffset = rotations[0];
-                		Minecraft.getMinecraft().thePlayer.setRotationYawHead(rotations[0]);
+						// Put client side rotation code here later
 						
 					}
 					
@@ -431,6 +435,8 @@ public class Killaura extends Module {
 				}else {
 					
 					stopBlocking();
+					RenderUtils.resetPlayerYaw();
+					RenderUtils.resetPlayerPitch();
 					
 		            return;
 		            

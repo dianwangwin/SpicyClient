@@ -105,4 +105,36 @@ public class S3CPacketUpdateScore implements Packet<INetHandlerPlayClient>
         CHANGE,
         REMOVE;
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getObjective() {
+		return objective;
+	}
+
+	public void setObjective(String objective) {
+		this.objective = objective;
+	}
+
+	public int getValue() {
+		return value;
+	}
+
+	public void setValue(int value) {
+		this.value = value;
+	}
+
+	public S3CPacketUpdateScore.Action getAction() {
+		return action;
+	}
+
+	public void setAction(S3CPacketUpdateScore.Action action) {
+		this.action = action;
+	}
 }

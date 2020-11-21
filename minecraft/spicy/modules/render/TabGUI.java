@@ -8,6 +8,7 @@ import org.lwjgl.input.Keyboard;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import spicy.SpicyClient;
+import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventKey;
 import spicy.events.listeners.EventRenderGUI;
@@ -457,6 +458,9 @@ public class TabGUI extends Module {
 		
 	}
 	
+	private transient int targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+	private transient boolean moveSelector = true;
+	
 	private void compressedTabGui(Event e) {
 		
 		if (e instanceof EventRenderGUI) {
@@ -512,7 +516,68 @@ public class TabGUI extends Module {
 				
 				catNum = 0;
 				
-				Gui.drawRect(0, 0 + ((current_tab*11) + 40), maxCatSize, fr.FONT_HEIGHT + 2 + ((current_tab*11) + 40), 0x60ffffff);
+				if (!expanded && targetX < maxCatSize + 10) {
+					
+					targetX = 0;
+					targetY = 0 + ((current_tab*11) + 40);
+					
+				}
+				
+				int speedX = 2, speedY = 2;
+				
+				if (currentY - targetY > 40 || currentY - targetY < -40) {
+					speedY = 10;
+				}
+				
+				if (currentX != targetX) {
+					currentX = targetX;
+				}
+				
+				if (moveSelector) {
+					moveSelector = false;
+					
+					if (((int)currentY) < ((int)targetY)) {
+						if (targetY - currentY < speedY) {
+							currentY += targetY - currentY;
+						}else {
+							currentY += speedY;
+						}
+					}
+					else if (((int)currentY) > ((int)targetY)){
+						if (currentY - targetY < speedY) {
+							currentY -= currentY - targetY;
+						}else {
+							currentY -= speedY;
+						}
+					}
+					
+					if (((int)currentX) < ((int)targetX)) {
+						if (targetX - currentX < speedX) {
+							currentX += targetX - currentX;
+						}else {
+							currentX += speedX;
+						}
+					}
+					else if (((int)currentX) > ((int)targetX)){
+						if (currentX - targetX < speedX) {
+							currentX -= currentX - targetX;
+						}else {
+							currentX -= speedX;
+						}
+					}
+					
+				}else {
+					moveSelector = true;
+				}
+				
+				boolean displayModules = false;
+				
+				if (!expanded) {
+					
+					// The first selector
+					Gui.drawRect(currentX, currentY, maxCatSize, fr.FONT_HEIGHT + 2 + currentY, 0x60ffffff);
+					
+				}
 				
 				for (Category c : CategoryList) {
 					
@@ -538,7 +603,7 @@ public class TabGUI extends Module {
 						
 						for (Module m : SpicyClient.modules) {
 							
-							float offset = ((moduleNum*11) + 40);
+							float offset = ((moduleNum*11) + 40) + ((current_tab*11));
 							
 							if (m.category == cat) {
 								
@@ -548,7 +613,15 @@ public class TabGUI extends Module {
 							
 							if (m.category == cat && !renderedModuleIndex && moduleNum == module_index) {
 								
-								Gui.drawRect(maxCatSize, 0 + ((module_index*11) + 40), maxCatSize + maxModSize, fr.FONT_HEIGHT + 2 + ((module_index*11) + 40), 0x60ffffff);
+								if (m.category == cat && !m.expanded) {
+									
+									targetY = 0 + ((module_index*11) + 40) + ((current_tab*11));
+									
+									// The second selector
+									targetX = (int) (maxCatSize);
+									Gui.drawRect(currentX, currentY, currentX + maxModSize, fr.FONT_HEIGHT + 2 + currentY, 0x60ffffff);
+								}
+								
 								renderedModuleIndex = true;
 								
 							}
@@ -611,7 +684,7 @@ public class TabGUI extends Module {
 									
 									for (Setting s : m.settings) {
 										
-										float settingOffset = ((maxSettingNum*11) + 40);
+										float settingOffset = ((maxSettingNum*11) + 40) + (((moduleNum)*11) + ((current_tab*11))) - 1;
 										
 										Gui.drawRect(maxCatSize + maxModSize, 0 + settingOffset, maxModSize + maxCatSize + maxSettingSize, fr.FONT_HEIGHT + 2 + settingOffset, 0x60000000);
 										
@@ -649,7 +722,13 @@ public class TabGUI extends Module {
 										
 										if (m.settings.indexOf(s) == m.index && !renderedSelectedSetting) {
 											
-											Gui.drawRect(maxCatSize + maxModSize, 0 + settingOffset, maxModSize + maxCatSize + maxSettingSize, fr.FONT_HEIGHT + 2 + settingOffset, 0x60ffffff);
+											targetX = (int) (maxModSize + maxCatSize + maxSettingSize) + (0);
+											targetY = (int) settingOffset;
+											
+											// The third selector
+											Gui.drawRect(maxCatSize + maxModSize, currentY, currentX, fr.FONT_HEIGHT + 2 + currentY, 0x60ffffff);
+											
+											//Gui.drawRect(maxCatSize + maxModSize, 0 + settingOffset, maxModSize + maxCatSize + maxSettingSize, fr.FONT_HEIGHT + 2 + settingOffset, 0x60ffffff);
 											renderedSelectedSetting = true;
 											
 										}

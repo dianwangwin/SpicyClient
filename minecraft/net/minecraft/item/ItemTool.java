@@ -31,7 +31,11 @@ public class ItemTool extends Item
         this.damageVsEntity = attackDamage + material.getDamageVsEntity();
         this.setCreativeTab(CreativeTabs.tabTools);
     }
-
+    
+    public float getDamage() {
+        return damageVsEntity;
+    }
+    
     public float getStrVsBlock(ItemStack stack, Block block)
     {
         return this.effectiveBlocks.contains(block) ? this.efficiencyOnProperMaterial : 1.0F;

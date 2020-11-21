@@ -29,6 +29,7 @@ import spicy.settings.ModeSetting;
 import spicy.settings.NumberSetting;
 import spicy.settings.SettingChangeEvent;
 import spicy.settings.SettingChangeEvent.type;
+import spicy.util.RenderUtils;
 import spicy.util.RotationUtils;
 
 public class BlockFly extends Module {
@@ -91,7 +92,8 @@ public class BlockFly extends Module {
 	}
 	
 	public void onDisable() {
-		mc.gameSettings.keyBindSneak.pressed = false;
+		RenderUtils.resetPlayerYaw();
+		RenderUtils.resetPlayerPitch();
 	}
 	
 	private BlockPos currentPos;
@@ -102,164 +104,80 @@ public class BlockFly extends Module {
 	private float oldPitch = -1000;
 	
 	public void onEvent(Event e) {
-		
-		if (e instanceof EventMotion) {
+		if (mc.thePlayer.getCurrentEquippedItem() == null) {
+			return;
+		}
+		if (e instanceof EventMotion && e.isPre()) {
 			
-			if (e.isPre()) {
-				
-				EventMotion event = (EventMotion) e;
-				
-				if (sneakMode.getMode() == "End of block") {
-					mc.gameSettings.keyBindSneak.pressed = false;
-				}
-				
-				if (mc.thePlayer.onGround) {
-					
-					event.motionX = event.motionX * (speed.getValue() / 100);
-					event.motionZ = event.motionZ * (speed.getValue() / 100);
-				}
-				
-				currentFacing = null;
-				
-				playerPos = new BlockPos(event.getX(), event.getY(), event.getZ());
-				currentPos = new BlockPos(event.getX(), event.getY() - 1, event.getZ());
-				
-				if (sprintEnabled.enabled) {
-					mc.thePlayer.setSprinting(true);
-				}else {
-					mc.thePlayer.setSprinting(false);
-				}
-				
-				if (sneakMode.getMode() == "Always") {
-					mc.gameSettings.keyBindSneak.pressed = true;
-				}
-				
-				if (keepRotations.enabled) {
-					keepRotations(event);
-					
-					//getSmoothRotations(event, event.yaw, event.pitch);
-					
-				}
-				
-				if (rotationMode.is("90 degree snap")) {
-					currentFacing = snapFacingAndRotation(event);
-					if (event.yaw != mc.thePlayer.rotationYaw) {
-						event.yaw = event.yaw + 180;
-					}
-					//Command.sendPrivateChatMessage("Yaw: " + event.yaw + " | Pitch: " + event.pitch);
-					Random random = new Random();
-					int r = random.nextInt(10);
-					if (random.nextBoolean()) {
-						r *= -1;
-					}
-					//event.pitch += r;
-					
-					int w = random.nextInt(2);
-					if (random.nextBoolean()) {
-						w *= -1;
-					}
-					
-					getSmoothRotations(event, event.yaw + r, (float) (event.pitch + pitch.getValue()));
-					
-					//Command.sendPrivateChatMessage("Yaw: " + event.yaw + " | Pitch: " + event.pitch);
-					//Command.sendPrivateChatMessage(" ");
-					lastSmoothPitch = 0;
-					lastSmoothYaw = 0;
-					//mc.thePlayer.rotationYaw = event.yaw;
-					//mc.thePlayer.rotationPitch = event.pitch;
-					
-					
-				}
-				else if (rotationMode.is("test")) {
-					
-					getCoords(event);
-					
-				}
-				
-				if (mc.thePlayer.inventory.getCurrentItem() == null) {
-					return;
-				}
-				
-				ItemStack itemstack = mc.thePlayer.inventory.getCurrentItem();
-				
-				if (currentFacing == null || currentPos == null || mc.thePlayer.getCurrentEquippedItem() == null || !(mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemBlock)) {
-					
-				}else {
-					if (sneakMode.getMode() == "End of block") {
-						mc.gameSettings.keyBindSneak.pressed = true;
-					}
-					if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem(), currentPos, currentFacing, new Vec3(currentPos.getX(), currentPos.getY(), currentPos.getZ()))) {
-						mc.thePlayer.swingItem();
-						System.out.println("Sent a block place packet");
-						oldYaw = event.yaw;
-						oldPitch = event.pitch;
-					}
-					
-				}
-				
-			}
+			EventMotion event = (EventMotion) e;
+			doStuff(event, 0.1D, 0.1D);
+			doStuff(event, 0.25D, 0.25D);
+			doStuff(event, 0D, 0D);
+			doStuff(event, -0.1D, -0.1D);
+			doStuff(event, -0.25D, -0.25D);
+			doStuff(event, -1D, 0D);
+			doStuff(event, 0D, -1D);
+			doStuff(event, 1D, 0D);
+			doStuff(event, 0D, 1D);
 			
 		}
 		
 	}
 	
-	public void keepRotations(EventMotion event) {
+	public void doStuff(EventMotion event, Double offsetX, Double offsetZ) {
 		
-		Random random = new Random();
-		
-		if (rotationMode.is("90 degree snap")) {
+		currentPos = mc.thePlayer.getPosition().add(offsetX, -1, offsetZ);
+		//currentPos = new BlockPos(((int)mc.thePlayer.posX), ((int)mc.thePlayer.posY), ((int)mc.thePlayer.posZ + 0.25));
+		for (EnumFacing facing : EnumFacing.VALUES) {
 			
-			if (mc.thePlayer.moveForward > 0.01 && mc.thePlayer.moveStrafing == 0) {
+			switch (facing) {
+			case DOWN:
+				if (mc.theWorld.getBlockState(currentPos.add(0, -1, 0)).getBlock().isBlockSolid(mc.theWorld, currentPos.add(0, -1, 0), EnumFacing.UP)) {
+					float[] rots = getRotations(currentPos.add(0, -1, 0).getX(), currentPos.add(0, -1, 0).getY(), currentPos.add(0, -1, 0).getZ());
+					if (rots == null) {
+						endEarly();
+						return;
+					}
+					event.setYaw(rots[0]);
+					event.setPitch(rots[1]);
+					RenderUtils.setCustomYaw(rots[0]);
+					RenderUtils.setCustomPitch(rots[1]);
+					currentFacing = EnumFacing.UP;
+					
+					placeBlock(currentPos.add(0, -1, 0), currentPos, currentFacing);
+					return;
+				}
 				
-				int pitch = random.nextInt(2);
-				pitch = pitch + 75;
-				
-				float yaw = random.nextInt(2);
-				if (random.nextBoolean()) {
-					
-					yaw = yaw * -1;
-					
-				}
-				
-				currentFacing = mc.thePlayer.getHorizontalFacing();
-				if (currentFacing == EnumFacing.NORTH) {
-					
-					event.setYaw(mc.thePlayer.rotationYaw + 180 + yaw);
-					event.setPitch(pitch);
-					return;
-					
-				}
-				if (currentFacing == EnumFacing.EAST) {
-					
-					event.setYaw(mc.thePlayer.rotationYaw + 180 + yaw);
-					event.setPitch(pitch);
-					return;
-					
-				}
-				if (currentFacing == EnumFacing.SOUTH) {
-					
-					event.setYaw(mc.thePlayer.rotationYaw + 180 + yaw);
-					event.setPitch(pitch);
-					return;
-					
-				}
-				if (currentFacing == EnumFacing.WEST) {
-					
-					event.setYaw(mc.thePlayer.rotationYaw + 180 + yaw);
-					event.setPitch(pitch);
-					return;
-					
-				}
+				break;
+
+			default:
+				endEarly();
+				return;
 				
 			}
 			
-		}else {
-			
-			event.setYaw(oldYaw);
-			event.setPitch(oldPitch);
-			
 		}
 		
+		endEarly();
+		return;
+		
+	}
+	
+	public void endEarly() {
+		
+		RenderUtils.resetPlayerYaw();
+		RenderUtils.resetPlayerPitch();
+		
+	}
+	
+	public boolean placeBlock(BlockPos pos1, BlockPos pos2, EnumFacing face) {
+		
+		if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem(), pos1, face, new Vec3(pos2.getX(), pos2.getY(), pos2.getZ()))) {
+			mc.thePlayer.swingItem();
+			System.out.println("Sent a block place packet");
+			return true;
+		}
+		return false;
 	}
 	
 	public EnumFacing snapFacingAndRotation(EventMotion event) {
@@ -322,10 +240,6 @@ public class BlockFly extends Module {
 		
 		double playerX = mc.thePlayer.posX, playerZ = mc.thePlayer.posZ;
 		
-		if (currentFacing == null) {
-			return null;
-		}
-		
 		double deltaX = x + (x - x) - playerX,
 				deltaY = y - 3.5 - mc.thePlayer.posY + mc.thePlayer.getEyeHeight(),
 				deltaZ = z + (z - z) - playerZ,
@@ -346,19 +260,6 @@ public class BlockFly extends Module {
 			yaw = (float) (-90 + Math.toDegrees(Math.atan(deltaZ/deltaX)));
 			
 		}
-		
-		float tempYaw = yaw;
-		
-		if (!(tempYaw < mc.thePlayer.rotationYaw - 130) && !(tempYaw > mc.thePlayer.rotationYaw + 130)) {
-			Command.sendPrivateChatMessage("no");
-			return null;
-		}
-		
-		if (pitch >= 88) {
-			return null;
-		}
-		
-		Command.sendPrivateChatMessage("Yaw: " + yaw + " Pitch: " + pitch);
 		
 		//return new float[] { yaw, pitch };
 		return new float[] { yaw, pitch };

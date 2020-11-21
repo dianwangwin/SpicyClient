@@ -103,7 +103,7 @@ public class ChatBypass extends Module {
 		        
 		        Random random = new Random();
 		        
-		        String bypass = "⛍⛗⛌⛗⛘⛉⛡⛍⛗⛉⛍⛘⛜⛍⛠⛘⛟⛏⛡⛏⛗⛏ ⛍⛉⛋׼";
+		        String bypass = "⛍⛗⛌⛗⛘⛉⛡⛍⛗⛉⛍⛘⛜⛍⛠⛘⛟⛏⛡⛏⛗⛏⛍⛉⛋׼";
 		        prefix = Character.toString(bypass.charAt(random.nextInt(bypass.length())));
 		        
 		        builder.append(text.substring(index, 

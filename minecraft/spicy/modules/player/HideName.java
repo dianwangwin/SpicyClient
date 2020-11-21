@@ -3,6 +3,9 @@ package spicy.modules.player;
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.network.play.server.S02PacketChat;
+import net.minecraft.network.play.server.S3BPacketScoreboardObjective;
+import net.minecraft.network.play.server.S3CPacketUpdateScore;
+import net.minecraft.network.play.server.S3DPacketDisplayScoreboard;
 import net.minecraft.util.ChatComponentText;
 import spicy.SpicyClient;
 import spicy.events.Event;
@@ -11,6 +14,7 @@ import spicy.events.listeners.EventUpdate;
 import spicy.modules.Module;
 import spicy.settings.ModeSetting;
 import spicy.settings.SettingChangeEvent;
+import sun.net.www.content.text.plain;
 
 public class HideName extends Module {
 	
@@ -44,6 +48,18 @@ public class HideName extends Module {
 				if (packet.getChatComponent().getUnformattedText().replaceAll("׼", "").contains(mc.getSession().getUsername())) {
 					mc.thePlayer.addChatComponentMessage(new ChatComponentText(packet.getChatComponent().getFormattedText().replaceAll("׼", "").replaceAll(mc.getSession().getUsername(), mode.getMode())));
 					e.setCanceled(true);
+				}
+				
+			}
+			else if (packetEvent.packet instanceof S3CPacketUpdateScore) {
+				S3CPacketUpdateScore packet = (S3CPacketUpdateScore) packetEvent.packet;
+				
+				if (packet.getObjectiveName().replaceAll("׼", "").contains(mc.getSession().getUsername())){
+					packet.setObjective(packet.getObjectiveName().replaceAll("׼", "").replaceAll(mc.getSession().getUsername(), mode.getMode()));
+				}
+				
+				if (packet.getName().replaceAll("׼", "").contains(mc.getSession().getUsername())){
+					packet.setName(packet.getName().replaceAll("׼", "").replaceAll(mc.getSession().getUsername(), mode.getMode()));
 				}
 				
 			}

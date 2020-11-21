@@ -7,11 +7,23 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
+import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemAxe;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemFishFood;
+import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemHoe;
+import net.minecraft.item.ItemPickaxe;
+import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C16PacketClientStatus;
+import net.minecraft.network.play.client.C16PacketClientStatus.EnumState;
+import spicy.SpicyClient;
 import spicy.chatCommands.Command;
 import spicy.events.Event;
 import spicy.events.listeners.EventSendPacket;
@@ -21,6 +33,7 @@ import spicy.settings.BooleanSetting;
 import spicy.settings.NumberSetting;
 import spicy.settings.SettingChangeEvent;
 import spicy.settings.SettingChangeEvent.type;
+import spicy.util.InventoryUtils;
 
 public class InventoryManager extends Module {
 	
@@ -35,7 +48,8 @@ public class InventoryManager extends Module {
 	
 	// Different settings for when sort is enabled
 	public NumberSetting swordSlot = new NumberSetting("Sword slot", 1, 1, 9, 1);
-	public NumberSetting blockSlot = new NumberSetting("Block slot", 9, 1, 9, 1);
+	public NumberSetting pickaxeSlot = new NumberSetting("Pickaxe slot", 2, 1, 9, 1);
+	public NumberSetting axeSlot = new NumberSetting("Axe slot", 3, 1, 9, 1);
 	
 	public InventoryManager() {
 		super("Inventory Manager", Keyboard.KEY_NONE, Category.BETA);
@@ -45,7 +59,7 @@ public class InventoryManager extends Module {
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
-		this.addSettings(purge, armor, tools, blocks, food, sort, swordSlot, blockSlot);
+		this.addSettings(purge, armor, tools, blocks, food, sort, swordSlot);
 	}
 	
 	@Override
@@ -112,8 +126,12 @@ public class InventoryManager extends Module {
 							settings.add(swordSlot);
 							this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
 						}
-						if (!settings.contains(blockSlot)) {
-							settings.add(blockSlot);
+						if (!settings.contains(pickaxeSlot)) {
+							settings.add(pickaxeSlot);
+							this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
+						}
+						if (!settings.contains(axeSlot)) {
+							settings.add(axeSlot);
 							this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
 						}
 					}
@@ -122,8 +140,12 @@ public class InventoryManager extends Module {
 							settings.remove(swordSlot);
 							this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
 						}
-						if (settings.contains(blockSlot)) {
-							settings.remove(blockSlot);
+						if (settings.contains(pickaxeSlot)) {
+							settings.remove(pickaxeSlot);
+							this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
+						}
+						if (settings.contains(axeSlot)) {
+							settings.remove(axeSlot);
 							this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
 						}
 						
@@ -150,6 +172,264 @@ public class InventoryManager extends Module {
 	}
 	
 	public void onEvent(Event e) {
+		
+		if (e instanceof EventUpdate && e.isPre()) {
+			
+			this.additionalInformation = "Hypixel";
+			
+			if (!SpicyClient.config.autoArmor.timer.hasTimeElapsed(300, false)) {
+				return;
+			}
+			
+			boolean packetSent = false;
+			int blockAmount = 0, foodAmount = 0;
+			
+			boolean sword = false;
+			boolean pickaxe = false;
+			boolean axe = false;
+			
+			for (int i = 9; i < 45; i++) {
+    			if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+    				
+    				ItemStack item = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
+    				
+    				if (sort.isEnabled()) {
+    					
+	    				if(InventoryUtils.isBestWeapon(item) && item.getItem() instanceof ItemSword){
+	    					
+	        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+	        					packetSent = true;
+	            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
+	            				mc.thePlayer.sendQueue.addToSendQueue(p);
+	        				}
+	    					
+	    					InventoryUtils.swap(i, (int)swordSlot.getValue() - 1);
+	    					sword = true;
+	    					
+	    				}
+	    				
+	    				if(InventoryUtils.isBestPickaxe(item) && item.getItem() instanceof ItemPickaxe){
+	        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+	        					packetSent = true;
+	            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
+	            				mc.thePlayer.sendQueue.addToSendQueue(p);
+	        				}
+	        				
+	    					InventoryUtils.swap(i, (int)pickaxeSlot.getValue() - 1);
+	    					pickaxe = true;
+	    					
+	    				}
+	    				
+	    				if(InventoryUtils.isBestAxe(item) && item.getItem() instanceof ItemAxe){
+	        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+	        					packetSent = true;
+	            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
+	            				mc.thePlayer.sendQueue.addToSendQueue(p);
+	        				}
+	        				
+	    					InventoryUtils.swap(i, (int)axeSlot.getValue() - 1);
+	    					axe = true;
+	    					
+	    				}
+	    				
+    				}
+    				
+    			}
+    			
+            }
+			
+			for (int i = 9; i < 45; i++) {
+    			if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+    				
+    				ItemStack item = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
+    				
+    				if (purge.isEnabled()) {
+    					
+	    				if(item.getItem() instanceof ItemBlock){
+	    					
+	    					blockAmount += item.stackSize;
+	    					
+	    					if (blockAmount > blocks.getValue()) {
+	    						
+		        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+		        					packetSent = true;
+		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
+		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		        				}
+		        				
+		    					InventoryUtils.drop(i);
+		    					SpicyClient.config.autoArmor.timer.reset();
+		    					return;
+		    					
+	    					}
+	    					
+	    				}
+	    				
+	    				if(item.getItem() instanceof ItemFood){
+	    					
+	    					if (foodAmount > blocks.getValue()) {
+	    						
+	    						foodAmount += item.stackSize;
+	    						
+		        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+		        					packetSent = true;
+		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
+		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		        				}
+		        				
+		    					InventoryUtils.drop(i);
+		    					SpicyClient.config.autoArmor.timer.reset();
+		    					return;
+		    					
+	    					}
+	    					
+	    				}
+	    				
+	    				if (tools.isEnabled()) {
+	    					
+		    				if (sword) {
+		    					
+		    					if(item.getItem() instanceof ItemSword && i - 36 != swordSlot.getValue() - 1){
+		    						
+			        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+			        					packetSent = true;
+			            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
+			            				mc.thePlayer.sendQueue.addToSendQueue(p);
+			        				}
+			        				
+			    					InventoryUtils.drop(i);
+			    					SpicyClient.config.autoArmor.timer.reset();
+			    					return;
+			    					
+		    					}
+		    					
+		    				}else if (item.getItem() instanceof ItemSword) {
+		    					
+		        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+		        					packetSent = true;
+		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
+		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		        				}
+		        				
+		    					InventoryUtils.drop(i);
+		    					SpicyClient.config.autoArmor.timer.reset();
+		    					return;
+		    					
+		    				}
+		    				
+		    				if (pickaxe) {
+		    					
+		    					if(item.getItem() instanceof ItemPickaxe && i - 36 != pickaxeSlot.getValue() - 1){
+		    						
+			        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+			        					packetSent = true;
+			            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
+			            				mc.thePlayer.sendQueue.addToSendQueue(p);
+			        				}
+			        				
+			    					InventoryUtils.drop(i);
+			    					SpicyClient.config.autoArmor.timer.reset();
+			    					return;
+			    					
+		    					}
+		    					
+		    				}else if (item.getItem() instanceof ItemPickaxe && !(item.getItem() instanceof ItemSword)) {
+		    					
+		        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+		        					packetSent = true;
+		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
+		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		        				}
+		        				
+		    					InventoryUtils.drop(i);
+		    					SpicyClient.config.autoArmor.timer.reset();
+		    					return;
+		    					
+		    				}
+		    				
+		    				if (axe) {
+		    					
+		    					if(item.getItem() instanceof ItemAxe && i - 36 != axeSlot.getValue() - 1){
+		    						
+			        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+			        					packetSent = true;
+			            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
+			            				mc.thePlayer.sendQueue.addToSendQueue(p);
+			        				}
+			        				
+			    					InventoryUtils.drop(i);
+			    					SpicyClient.config.autoArmor.timer.reset();
+			    					return;
+			    					
+		    					}
+		    					
+		    				}else if (item.getItem() instanceof ItemAxe) {
+		    					
+		        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+		        					packetSent = true;
+		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
+		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		        				}
+		        				
+		    					InventoryUtils.drop(i);
+		    					SpicyClient.config.autoArmor.timer.reset();
+		    					return;
+		    					
+		    				}
+		    				
+		    				if (item.getItem() instanceof ItemSpade || item.getItem() instanceof ItemHoe) {
+		    					
+		        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+		        					packetSent = true;
+		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
+		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		        				}
+		        				
+		    					InventoryUtils.drop(i);
+		    					SpicyClient.config.autoArmor.timer.reset();
+		    					return;
+		    					
+		    				}
+		    				
+		    				if (armor.isEnabled()) {
+		    					
+		    					for(int type = 1; type < 5; type++){
+		    						
+		    						if (SpicyClient.config.autoArmor.isEnabled()) {
+		    							SpicyClient.config.autoArmor.getBestArmor();
+		    						}
+		    						
+				    				if (item.getItem() instanceof ItemArmor && !AutoArmor.isBestArmor(item, type)) {
+				    					
+				        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+				        					packetSent = true;
+				            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
+				            				mc.thePlayer.sendQueue.addToSendQueue(p);
+				        				}
+				        				
+				    					InventoryUtils.drop(i);
+				    					SpicyClient.config.autoArmor.timer.reset();
+				    					return;
+				    					
+				    				}
+		    						
+		    			        }
+		    					
+		    				}
+		    				
+	    				}
+	    				
+    				}
+    				
+    			}
+    			
+            }
+			
+			if (packetSent) {
+				SpicyClient.config.autoArmor.timer.reset();
+			}
+			
+		}
 		
 	}
 	
