@@ -177,7 +177,7 @@ public class InventoryManager extends Module {
 			
 			this.additionalInformation = "Hypixel";
 			
-			if (!SpicyClient.config.autoArmor.timer.hasTimeElapsed(300, false)) {
+			if (!SpicyClient.config.autoArmor.timer.hasTimeElapsed(1000, false)) {
 				return;
 			}
 			
@@ -197,7 +197,7 @@ public class InventoryManager extends Module {
     					
 	    				if(InventoryUtils.isBestWeapon(item) && item.getItem() instanceof ItemSword){
 	    					
-	        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+	        				if (!(mc.currentScreen instanceof GuiInventory)) {
 	        					packetSent = true;
 	            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
 	            				mc.thePlayer.sendQueue.addToSendQueue(p);
@@ -209,7 +209,7 @@ public class InventoryManager extends Module {
 	    				}
 	    				
 	    				if(InventoryUtils.isBestPickaxe(item) && item.getItem() instanceof ItemPickaxe){
-	        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+	        				if (!(mc.currentScreen instanceof GuiInventory)) {
 	        					packetSent = true;
 	            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
 	            				mc.thePlayer.sendQueue.addToSendQueue(p);
@@ -221,7 +221,7 @@ public class InventoryManager extends Module {
 	    				}
 	    				
 	    				if(InventoryUtils.isBestAxe(item) && item.getItem() instanceof ItemAxe){
-	        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+	        				if (!(mc.currentScreen instanceof GuiInventory)) {
 	        					packetSent = true;
 	            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
 	            				mc.thePlayer.sendQueue.addToSendQueue(p);
@@ -251,7 +251,7 @@ public class InventoryManager extends Module {
 	    					
 	    					if (blockAmount > blocks.getValue()) {
 	    						
-		        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
 		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
 		            				mc.thePlayer.sendQueue.addToSendQueue(p);
@@ -271,7 +271,7 @@ public class InventoryManager extends Module {
 	    						
 	    						foodAmount += item.stackSize;
 	    						
-		        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
 		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
 		            				mc.thePlayer.sendQueue.addToSendQueue(p);
@@ -291,7 +291,7 @@ public class InventoryManager extends Module {
 		    					
 		    					if(item.getItem() instanceof ItemSword && i - 36 != swordSlot.getValue() - 1){
 		    						
-			        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+			        				if (!(mc.currentScreen instanceof GuiInventory)) {
 			        					packetSent = true;
 			            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
 			            				mc.thePlayer.sendQueue.addToSendQueue(p);
@@ -305,7 +305,7 @@ public class InventoryManager extends Module {
 		    					
 		    				}else if (item.getItem() instanceof ItemSword) {
 		    					
-		        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
 		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
 		            				mc.thePlayer.sendQueue.addToSendQueue(p);
@@ -321,7 +321,7 @@ public class InventoryManager extends Module {
 		    					
 		    					if(item.getItem() instanceof ItemPickaxe && i - 36 != pickaxeSlot.getValue() - 1){
 		    						
-			        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+			        				if (!(mc.currentScreen instanceof GuiInventory)) {
 			        					packetSent = true;
 			            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
 			            				mc.thePlayer.sendQueue.addToSendQueue(p);
@@ -335,7 +335,7 @@ public class InventoryManager extends Module {
 		    					
 		    				}else if (item.getItem() instanceof ItemPickaxe && !(item.getItem() instanceof ItemSword)) {
 		    					
-		        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
 		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
 		            				mc.thePlayer.sendQueue.addToSendQueue(p);
@@ -351,7 +351,7 @@ public class InventoryManager extends Module {
 		    					
 		    					if(item.getItem() instanceof ItemAxe && i - 36 != axeSlot.getValue() - 1){
 		    						
-			        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+			        				if (!(mc.currentScreen instanceof GuiInventory)) {
 			        					packetSent = true;
 			            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
 			            				mc.thePlayer.sendQueue.addToSendQueue(p);
@@ -365,7 +365,7 @@ public class InventoryManager extends Module {
 		    					
 		    				}else if (item.getItem() instanceof ItemAxe) {
 		    					
-		        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
 		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
 		            				mc.thePlayer.sendQueue.addToSendQueue(p);
@@ -379,7 +379,7 @@ public class InventoryManager extends Module {
 		    				
 		    				if (item.getItem() instanceof ItemSpade || item.getItem() instanceof ItemHoe) {
 		    					
-		        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
 		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
 		            				mc.thePlayer.sendQueue.addToSendQueue(p);
@@ -401,7 +401,7 @@ public class InventoryManager extends Module {
 		    						
 				    				if (item.getItem() instanceof ItemArmor && !AutoArmor.isBestArmor(item, type)) {
 				    					
-				        				if (!(mc.currentScreen instanceof GuiInventory) && !packetSent) {
+				        				if (!(mc.currentScreen instanceof GuiInventory)) {
 				        					packetSent = true;
 				            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
 				            				mc.thePlayer.sendQueue.addToSendQueue(p);
