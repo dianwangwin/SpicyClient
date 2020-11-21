@@ -20,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C16PacketClientStatus;
 import net.minecraft.network.play.client.C16PacketClientStatus.EnumState;
@@ -172,6 +173,18 @@ public class InventoryManager extends Module {
 	}
 	
 	public void onEvent(Event e) {
+		
+		if (e instanceof EventSendPacket && e.isPre()) {
+			
+			EventSendPacket event = (EventSendPacket) e;
+			
+			if (event.packet instanceof C02PacketUseEntity) {
+				
+				SpicyClient.config.autoArmor.timer.reset();
+				
+			}
+			
+		}
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
