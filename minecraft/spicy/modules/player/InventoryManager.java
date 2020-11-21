@@ -22,6 +22,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C16PacketClientStatus;
 import net.minecraft.network.play.client.C16PacketClientStatus.EnumState;
 import spicy.SpicyClient;
@@ -178,7 +179,7 @@ public class InventoryManager extends Module {
 			
 			EventSendPacket event = (EventSendPacket) e;
 			
-			if (event.packet instanceof C02PacketUseEntity) {
+			if (event.packet instanceof C02PacketUseEntity || event.packet instanceof C08PacketPlayerBlockPlacement) {
 				
 				SpicyClient.config.autoArmor.timer.reset();
 				
@@ -190,7 +191,7 @@ public class InventoryManager extends Module {
 			
 			this.additionalInformation = "Hypixel";
 			
-			if (!SpicyClient.config.autoArmor.timer.hasTimeElapsed(1000, false)) {
+			if (!SpicyClient.config.autoArmor.timer.hasTimeElapsed(850, false)) {
 				return;
 			}
 			
