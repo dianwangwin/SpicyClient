@@ -4,6 +4,7 @@ import org.apache.commons.lang3.RandomUtils;
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C02PacketUseEntity;
@@ -58,6 +59,13 @@ public class TriggerBot extends Module {
 			if (mc.objectMouseOver.typeOfHit.equals(MovingObjectType.ENTITY) && timer.hasTimeElapsed((long) (1000/aps.getValue()), true)) {
 				mc.thePlayer.swingItem();
 				mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(mc.objectMouseOver.entityHit, Action.ATTACK));
+				
+				/*
+				if (mc.thePlayer.getCurrentEquippedItem() == null) {
+					return;
+				}
+				mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.getCurrentEquippedItem()));
+				*/
 			}
 			
 		}

@@ -53,15 +53,18 @@ public class GuiDisconnected extends GuiScreen
         
         GuiButton altManager = new GuiButton(1, this.width / 2 - 100, this.height / 2 + this.field_175353_i / 2 + this.fontRendererObj.FONT_HEIGHT, "Alt manager");
         GuiButton genAlt = new GuiButton(2, (this.width / 2 - 100), this.height / 2 + this.field_175353_i / 2 + this.fontRendererObj.FONT_HEIGHT, "Generate and reconnect");
+        GuiButton reconnectAlt = new GuiButton(3, (this.width / 2 - 100), this.height / 2 + this.field_175353_i / 2 + this.fontRendererObj.FONT_HEIGHT, "Reconnect");
         
         //altManager.width = altManager.width / 2;
-        altManager.yPosition += altManager.height + 5;
+        altManager.yPosition += (altManager.height * 2) + 10;
+        reconnectAlt.yPosition += reconnectAlt.height + 5;
         //genAlt.width = genAlt.width / 2;
         //genAlt.xPosition = genAlt.xPosition + genAlt.width;
         
         this.buttonList.add(altManager);
         this.buttonList.add(genAlt);
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 2 + this.field_175353_i / 2 + this.fontRendererObj.FONT_HEIGHT + 50, I18n.format("gui.toMenu", new Object[0])));
+        this.buttonList.add(reconnectAlt);
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 2 + this.field_175353_i / 2 + this.fontRendererObj.FONT_HEIGHT + 75, I18n.format("§aBack to the server list", new Object[0])));
     }
 
     /**
@@ -168,6 +171,17 @@ public class GuiDisconnected extends GuiScreen
     		}
     		
         }
+        
+        else if (button.id == 3) {
+        	
+        	if (parentScreen instanceof GuiMultiplayer) {
+        		
+        		((GuiMultiplayer)parentScreen).connectToSelected();
+        		
+        	}
+        	
+        }
+        
     }
 
     /**

@@ -22,6 +22,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C16PacketClientStatus;
 import net.minecraft.network.play.client.C16PacketClientStatus.EnumState;
@@ -54,7 +55,7 @@ public class InventoryManager extends Module {
 	public NumberSetting axeSlot = new NumberSetting("Axe slot", 3, 1, 9, 1);
 	
 	public InventoryManager() {
-		super("Inventory Manager", Keyboard.KEY_NONE, Category.BETA);
+		super("Inventory Manager", Keyboard.KEY_NONE, Category.PLAYER);
 		resetSettings();
 	}
 	
@@ -179,7 +180,7 @@ public class InventoryManager extends Module {
 			
 			EventSendPacket event = (EventSendPacket) e;
 			
-			if (event.packet instanceof C02PacketUseEntity || event.packet instanceof C08PacketPlayerBlockPlacement) {
+			if (event.packet instanceof C02PacketUseEntity || event.packet instanceof C07PacketPlayerDigging) {
 				
 				SpicyClient.config.autoArmor.timer.reset();
 				

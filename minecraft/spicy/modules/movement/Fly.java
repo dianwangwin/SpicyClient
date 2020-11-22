@@ -236,7 +236,6 @@ public class Fly extends Module {
 					//MovementUtils.strafe(0.195f);
 					MovementUtils.setMotion(((float)hypixelSpeed.getValue()));
 					
-					
 					int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);
 					
 					if (hypixelTimerBoost.isEnabled()) {

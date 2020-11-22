@@ -43,7 +43,7 @@ public class BlockFly extends Module {
 	private NumberSetting pitch = new NumberSetting("Pitch", 89.8, 50, 90, 0.05);
 	
 	public BlockFly() {
-		super("Block Fly", Keyboard.KEY_NONE, Category.MOVEMENT);
+		super("Block Fly", Keyboard.KEY_NONE, Category.BETA);
 		resetSettings();
 	}
 	
