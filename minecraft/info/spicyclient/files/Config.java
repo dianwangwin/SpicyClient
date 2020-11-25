@@ -81,6 +81,7 @@ public class Config {
 	public AntiLava antiLava = new AntiLava();
 	public InvWalk invWalk = new InvWalk();
 	public Mike mike = new Mike();
+	public Disabler disabler = new Disabler();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -134,6 +135,7 @@ public class Config {
 			this.antiLava = new AntiLava();
 			this.invWalk = new InvWalk();
 			this.mike = new Mike();
+			this.disabler = new Disabler();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");

@@ -110,6 +110,7 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ Hypixel autoblock");
         changeLogs.add("+ Hypixel killsults");
         changeLogs.add("+ Hypixel interact autoblock");
+        changeLogs.add("+ Hypixel disabler");
         changeLogs.add("+ Payback for pvplands killsults");
         changeLogs.add("+ Vanilla nofall");
         changeLogs.add("+ Vanilla and packet autolog");

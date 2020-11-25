@@ -396,6 +396,7 @@ public class SpicyClient {
 		modules.add(c.antiLava);
 		modules.add(c.invWalk);
 		modules.add(c.mike);
+		modules.add(c.disabler);
 		
 		for (Module temp : SpicyClient.modules) {
 			

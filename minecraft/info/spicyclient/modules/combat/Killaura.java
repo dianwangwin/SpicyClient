@@ -475,6 +475,11 @@ public class Killaura extends Module {
         }
         else
         {
+        	
+        	if (itemStackIn == null) {
+        		return false;
+        	}
+        	
             mc.playerController.syncCurrentPlayItem();
             int i = itemStackIn.stackSize;
             ItemStack itemstack = itemStackIn.useItemRightClick(worldIn, playerIn);
