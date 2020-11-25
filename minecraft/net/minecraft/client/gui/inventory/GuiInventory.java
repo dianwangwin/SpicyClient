@@ -1,6 +1,9 @@
 package net.minecraft.client.gui.inventory;
 
 import java.io.IOException;
+
+import info.spicyclient.SpicyClient;
+import info.spicyclient.events.EventType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.achievement.GuiAchievements;
@@ -14,8 +17,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
-import spicy.SpicyClient;
-import spicy.events.EventType;
 
 public class GuiInventory extends InventoryEffectRenderer
 {

@@ -1,6 +1,12 @@
 package net.minecraft.client.renderer;
 
 import com.google.gson.JsonSyntaxException;
+
+import info.spicyclient.SpicyClient;
+import info.spicyclient.events.EventType;
+import info.spicyclient.events.listeners.EventRender3D;
+import info.spicyclient.ui.NewMainMenu;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.FloatBuffer;
@@ -87,10 +93,6 @@ import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Project;
 import shadersmod.client.Shaders;
 import shadersmod.client.ShadersRender;
-import spicy.SpicyClient;
-import spicy.events.EventType;
-import spicy.events.listeners.EventRender3D;
-import spicy.ui.NewMainMenu;
 
 public class EntityRenderer implements IResourceManagerReloadListener
 {

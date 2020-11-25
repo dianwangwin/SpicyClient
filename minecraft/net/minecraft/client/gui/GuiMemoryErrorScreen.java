@@ -1,8 +1,9 @@
 package net.minecraft.client.gui;
 
 import java.io.IOException;
+
+import info.spicyclient.ui.NewMainMenu;
 import net.minecraft.client.resources.I18n;
-import spicy.ui.NewMainMenu;
 
 public class GuiMemoryErrorScreen extends GuiScreen
 {

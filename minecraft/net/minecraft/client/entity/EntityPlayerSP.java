@@ -1,5 +1,10 @@
 package net.minecraft.client.entity;
 
+import info.spicyclient.SpicyClient;
+import info.spicyclient.events.EventType;
+import info.spicyclient.events.listeners.EventChatmessage;
+import info.spicyclient.events.listeners.EventMotion;
+import info.spicyclient.events.listeners.EventUpdate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -51,11 +56,6 @@ import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
-import spicy.SpicyClient;
-import spicy.events.EventType;
-import spicy.events.listeners.EventChatmessage;
-import spicy.events.listeners.EventMotion;
-import spicy.events.listeners.EventUpdate;
 
 public class EntityPlayerSP extends AbstractClientPlayer
 {

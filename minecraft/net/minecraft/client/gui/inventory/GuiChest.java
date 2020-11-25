@@ -2,15 +2,15 @@ package net.minecraft.client.gui.inventory;
 
 import org.lwjgl.input.Keyboard;
 
+import info.spicyclient.SpicyClient;
+import info.spicyclient.events.EventType;
+import info.spicyclient.events.listeners.EventOpenChest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
-import spicy.SpicyClient;
-import spicy.events.EventType;
-import spicy.events.listeners.EventOpenChest;
 
 public class GuiChest extends GuiContainer
 {

@@ -13,6 +13,11 @@ import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
+
+import info.spicyclient.SpicyClient;
+import info.spicyclient.files.Config;
+import info.spicyclient.ui.NewMainMenu;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -167,9 +172,6 @@ import net.minecraft.world.chunk.storage.AnvilSaveConverter;
 import net.minecraft.world.storage.ISaveFormat;
 import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.WorldInfo;
-import spicy.SpicyClient;
-import spicy.files.Config;
-import spicy.ui.NewMainMenu;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
@@ -566,7 +568,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.checkGLError("Post startup");
         this.ingameGUI = new GuiIngame(this);
         
-        spicy.SpicyClient.StartUp();
+        info.spicyclient.SpicyClient.StartUp();
         
         if (this.serverName != null)
         {

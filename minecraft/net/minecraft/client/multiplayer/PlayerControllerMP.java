@@ -1,5 +1,9 @@
 package net.minecraft.client.multiplayer;
 
+import info.spicyclient.SpicyClient;
+import info.spicyclient.events.EventType;
+import info.spicyclient.events.listeners.EventAddBlockDamage;
+import info.spicyclient.events.listeners.EventGetBlockReach;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -28,10 +32,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
-import spicy.SpicyClient;
-import spicy.events.EventType;
-import spicy.events.listeners.EventAddBlockDamage;
-import spicy.events.listeners.EventGetBlockReach;
 
 public class PlayerControllerMP
 {

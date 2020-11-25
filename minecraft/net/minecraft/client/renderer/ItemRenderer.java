@@ -30,12 +30,13 @@ import optifine.DynamicLights;
 import optifine.Reflector;
 
 import org.lwjgl.opengl.GL11;
+
+import info.spicyclient.SpicyClient;
+import info.spicyclient.events.EventDirection;
+import info.spicyclient.events.EventType;
+import info.spicyclient.events.listeners.EventSwordBlockAnimation;
+import info.spicyclient.events.listeners.EventUpdate;
 import shadersmod.client.Shaders;
-import spicy.SpicyClient;
-import spicy.events.EventDirection;
-import spicy.events.EventType;
-import spicy.events.listeners.EventSwordBlockAnimation;
-import spicy.events.listeners.EventUpdate;
 
 public class ItemRenderer {
 	private static final ResourceLocation RES_MAP_BACKGROUND = new ResourceLocation("textures/map/map_background.png");

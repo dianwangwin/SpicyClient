@@ -1,5 +1,10 @@
 package net.minecraft.client.renderer.entity;
 
+import info.spicyclient.SpicyClient;
+import info.spicyclient.cosmetics.CosmeticController;
+import info.spicyclient.cosmetics.impl.Tophat;
+import info.spicyclient.events.EventType;
+import info.spicyclient.events.listeners.EventPlayerRender;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.model.ModelPlayer;
@@ -18,11 +23,6 @@ import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.ResourceLocation;
-import spicy.SpicyClient;
-import spicy.cosmetics.CosmeticController;
-import spicy.cosmetics.impl.Tophat;
-import spicy.events.EventType;
-import spicy.events.listeners.EventPlayerRender;
 
 public class RenderPlayer extends RendererLivingEntity<AbstractClientPlayer>
 {

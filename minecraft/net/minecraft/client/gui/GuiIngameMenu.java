@@ -1,12 +1,13 @@
 package net.minecraft.client.gui;
 
 import java.io.IOException;
+
+import info.spicyclient.ui.NewMainMenu;
 import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.gui.achievement.GuiStats;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.realms.RealmsBridge;
-import spicy.ui.NewMainMenu;
 
 public class GuiIngameMenu extends GuiScreen
 {

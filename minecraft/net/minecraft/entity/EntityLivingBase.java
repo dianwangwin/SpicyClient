@@ -3,6 +3,11 @@ package net.minecraft.entity;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
+
+import info.spicyclient.SpicyClient;
+import info.spicyclient.events.EventType;
+import info.spicyclient.events.listeners.EventOnLadder;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -50,9 +55,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import spicy.SpicyClient;
-import spicy.events.EventType;
-import spicy.events.listeners.EventOnLadder;
 
 public abstract class EntityLivingBase extends Entity
 {
@@ -1562,7 +1564,7 @@ public abstract class EntityLivingBase extends Entity
         return false;
     }
 
-    protected float getJumpUpwardsMotion()
+    public float getJumpUpwardsMotion()
     {
         return 0.42F;
     }

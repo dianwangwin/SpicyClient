@@ -1,6 +1,10 @@
 package net.minecraft.block;
 
 import java.util.Random;
+
+import info.spicyclient.SpicyClient;
+import info.spicyclient.events.EventType;
+import info.spicyclient.events.listeners.EventGetLiquidHitbox;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
@@ -19,9 +23,6 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColorHelper;
-import spicy.SpicyClient;
-import spicy.events.EventType;
-import spicy.events.listeners.EventGetLiquidHitbox;
 
 public abstract class BlockLiquid extends Block
 {

@@ -1,6 +1,9 @@
 package net.minecraft.client.entity;
 
 import com.mojang.authlib.GameProfile;
+
+import info.spicyclient.SpicyClient;
+
 import java.io.File;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
@@ -21,7 +24,6 @@ import optifine.CapeUtils;
 import optifine.Config;
 import optifine.PlayerConfigurations;
 import optifine.Reflector;
-import spicy.SpicyClient;
 
 public abstract class AbstractClientPlayer extends EntityPlayer
 {

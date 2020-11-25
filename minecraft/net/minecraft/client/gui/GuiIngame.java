@@ -3,6 +3,9 @@ package net.minecraft.client.gui;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
+import info.spicyclient.SpicyClient;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
@@ -43,7 +46,6 @@ import net.minecraft.util.StringUtils;
 import net.minecraft.world.border.WorldBorder;
 import optifine.Config;
 import optifine.CustomColors;
-import spicy.SpicyClient;
 
 public class GuiIngame extends Gui
 {
@@ -347,7 +349,7 @@ public class GuiIngame extends Gui
             this.overlayPlayerList.renderPlayerlist(i, scoreboard, scoreobjective1);
         }
         
-        spicy.SpicyClient.hud.draw();
+        info.spicyclient.SpicyClient.hud.draw();
         
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();

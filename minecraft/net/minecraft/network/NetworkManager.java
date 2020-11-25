@@ -2,6 +2,12 @@ package net.minecraft.network;
 
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+import info.spicyclient.SpicyClient;
+import info.spicyclient.events.EventDirection;
+import info.spicyclient.events.EventType;
+import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventSendPacket;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelException;
@@ -42,11 +48,6 @@ import net.minecraft.util.MessageDeserializer;
 import net.minecraft.util.MessageDeserializer2;
 import net.minecraft.util.MessageSerializer;
 import net.minecraft.util.MessageSerializer2;
-import spicy.SpicyClient;
-import spicy.events.EventDirection;
-import spicy.events.EventType;
-import spicy.events.listeners.EventPacket;
-import spicy.events.listeners.EventSendPacket;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Validate;

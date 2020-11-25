@@ -7,16 +7,16 @@ import org.json.JSONObject;
 
 import com.thealtening.AltService.EnumAltService;
 
+import info.spicyclient.SessionChanger;
+import info.spicyclient.SpicyClient;
+import info.spicyclient.TheAlteningAPI;
+import info.spicyclient.files.FileManager;
+import info.spicyclient.files.AltInfo.alt;
+import info.spicyclient.ui.NewAltManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.IChatComponent;
-import spicy.SessionChanger;
-import spicy.SpicyClient;
-import spicy.TheAlteningAPI;
-import spicy.files.AltInfo.alt;
-import spicy.files.FileManager;
-import spicy.ui.NewAltManager;
 
 public class GuiDisconnected extends GuiScreen
 {
