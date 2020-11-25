@@ -397,6 +397,7 @@ public class SpicyClient {
 		modules.add(c.invWalk);
 		modules.add(c.mike);
 		modules.add(c.disabler);
+		modules.add(c.smallItems);
 		
 		for (Module temp : SpicyClient.modules) {
 			

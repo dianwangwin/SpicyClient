@@ -49,6 +49,7 @@ public class Disabler extends Module {
 			
 			if (SpicyClient.config.fly.isEnabled()) {
 				
+				// Might ass this later
 	            //PlayerCapabilities playerCapabilities = new PlayerCapabilities();
 	            //playerCapabilities.isFlying = true;
 	            //playerCapabilities.allowFlying = true;
@@ -65,12 +66,14 @@ public class Disabler extends Module {
 			
             if (event.packet instanceof C0FPacketConfirmTransaction) {
                 C0FPacketConfirmTransaction packetConfirmTransaction = (C0FPacketConfirmTransaction)event.packet;
-                mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0FPacketConfirmTransaction(2147483647, packetConfirmTransaction.getUid(), false));
+                //mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0FPacketConfirmTransaction(2147483647, packetConfirmTransaction.getUid(), false));
+                mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0FPacketConfirmTransaction(1147483647, packetConfirmTransaction.getUid(), false));
                 e.setCanceled(true);
             }
 
             if (event.packet instanceof C00PacketKeepAlive) {
-                mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C00PacketKeepAlive(-2147483648 + (new Random()).nextInt(100)));
+                //mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C00PacketKeepAlive(-2147483648 + (new Random()).nextInt(100)))
+            	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C00PacketKeepAlive(-1147483648 + (new Random()).nextInt(100)));;
                 e.setCanceled(true);
             }
 			

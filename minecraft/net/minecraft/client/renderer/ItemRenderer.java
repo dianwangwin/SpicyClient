@@ -316,6 +316,13 @@ public class ItemRenderer {
 	 * partialTickTime
 	 */
 	public void renderItemInFirstPerson(float partialTicks) {
+		
+		if (SpicyClient.config.smallItems.isEnabled()) {
+			
+			GlStateManager.translate(0.75, -0.15, -1);
+			
+		}
+		
 		partTicks = partialTicks;
 		float f = 1.0F
 				- (this.prevEquippedProgress + (this.equippedProgress - this.prevEquippedProgress) * partialTicks);
