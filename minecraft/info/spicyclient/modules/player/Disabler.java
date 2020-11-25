@@ -49,7 +49,7 @@ public class Disabler extends Module {
 			
 			if (SpicyClient.config.fly.isEnabled()) {
 				
-				// Might ass this later
+				// Might add this later
 	            //PlayerCapabilities playerCapabilities = new PlayerCapabilities();
 	            //playerCapabilities.isFlying = true;
 	            //playerCapabilities.allowFlying = true;
