@@ -34,18 +34,17 @@ import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
 import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook;
 import net.minecraft.util.MathHelper;
 
-public class Fly extends Module {
+public class BackupFly extends Module {
 
 	public NumberSetting speed = new NumberSetting("Speed", 0.1, 0.01, 2, 0.1);
 	private ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "Hypixel");
 	
-	public BooleanSetting hypixelBlink = new BooleanSetting("Blink", true);
 	public BooleanSetting hypixelTimerBoost = new BooleanSetting("Hypixel timer boost", true);
 	public NumberSetting hypixelSpeed = new NumberSetting("Speed", 0.195, 0.05, 0.2, 0.005);
 	
 	public static ArrayList<Packet> hypixelPackets = new ArrayList<Packet>();
 	
-	public Fly() {
+	public BackupFly() {
 		super("Fly", Keyboard.KEY_NONE, Category.MOVEMENT);
 		resetSettings();
 	}
@@ -67,10 +66,6 @@ public class Fly extends Module {
 					this.settings.remove(speed);
 				}
 				
-				if (!this.settings.contains(hypixelBlink)) {
-					this.settings.add(hypixelBlink);
-				}
-				
 				if (!this.settings.contains(hypixelTimerBoost)) {
 					this.settings.add(hypixelTimerBoost);
 				}
@@ -84,10 +79,6 @@ public class Fly extends Module {
 				
 				if (!this.settings.contains(speed)) {
 					this.settings.add(speed);
-				}
-				
-				if (this.settings.contains(hypixelBlink)) {
-					this.settings.remove(hypixelBlink);
 				}
 				
 				if (this.settings.contains(hypixelTimerBoost)) {
@@ -131,7 +122,7 @@ public class Fly extends Module {
 			if (!SpicyClient.config.blink.isEnabled()) {
 				//SpicyClient.config.blink.toggle();
 			}
-			//damage();
+			
 			if (mc.thePlayer.onGround) {
 				mc.thePlayer.jump();
 			}
@@ -195,10 +186,8 @@ public class Fly extends Module {
 					((C03PacketPlayer)sendPacket.packet).setIsOnGround(false);
 				}
 				
-				if (hypixelBlink.isEnabled()) {
-					hypixelPackets.add(sendPacket.packet);
-					sendPacket.setCanceled(true);
-				}
+				hypixelPackets.add(sendPacket.packet);
+				sendPacket.setCanceled(true);
 				
 			}
 			
@@ -308,7 +297,7 @@ public class Fly extends Module {
     public void damage(){
         double fallDistance = 0;
         double offset = 0.41999998688698;
-        while (fallDistance < 6)
+        while (fallDistance < 4)
         {
             sendPacket(offset,false);
             sendPacket(0, fallDistance + offset >= 4);

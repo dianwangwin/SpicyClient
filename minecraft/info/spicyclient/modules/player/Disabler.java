@@ -5,6 +5,7 @@ import java.util.Random;
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventPacket;
 import info.spicyclient.events.listeners.EventSendPacket;
@@ -47,14 +48,14 @@ public class Disabler extends Module {
 			
 			this.additionalInformation = "Hypixel";
 			
-			if (SpicyClient.config.fly.isEnabled()) {
+			if (SpicyClient.config.fly.isEnabled() && !SpicyClient.config.fly.hypixelBlink.isEnabled()) {
 				
-				// Might add this later
-	            //PlayerCapabilities playerCapabilities = new PlayerCapabilities();
-	            //playerCapabilities.isFlying = true;
-	            //playerCapabilities.allowFlying = true;
-	            //playerCapabilities.setFlySpeed((float) (Math.random() * (9.0 - 0.1) + 0.1));
-	            //mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
+	            PlayerCapabilities playerCapabilities = new PlayerCapabilities();
+	            playerCapabilities.isFlying = true;
+	            playerCapabilities.allowFlying = true;
+	            playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
+	            //playerCapabilities.isCreativeMode = new Random().nextBoolean();
+	            mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
 				
 			}
 			
@@ -66,14 +67,14 @@ public class Disabler extends Module {
 			
             if (event.packet instanceof C0FPacketConfirmTransaction) {
                 C0FPacketConfirmTransaction packetConfirmTransaction = (C0FPacketConfirmTransaction)event.packet;
-                //mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0FPacketConfirmTransaction(2147483647, packetConfirmTransaction.getUid(), false));
-                mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0FPacketConfirmTransaction(1147483647, packetConfirmTransaction.getUid(), false));
+                mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0FPacketConfirmTransaction(2147483647, packetConfirmTransaction.getUid(), false));
+                //mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0FPacketConfirmTransaction(1147483647, packetConfirmTransaction.getUid(), false));
                 e.setCanceled(true);
             }
 
             if (event.packet instanceof C00PacketKeepAlive) {
-                //mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C00PacketKeepAlive(-2147483648 + (new Random()).nextInt(100)))
-            	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C00PacketKeepAlive(-1147483648 + (new Random()).nextInt(100)));;
+            	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C00PacketKeepAlive(-2147483648 + (new Random()).nextInt(100)));
+            	//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C00PacketKeepAlive(-1147483648 + (new Random()).nextInt(100)));
                 e.setCanceled(true);
             }
 			

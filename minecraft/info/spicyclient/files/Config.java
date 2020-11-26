@@ -161,6 +161,7 @@ public class Config {
 			this.clickgui.colorSettingGreen = new NumberSetting("Red", 255, 0, 255, 1);
 			this.clickgui.colorSettingBlue = new NumberSetting("Red", 255, 0, 255, 1);
 			
+			this.fly.hypixelBlink = new BooleanSetting("Blink", true);
 			this.fly.hypixelTimerBoost = new BooleanSetting("Hypixel timer boost", true);
 			this.fly.hypixelSpeed = new NumberSetting("Speed", 0.195, 0.05, 0.2, 0.005);
 			
