@@ -79,7 +79,7 @@ public class SpicyClient {
 	public static Boolean originalAccountOnline = false;
 	
 	public static void StartUp() {
-		
+
 		if (Minecraft.getMinecraft().getSession().getSessionType().equals(Session.Type.LEGACY)) {
 			System.out.println("Not pinging server, this is an offline account");
 			System.out.println("Please keep in mind that all this would send is your username and nothing else");
