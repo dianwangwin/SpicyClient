@@ -7,6 +7,7 @@ import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventRender3D;
 import info.spicyclient.ui.NewMainMenu;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.FloatBuffer;
@@ -21,6 +22,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.gui.MapItemRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -959,7 +961,15 @@ public class EntityRenderer implements IResourceManagerReloadListener
             GlStateManager.scale(1.0F / f2, 1.0F, 1.0F);
             GlStateManager.rotate(-((float)this.rendererUpdateCount + partialTicks) * (float)b0, 0.0F, 1.0F, 1.0F);
         }
-
+        
+        if (SpicyClient.config.lsd.isEnabled()) {
+        	
+            GlStateManager.rotate(((float)this.rendererUpdateCount + partialTicks) * (float)6, 0.0F, 1.0F, 1.0F);
+            GlStateManager.scale(1.0F / 2f, 1.0F, 1.0F);
+            GlStateManager.rotate(-((float)this.rendererUpdateCount + partialTicks) * (float)6, 0.0F, 1.0F, 1.0F);
+            
+        }
+        
         this.orientCamera(partialTicks);
 
         if (this.debugView)

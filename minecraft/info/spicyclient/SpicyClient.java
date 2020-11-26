@@ -398,6 +398,7 @@ public class SpicyClient {
 		modules.add(c.mike);
 		modules.add(c.disabler);
 		modules.add(c.smallItems);
+		modules.add(c.lsd);
 		
 		for (Module temp : SpicyClient.modules) {
 			

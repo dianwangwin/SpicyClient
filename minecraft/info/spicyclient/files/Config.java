@@ -83,6 +83,7 @@ public class Config {
 	public Mike mike = new Mike();
 	public Disabler disabler = new Disabler();
 	public SmallItems smallItems = new SmallItems();
+	public LSD lsd = new LSD();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -138,6 +139,7 @@ public class Config {
 			this.mike = new Mike();
 			this.disabler = new Disabler();
 			this.smallItems = new SmallItems();
+			this.lsd = new LSD();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
