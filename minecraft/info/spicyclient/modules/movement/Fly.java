@@ -181,6 +181,26 @@ public class Fly extends Module {
 
 	public void onEvent(Event e) {
 		
+		// For the viewbobbing
+		if (e instanceof EventMotion && e.isPre() && (mc.gameSettings.keyBindForward.isKeyDown() || mc.gameSettings.keyBindBack.isKeyDown() || mc.gameSettings.keyBindLeft.isKeyDown() || mc.gameSettings.keyBindRight.isKeyDown())) {
+			
+			switch (NCP_Status) {
+			case 0:
+				mc.thePlayer.cameraYaw = 0.105F;
+				mc.thePlayer.cameraPitch = 0.105F;
+				NCP_Status++;
+				break;
+			case 1:
+				NCP_Status++;
+				break;
+			case 2:
+				NCP_Status = 0;
+				break;
+			}
+			
+		}
+		// For the viewbobbing
+		
 		if (e instanceof EventSendPacket && mode.getMode().equals("Hypixel")) {
 			
 			if (e.isPre()) {
