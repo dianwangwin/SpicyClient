@@ -25,6 +25,7 @@ import info.spicyclient.settings.SettingChangeEvent;
 import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.RotationUtils;
 import info.spicyclient.util.Timer;
+import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.network.Packet;
 import net.minecraft.network.handshake.client.C00Handshake;
 import net.minecraft.network.login.client.C00PacketLoginStart;
@@ -32,6 +33,7 @@ import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition;
 import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook;
+import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.util.MathHelper;
 
 public class Fly extends Module {
@@ -111,6 +113,7 @@ public class Fly extends Module {
 	public static transient float lastPlayerHealth;
 	
 	public void onEnable() {
+		hypixelDamaged = false;
 		if (mode.getMode().equals("Vanilla")) {
 			original_fly_speed = mc.thePlayer.capabilities.getFlySpeed();
 		} else if (mode.getMode().equals("Hypixel")) {
@@ -133,16 +136,25 @@ public class Fly extends Module {
 			}
 			//damage();
 			if (mc.thePlayer.onGround) {
-				mc.thePlayer.jump();
+				//mc.thePlayer.jump();
 			}
 			
 			mc.thePlayer.stepHeight = 0;
+			
+			if (!hypixelBlink.isEnabled()) {
+				
+				lastPlayerHealth = mc.thePlayer.getHealth();
+				damage();
+				
+			}else {
+				hypixelDamaged = true;
+			}
 			
 		}
 	}
 	
 	public void onDisable() {
-		
+		hypixelDamaged = false;
 		mc.thePlayer.stepHeight = 0.6f;
 		
 		if (mode.getMode().equals("Vanilla")) {
@@ -173,7 +185,7 @@ public class Fly extends Module {
 	}
 	
 	private static float original_fly_speed;
-	private static int NCP_Status = 0;
+	private static int viewBobbing = 0;
 
 	private transient long hypixelStartTime = System.currentTimeMillis() + (3 * 1000);
 
@@ -184,24 +196,25 @@ public class Fly extends Module {
 		// For the viewbobbing
 		if (e instanceof EventMotion && e.isPre() && (mc.gameSettings.keyBindForward.isKeyDown() || mc.gameSettings.keyBindBack.isKeyDown() || mc.gameSettings.keyBindLeft.isKeyDown() || mc.gameSettings.keyBindRight.isKeyDown())) {
 			
-			switch (NCP_Status) {
+			switch (viewBobbing) {
 			case 0:
 				mc.thePlayer.cameraYaw = 0.105F;
 				mc.thePlayer.cameraPitch = 0.105F;
-				NCP_Status++;
+				viewBobbing++;
 				break;
 			case 1:
-				NCP_Status++;
+				viewBobbing++;
 				break;
 			case 2:
-				NCP_Status = 0;
+				viewBobbing = 0;
 				break;
 			}
 			
 		}
+		
 		// For the viewbobbing
 		
-		if (e instanceof EventSendPacket && mode.getMode().equals("Hypixel")) {
+		if (e instanceof EventSendPacket && mode.getMode().equals("Hypixel") && hypixelDamaged) {
 			
 			if (e.isPre()) {
 				
@@ -262,11 +275,17 @@ public class Fly extends Module {
 			if (e.isPost()) {
 				
 				this.additionalInformation = mode.getMode();
-
-				if (mode.getMode().equals("Hypixel")) {
-
+				
+				if (lastPlayerHealth > mc.thePlayer.getHealth()) {
+					hypixelDamaged = true;
+				}
+				
+				if (mode.getMode().equals("Hypixel") && hypixelDamaged) {
+					
+					//mc.thePlayer.capabilities.isFlying = true;
+					
 					mc.thePlayer.onGround = true;
-					mc.thePlayer.motionY = 0;
+					mc.thePlayer.motionY = -0.000000000001;
 					
 					//MovementUtils.setMotion(0.2);
 					//MovementUtils.strafe(0.195f);
@@ -296,7 +315,7 @@ public class Fly extends Module {
 						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset,
 								mc.thePlayer.posZ);
 						event.setY(mc.thePlayer.posY);
-						hypixelStage++;
+						hypixelStage = 0;
 						break;
 					case 2:
 						// mc.thePlayer.posY = mc.thePlayer.posY + -9.947598300641403E-14;
@@ -326,6 +345,30 @@ public class Fly extends Module {
     //Damage method. It can only take 1 heart of damage.
     //2020/2/3 Jump Potion supported.
     public void damage(){
+    	
+    	for (int i = 0; i < 10; i++) {
+            //Imagine flagging to NCP.
+            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
+        }
+
+        //float fallDistance = 3.0125f; does half a heart of damage
+    	float fallDistance = 8.0125f;
+
+        while (fallDistance > 0) {
+            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0624986421, mc.thePlayer.posZ, false));
+            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0625, mc.thePlayer.posZ, false));
+            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0624986421, mc.thePlayer.posZ, false));
+            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0000013579, mc.thePlayer.posZ, false));
+            fallDistance -= 0.0624986421f;
+        }
+
+        mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
+
+        //mc.thePlayer.jump();
+
+        mc.thePlayer.posY += 0.42f;
+    	
+    	/*
         double fallDistance = 0;
         double offset = 0.41999998688698;
         while (fallDistance < 6)
@@ -334,6 +377,8 @@ public class Fly extends Module {
             sendPacket(0, fallDistance + offset >= 4);
             fallDistance += offset;
         }
+        */
+        //hypixelDamaged = true;
     }
     void sendPacket(double addY,boolean ground){
         mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(
