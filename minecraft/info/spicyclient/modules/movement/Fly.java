@@ -134,6 +134,7 @@ public class Fly extends Module {
 			if (!SpicyClient.config.blink.isEnabled()) {
 				//SpicyClient.config.blink.toggle();
 			}
+			
 			//damage();
 			if (MovementUtils.isOnGround(0.0001)) {
 				mc.thePlayer.jump();
@@ -144,7 +145,8 @@ public class Fly extends Module {
 			if (!hypixelBlink.isEnabled()) {
 				
 				lastPlayerHealth = mc.thePlayer.getHealth();
-				damage();
+				//damage();
+				hypixelDamaged = true;
 				
 	            PlayerCapabilities playerCapabilities = new PlayerCapabilities();
 	            playerCapabilities.isFlying = true;
@@ -309,6 +311,7 @@ public class Fly extends Module {
 					//MovementUtils.setMotion(0.2);
 					//MovementUtils.strafe(0.195f);
 					MovementUtils.setMotion(((float)hypixelSpeed.getValue()));
+					//MovementUtils.setMotion((float) ((Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ)) / (2)) + ((float)hypixelSpeed.getValue()));
 					
 					//int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);
 					
@@ -319,7 +322,7 @@ public class Fly extends Module {
 					//double offset = 9.947598300641403E-14D;
 					//double offset = 9.947599900641403E-14D;
 					//double offset = 9.274936900641403E-14D;
-					double offset1 = 0.00000000824934 / 4;
+					double offset1 = 0.00000000824934;
 					double offset2 = 0.002248000625918 / 6;
 					double offset3 = 9.274936900641403E-12D;
 					
@@ -331,7 +334,7 @@ public class Fly extends Module {
 					case 0:
 						event.setY(mc.thePlayer.posY);
 						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0,
+						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY,
 								mc.thePlayer.posZ);
 						hypixelStage++;
 						break;
@@ -350,7 +353,7 @@ public class Fly extends Module {
 					case 2:
 						event.setY(mc.thePlayer.posY);
 						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + (offset2),
+						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + (offset2 + offset1),
 								mc.thePlayer.posZ);
 						hypixelStage = 0;
 						break;
@@ -391,7 +394,7 @@ public class Fly extends Module {
 
         mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
 
-        //mc.thePlayer.jump();
+        mc.thePlayer.jump();
 
         mc.thePlayer.posY += 0.42f;
     	
