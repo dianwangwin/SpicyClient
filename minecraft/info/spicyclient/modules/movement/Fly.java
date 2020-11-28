@@ -129,14 +129,14 @@ public class Fly extends Module {
 				NotificationManager.getNotificationManager().createNotification("Don't use bhop while fly is enabled!", "", true, 5000, Type.WARNING, Color.RED);
 			}
 			
-			hypixelStartTime = (long) (System.currentTimeMillis() + (3 * 1000));
+			hypixelStartTime = (long) (System.currentTimeMillis());
 			
 			if (!SpicyClient.config.blink.isEnabled()) {
 				//SpicyClient.config.blink.toggle();
 			}
 			//damage();
-			if (mc.thePlayer.onGround) {
-				//mc.thePlayer.jump();
+			if (MovementUtils.isOnGround(0.0001)) {
+				mc.thePlayer.jump();
 			}
 			
 			mc.thePlayer.stepHeight = 0;
@@ -145,6 +145,14 @@ public class Fly extends Module {
 				
 				lastPlayerHealth = mc.thePlayer.getHealth();
 				damage();
+				
+	            PlayerCapabilities playerCapabilities = new PlayerCapabilities();
+	            playerCapabilities.isFlying = true;
+	            playerCapabilities.allowFlying = true;
+	            //playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
+	            playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
+	            playerCapabilities.isCreativeMode = new Random().nextBoolean();
+	            mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
 				
 			}else {
 				hypixelDamaged = true;
@@ -162,6 +170,10 @@ public class Fly extends Module {
 			mc.thePlayer.capabilities.isFlying = false;
 			mc.thePlayer.capabilities.allowFlying = false;
 		} else if (mode.getMode().equals("Hypixel")) {
+			
+			if (MovementUtils.isOnGround(0.0001)) {
+				mc.thePlayer.jump();
+			}
 			
 			for (Packet p : hypixelPackets) {
 				
@@ -187,11 +199,17 @@ public class Fly extends Module {
 	private static float original_fly_speed;
 	private static int viewBobbing = 0;
 
-	private transient long hypixelStartTime = System.currentTimeMillis() + (3 * 1000);
+	private transient long hypixelStartTime = System.currentTimeMillis();
 
 	private transient Timer timer = new Timer();
 
 	public void onEvent(Event e) {
+		
+		if (e instanceof EventUpdate && e.isPre()) {
+			
+			this.additionalInformation = mode.getMode() + " : " + (hypixelBlink.isEnabled() ? "Blink" : "Non Blink");
+			
+		}
 		
 		// For the viewbobbing
 		if (e instanceof EventMotion && e.isPre() && (mc.gameSettings.keyBindForward.isKeyDown() || mc.gameSettings.keyBindBack.isKeyDown() || mc.gameSettings.keyBindLeft.isKeyDown() || mc.gameSettings.keyBindRight.isKeyDown())) {
@@ -226,6 +244,7 @@ public class Fly extends Module {
 				
 				if (sendPacket.packet instanceof C03PacketPlayer) {
 					((C03PacketPlayer)sendPacket.packet).setIsOnGround(false);
+					((C03PacketPlayer)sendPacket.packet).setMoving(false);
 				}
 				
 				if (hypixelBlink.isEnabled()) {
@@ -274,7 +293,7 @@ public class Fly extends Module {
 
 			if (e.isPost()) {
 				
-				this.additionalInformation = mode.getMode();
+				//this.additionalInformation = mode.getMode();
 				
 				if (lastPlayerHealth > mc.thePlayer.getHealth()) {
 					hypixelDamaged = true;
@@ -285,13 +304,14 @@ public class Fly extends Module {
 					//mc.thePlayer.capabilities.isFlying = true;
 					
 					mc.thePlayer.onGround = true;
-					mc.thePlayer.motionY = -0.000000000001;
+					mc.thePlayer.motionY = 0.0;
 					
 					//MovementUtils.setMotion(0.2);
 					//MovementUtils.strafe(0.195f);
 					MovementUtils.setMotion(((float)hypixelSpeed.getValue()));
 					
-					int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);
+					
+					//int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);
 					
 					if (hypixelTimerBoost.isEnabled()) {
 						mc.timer.ticksPerSecond = 27f;
@@ -299,12 +319,21 @@ public class Fly extends Module {
 					
 					//double offset = 9.947598300641403E-14D;
 					//double offset = 9.947599900641403E-14D;
-					double offset = 9.274936900641403E-14D;
+					//double offset = 9.274936900641403E-14D;
+					double offset1 = 0.00000000824934 / 4;
+					double offset2 = 0.002248000625918 / 4;
+					double offset3 = 9.274936900641403E-12D;
+					
+					//offset1 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
+					//offset2 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
+					//Command.sendPrivateChatMessage(new DecimalFormat("#.####################################################").format(offset2));
 					
 					switch (hypixelStage) {
 					case 0:
 						event.setY(mc.thePlayer.posY);
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0,
+								mc.thePlayer.posZ);
 						hypixelStage++;
 						break;
 					case 1:
@@ -312,23 +341,22 @@ public class Fly extends Module {
 						// mc.thePlayer.posY = mc.thePlayer.lastTickPosY + 0.0002000000000066393;
 						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
 								//mc.thePlayer.posZ);
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset,
-								mc.thePlayer.posZ);
-						event.setY(mc.thePlayer.posY);
-						hypixelStage = 0;
+						if (!MovementUtils.isOnGround(0.0001)) {
+							mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -offset2, mc.thePlayer.posZ);
+						}
+						
+						//event.setY(mc.thePlayer.posY);
+						hypixelStage++;
 						break;
 					case 2:
-						// mc.thePlayer.posY = mc.thePlayer.posY + -9.947598300641403E-14;
-						// mc.thePlayer.posY = mc.thePlayer.lastTickPosY -0.0002000000000066393;
-						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
-								//mc.thePlayer.posZ);
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -offset,
-								mc.thePlayer.posZ);
 						event.setY(mc.thePlayer.posY);
+						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + (offset2),
+								mc.thePlayer.posZ);
 						hypixelStage = 0;
 						break;
 					}
-					
+					//Command.sendPrivateChatMessage(mc.thePlayer.posY);
 					DecimalFormat dec = new DecimalFormat("#.##########################################");
 					//Command.sendPrivateChatMessage(dec.format(offset));
 					
@@ -351,8 +379,8 @@ public class Fly extends Module {
             mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
         }
 
-        //float fallDistance = 3.0125f; does half a heart of damage
-    	float fallDistance = 8.0125f;
+        float fallDistance = 3.0125f; //does half a heart of damage
+    	//float fallDistance = 8.0125f;
 
         while (fallDistance > 0) {
             mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0624986421, mc.thePlayer.posZ, false));
@@ -378,7 +406,7 @@ public class Fly extends Module {
             fallDistance += offset;
         }
         */
-        //hypixelDamaged = true;
+        hypixelDamaged = true;
     }
     void sendPacket(double addY,boolean ground){
         mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(
