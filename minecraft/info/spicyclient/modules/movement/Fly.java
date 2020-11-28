@@ -43,7 +43,7 @@ public class Fly extends Module {
 	
 	public BooleanSetting hypixelBlink = new BooleanSetting("Blink", true);
 	public BooleanSetting hypixelTimerBoost = new BooleanSetting("Hypixel timer boost", true);
-	public NumberSetting hypixelSpeed = new NumberSetting("Speed", 0.195, 0.05, 0.2, 0.005);
+	public NumberSetting hypixelSpeed = new NumberSetting("Speed", 0.18, 0.05, 0.2, 0.005);
 	
 	public static ArrayList<Packet> hypixelPackets = new ArrayList<Packet>();
 	
@@ -310,7 +310,6 @@ public class Fly extends Module {
 					//MovementUtils.strafe(0.195f);
 					MovementUtils.setMotion(((float)hypixelSpeed.getValue()));
 					
-					
 					//int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);
 					
 					if (hypixelTimerBoost.isEnabled()) {
@@ -321,11 +320,11 @@ public class Fly extends Module {
 					//double offset = 9.947599900641403E-14D;
 					//double offset = 9.274936900641403E-14D;
 					double offset1 = 0.00000000824934 / 4;
-					double offset2 = 0.002248000625918 / 4;
+					double offset2 = 0.002248000625918 / 6;
 					double offset3 = 9.274936900641403E-12D;
 					
-					//offset1 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
-					//offset2 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
+					offset1 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
+					offset2 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
 					//Command.sendPrivateChatMessage(new DecimalFormat("#.####################################################").format(offset2));
 					
 					switch (hypixelStage) {
