@@ -8,6 +8,7 @@ import net.arikia.dev.drpc.DiscordRPC;
 import net.arikia.dev.drpc.DiscordRichPresence;
 import net.arikia.dev.drpc.DiscordUser;
 import net.arikia.dev.drpc.callbacks.ReadyCallback;
+import net.minecraft.client.Minecraft;
 
 public class DiscordRP {
 	
@@ -56,6 +57,9 @@ public class DiscordRP {
 	
 	public void refresh() {
 		
+		if (Minecraft.getMinecraft().currentScreen == null && !Minecraft.getMinecraft().isSingleplayer()) {
+			lastLine = "Hacking on " + Minecraft.getMinecraft().getCurrentServerData().serverIP;
+		}
 		update(lastLine);
 		
 	}

@@ -217,6 +217,9 @@ public class Fly extends Module {
 
 	public void onEvent(Event e) {
 		
+		this.toggle();
+		NotificationManager.getNotificationManager().createNotification(this.name + " has been disabled to prevent flags", "", true, 1000, Type.WARNING, Color.RED);
+		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
 			this.additionalInformation = mode.getMode() + " : " + (hypixelBlink.isEnabled() ? "Blink" : "Non Blink");
