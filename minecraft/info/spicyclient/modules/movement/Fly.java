@@ -210,7 +210,7 @@ public class Fly extends Module {
 	}
 	
 	private static float original_fly_speed;
-	private static int viewBobbing = 0;
+	private static transient int viewBobbing = 0, hypixelLagback = 0;
 
 	private transient long hypixelStartTime = System.currentTimeMillis();
 
@@ -218,10 +218,14 @@ public class Fly extends Module {
 
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventPacket && ((EventPacket) e).packet instanceof S08PacketPlayerPosLook) {
+		if (e instanceof EventPacket && ((EventPacket) e).packet instanceof S08PacketPlayerPosLook && mode.getMode().equals("Hypixel")) {
 			
-			this.toggle();
-			NotificationManager.getNotificationManager().createNotification(this.name + " has been disabled to prevent flags", "", true, 1000, Type.WARNING, Color.RED);
+			if (hypixelLagback >= 1) {
+				this.toggle();
+				NotificationManager.getNotificationManager().createNotification(this.name + " has been disabled to prevent flags", "", true, 1000, Type.WARNING, Color.RED);
+			}else {
+				hypixelLagback++;
+			}
 			
 		}
 		
@@ -328,8 +332,15 @@ public class Fly extends Module {
 					
 					//MovementUtils.setMotion(0.2);
 					//MovementUtils.strafe(0.195f);
-					MovementUtils.setMotion(((float)hypixelSpeed.getValue()));
 					//MovementUtils.setMotion((float) ((Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ)) / (2)) + ((float)hypixelSpeed.getValue()));
+					
+					if (mc.thePlayer.fallDistance >= 2) {
+						MovementUtils.setMotion(2.2d);
+						mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer(false));
+						hypixelLagback = 0;
+					}else {
+						MovementUtils.setMotion(hypixelSpeed.getValue());
+					}
 					
 					//int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);
 					
