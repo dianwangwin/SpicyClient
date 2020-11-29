@@ -103,7 +103,7 @@ public class NewMainMenu extends GuiScreen {
         
         // Put the added things here
         // changeLogs.add("+ ");
-        changeLogs.add("+ Hypixel blink fly");
+        changeLogs.add("+ Hypixel fly");
         changeLogs.add("+ Hypixel bhop");
         changeLogs.add("+ Hypixel antivoid");
         changeLogs.add("+ Hypixel chat bypass");

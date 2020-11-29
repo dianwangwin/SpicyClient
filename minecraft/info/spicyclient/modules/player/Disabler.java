@@ -19,6 +19,7 @@ import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C0CPacketInput;
 import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
@@ -78,7 +79,11 @@ public class Disabler extends Module {
             	//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C00PacketKeepAlive(-1147483648 + (new Random()).nextInt(100)));
                 e.setCanceled(true);
             }
-			
+            
+			if (event.packet instanceof C0CPacketInput) {
+				e.setCanceled(true);
+			}
+            
 		}
 		
 	}

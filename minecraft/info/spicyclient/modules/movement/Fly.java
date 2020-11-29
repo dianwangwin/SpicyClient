@@ -153,9 +153,10 @@ public class Fly extends Module {
 	            playerCapabilities.allowFlying = true;
 	            //playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
 	            playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
-	            playerCapabilities.isCreativeMode = new Random().nextBoolean();
+	            playerCapabilities.isCreativeMode = true;
 	            mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
-				
+	            //mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
+	            
 			}else {
 				hypixelDamaged = true;
 			}
@@ -323,11 +324,11 @@ public class Fly extends Module {
 					//double offset = 9.947599900641403E-14D;
 					//double offset = 9.274936900641403E-14D;
 					double offset1 = 0.00000000824934;
-					double offset2 = 0.002248000625918 / 6;
+					double offset2 = 0.002248000625918 / 5;
 					double offset3 = 9.274936900641403E-12D;
 					
-					offset1 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
-					offset2 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
+					//offset1 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
+					//offset2 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
 					//Command.sendPrivateChatMessage(new DecimalFormat("#.####################################################").format(offset2));
 					
 					switch (hypixelStage) {
@@ -353,7 +354,7 @@ public class Fly extends Module {
 					case 2:
 						event.setY(mc.thePlayer.posY);
 						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + (offset2 + offset1),
+						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + (offset2),
 								mc.thePlayer.posZ);
 						hypixelStage = 0;
 						break;

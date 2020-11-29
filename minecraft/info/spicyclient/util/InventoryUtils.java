@@ -35,6 +35,7 @@ public class InventoryUtils {
     	}
     	
     	Minecraft.getMinecraft().playerController.windowClick(Minecraft.getMinecraft().thePlayer.inventoryContainer.windowId, slot1, hotbarSlot, 2, Minecraft.getMinecraft().thePlayer);
+    	
     }
     
     public static float getDamage(ItemStack stack) {
