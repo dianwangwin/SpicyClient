@@ -139,7 +139,7 @@ public class Bhop extends Module {
 						this.toggle();
 						//Command.sendPrivateChatMessage(this.name + " has been disabled due to lagbacks");
 						
-						NotificationManager.getNotificationManager().createNotification(this.name + " has been disabled", "", true, 1000, Type.WARNING, Color.RED);
+						NotificationManager.getNotificationManager().createNotification(this.name + " has been disabled to prevent flags", "", true, 1000, Type.WARNING, Color.RED);
 						
 					}else {
 						

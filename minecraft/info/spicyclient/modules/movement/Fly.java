@@ -12,6 +12,7 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
+import info.spicyclient.events.listeners.EventPacket;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
@@ -217,8 +218,12 @@ public class Fly extends Module {
 
 	public void onEvent(Event e) {
 		
-		this.toggle();
-		NotificationManager.getNotificationManager().createNotification(this.name + " has been disabled to prevent flags", "", true, 1000, Type.WARNING, Color.RED);
+		if (e instanceof EventPacket && ((EventPacket) e).packet instanceof S08PacketPlayerPosLook) {
+			
+			this.toggle();
+			NotificationManager.getNotificationManager().createNotification(this.name + " has been disabled to prevent flags", "", true, 1000, Type.WARNING, Color.RED);
+			
+		}
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
