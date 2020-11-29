@@ -20,6 +20,7 @@ public class FileManager {
 	
 	public static File ROOT_DIR = new File("SpicyClient_V1");
 	public static File configs = new File(ROOT_DIR, "configs");
+	public static File blockCoding = new File(ROOT_DIR, "BlockCoding");
 	
 	// Removed
 	//public static File skins = new File(ROOT_DIR, "skins");
@@ -34,6 +35,11 @@ public class FileManager {
 		if (!configs.exists()) {
 			
 			configs.mkdirs();
+			
+		}
+		if (!blockCoding.exists()) {
+			
+			blockCoding.mkdirs();
 			
 		}
 		

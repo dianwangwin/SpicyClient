@@ -23,8 +23,10 @@ import info.spicyclient.settings.ModeSetting;
 import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.settings.SettingChangeEvent;
 import info.spicyclient.util.MovementUtils;
+import info.spicyclient.util.PlayerUtils;
 import info.spicyclient.util.RotationUtils;
 import info.spicyclient.util.Timer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.network.Packet;
 import net.minecraft.network.handshake.client.C00Handshake;
@@ -34,6 +36,7 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition;
 import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
+import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.util.MathHelper;
 
 public class Fly extends Module {
@@ -108,7 +111,7 @@ public class Fly extends Module {
 	
 	public static int fly_keybind = Keyboard.KEY_F;
 
-	public static transient int hypixelStage = 0;
+	public static transient int hypixelStage = 0, verusStage = 0;
 	public static transient boolean hypixelDamaged = false;
 	public static transient float lastPlayerHealth;
 	
@@ -116,6 +119,11 @@ public class Fly extends Module {
 		hypixelDamaged = false;
 		if (mode.getMode().equals("Vanilla")) {
 			original_fly_speed = mc.thePlayer.capabilities.getFlySpeed();
+			
+			if (MovementUtils.isOnGround(0.0001)) {
+				mc.thePlayer.posY += 0.5;
+			}
+			
 		} else if (mode.getMode().equals("Hypixel")) {
 			
 			if (mc.isSingleplayer()) {
@@ -165,6 +173,7 @@ public class Fly extends Module {
 	}
 	
 	public void onDisable() {
+		
 		hypixelDamaged = false;
 		mc.thePlayer.stepHeight = 0.6f;
 		
@@ -284,7 +293,7 @@ public class Fly extends Module {
 				e2.printStackTrace();
 			}
 		}
-
+		
 		if (mode.getMode().equals("Vanilla")) {
 			mc.thePlayer.capabilities.isFlying = true;
 			mc.thePlayer.capabilities.setFlySpeed((float) speed.getValue());
@@ -324,8 +333,9 @@ public class Fly extends Module {
 					//double offset = 9.947599900641403E-14D;
 					//double offset = 9.274936900641403E-14D;
 					double offset1 = 0.00000000824934;
-					double offset2 = 0.002248000625918 / 5;
-					double offset3 = 9.274936900641403E-12D;
+					//double offset2 = 0.002248000625918 / 5;
+					// 4.496001251836E-4
+					double offset2 = 4.496001251836E-5;
 					
 					//offset1 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
 					//offset2 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 

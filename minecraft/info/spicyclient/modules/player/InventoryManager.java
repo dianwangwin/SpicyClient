@@ -193,7 +193,7 @@ public class InventoryManager extends Module {
 			
 			this.additionalInformation = "Hypixel";
 			
-			if (!SpicyClient.config.autoArmor.timer.hasTimeElapsed(850, false)) {
+			if (!SpicyClient.config.autoArmor.timer.hasTimeElapsed(250, false)) {
 				return;
 			}
 			

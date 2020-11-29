@@ -23,8 +23,10 @@ import info.spicyclient.settings.ModeSetting;
 import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.settings.SettingChangeEvent;
 import info.spicyclient.util.MovementUtils;
+import info.spicyclient.util.PlayerUtils;
 import info.spicyclient.util.RotationUtils;
 import info.spicyclient.util.Timer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.network.Packet;
 import net.minecraft.network.handshake.client.C00Handshake;
@@ -34,6 +36,7 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition;
 import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
+import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.util.MathHelper;
 
 public class BackupFly extends Module {
@@ -108,7 +111,7 @@ public class BackupFly extends Module {
 	
 	public static int fly_keybind = Keyboard.KEY_F;
 
-	public static transient int hypixelStage = 0;
+	public static transient int hypixelStage = 0, verusStage = 0;
 	public static transient boolean hypixelDamaged = false;
 	public static transient float lastPlayerHealth;
 	
@@ -116,6 +119,11 @@ public class BackupFly extends Module {
 		hypixelDamaged = false;
 		if (mode.getMode().equals("Vanilla")) {
 			original_fly_speed = mc.thePlayer.capabilities.getFlySpeed();
+			
+			if (MovementUtils.isOnGround(0.0001)) {
+				mc.thePlayer.posY += 0.5;
+			}
+			
 		} else if (mode.getMode().equals("Hypixel")) {
 			
 			if (mc.isSingleplayer()) {
@@ -134,6 +142,7 @@ public class BackupFly extends Module {
 			if (!SpicyClient.config.blink.isEnabled()) {
 				//SpicyClient.config.blink.toggle();
 			}
+			
 			//damage();
 			if (MovementUtils.isOnGround(0.0001)) {
 				mc.thePlayer.jump();
@@ -145,15 +154,17 @@ public class BackupFly extends Module {
 				
 				lastPlayerHealth = mc.thePlayer.getHealth();
 				damage();
+				hypixelDamaged = true;
 				
 	            PlayerCapabilities playerCapabilities = new PlayerCapabilities();
 	            playerCapabilities.isFlying = true;
 	            playerCapabilities.allowFlying = true;
 	            //playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
 	            playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
-	            playerCapabilities.isCreativeMode = new Random().nextBoolean();
+	            playerCapabilities.isCreativeMode = true;
 	            mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
-				
+	            //mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
+	            
 			}else {
 				hypixelDamaged = true;
 			}
@@ -162,6 +173,7 @@ public class BackupFly extends Module {
 	}
 	
 	public void onDisable() {
+		
 		hypixelDamaged = false;
 		mc.thePlayer.stepHeight = 0.6f;
 		
@@ -281,7 +293,7 @@ public class BackupFly extends Module {
 				e2.printStackTrace();
 			}
 		}
-
+		
 		if (mode.getMode().equals("Vanilla")) {
 			mc.thePlayer.capabilities.isFlying = true;
 			mc.thePlayer.capabilities.setFlySpeed((float) speed.getValue());
@@ -320,19 +332,19 @@ public class BackupFly extends Module {
 					//double offset = 9.947598300641403E-14D;
 					//double offset = 9.947599900641403E-14D;
 					//double offset = 9.274936900641403E-14D;
-					double offset1 = 0.00000000824934 / 4;
-					double offset2 = 0.002248000625918 / 6;
+					double offset1 = 0.00000000824934;
+					double offset2 = 0.002248000625918 / 5;
 					double offset3 = 9.274936900641403E-12D;
 					
-					offset1 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
-					offset2 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
+					//offset1 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
+					//offset2 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
 					//Command.sendPrivateChatMessage(new DecimalFormat("#.####################################################").format(offset2));
 					
 					switch (hypixelStage) {
 					case 0:
 						event.setY(mc.thePlayer.posY);
 						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0,
+						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY,
 								mc.thePlayer.posZ);
 						hypixelStage++;
 						break;
@@ -379,8 +391,8 @@ public class BackupFly extends Module {
             mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
         }
 
-        float fallDistance = 3.0125f; //does half a heart of damage
-    	//float fallDistance = 8.0125f;
+        //float fallDistance = 3.0125f; //does half a heart of damage
+    	float fallDistance = 4.0125f;
 
         while (fallDistance > 0) {
             mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0624986421, mc.thePlayer.posZ, false));
@@ -392,7 +404,7 @@ public class BackupFly extends Module {
 
         mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
 
-        //mc.thePlayer.jump();
+        mc.thePlayer.jump();
 
         mc.thePlayer.posY += 0.42f;
     	

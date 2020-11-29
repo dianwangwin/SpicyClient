@@ -400,6 +400,7 @@ public class SpicyClient {
 		modules.add(c.smallItems);
 		modules.add(c.lsd);
 		modules.add(c.tracers);
+		modules.add(c.blockCoding);
 		
 		for (Module temp : SpicyClient.modules) {
 			

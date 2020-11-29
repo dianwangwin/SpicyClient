@@ -61,6 +61,7 @@ public class ClickGUI extends GuiScreen {
     }
 	
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		
 		Gui.drawRect(0, 0, this.width, this.height, 0x9f000000);
 		
 		fr = Minecraft.getMinecraft().fontRendererObj;

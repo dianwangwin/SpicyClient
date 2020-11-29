@@ -85,6 +85,7 @@ public class Config {
 	public SmallItems smallItems = new SmallItems();
 	public LSD lsd = new LSD();
 	public Tracers tracers = new Tracers();
+	public BlockCoding blockCoding = new BlockCoding();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -142,6 +143,7 @@ public class Config {
 			this.smallItems = new SmallItems();
 			this.lsd = new LSD();
 			this.tracers = new Tracers();
+			this.blockCoding = new BlockCoding();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
