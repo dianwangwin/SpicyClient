@@ -377,7 +377,8 @@ public class Fly extends Module {
 					if (hypixelTimerBoost.isEnabled()) {
 						mc.timer.ticksPerSecond = 27f;
 					}
-					Command.sendPrivateChatMessage(offset2);
+					
+					//Command.sendPrivateChatMessage(offset2);
 					//offset1 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
 					//offset2 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
 					//Command.sendPrivateChatMessage(new DecimalFormat("#.####################################################").format(offset2));
