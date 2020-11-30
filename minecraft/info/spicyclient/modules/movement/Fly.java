@@ -13,6 +13,7 @@ import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
@@ -27,6 +28,9 @@ import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.PlayerUtils;
 import info.spicyclient.util.RotationUtils;
 import info.spicyclient.util.Timer;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.network.Packet;
@@ -48,6 +52,7 @@ public class Fly extends Module {
 	public BooleanSetting hypixelBlink = new BooleanSetting("Blink", true);
 	public BooleanSetting hypixelTimerBoost = new BooleanSetting("Hypixel timer boost", true);
 	public NumberSetting hypixelSpeed = new NumberSetting("Speed", 0.18, 0.05, 0.2, 0.005);
+	public NumberSetting hypixelBoostSpeed = new NumberSetting("Fall speed boost", 2.2, 1.0, 10, 0.1);
 	
 	public static ArrayList<Packet> hypixelPackets = new ArrayList<Packet>();
 	
@@ -59,7 +64,7 @@ public class Fly extends Module {
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
-		this.addSettings(speed, mode, hypixelTimerBoost, hypixelSpeed);
+		this.addSettings(speed, mode, hypixelTimerBoost, hypixelSpeed, hypixelBoostSpeed);
 	}
 	
 	@Override
@@ -84,6 +89,11 @@ public class Fly extends Module {
 				if (!this.settings.contains(hypixelSpeed)) {
 					this.settings.add(hypixelSpeed);
 				}
+				
+				if (!this.settings.contains(hypixelBoostSpeed)) {
+					this.settings.add(hypixelBoostSpeed);
+				}
+				
 				reorderSettings();
 			}
 			else {
@@ -103,6 +113,11 @@ public class Fly extends Module {
 				if (this.settings.contains(hypixelSpeed)) {
 					this.settings.remove(hypixelSpeed);
 				}
+				
+				if (this.settings.contains(hypixelBoostSpeed)) {
+					this.settings.remove(hypixelBoostSpeed);
+				}
+				
 				reorderSettings();
 			}
 			
@@ -221,8 +236,8 @@ public class Fly extends Module {
 		if (e instanceof EventPacket && ((EventPacket) e).packet instanceof S08PacketPlayerPosLook && mode.getMode().equals("Hypixel")) {
 			
 			if (hypixelLagback >= 1) {
-				this.toggle();
-				NotificationManager.getNotificationManager().createNotification(this.name + " has been disabled to prevent flags", "", true, 1000, Type.WARNING, Color.RED);
+				//toggle();
+				//NotificationManager.getNotificationManager().createNotification(this.name + " has been disabled to prevent flags", "", true, 1000, Type.WARNING, Color.RED);
 			}else {
 				hypixelLagback++;
 			}
@@ -330,16 +345,31 @@ public class Fly extends Module {
 					mc.thePlayer.onGround = true;
 					mc.thePlayer.motionY = 0.0;
 					
+					//double offset = 9.947598300641403E-14D;
+					//double offset = 9.947599900641403E-14D;
+					//double offset = 9.274936900641403E-14D;
+					double offset1 = 0.00000000824934;
+					//double offset2 = 0.002248000625918 / 5;
+					// 4.496001251836E-4
+					//double offset2 = 4.496001251836E-4;
+					
+					double offset2 = 4.496001251836E-43;
+					offset2 += ((float)new Random().nextInt(99999)) / 1000000000000000000000000000000000000000000000000d; 
+					
 					//MovementUtils.setMotion(0.2);
 					//MovementUtils.strafe(0.195f);
 					//MovementUtils.setMotion((float) ((Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ)) / (2)) + ((float)hypixelSpeed.getValue()));
 					
-					if (mc.thePlayer.fallDistance >= 2) {
-						MovementUtils.setMotion(2.2d);
-						mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer(false));
+					if (mc.thePlayer.fallDistance >= 3) {
+						MovementUtils.setMotion(hypixelBoostSpeed.getValue());
+						this.additionalInformation = "MEGA SPEED BOOST!!!";
+						//mc.thePlayer.motionY = -0.1;
+						//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer(true));
 						hypixelLagback = 0;
 					}else {
 						MovementUtils.setMotion(hypixelSpeed.getValue());
+						offset2 = 4.496001251836E-4;
+						offset2 += ((float)new Random().nextInt(99999)) / 1000000000f; 
 					}
 					
 					//int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);
@@ -347,28 +377,13 @@ public class Fly extends Module {
 					if (hypixelTimerBoost.isEnabled()) {
 						mc.timer.ticksPerSecond = 27f;
 					}
-					
-					//double offset = 9.947598300641403E-14D;
-					//double offset = 9.947599900641403E-14D;
-					//double offset = 9.274936900641403E-14D;
-					double offset1 = 0.00000000824934;
-					//double offset2 = 0.002248000625918 / 5;
-					// 4.496001251836E-4
-					double offset2 = 4.496001251836E-5;
-					
+					Command.sendPrivateChatMessage(offset2);
 					//offset1 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
 					//offset2 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
 					//Command.sendPrivateChatMessage(new DecimalFormat("#.####################################################").format(offset2));
 					
 					switch (hypixelStage) {
 					case 0:
-						event.setY(mc.thePlayer.posY);
-						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY,
-								mc.thePlayer.posZ);
-						hypixelStage++;
-						break;
-					case 1:
 						// mc.thePlayer.posY = mc.thePlayer.posY + 9.947598300641403E-14;
 						// mc.thePlayer.posY = mc.thePlayer.lastTickPosY + 0.0002000000000066393;
 						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
@@ -380,6 +395,13 @@ public class Fly extends Module {
 						//event.setY(mc.thePlayer.posY);
 						hypixelStage++;
 						break;
+					case 1:
+						event.setY(mc.thePlayer.posY);
+						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + (offset2),
+								mc.thePlayer.posZ);
+						hypixelStage = 0;
+						break;
 					case 2:
 						event.setY(mc.thePlayer.posY);
 						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
@@ -390,7 +412,7 @@ public class Fly extends Module {
 					}
 					//Command.sendPrivateChatMessage(mc.thePlayer.posY);
 					DecimalFormat dec = new DecimalFormat("#.##########################################");
-					//Command.sendPrivateChatMessage(dec.format(offset));
+					
 					
 				}
 
@@ -398,6 +420,22 @@ public class Fly extends Module {
 
 		}
 
+	}
+	
+	@Override
+	public void onEventWhenDisabled(Event e) {
+		
+		if (e instanceof EventRenderGUI && e.isPre() && this.keycode.getKeycode() != Keyboard.KEY_NONE && mc.thePlayer.fallDistance >= 3) {
+			
+			ScaledResolution sr = new ScaledResolution(mc);
+			
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(1.2, 1.2, 1.2);
+			Gui.drawString(mc.fontRendererObj, "Toggle fly for a mega speed boost", ((sr.getScaledWidth()/2) - ((mc.fontRendererObj.getStringWidth("Toggle fly for a mega speed boost") / 2) * 1.2)) / 1.2, ((sr.getScaledHeight() - (sr.getScaledHeight()/3))) / 1.2, 0xffff0000);
+			GlStateManager.popMatrix();
+			
+		}
+		
 	}
 	
 	// Found on github

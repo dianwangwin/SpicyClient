@@ -12,6 +12,8 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
+import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
@@ -26,6 +28,9 @@ import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.PlayerUtils;
 import info.spicyclient.util.RotationUtils;
 import info.spicyclient.util.Timer;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.network.Packet;
@@ -47,6 +52,7 @@ public class BackupFly extends Module {
 	public BooleanSetting hypixelBlink = new BooleanSetting("Blink", true);
 	public BooleanSetting hypixelTimerBoost = new BooleanSetting("Hypixel timer boost", true);
 	public NumberSetting hypixelSpeed = new NumberSetting("Speed", 0.18, 0.05, 0.2, 0.005);
+	public NumberSetting hypixelBoostSpeed = new NumberSetting("Fall speed boost", 2.2, 1.0, 10, 0.1);
 	
 	public static ArrayList<Packet> hypixelPackets = new ArrayList<Packet>();
 	
@@ -58,7 +64,7 @@ public class BackupFly extends Module {
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
-		this.addSettings(speed, mode, hypixelTimerBoost, hypixelSpeed);
+		this.addSettings(speed, mode, hypixelTimerBoost, hypixelSpeed, hypixelBoostSpeed);
 	}
 	
 	@Override
@@ -83,6 +89,11 @@ public class BackupFly extends Module {
 				if (!this.settings.contains(hypixelSpeed)) {
 					this.settings.add(hypixelSpeed);
 				}
+				
+				if (!this.settings.contains(hypixelBoostSpeed)) {
+					this.settings.add(hypixelBoostSpeed);
+				}
+				
 				reorderSettings();
 			}
 			else {
@@ -102,6 +113,11 @@ public class BackupFly extends Module {
 				if (this.settings.contains(hypixelSpeed)) {
 					this.settings.remove(hypixelSpeed);
 				}
+				
+				if (this.settings.contains(hypixelBoostSpeed)) {
+					this.settings.remove(hypixelBoostSpeed);
+				}
+				
 				reorderSettings();
 			}
 			
@@ -153,7 +169,7 @@ public class BackupFly extends Module {
 			if (!hypixelBlink.isEnabled()) {
 				
 				lastPlayerHealth = mc.thePlayer.getHealth();
-				damage();
+				//damage();
 				hypixelDamaged = true;
 				
 	            PlayerCapabilities playerCapabilities = new PlayerCapabilities();
@@ -209,13 +225,24 @@ public class BackupFly extends Module {
 	}
 	
 	private static float original_fly_speed;
-	private static int viewBobbing = 0;
+	private static transient int viewBobbing = 0, hypixelLagback = 0;
 
 	private transient long hypixelStartTime = System.currentTimeMillis();
 
 	private transient Timer timer = new Timer();
 
 	public void onEvent(Event e) {
+		
+		if (e instanceof EventPacket && ((EventPacket) e).packet instanceof S08PacketPlayerPosLook && mode.getMode().equals("Hypixel")) {
+			
+			if (hypixelLagback >= 1) {
+				//toggle();
+				//NotificationManager.getNotificationManager().createNotification(this.name + " has been disabled to prevent flags", "", true, 1000, Type.WARNING, Color.RED);
+			}else {
+				hypixelLagback++;
+			}
+			
+		}
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
@@ -320,8 +347,17 @@ public class BackupFly extends Module {
 					
 					//MovementUtils.setMotion(0.2);
 					//MovementUtils.strafe(0.195f);
-					MovementUtils.setMotion(((float)hypixelSpeed.getValue()));
 					//MovementUtils.setMotion((float) ((Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ)) / (2)) + ((float)hypixelSpeed.getValue()));
+					
+					if (mc.thePlayer.fallDistance >= 2) {
+						MovementUtils.setMotion(hypixelBoostSpeed.getValue());
+						this.additionalInformation = "MEGA SPEED BOOST!!!";
+						//mc.thePlayer.motionY = -0.1;
+						//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer(true));
+						hypixelLagback = 0;
+					}else {
+						MovementUtils.setMotion(hypixelSpeed.getValue());
+					}
 					
 					//int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);
 					
@@ -333,8 +369,9 @@ public class BackupFly extends Module {
 					//double offset = 9.947599900641403E-14D;
 					//double offset = 9.274936900641403E-14D;
 					double offset1 = 0.00000000824934;
-					double offset2 = 0.002248000625918 / 5;
-					double offset3 = 9.274936900641403E-12D;
+					//double offset2 = 0.002248000625918 / 5;
+					// 4.496001251836E-4
+					double offset2 = 4.496001251836E-5;
 					
 					//offset1 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
 					//offset2 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
@@ -370,7 +407,7 @@ public class BackupFly extends Module {
 					}
 					//Command.sendPrivateChatMessage(mc.thePlayer.posY);
 					DecimalFormat dec = new DecimalFormat("#.##########################################");
-					//Command.sendPrivateChatMessage(dec.format(offset));
+					
 					
 				}
 
@@ -378,6 +415,22 @@ public class BackupFly extends Module {
 
 		}
 
+	}
+	
+	@Override
+	public void onEventWhenDisabled(Event e) {
+		
+		if (e instanceof EventRenderGUI && e.isPre() && this.keycode.getKeycode() != Keyboard.KEY_NONE && mc.thePlayer.fallDistance >= 2) {
+			
+			ScaledResolution sr = new ScaledResolution(mc);
+			
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(1.2, 1.2, 1.2);
+			Gui.drawString(mc.fontRendererObj, "Toggle fly for a mega speed boost", ((sr.getScaledWidth()/2) - ((mc.fontRendererObj.getStringWidth("Toggle fly for a mega speed boost") / 2) * 1.2)) / 1.2, ((sr.getScaledHeight() - (sr.getScaledHeight()/3))) / 1.2, 0xffff0000);
+			GlStateManager.popMatrix();
+			
+		}
+		
 	}
 	
 	// Found on github
@@ -391,8 +444,8 @@ public class BackupFly extends Module {
             mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
         }
 
-        //float fallDistance = 3.0125f; //does half a heart of damage
-    	float fallDistance = 4.0125f;
+        float fallDistance = 3.0125f; //does half a heart of damage
+    	//float fallDistance = 8.0125f;
 
         while (fallDistance > 0) {
             mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0624986421, mc.thePlayer.posZ, false));

@@ -111,6 +111,7 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ Hypixel killsults");
         changeLogs.add("+ Hypixel interact autoblock");
         changeLogs.add("+ Hypixel disabler");
+        changeLogs.add("+ Hypixel inventory manager");
         changeLogs.add("+ Payback for pvplands killsults");
         changeLogs.add("+ Vanilla nofall");
         changeLogs.add("+ Vanilla and packet autolog");
@@ -125,7 +126,6 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ Basic anti lava");
         changeLogs.add("+ Inventory Move");
         changeLogs.add("+ Hide name");
-        changeLogs.add("+ Hypixel inventory manager");
         
         // Put the changed things here
         // changeLogs.add("* ");

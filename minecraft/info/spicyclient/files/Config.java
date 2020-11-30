@@ -168,6 +168,7 @@ public class Config {
 			this.fly.hypixelBlink = new BooleanSetting("Blink", true);
 			this.fly.hypixelTimerBoost = new BooleanSetting("Hypixel timer boost", true);
 			this.fly.hypixelSpeed = new NumberSetting("Speed", 0.18, 0.05, 0.2, 0.005);
+			this.fly.hypixelBoostSpeed = new NumberSetting("Fall speed boost", 2.2, 1.0, 10, 0.1);
 			
 			this.bhop.hypixelSpeed = new NumberSetting("Speed", 0.01, 0.0001, 0.03, 0.0001);
 			

@@ -8,6 +8,7 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.ClickGUI.ClickGUI;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventSendPacket;
@@ -190,6 +191,10 @@ public class InventoryManager extends Module {
 		}
 		
 		if (e instanceof EventUpdate && e.isPre()) {
+			
+			if (mc.currentScreen != null && !(mc.currentScreen instanceof ClickGUI)) {
+				return;
+			}
 			
 			this.additionalInformation = "Hypixel";
 			

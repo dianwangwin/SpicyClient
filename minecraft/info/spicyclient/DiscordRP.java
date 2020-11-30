@@ -72,7 +72,7 @@ public class DiscordRP {
 		
 		for (Module m : SpicyClient.modules) {
 			
-			if (m.isEnabled() && !(m instanceof ClickGUI)) {
+			if (m.isEnabled() && !(m instanceof ClickGUI) && !(m instanceof info.spicyclient.modules.player.DiscordRichPresence)) {
 				toggled++;
 			}
 			
