@@ -179,7 +179,6 @@ public class Fly extends Module {
 	            playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
 	            playerCapabilities.isCreativeMode = true;
 	            mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
-	            //mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
 	            
 			}else {
 				hypixelDamaged = true;
@@ -385,6 +384,13 @@ public class Fly extends Module {
 					
 					switch (hypixelStage) {
 					case 0:
+						event.setY(mc.thePlayer.posY);
+						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY,
+								mc.thePlayer.posZ);
+						hypixelStage++;
+						break;
+					case 1:
 						// mc.thePlayer.posY = mc.thePlayer.posY + 9.947598300641403E-14;
 						// mc.thePlayer.posY = mc.thePlayer.lastTickPosY + 0.0002000000000066393;
 						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
@@ -395,13 +401,6 @@ public class Fly extends Module {
 						
 						//event.setY(mc.thePlayer.posY);
 						hypixelStage++;
-						break;
-					case 1:
-						event.setY(mc.thePlayer.posY);
-						//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + (offset2),
-								mc.thePlayer.posZ);
-						hypixelStage = 0;
 						break;
 					case 2:
 						event.setY(mc.thePlayer.posY);

@@ -10,6 +10,8 @@ import info.spicyclient.modules.Module;
 import info.spicyclient.modules.Module.Category;
 import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.Timer;
+import net.minecraft.entity.player.PlayerCapabilities;
+import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.util.MathHelper;
 
 public class LongJump extends Module {
@@ -21,6 +23,13 @@ public class LongJump extends Module {
 	
 	public void onEnable() {
 		
+        PlayerCapabilities playerCapabilities = new PlayerCapabilities();
+        playerCapabilities.isFlying = true;
+        playerCapabilities.allowFlying = true;
+        playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
+        playerCapabilities.isCreativeMode = true;
+        mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
+		
 	}
 	
 	public void onDisable() {
@@ -29,6 +38,7 @@ public class LongJump extends Module {
 	
 	public static boolean jumped = false;
 	public static Timer timer = new Timer();
+	
 	
 	public void onEvent(Event e) {
 		
