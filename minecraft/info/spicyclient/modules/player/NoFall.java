@@ -2,6 +2,7 @@ package info.spicyclient.modules.player;
 
 import org.lwjgl.input.Keyboard;
 
+import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
@@ -47,7 +48,7 @@ public class NoFall extends Module {
 			
 			if (e.isPre()) {
 				
-				if (mc.thePlayer.fallDistance > 3 && noFallMode.is("Packet")) {
+				if (mc.thePlayer.fallDistance > 3 && noFallMode.is("Packet") && !SpicyClient.config.fly.isEnabled()) {
 					
 					mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 					
