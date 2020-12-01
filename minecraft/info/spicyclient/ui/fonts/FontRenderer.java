@@ -12,6 +12,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
+import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

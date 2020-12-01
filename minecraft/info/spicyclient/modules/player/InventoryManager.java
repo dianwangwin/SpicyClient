@@ -48,7 +48,7 @@ public class InventoryManager extends Module {
 	// Different settings for when purge is enabled
 	public BooleanSetting armor = new BooleanSetting("Purge armor", false);
 	public BooleanSetting tools = new BooleanSetting("Purge tools", false);
-	public NumberSetting blocks = new NumberSetting("Max amount of blocks", 64, 0, 64, 1);
+	public NumberSetting blocks = new NumberSetting("Max amount of blocks", 64, 0, 512, 16);
 	public NumberSetting food = new NumberSetting("Max amount of food", 64, 0, 64, 1);
 	
 	// Different settings for when sort is enabled

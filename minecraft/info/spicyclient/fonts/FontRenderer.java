@@ -18,11 +18,12 @@ public class FontRenderer {
 	
 	public static void drawstring(String text, float x, float y, Color color) {
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GL11.glScaled(0.1, 0.1, 1);
 		font.drawString(x * 10, (y - ((font.getHeight(text) / 10) / 2)) * 10, text, color);
 		GL11.glScaled(10, 10, 1);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
+		
 	}
 	
 }

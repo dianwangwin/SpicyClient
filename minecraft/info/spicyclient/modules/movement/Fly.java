@@ -369,7 +369,7 @@ public class Fly extends Module {
 					}else {
 						MovementUtils.setMotion(hypixelSpeed.getValue());
 						offset2 = 4.496001251836E-4;
-						offset2 += ((float)new Random().nextInt(99999)) / 1000000000f; 
+						offset2 += ((float)new Random().nextInt(99999)) / 100000000000f; 
 					}
 					
 					//int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);
@@ -446,7 +446,6 @@ public class Fly extends Module {
     public void damage(){
     	
     	for (int i = 0; i < 10; i++) {
-            //Imagine flagging to NCP.
             mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
         }
 

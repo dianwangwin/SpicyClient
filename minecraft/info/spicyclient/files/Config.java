@@ -5,6 +5,7 @@ import java.io.IOException;
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.modules.Module;
+import info.spicyclient.modules.Module.Category;
 import info.spicyclient.modules.combat.*;
 import info.spicyclient.modules.memes.*;
 import info.spicyclient.modules.movement.*;
@@ -171,6 +172,8 @@ public class Config {
 			this.fly.hypixelBoostSpeed = new NumberSetting("Fall speed boost", 2.2, 1.0, 10, 0.1);
 			
 			this.bhop.hypixelSpeed = new NumberSetting("Speed", 0.01, 0.0001, 0.03, 0.0001);
+			
+			this.inventoryManager.category = Category.PLAYER;
 			
 		}
 		

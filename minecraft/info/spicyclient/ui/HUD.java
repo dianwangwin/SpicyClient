@@ -13,6 +13,8 @@ import org.lwjgl.opengl.GL11;
 import info.spicyclient.SpicyClient;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventRenderGUI;
+import info.spicyclient.fonts.FontManager;
+import info.spicyclient.fonts.FontUtils;
 import info.spicyclient.modules.Module;
 import info.spicyclient.notifications.NotificationManager;
 import net.minecraft.client.Minecraft;
