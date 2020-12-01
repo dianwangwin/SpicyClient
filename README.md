@@ -10,4 +10,4 @@
 
 ## Exporting your client
 
-> To export your code just build your code in eclipse and open the jar file in winar, then download the built SpicyClient jar file from https://SpicyClient.info and open it in winrar. then replace the net and spicy package in the SpicyClient jar with the ones from the jar you created, after all that you should be able to run your code in the Minecraft launcher.
+> To export your code just build your code in eclipse and open the jar file in winar, then download the built SpicyClient jar file from https://SpicyClient.info and open it in winrar. then replace the net and info.spicyclient packages in the SpicyClient jar with the ones from the jar you created, after all that you should be able to run your code in the Minecraft launcher.
