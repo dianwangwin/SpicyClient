@@ -13,7 +13,7 @@ public class NotificationManager {
 	public CopyOnWriteArrayList<Notification> notifications = new CopyOnWriteArrayList<Notification>();
 	public CopyOnWriteArrayList<Notification> notificationQueue = new CopyOnWriteArrayList<Notification>();
 	
-	private int defaultTargetX = 0, defaultTargetY = 0, defaultStartingX = 0, defaultStartingY = 0, defaultSpeed = 4;
+	public int defaultTargetX = 0, defaultTargetY = 0, defaultStartingX = 0, defaultStartingY = 0, defaultSpeed = 4;
 	
 	public void createNotification(String title, String text, boolean showTimer, long timeOnScreen, Type type, Color color) {
 		

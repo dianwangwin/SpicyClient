@@ -20,10 +20,8 @@ public class FileManager {
 	
 	public static File ROOT_DIR = new File("SpicyClient_V1");
 	public static File configs = new File(ROOT_DIR, "configs");
-	public static File blockCoding = new File(ROOT_DIR, "BlockCoding");
-	
-	// Removed
-	//public static File skins = new File(ROOT_DIR, "skins");
+	public static File blockCoding = new File(ROOT_DIR, "blockCoding");
+	public static File music = new File(ROOT_DIR, "music");
 	
 	public static void init() {
 		
@@ -42,15 +40,12 @@ public class FileManager {
 			blockCoding.mkdirs();
 			
 		}
-		
-		// Removed
-		/*
-		if (!skins.exists()) {
+		if (!music.exists()) {
 			
-			skins.mkdirs();
+			music.mkdirs();
 			
 		}
-		*/
+		
 	}
 
 	public static Gson getGson() {

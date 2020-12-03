@@ -21,6 +21,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import javax.swing.SwingUtilities;
+
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -49,6 +51,13 @@ import info.spicyclient.modules.player.Timer;
 import info.spicyclient.modules.render.*;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.ui.HUD;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.event.EventHandler;
+import javafx.scene.SceneBuilder;
+import javafx.scene.control.LabelBuilder;
+import javafx.stage.StageBuilder;
+import javafx.stage.WindowEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.network.NetworkPlayerInfo;

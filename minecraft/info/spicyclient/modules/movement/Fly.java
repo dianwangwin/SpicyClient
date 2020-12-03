@@ -161,6 +161,11 @@ public class Fly extends Module {
 			
 			//damage();
 			if (MovementUtils.isOnGround(0.0001)) {
+				//damage();
+				//mc.thePlayer.onGround = false;
+				//MovementUtils.setMotion(0);
+				//mc.thePlayer.jumpMovementFactor = 0;
+				
 				mc.thePlayer.jump();
 			}
 			
@@ -444,6 +449,21 @@ public class Fly extends Module {
     //2020/2/3 Jump Potion supported.
     public void damage(){
     	
+    	int damage = 1;
+		if (damage > MathHelper.floor_double(mc.thePlayer.getMaxHealth()))
+			damage = MathHelper.floor_double(mc.thePlayer.getMaxHealth());
+
+		double offset = 0.0625;
+		if (mc.thePlayer != null && mc.getNetHandler() != null && mc.thePlayer.onGround) {
+			for (int i = 0; i <= ((3 + damage) / offset); i++) {
+				mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
+						mc.thePlayer.posY + offset, mc.thePlayer.posZ, false));
+				mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
+						mc.thePlayer.posY, mc.thePlayer.posZ, (i == ((3 + damage) / offset))));
+			}
+		}
+    	
+    	/*
     	for (int i = 0; i < 10; i++) {
             mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
         }
@@ -456,6 +476,7 @@ public class Fly extends Module {
             mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0625, mc.thePlayer.posZ, false));
             mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0624986421, mc.thePlayer.posZ, false));
             mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0000013579, mc.thePlayer.posZ, false));
+            
             fallDistance -= 0.0624986421f;
         }
 
@@ -464,7 +485,7 @@ public class Fly extends Module {
         mc.thePlayer.jump();
 
         mc.thePlayer.posY += 0.42f;
-    	
+        
     	/*
         double fallDistance = 0;
         double offset = 0.41999998688698;
