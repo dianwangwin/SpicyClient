@@ -274,6 +274,12 @@ public class SpicyClient {
 			
 		}
 		
+		if (e instanceof EventUpdate && e.isPre()) {
+			
+			MusicManager.getMusicManager().changeNotificationColor((EventUpdate) e);
+			
+		}
+		
 		for (Module m : modules) {
 			
 			//if (!m.toggled)

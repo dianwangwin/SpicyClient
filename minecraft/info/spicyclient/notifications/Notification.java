@@ -34,7 +34,7 @@ public class Notification {
 	public long originalTimeOnScreen;
 	public long originalTime;
 	public final Type type;
-	public final Color color;
+	public Color color;
 	public int targetX, targetY, startingX, startingY, speed;
 	
 	// So notifications don't get stuck

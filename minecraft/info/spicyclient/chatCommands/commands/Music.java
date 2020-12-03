@@ -2,6 +2,7 @@ package info.spicyclient.chatCommands.commands;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.files.FileManager;
@@ -33,13 +34,14 @@ public class Music extends Command {
 		
 		if (splitMessage[1].equalsIgnoreCase("play") && musicName != "") {
 			
-			MusicManager.getMusicManager().playMp3(new File(FileManager.music + "\\" + musicName).toURI().toString());
+			MusicManager.getMusicManager().playMp3(new File(FileManager.music + "\\" + musicName).toURI().toString().replaceAll(" ", "%20"));
 			
 		}
 		else if (splitMessage[1].equalsIgnoreCase("stop")) {
 			MusicManager.getMusicManager().stopPlaying();
 		}
-		else if (splitMessage[1].equalsIgnoreCase("list")) {
+		else if (splitMessage[1].equalsIgnoreCase("shuffle")) {
+			
 			File[] files = FileManager.music.listFiles();
 			
 			if (files == null) {
@@ -49,7 +51,19 @@ public class Music extends Command {
 				
 			}
 			
-			sendPrivateChatMessage("You have " + files.length + " mp4 files");
+			MusicManager.getMusicManager().playMp3(files[new Random().nextInt(files.length)].toURI().toString().replaceAll(" ", "%20"));
+		}
+		else if (splitMessage[1].equalsIgnoreCase("list")) {
+			File[] files = FileManager.music.listFiles();
+			
+			if (files == null) {
+				
+				sendPrivateChatMessage("You have 0 mp3 files");
+				return;
+				
+			}
+			
+			sendPrivateChatMessage("You have " + files.length + " mp3 files");
 			
 			for (File file : files) {
 			    if (file.isFile()) {

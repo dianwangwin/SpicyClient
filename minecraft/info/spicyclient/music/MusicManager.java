@@ -6,6 +6,7 @@ import java.util.Random;
 import javax.swing.SwingUtilities;
 
 import info.spicyclient.chatCommands.Command;
+import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.Notification;
 import info.spicyclient.notifications.NotificationManager;
@@ -68,6 +69,7 @@ public class MusicManager {
 	
 	public static MediaPlayer mediaPlayer;
 	public Notification musicNotification;
+	public boolean playingMusic = false;
 	
 	public void playMp3(String filepath) {
 		
@@ -98,7 +100,7 @@ public class MusicManager {
 						
 					}
 					
-					musicNotification.timeOnScreen = (long) mediaPlayer.getTotalDuration().toMillis();
+					playingMusic = true;
 					
 				} catch (MediaException | IllegalStateException | IllegalArgumentException e) {
 					
@@ -112,7 +114,7 @@ public class MusicManager {
 			
 		}.start();
 		
-		musicNotification = new Notification("Playing - " + ((filepath.split("/")[filepath.split("/").length - 1]).contains(".mp3") ? (filepath.split("/")[filepath.split("/").length - 1]) : (filepath.split("/")[filepath.split("/").length - 1]) + ".mp3"), "", true, (long) mediaPlayer.getTotalDuration().toMillis(), Type.INFO, Color.values()[new Random().nextInt(Color.values().length)], NotificationManager.getNotificationManager().defaultTargetX, NotificationManager.getNotificationManager().defaultTargetY, NotificationManager.getNotificationManager().defaultStartingX, NotificationManager.getNotificationManager().defaultStartingY, NotificationManager.getNotificationManager().defaultSpeed);
+		musicNotification = new Notification("Playing - " + ((filepath.split("/")[filepath.split("/").length - 1]).contains(".mp3") ? (filepath.split("/")[filepath.split("/").length - 1]) : (filepath.split("/")[filepath.split("/").length - 1]) + ".mp3").replaceAll("%20", " "), "", true, (long) mediaPlayer.getTotalDuration().toMillis(), Type.INFO, Color.values()[new Random().nextInt(Color.values().length)], NotificationManager.getNotificationManager().defaultTargetX, NotificationManager.getNotificationManager().defaultTargetY, NotificationManager.getNotificationManager().defaultStartingX, NotificationManager.getNotificationManager().defaultStartingY, NotificationManager.getNotificationManager().defaultSpeed);
 		musicNotification.setDefaultY = true;
 		NotificationManager.getNotificationManager().createNotification(musicNotification);
 		
@@ -123,6 +125,16 @@ public class MusicManager {
 		if (mediaPlayer != null || musicNotification != null) {
 			mediaPlayer.stop();
 			musicNotification.timeOnScreen = 0;
+		}
+		
+	}
+	
+	public void changeNotificationColor(EventUpdate e) {
+		
+		if (playingMusic && (Minecraft.getMinecraft().thePlayer.ticksExisted % 20 == 0 || Minecraft.getMinecraft().thePlayer.ticksExisted % 20 == 10)) {
+			
+			musicNotification.color = Color.values()[new Random().nextInt(Color.values().length)];
+			
 		}
 		
 	}
