@@ -49,6 +49,7 @@ import info.spicyclient.modules.Module;
 import info.spicyclient.modules.Module.Category;
 import info.spicyclient.modules.player.Timer;
 import info.spicyclient.modules.render.*;
+import info.spicyclient.music.MusicManager;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.ui.HUD;
 import javafx.application.Platform;
@@ -56,6 +57,8 @@ import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
 import javafx.scene.SceneBuilder;
 import javafx.scene.control.LabelBuilder;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.StageBuilder;
 import javafx.stage.WindowEvent;
 import net.minecraft.client.Minecraft;
@@ -88,7 +91,6 @@ public class SpicyClient {
 	public static Boolean originalAccountOnline = false;
 	
 	public static void StartUp() {
-		
 		if (Minecraft.getMinecraft().getSession().getSessionType().equals(Session.Type.LEGACY)) {
 			System.out.println("Not pinging server, this is an offline account");
 			System.out.println("Please keep in mind that all this would send is your username and nothing else");
@@ -151,6 +153,12 @@ public class SpicyClient {
 		FontManager.getFontManager();
 		// Sets the font renderer's font to the default font
 		FontRenderer.setCurrentFont(FontManager.getFontManager().getUniFont("opensans"));
+		
+		// Does music player stuff
+		Media tempMedia = new Media("http://google.com/SpicyClient.mp3");
+		MusicManager.getMusicManager();
+		MusicManager.mediaPlayer = new MediaPlayer(tempMedia);
+		
 		
 		// Creates a new config with the default values
 		config = new Config("Default");

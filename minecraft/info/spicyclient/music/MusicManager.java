@@ -66,7 +66,7 @@ public class MusicManager {
 		
 	}
 	
-	public MediaPlayer mediaPlayer;
+	public static MediaPlayer mediaPlayer;
 	public Notification musicNotification;
 	
 	public void playMp3(String filepath) {
@@ -97,6 +97,8 @@ public class MusicManager {
 						mediaPlayer.play();
 						
 					}
+					
+					musicNotification.timeOnScreen = (long) mediaPlayer.getTotalDuration().toMillis();
 					
 				} catch (MediaException | IllegalStateException | IllegalArgumentException e) {
 					
