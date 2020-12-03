@@ -36,9 +36,12 @@ public class Music extends Command {
 			
 			MusicManager.getMusicManager().playMp3(new File(FileManager.music + "\\" + musicName).toURI().toString().replaceAll(" ", "%20"));
 			
+			MusicManager.getMusicManager().shuffle = false;
+			
 		}
 		else if (splitMessage[1].equalsIgnoreCase("stop")) {
 			MusicManager.getMusicManager().stopPlaying();
+			MusicManager.getMusicManager().shuffle = false;
 		}
 		else if (splitMessage[1].equalsIgnoreCase("shuffle")) {
 			
@@ -46,12 +49,14 @@ public class Music extends Command {
 			
 			if (files == null) {
 				
-				sendPrivateChatMessage("You have 0 mp4 files");
+				sendPrivateChatMessage("You have 0 mp3 files");
 				return;
 				
 			}
 			
 			MusicManager.getMusicManager().playMp3(files[new Random().nextInt(files.length)].toURI().toString().replaceAll(" ", "%20"));
+			MusicManager.getMusicManager().shuffle = true;
+			
 		}
 		else if (splitMessage[1].equalsIgnoreCase("list")) {
 			File[] files = FileManager.music.listFiles();

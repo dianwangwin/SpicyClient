@@ -7,6 +7,7 @@ import javax.swing.SwingUtilities;
 
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.listeners.EventUpdate;
+import info.spicyclient.files.FileManager;
 import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.Notification;
 import info.spicyclient.notifications.NotificationManager;
@@ -67,9 +68,9 @@ public class MusicManager {
 		
 	}
 	
-	public static MediaPlayer mediaPlayer;
+	public MediaPlayer mediaPlayer;
 	public Notification musicNotification;
-	public boolean playingMusic = false;
+	public boolean playingMusic = false, shuffle = false;
 	
 	public void playMp3(String filepath) {
 		
@@ -79,6 +80,10 @@ public class MusicManager {
 			stopPlaying();
 			
 		}
+		
+		musicNotification = new Notification("Playing - " + ((filepath.split("/")[filepath.split("/").length - 1]).contains(".mp3") ? (filepath.split("/")[filepath.split("/").length - 1]) : (filepath.split("/")[filepath.split("/").length - 1]) + ".mp3").replaceAll("%20", " ").replaceAll("%5B", "[").replaceAll("%5D", "]"), "", true, (long) mediaPlayer.getTotalDuration().toMillis() + 1500L, Type.INFO, Color.values()[new Random().nextInt(Color.values().length)], NotificationManager.getNotificationManager().defaultTargetX, NotificationManager.getNotificationManager().defaultTargetY, NotificationManager.getNotificationManager().defaultStartingX, NotificationManager.getNotificationManager().defaultStartingY, NotificationManager.getNotificationManager().defaultSpeed);
+		musicNotification.setDefaultY = true;
+		NotificationManager.getNotificationManager().createNotification(musicNotification);
 		
 		new Thread("Music Player - " + filepath) {
 			
@@ -114,10 +119,6 @@ public class MusicManager {
 			
 		}.start();
 		
-		musicNotification = new Notification("Playing - " + ((filepath.split("/")[filepath.split("/").length - 1]).contains(".mp3") ? (filepath.split("/")[filepath.split("/").length - 1]) : (filepath.split("/")[filepath.split("/").length - 1]) + ".mp3").replaceAll("%20", " "), "", true, (long) mediaPlayer.getTotalDuration().toMillis(), Type.INFO, Color.values()[new Random().nextInt(Color.values().length)], NotificationManager.getNotificationManager().defaultTargetX, NotificationManager.getNotificationManager().defaultTargetY, NotificationManager.getNotificationManager().defaultStartingX, NotificationManager.getNotificationManager().defaultStartingY, NotificationManager.getNotificationManager().defaultSpeed);
-		musicNotification.setDefaultY = true;
-		NotificationManager.getNotificationManager().createNotification(musicNotification);
-		
 	}
 	
 	public void stopPlaying() {
@@ -130,6 +131,21 @@ public class MusicManager {
 	}
 	
 	public void changeNotificationColor(EventUpdate e) {
+		
+		if (shuffle && musicNotification.left) {
+			
+			File[] files = FileManager.music.listFiles();
+			
+			if (files == null) {
+				
+				Command.sendPrivateChatMessage("You have 0 mp3 files");
+				return;
+				
+			}
+			
+			MusicManager.getMusicManager().playMp3(files[new Random().nextInt(files.length)].toURI().toString().replaceAll(" ", "%20"));
+			
+		}
 		
 		if (playingMusic && (Minecraft.getMinecraft().thePlayer.ticksExisted % 20 == 0 || Minecraft.getMinecraft().thePlayer.ticksExisted % 20 == 10)) {
 			

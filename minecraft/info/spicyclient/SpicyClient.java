@@ -157,7 +157,7 @@ public class SpicyClient {
 		// Does music player stuff
 		Media tempMedia = new Media("http://google.com/SpicyClient.mp3");
 		MusicManager.getMusicManager();
-		MusicManager.mediaPlayer = new MediaPlayer(tempMedia);
+		MusicManager.getMusicManager().mediaPlayer = new MediaPlayer(tempMedia);
 		
 		
 		// Creates a new config with the default values
