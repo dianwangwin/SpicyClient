@@ -356,7 +356,7 @@ public class Killaura extends Module {
 							
                     		aacB/=2;
                     		customRots(event, target);
-							
+                    		
 							/*
 							try {
 								getSmoothRotations(event);
@@ -377,6 +377,11 @@ public class Killaura extends Module {
 						}
 						
 						// Put client side rotation code here later
+						
+                		//RenderUtils.setCustomYaw(event.yaw + 180);
+						//RenderUtils.setCustomYaw((float) (event.yaw / Math.PI));
+						mc.thePlayer.rotationYawHead = event.yaw;
+                		RenderUtils.setCustomPitch(event.pitch);
 						
 					}
 					

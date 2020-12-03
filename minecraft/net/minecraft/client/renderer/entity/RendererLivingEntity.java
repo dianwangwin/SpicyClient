@@ -152,10 +152,6 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 	Minecraft.getMinecraft().thePlayer.renderYawOffset = RenderUtils.getCustomYaw();
                 }
                 
-                if (RenderUtils.SetCustomYaw && entity == Minecraft.getMinecraft().thePlayer) {
-                	f2 = RenderUtils.getCustomYaw();
-                }
-                
                 this.renderLivingAt(entity, x, y, z);
                 float f7 = this.handleRotationFloat(entity, partialTicks);
                 this.rotateCorpse(entity, f7, f, partialTicks);
@@ -184,6 +180,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 if (this.renderOutlines)
                 {
                     boolean flag1 = this.setScoreTeamColor(entity);
+                    f2 = f1 - f;
                     this.renderModel(entity, f6, f5, f7, f2, f8, 0.0625F);
 
                     if (flag1)

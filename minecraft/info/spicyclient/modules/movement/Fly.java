@@ -358,7 +358,7 @@ public class Fly extends Module {
 					//double offset2 = 4.496001251836E-4;
 					
 					double offset2 = 4.496001251836E-43;
-					offset2 += ((float)new Random().nextInt(99999)) / 10000000000000000000000000000000000000000000000000d; 
+					offset2 += ((float)new Random().nextInt(99999)) / 1000000000000000000000000000000000000000000000000d; 
 					
 					//MovementUtils.setMotion(0.2);
 					//MovementUtils.strafe(0.195f);
@@ -367,7 +367,7 @@ public class Fly extends Module {
 					if (mc.thePlayer.fallDistance >= 3) {
 						MovementUtils.setMotion(hypixelBoostSpeed.getValue());
 						this.additionalInformation = "MEGA SPEED BOOST!!!";
-						mc.thePlayer.motionY = 0.005;
+						mc.thePlayer.motionY = -0.005;
 						//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer(true));
 						hypixelLagback = 0;
 					}else {

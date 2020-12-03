@@ -52,6 +52,8 @@ import info.spicyclient.modules.render.*;
 import info.spicyclient.music.MusicManager;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.ui.HUD;
+import info.spicyclient.util.RenderUtils;
+import info.spicyclient.util.RotationUtils;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
@@ -275,6 +277,9 @@ public class SpicyClient {
 		}
 		
 		if (e instanceof EventUpdate && e.isPre()) {
+			
+			RenderUtils.resetPlayerYaw();
+			RenderUtils.resetPlayerPitch();
 			
 			MusicManager.getMusicManager().changeNotificationColor((EventUpdate) e);
 			
