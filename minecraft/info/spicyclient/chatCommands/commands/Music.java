@@ -11,7 +11,7 @@ import info.spicyclient.music.MusicManager;
 public class Music extends Command {
 
 	public Music() {
-		super("music", "music play/stop/list/shuffle song.mp3", 1);
+		super("music", "music play/stop/list/shuffle/volume song.mp3/volume", 1);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -42,6 +42,21 @@ public class Music extends Command {
 		else if (splitMessage[1].equalsIgnoreCase("stop")) {
 			MusicManager.getMusicManager().stopPlaying();
 			MusicManager.getMusicManager().shuffle = false;
+		}
+		else if (splitMessage[1].equalsIgnoreCase("volume") && musicName != "") {
+			
+			if (MusicManager.getMusicManager().mediaPlayer != null) {
+				
+				try {
+					MusicManager.getMusicManager().mediaPlayer.setVolume(Double.valueOf(musicName)/ 100);
+					MusicManager.getMusicManager().volume = Double.valueOf(musicName) / 100;
+					sendPrivateChatMessage("Set the music volume to " + musicName);
+				} catch (NumberFormatException e) {
+					sendPrivateChatMessage("Please type a number between 1 and 100");
+				}
+				
+			}
+			
 		}
 		else if (splitMessage[1].equalsIgnoreCase("shuffle")) {
 			
@@ -88,7 +103,7 @@ public class Music extends Command {
 	@Override
 	public void incorrectParameters() {
 		
-		sendPrivateChatMessage("Please use .music play/stop/list/shuffle song.mp3");
+		sendPrivateChatMessage("Please use .music play/stop/list/shuffle/volume song.mp3/volume");
 		
 	}
 	

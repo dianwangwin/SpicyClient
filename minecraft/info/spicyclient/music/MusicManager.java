@@ -71,6 +71,7 @@ public class MusicManager {
 	public MediaPlayer mediaPlayer;
 	public Notification musicNotification;
 	public boolean playingMusic = false, shuffle = false;
+	public Double volume = 1.0;
 	
 	public void playMp3(String filepath) {
 		
@@ -81,7 +82,7 @@ public class MusicManager {
 			
 		}
 		
-		musicNotification = new Notification("Playing - " + ((filepath.split("/")[filepath.split("/").length - 1]).contains(".mp3") ? (filepath.split("/")[filepath.split("/").length - 1]) : (filepath.split("/")[filepath.split("/").length - 1]) + ".mp3").replaceAll("%20", " ").replaceAll("%5B", "[").replaceAll("%5D", "]"), "", true, (long) mediaPlayer.getTotalDuration().toMillis() + 1500L, Type.INFO, Color.values()[new Random().nextInt(Color.values().length)], NotificationManager.getNotificationManager().defaultTargetX, NotificationManager.getNotificationManager().defaultTargetY, NotificationManager.getNotificationManager().defaultStartingX, NotificationManager.getNotificationManager().defaultStartingY, NotificationManager.getNotificationManager().defaultSpeed);
+		musicNotification = new Notification("Playing - " + ((filepath.split("/")[filepath.split("/").length - 1]).contains(".mp3") ? (filepath.split("/")[filepath.split("/").length - 1]) : (filepath.split("/")[filepath.split("/").length - 1]) + ".mp3").replaceAll("%20", " ").replaceAll("%5B", "[").replaceAll("%5D", "]"), "", true, (long) (mediaPlayer.getTotalDuration().toMillis() + 3), Type.INFO, Color.values()[new Random().nextInt(Color.values().length)], NotificationManager.getNotificationManager().defaultTargetX, NotificationManager.getNotificationManager().defaultTargetY, NotificationManager.getNotificationManager().defaultStartingX, NotificationManager.getNotificationManager().defaultStartingY, NotificationManager.getNotificationManager().defaultSpeed);
 		musicNotification.setDefaultY = true;
 		NotificationManager.getNotificationManager().createNotification(musicNotification);
 		
@@ -106,6 +107,8 @@ public class MusicManager {
 					}
 					
 					playingMusic = true;
+					
+					mediaPlayer.setVolume(volume);
 					
 				} catch (MediaException | IllegalStateException | IllegalArgumentException e) {
 					
