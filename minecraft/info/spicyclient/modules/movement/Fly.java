@@ -290,7 +290,7 @@ public class Fly extends Module {
 					((C03PacketPlayer)sendPacket.packet).setMoving(false);
 				}
 				
-				if (hypixelBlink.isEnabled()) {
+				if (hypixelBlink.isEnabled() && mc.thePlayer.fallDistance < 3) {
 					hypixelPackets.add(sendPacket.packet);
 					sendPacket.setCanceled(true);
 				}
@@ -358,7 +358,7 @@ public class Fly extends Module {
 					//double offset2 = 4.496001251836E-4;
 					
 					double offset2 = 4.496001251836E-43;
-					offset2 += ((float)new Random().nextInt(99999)) / 1000000000000000000000000000000000000000000000000d; 
+					offset2 += ((float)new Random().nextInt(99999)) / 10000000000000000000000000000000000000000000000000d; 
 					
 					//MovementUtils.setMotion(0.2);
 					//MovementUtils.strafe(0.195f);

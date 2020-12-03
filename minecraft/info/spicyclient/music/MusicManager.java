@@ -1,6 +1,9 @@
 package info.spicyclient.music;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -13,6 +16,7 @@ import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.Notification;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.notifications.Type;
+import info.spicyclient.util.Timer;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
@@ -112,7 +116,6 @@ public class MusicManager {
 					playingMusic = true;
 					
 					mediaPlayer.setVolume(volume);
-					Command.sendPrivateChatMessage(mediaPlayer.getTotalDuration().toMillis());
 					
 					mediaPlayer.setOnReady(new Runnable() {
 
@@ -159,6 +162,8 @@ public class MusicManager {
 		
 	}
 	
+	public Timer timer = new Timer();
+	
 	public void changeNotificationColor(EventUpdate e) {
 		
 		if (shuffle && musicNotification.left && musicNotification.joined) {
@@ -176,9 +181,11 @@ public class MusicManager {
 			
 		}
 		
-		if (playingMusic && (Minecraft.getMinecraft().thePlayer.ticksExisted % 20 == 0 || Minecraft.getMinecraft().thePlayer.ticksExisted % 20 == 10)) {
+		if (playingMusic && timer.hasTimeElapsed((long) 504.201682, true)) {
 			
-			musicNotification.color = Color.values()[new Random().nextInt(Color.values().length)];
+			//musicNotification.color = Color.values()[new Random().nextInt(Color.values().length)];
+			List<Enum> colors = Arrays.asList(Color.values());
+			musicNotification.color = Color.values()[colors.indexOf(musicNotification.color) >= colors.size() - 1 ? 0 : colors.indexOf(musicNotification.color) + 1];
 			
 		}
 		
