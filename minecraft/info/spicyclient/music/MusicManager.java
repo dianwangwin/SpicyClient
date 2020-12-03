@@ -1,6 +1,7 @@
 package info.spicyclient.music;
 
 import java.io.File;
+import java.util.Map;
 import java.util.Random;
 
 import javax.swing.SwingUtilities;
@@ -82,9 +83,9 @@ public class MusicManager {
 			
 		}
 		
-		musicNotification = new Notification("Playing - " + ((filepath.split("/")[filepath.split("/").length - 1]).contains(".mp3") ? (filepath.split("/")[filepath.split("/").length - 1]) : (filepath.split("/")[filepath.split("/").length - 1]) + ".mp3").replaceAll("%20", " ").replaceAll("%5B", "[").replaceAll("%5D", "]"), "", true, (long) (mediaPlayer.getTotalDuration().toMillis() + 3), Type.INFO, Color.values()[new Random().nextInt(Color.values().length)], NotificationManager.getNotificationManager().defaultTargetX, NotificationManager.getNotificationManager().defaultTargetY, NotificationManager.getNotificationManager().defaultStartingX, NotificationManager.getNotificationManager().defaultStartingY, NotificationManager.getNotificationManager().defaultSpeed);
+		musicNotification = new Notification("Playing - " + ((filepath.split("/")[filepath.split("/").length - 1]).contains(".mp3") ? (filepath.split("/")[filepath.split("/").length - 1]) : (filepath.split("/")[filepath.split("/").length - 1]) + ".mp3").replaceAll("%20", " ").replaceAll("%5B", "[").replaceAll("%5D", "]"), "", true, 2000L, Type.INFO, Color.values()[new Random().nextInt(Color.values().length)], NotificationManager.getNotificationManager().defaultTargetX, NotificationManager.getNotificationManager().defaultTargetY, NotificationManager.getNotificationManager().defaultStartingX, NotificationManager.getNotificationManager().defaultStartingY, NotificationManager.getNotificationManager().defaultSpeed);
 		musicNotification.setDefaultY = true;
-		NotificationManager.getNotificationManager().createNotification(musicNotification);
+		//NotificationManager.getNotificationManager().createNotification(musicNotification);
 		
 		new Thread("Music Player - " + filepath) {
 			
@@ -92,15 +93,17 @@ public class MusicManager {
 				
 				try {
 					
+					Media hit;
+					
 					if (filepath.contains(".mp3")) {
 						
-						Media hit = new Media(filepath.replaceAll("\\\\", "/"));
+						hit = new Media(filepath.replaceAll("\\\\", "/"));
 						mediaPlayer = new MediaPlayer(hit);
 						mediaPlayer.play();
 						
 					}else {
 						
-						Media hit = new Media((filepath + ".mp3").replaceAll("\\\\", "/"));
+						hit = new Media((filepath + ".mp3").replaceAll("\\\\", "/"));
 						mediaPlayer = new MediaPlayer(hit);
 						mediaPlayer.play();
 						
@@ -109,8 +112,31 @@ public class MusicManager {
 					playingMusic = true;
 					
 					mediaPlayer.setVolume(volume);
+					Command.sendPrivateChatMessage(mediaPlayer.getTotalDuration().toMillis());
 					
-				} catch (MediaException | IllegalStateException | IllegalArgumentException e) {
+					mediaPlayer.setOnReady(new Runnable() {
+
+				        @Override
+				        public void run() {
+
+				            System.out.println("Duration: "+ hit.getDuration().toSeconds());
+
+				            // display media's metadata
+				            for (Map.Entry<String, Object> entry : hit.getMetadata().entrySet()){
+				                System.out.println(entry.getKey() + ": " + entry.getValue());
+				            }
+
+				            // play if you want
+				            //mediaPlayer.play();
+				            
+							musicNotification = new Notification("Playing - " + ((filepath.split("/")[filepath.split("/").length - 1]).contains(".mp3") ? (filepath.split("/")[filepath.split("/").length - 1]) : (filepath.split("/")[filepath.split("/").length - 1]) + ".mp3").replaceAll("%20", " ").replaceAll("%5B", "[").replaceAll("%5D", "]"), "", true, (long) (mediaPlayer.getMedia().getDuration().toMillis()), Type.INFO, Color.values()[new Random().nextInt(Color.values().length)], NotificationManager.getNotificationManager().defaultTargetX, NotificationManager.getNotificationManager().defaultTargetY, NotificationManager.getNotificationManager().defaultStartingX, NotificationManager.getNotificationManager().defaultStartingY, NotificationManager.getNotificationManager().defaultSpeed);
+							musicNotification.setDefaultY = true;
+							NotificationManager.getNotificationManager().createNotification(musicNotification);
+				            
+				        }
+				    });
+					
+				} catch (MediaException | IllegalStateException | IllegalArgumentException | NullPointerException e) {
 					
 					musicNotification.timeOnScreen = 0;
 					e.printStackTrace();
@@ -135,8 +161,8 @@ public class MusicManager {
 	
 	public void changeNotificationColor(EventUpdate e) {
 		
-		if (shuffle && musicNotification.left) {
-			
+		if (shuffle && musicNotification.left && musicNotification.joined) {
+			Command.sendPrivateChatMessage("Playing next song...");
 			File[] files = FileManager.music.listFiles();
 			
 			if (files == null) {

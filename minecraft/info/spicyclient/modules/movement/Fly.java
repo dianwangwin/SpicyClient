@@ -372,8 +372,8 @@ public class Fly extends Module {
 						hypixelLagback = 0;
 					}else {
 						MovementUtils.setMotion(hypixelSpeed.getValue());
-						offset2 = 0.002248000625918 / 2;
-						offset2 += ((float)new Random().nextInt(99999)) / 100000000000f; 
+						offset2 = 4.496001251836E-4;
+						//offset2 += ((float)new Random().nextInt(99999)) / 100000000000f; 
 					}
 					
 					//int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);
