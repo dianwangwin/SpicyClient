@@ -6,6 +6,8 @@ import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
+import info.spicyclient.modules.combat.Killaura;
+import info.spicyclient.util.MovementUtils;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.util.BlockPos;

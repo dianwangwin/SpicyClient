@@ -372,7 +372,7 @@ public class Fly extends Module {
 						hypixelLagback = 0;
 					}else {
 						MovementUtils.setMotion(hypixelSpeed.getValue());
-						offset2 = 4.496001251836E-4;
+						offset2 = 4.496001251836E-5;
 						//offset2 += ((float)new Random().nextInt(99999)) / 100000000000f; 
 					}
 					
@@ -422,7 +422,86 @@ public class Fly extends Module {
 				}
 
 			}
-
+			
+			if (mode.getMode().equals("Hypixel") && hypixelDamaged) {
+				
+				//mc.thePlayer.capabilities.isFlying = true;
+				
+				mc.thePlayer.onGround = true;
+				mc.thePlayer.motionY = 0.0;
+				
+				//double offset = 9.947598300641403E-14D;
+				//double offset = 9.947599900641403E-14D;
+				//double offset = 9.274936900641403E-14D;
+				double offset1 = 0.00000000824934;
+				//double offset2 = 0.002248000625918 / 5;
+				// 4.496001251836E-4
+				//double offset2 = 4.496001251836E-4;
+				
+				double offset2 = 4.496001251836E-43;
+				offset2 += ((float)new Random().nextInt(99999)) / 1000000000000000000000000000000000000000000000000d; 
+				
+				//MovementUtils.setMotion(0.2);
+				//MovementUtils.strafe(0.195f);
+				//MovementUtils.setMotion((float) ((Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ)) / (2)) + ((float)hypixelSpeed.getValue()));
+				
+				if (mc.thePlayer.fallDistance >= 3) {
+					MovementUtils.setMotion(hypixelBoostSpeed.getValue());
+					this.additionalInformation = "MEGA SPEED BOOST!!!";
+					mc.thePlayer.motionY = -0.005;
+					//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer(true));
+					hypixelLagback = 0;
+				}else {
+					MovementUtils.setMotion(hypixelSpeed.getValue());
+					offset2 = 4.496001251836E-4;
+					//offset2 += ((float)new Random().nextInt(99999)) / 100000000000f; 
+				}
+				
+				//int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);
+				
+				if (hypixelTimerBoost.isEnabled()) {
+					mc.timer.ticksPerSecond = 27f;
+				}
+				
+				//Command.sendPrivateChatMessage(offset2);
+				//offset1 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
+				//offset2 += ((float)new Random().nextInt(99999)) / 10000000000000000f; 
+				//Command.sendPrivateChatMessage(new DecimalFormat("#.####################################################").format(offset2));
+				
+				switch (hypixelStage) {
+				case 0:
+					event.setY(mc.thePlayer.posY);
+					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY,
+							mc.thePlayer.posZ);
+					hypixelStage++;
+					break;
+				case 1:
+					// mc.thePlayer.posY = mc.thePlayer.posY + 9.947598300641403E-14;
+					// mc.thePlayer.posY = mc.thePlayer.lastTickPosY + 0.0002000000000066393;
+					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
+							//mc.thePlayer.posZ);
+					if (!MovementUtils.isOnGround(0.0001)) {
+						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -offset2, mc.thePlayer.posZ);
+					}
+					
+					//event.setY(mc.thePlayer.posY);
+					hypixelStage++;
+					break;
+				case 2:
+					event.setY(mc.thePlayer.posY);
+					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + (offset2),
+							mc.thePlayer.posZ);
+					hypixelStage = 0;
+					break;
+				}
+				//Command.sendPrivateChatMessage(mc.thePlayer.posY);
+				DecimalFormat dec = new DecimalFormat("#.##########################################");
+				
+				
+			}
+			
 		}
 
 	}
@@ -444,9 +523,6 @@ public class Fly extends Module {
 	}
 	
 	// Found on github
-	
-    //Damage method. It can only take 1 heart of damage.
-    //2020/2/3 Jump Potion supported.
     public void damage(){
     	
     	int damage = 1;

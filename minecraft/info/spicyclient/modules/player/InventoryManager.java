@@ -220,8 +220,8 @@ public class InventoryManager extends Module {
 	    					
 	        				if (!(mc.currentScreen instanceof GuiInventory)) {
 	        					packetSent = true;
-	            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-	            				mc.thePlayer.sendQueue.addToSendQueue(p);
+	            				
+	            				
 	        				}
 	    					
 	    					InventoryUtils.swap(i, (int)swordSlot.getValue() - 1);
@@ -232,8 +232,8 @@ public class InventoryManager extends Module {
 	    				if(InventoryUtils.isBestPickaxe(item) && item.getItem() instanceof ItemPickaxe){
 	        				if (!(mc.currentScreen instanceof GuiInventory)) {
 	        					packetSent = true;
-	            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-	            				mc.thePlayer.sendQueue.addToSendQueue(p);
+	            				
+	            				
 	        				}
 	        				
 	    					InventoryUtils.swap(i, (int)pickaxeSlot.getValue() - 1);
@@ -244,8 +244,8 @@ public class InventoryManager extends Module {
 	    				if(InventoryUtils.isBestAxe(item) && item.getItem() instanceof ItemAxe){
 	        				if (!(mc.currentScreen instanceof GuiInventory)) {
 	        					packetSent = true;
-	            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-	            				mc.thePlayer.sendQueue.addToSendQueue(p);
+	            				
+	            				
 	        				}
 	        				
 	    					InventoryUtils.swap(i, (int)axeSlot.getValue() - 1);
@@ -274,8 +274,8 @@ public class InventoryManager extends Module {
 	    						
 		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
-		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		            				
+		            				
 		        				}
 		        				
 		    					InventoryUtils.drop(i);
@@ -294,8 +294,8 @@ public class InventoryManager extends Module {
 	    						
 		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
-		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		            				
+		            				
 		        				}
 		        				
 		    					InventoryUtils.drop(i);
@@ -314,8 +314,8 @@ public class InventoryManager extends Module {
 		    						
 			        				if (!(mc.currentScreen instanceof GuiInventory)) {
 			        					packetSent = true;
-			            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-			            				mc.thePlayer.sendQueue.addToSendQueue(p);
+			            				
+			            				
 			        				}
 			        				
 			    					InventoryUtils.drop(i);
@@ -328,8 +328,8 @@ public class InventoryManager extends Module {
 		    					
 		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
-		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		            				
+		            				
 		        				}
 		        				
 		    					InventoryUtils.drop(i);
@@ -344,8 +344,8 @@ public class InventoryManager extends Module {
 		    						
 			        				if (!(mc.currentScreen instanceof GuiInventory)) {
 			        					packetSent = true;
-			            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-			            				mc.thePlayer.sendQueue.addToSendQueue(p);
+			            				
+			            				
 			        				}
 			        				
 			    					InventoryUtils.drop(i);
@@ -358,8 +358,8 @@ public class InventoryManager extends Module {
 		    					
 		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
-		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		            				
+		            				
 		        				}
 		        				
 		    					InventoryUtils.drop(i);
@@ -374,8 +374,8 @@ public class InventoryManager extends Module {
 		    						
 			        				if (!(mc.currentScreen instanceof GuiInventory)) {
 			        					packetSent = true;
-			            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-			            				mc.thePlayer.sendQueue.addToSendQueue(p);
+			            				
+			            				
 			        				}
 			        				
 			    					InventoryUtils.drop(i);
@@ -388,8 +388,8 @@ public class InventoryManager extends Module {
 		    					
 		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
-		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		            				
+		            				
 		        				}
 		        				
 		    					InventoryUtils.drop(i);
@@ -402,8 +402,8 @@ public class InventoryManager extends Module {
 		    					
 		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
-		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		            				
+		            				
 		        				}
 		        				
 		    					InventoryUtils.drop(i);
@@ -424,8 +424,8 @@ public class InventoryManager extends Module {
 				    					
 				        				if (!(mc.currentScreen instanceof GuiInventory)) {
 				        					packetSent = true;
-				            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-				            				mc.thePlayer.sendQueue.addToSendQueue(p);
+				            				
+				            				
 				        				}
 				        				
 				    					InventoryUtils.drop(i);

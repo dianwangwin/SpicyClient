@@ -1,5 +1,7 @@
 package info.spicyclient.modules.player;
 
+import java.util.Random;
+
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
@@ -48,7 +50,7 @@ public class NoFall extends Module {
 			
 			if (e.isPre()) {
 				
-				if (mc.thePlayer.fallDistance > 2.8799999999 && noFallMode.is("Packet") && !SpicyClient.config.fly.isEnabled()) {
+				if (mc.thePlayer.fallDistance > 3 && noFallMode.is("Packet") && !SpicyClient.config.fly.isEnabled()) {
 					
 					mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 					
