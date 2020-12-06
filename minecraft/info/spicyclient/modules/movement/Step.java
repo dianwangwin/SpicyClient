@@ -33,7 +33,7 @@ public class Step extends Module {
 		if (e.setting.equals(mode)) {
 			
 			if (mode.is("Vanilla") && this.isToggled()) {
-				mc.thePlayer.stepHeight = 1f;
+				mc.thePlayer.stepHeight = 4f;
 				mc.timer.ticksPerSecond = 20f;
 			}
 			else if (mode.is("NCP") && this.isToggled()) {
@@ -46,7 +46,7 @@ public class Step extends Module {
 	
 	public void onEnable() {
 		if (mode.is("Vanilla")) {
-			mc.thePlayer.stepHeight = 20f;
+			mc.thePlayer.stepHeight = 4f;
 		}
 	}
 	
@@ -70,7 +70,7 @@ public class Step extends Module {
 		if (e instanceof EventUpdate) {
 			
 			if (e.isPre() && mode.is("Vanilla")) {
-				mc.thePlayer.stepHeight = 20f;
+				mc.thePlayer.stepHeight = 4f;
 			}
 			
 			else if (e.isBeforePre() && mode.is("NCP")) {

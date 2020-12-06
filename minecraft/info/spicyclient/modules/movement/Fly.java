@@ -367,7 +367,7 @@ public class Fly extends Module {
 					if (mc.thePlayer.fallDistance >= 3) {
 						MovementUtils.setMotion(hypixelBoostSpeed.getValue());
 						this.additionalInformation = "MEGA SPEED BOOST!!!";
-						mc.thePlayer.motionY = -0.005;
+						//mc.thePlayer.motionY = -0.005;
 						//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer(true));
 						hypixelLagback = 0;
 					}else {
@@ -579,5 +579,5 @@ public class Fly extends Module {
                 mc.thePlayer.posX,mc.thePlayer.posY+addY,mc.thePlayer.posZ,ground
         ));
     }
-	
+    
 }

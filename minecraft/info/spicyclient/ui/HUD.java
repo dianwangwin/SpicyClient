@@ -16,6 +16,7 @@ import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.fonts.FontManager;
 import info.spicyclient.fonts.FontUtils;
 import info.spicyclient.modules.Module;
+import info.spicyclient.modules.render.SkyColor;
 import info.spicyclient.notifications.NotificationManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -82,16 +83,23 @@ public class HUD {
 			// We enable blending so there is a transparent background on the logo
 			GlStateManager.enableBlend();
 			GlStateManager.color(1, 1, 1);
-			mc.getTextureManager().bindTexture(new ResourceLocation("spicy/SpicyClient.png"));
+			SkyColor skyColor = SpicyClient.config.skyColor;
+			
+			int maxBrightness = 200;
+			if (skyColor.red.getValue() >= maxBrightness && skyColor.green.getValue() >= maxBrightness && skyColor.blue.getValue() >= maxBrightness && skyColor.isEnabled() && skyColor.RgbBrightness.getValue() >= 0.5) {
+				mc.getTextureManager().bindTexture(new ResourceLocation("spicy/SpicyClientBlack.png"));
+			}else {
+				mc.getTextureManager().bindTexture(new ResourceLocation("spicy/SpicyClientWhite.png"));
+			}
 			int imageWidth = 500, imageHeight = 122;
 			imageWidth /= 6;
 			imageHeight /= 6;
-			Gui.drawModalRectWithCustomSizedTexture(4, 4, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+			Gui.drawModalRectWithCustomSizedTexture(4, 2, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(4, 4, 0);
 			GlStateManager.scale(0.7, 0.7, 1);
 			GlStateManager.translate(-4, -4, 0);
-			fr.drawStringWithQuadShadow(SpicyClient.config.clientVersion, 122, 3.5f, primaryColor, 0.3f);
+			//fr.drawStringWithQuadShadow(SpicyClient.config.clientVersion, 122, 3.5f, primaryColor, 0.3f);
 			GlStateManager.popMatrix();
 		}
 		

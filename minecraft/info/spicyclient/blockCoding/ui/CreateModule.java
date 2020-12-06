@@ -17,15 +17,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 
-public class BlockCodingMainUi extends GuiScreen {
-	
-	public BlockCodingMainUi(String name) {
-		
-		module = new CustomModule(name);
-		
-	}
-	
-	public CustomModule module;
+public class CreateModule extends GuiScreen {
 	
 	@Override
 	public void initGui() {
@@ -56,8 +48,9 @@ public class BlockCodingMainUi extends GuiScreen {
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(textscale, textscale, 1);
-		mc.fontRendererObj.drawString(module.name, ((sr.getScaledWidth() / 2) - ((mc.fontRendererObj.getStringWidth(module.name) * textscale) / 2)) / textscale, ((sr.getScaledHeight() / factor) + 10) / textscale, 0xffffffff);
+		mc.fontRendererObj.drawString("Create a module", ((sr.getScaledWidth() / 2) - ((mc.fontRendererObj.getStringWidth("Create a module") * textscale) / 2)) / textscale, ((sr.getScaledHeight() / factor) + 10) / textscale, 0xffffffff);
 		GlStateManager.popMatrix();
+		
 	}
 	
 	@Override

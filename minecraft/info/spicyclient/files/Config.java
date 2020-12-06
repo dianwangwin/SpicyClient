@@ -6,6 +6,7 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.modules.Module;
 import info.spicyclient.modules.Module.Category;
+import info.spicyclient.modules.beta.TestModuleOne;
 import info.spicyclient.modules.combat.*;
 import info.spicyclient.modules.memes.*;
 import info.spicyclient.modules.movement.*;
@@ -87,6 +88,7 @@ public class Config {
 	public LSD lsd = new LSD();
 	public Tracers tracers = new Tracers();
 	public BlockCoding blockCoding = new BlockCoding();
+	public TestModuleOne testModuleOne = new TestModuleOne();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -145,6 +147,7 @@ public class Config {
 			this.lsd = new LSD();
 			this.tracers = new Tracers();
 			this.blockCoding = new BlockCoding();
+			this.testModuleOne = new TestModuleOne();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");

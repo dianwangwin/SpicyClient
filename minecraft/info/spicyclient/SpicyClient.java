@@ -429,6 +429,7 @@ public class SpicyClient {
 		modules.add(c.lsd);
 		modules.add(c.tracers);
 		modules.add(c.blockCoding);
+		modules.add(c.testModuleOne);
 		
 		for (Module temp : SpicyClient.modules) {
 			

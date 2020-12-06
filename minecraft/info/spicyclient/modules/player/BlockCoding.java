@@ -1,4 +1,4 @@
-package info.spicyclient.modules.render;
+package info.spicyclient.modules.player;
 
 import java.awt.Color;
 import java.util.List;
@@ -7,6 +7,7 @@ import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.blockCoding.ui.BlockCodingMainUi;
+import info.spicyclient.blockCoding.ui.CreateModule;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventKey;
 import info.spicyclient.events.listeners.EventRenderGUI;
@@ -31,7 +32,7 @@ public class BlockCoding extends Module{
 	public static BlockCodingMainUi BlockCodeUi = new BlockCodingMainUi("test");
 	
 	public BlockCoding() {
-		super("BlockCode", Keyboard.KEY_NONE, Category.RENDER);
+		super("BlockCode", Keyboard.KEY_NONE, Category.PLAYER);
 		
 	}
 	
@@ -46,8 +47,7 @@ public class BlockCoding extends Module{
 	}
 	
 	public void onEnable() {
-		BlockCodingMainUi blockCode = new BlockCodingMainUi("test");
-		mc.displayGuiScreen(blockCode);
+		mc.displayGuiScreen(new CreateModule());
 		toggle();
 	}
 	
