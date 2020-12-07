@@ -599,8 +599,8 @@ public class Killaura extends Module {
     }
     
     public void customRots(EventMotion em, EntityLivingBase ent) {
-        double randomYaw = 0.05;
-		double randomPitch = 0.05;
+        double randomYaw = 0.09;
+		double randomPitch = 0.09;
 		float[] rotsN = getCustomRotsChange(sYaw, sPitch, target.posX + randomNumber(1,-1) * randomYaw, target.posY+ randomNumber(1,-1) * randomPitch, target.posZ+ randomNumber(1,-1) * randomYaw);
 		float targetYaw = rotsN[0];
 		float yawFactor = targetYaw*targetYaw/(4.7f * targetYaw);

@@ -510,7 +510,7 @@ public class Fly extends Module {
 	@Override
 	public void onEventWhenDisabled(Event e) {
 		
-		if (e instanceof EventRenderGUI && e.isPre() && this.keycode.getKeycode() != Keyboard.KEY_NONE && mc.thePlayer.fallDistance >= 3) {
+		if (e instanceof EventRenderGUI && e.isPre() && this.keycode.getKeycode() != Keyboard.KEY_NONE && mc.thePlayer.fallDistance >= 3 && mode.getMode().equals("Hypixel")) {
 			
 			ScaledResolution sr = new ScaledResolution(mc);
 			
