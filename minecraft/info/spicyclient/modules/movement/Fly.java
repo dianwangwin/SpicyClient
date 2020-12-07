@@ -357,8 +357,9 @@ public class Fly extends Module {
 					// 4.496001251836E-4
 					//double offset2 = 4.496001251836E-4;
 					
-					double offset2 = 4.496001251836E-43;
-					offset2 += ((float)new Random().nextInt(99999)) / 1000000000000000000000000000000000000000000000000d; 
+					//double offset2 = 4.496001251836E-43;
+					double offset2 = 9.274936900641403E-14D;
+					//offset2 += ((float)new Random().nextInt(99999)) / 1000000000000000000000000000000000000000000000000d; 
 					
 					//MovementUtils.setMotion(0.2);
 					//MovementUtils.strafe(0.195f);
@@ -372,7 +373,7 @@ public class Fly extends Module {
 						hypixelLagback = 0;
 					}else {
 						MovementUtils.setMotion(hypixelSpeed.getValue());
-						offset2 = 4.496001251836E-5;
+						//offset2 = 4.496001251836E-5;
 						//offset2 += ((float)new Random().nextInt(99999)) / 100000000000f; 
 					}
 					

@@ -1,5 +1,17 @@
 package net.minecraft.client.network;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Random;
+import java.util.UUID;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -7,22 +19,11 @@ import com.mojang.authlib.GameProfile;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
-import info.spicyclient.events.EventDirection;
 import info.spicyclient.events.EventType;
-import info.spicyclient.events.listeners.EventPacket;
-import info.spicyclient.events.listeners.EventReceivedKnockbackPacket;
 import info.spicyclient.events.listeners.EventServerSetYawAndPitch;
 import info.spicyclient.events.listeners.EventServerSettingWorldTime;
 import info.spicyclient.ui.NewMainMenu;
 import io.netty.buffer.Unpooled;
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-import java.util.Map.Entry;
 import net.minecraft.block.Block;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
@@ -32,7 +33,6 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiDisconnected;
 import net.minecraft.client.gui.GuiDownloadTerrain;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiMerchant;
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiScreen;
@@ -219,9 +219,6 @@ import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class NetHandlerPlayClient implements INetHandlerPlayClient
 {
@@ -511,14 +508,6 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
      */
     public void handleEntityVelocity(S12PacketEntityVelocity packetIn)
     {
-    	
-    	EventReceivedKnockbackPacket knockbackPacket = new EventReceivedKnockbackPacket();
-    	knockbackPacket.setType(EventType.PRE);
-    	SpicyClient.onEvent(knockbackPacket);
-    	if (knockbackPacket.canceled) {
-    		return;
-    	}
-    	
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
         Entity entity = this.clientWorldController.getEntityByID(packetIn.getEntityID());
 

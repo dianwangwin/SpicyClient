@@ -13,7 +13,6 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
-import info.spicyclient.events.listeners.EventPlayerRenderUtilRender;
 import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;

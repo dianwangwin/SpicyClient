@@ -176,6 +176,9 @@ public class Config {
 			
 			this.bhop.hypixelSpeed = new NumberSetting("Speed", 0.01, 0.0001, 0.03, 0.0001);
 			
+			this.antiKnockback.horizontalKnockback = new NumberSetting("Horizontal Knockback", 0, 0, 100, 1);
+			this.antiKnockback.verticalKnockback = new NumberSetting("Vertical Knockback", 0, 0, 100, 1);
+			
 			this.inventoryManager.category = Category.PLAYER;
 			
 		}

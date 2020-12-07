@@ -37,7 +37,6 @@ import info.spicyclient.events.Event;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventChatmessage;
 import info.spicyclient.events.listeners.EventKey;
-import info.spicyclient.events.listeners.EventPlayerRenderUtilRender;
 import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.files.AltInfo;

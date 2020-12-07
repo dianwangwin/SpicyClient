@@ -24,6 +24,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 public class HUD {
@@ -129,6 +130,14 @@ public class HUD {
 			}
 			
 			fr.drawString(message, 4,  (int) ((sr.getScaledHeight() - fr.FONT_HEIGHT) / 2.6 - 3), primaryColor);
+			
+			try {
+				GlStateManager.scale(0.5, 0.5, 1);
+				fr.drawString("Ping: " + mc.getNetHandler().getPlayerInfo((mc.thePlayer).getUniqueID()).responseTime, 8,  (int) ((sr.getScaledHeight() - fr.FONT_HEIGHT) / 1.3 - 16), primaryColor);
+				GlStateManager.scale(2, 2, 1);
+			} catch (NullPointerException e) {
+				
+			}
 			
 		}
 		
