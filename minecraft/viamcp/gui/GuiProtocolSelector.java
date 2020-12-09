@@ -6,6 +6,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSlot;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemPickaxe;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.opengl.GL11;
 import viamcp.utils.ProtocolSorter;
@@ -28,7 +35,7 @@ public class GuiProtocolSelector extends GuiScreen {
         buttonList.add(new GuiButton(1, width / 2 - 100, height - 27, 200, 20, "Back"));
         list = new SlotList(mc, width, height, 32, height - 32, 10);
     }
-
+    
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
         list.actionPerformed(button);
@@ -49,14 +56,14 @@ public class GuiProtocolSelector extends GuiScreen {
 
         GL11.glPushMatrix();
         GL11.glScalef(2.0F, 2.0F, 2.0F);
-        this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.BLUE + EnumChatFormatting.BOLD.toString() + "Spicy Portal (just viaversion lol)",this.width / 4, 6, 16777215);
+        this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.BOLD.toString() + "Via Version",this.width / 4, 6, 16777215);
         GL11.glPopMatrix();
 
         super.drawScreen(drawScreen, mouseX, mouseY);
     }
 
     class SlotList extends GuiSlot {
-
+    	
         public SlotList(Minecraft p_i1052_1_, int p_i1052_2_, int p_i1052_3_, int p_i1052_4_, int p_i1052_5_, int p_i1052_6_) {
             super(p_i1052_1_, p_i1052_2_, p_i1052_3_, p_i1052_4_, p_i1052_5_, p_i1052_6_);
         }

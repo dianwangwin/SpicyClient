@@ -105,8 +105,9 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
         
         // Viaversion
         //new GuiButton(buttonId, x, y, buttonText)
-        String text = "Spicy Portal ("  + ProtocolUtils.getProtocolName(ViaFabric.clientSideVersion) + ")";
-        buttonList.add(new GuiButton(12345, this.width - mc.fontRendererObj.getStringWidth(text) - 10, 5, 10 + mc.fontRendererObj.getStringWidth(text), 20, text));
+        //String text = "Spicy Portal ("  + ProtocolUtils.getProtocolName(ViaFabric.clientSideVersion) + ")";
+        String text = "Via Version ("  + ProtocolUtils.getProtocolName(ViaFabric.clientSideVersion) + ")";
+        buttonList.add(new GuiButton(12345, this.width - mc.fontRendererObj.getStringWidth(text) - 23, 5, 20 + mc.fontRendererObj.getStringWidth(text), 20, text));
         
         this.selectServer(this.serverListSelector.func_148193_k());
     }
