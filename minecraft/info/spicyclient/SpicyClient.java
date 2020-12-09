@@ -32,6 +32,7 @@ import com.thealtening.AltService;
 import com.thealtening.AltService.EnumAltService;
 
 import info.spicyclient.ClickGUI.Tab;
+import info.spicyclient.autoUpdater.Updater;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.chatCommands.CommandManager;
 import info.spicyclient.events.Event;
@@ -84,6 +85,8 @@ public class SpicyClient {
 	
 	public static String originalUsername = "Not Set";
 	public static Boolean originalAccountOnline = false;
+	
+	public static int currentVersionNum = 0;
 	
 	public static void StartUp() {
 		if (Minecraft.getMinecraft().getSession().getSessionType().equals(Session.Type.LEGACY)) {
@@ -224,11 +227,17 @@ public class SpicyClient {
 
 		}
 		
+		// Via Version
 		try {
             new ViaFabric().onInitialize();
         } catch (Exception e) {
             e.printStackTrace();
         }
+		// Via Version
+		
+		// Auto updater
+		Updater.getUpdater().start();
+		// Auto updater
 		
 	}
 	

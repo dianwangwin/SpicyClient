@@ -22,6 +22,7 @@ public class FileManager {
 	public static File configs = new File(ROOT_DIR, "configs");
 	public static File blockCoding = new File(ROOT_DIR, "blockCoding");
 	public static File music = new File(ROOT_DIR, "music");
+	public static File assets = new File(ROOT_DIR, "assets");
 	
 	public static void init() {
 		
@@ -30,22 +31,30 @@ public class FileManager {
 			ROOT_DIR.mkdirs();
 			
 		}
+		
 		if (!configs.exists()) {
 			
 			configs.mkdirs();
 			
 		}
+		
 		if (!blockCoding.exists()) {
 			
 			blockCoding.mkdirs();
 			
 		}
+		
 		if (!music.exists()) {
 			
 			music.mkdirs();
 			
 		}
 		
+		if (!assets.exists()) {
+			
+			assets.mkdirs();
+			
+		}
 	}
 
 	public static Gson getGson() {
