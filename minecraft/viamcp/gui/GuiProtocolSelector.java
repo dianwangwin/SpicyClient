@@ -14,6 +14,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import viamcp.utils.ProtocolSorter;
 
@@ -61,8 +63,19 @@ public class GuiProtocolSelector extends GuiScreen {
 
         super.drawScreen(drawScreen, mouseX, mouseY);
     }
-
-    class SlotList extends GuiSlot {
+    
+    @Override
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+    	
+    	if (keyCode == Keyboard.KEY_ESCAPE) {
+    		
+    		mc.displayGuiScreen(parent);
+    		
+    	}
+    	
+    }
+    
+    public class SlotList extends GuiSlot {
     	
         public SlotList(Minecraft p_i1052_1_, int p_i1052_2_, int p_i1052_3_, int p_i1052_4_, int p_i1052_5_, int p_i1052_6_) {
             super(p_i1052_1_, p_i1052_2_, p_i1052_3_, p_i1052_4_, p_i1052_5_, p_i1052_6_);
@@ -93,4 +106,5 @@ public class GuiProtocolSelector extends GuiScreen {
             drawCenteredString(mc.fontRendererObj,(ViaFabric.clientSideVersion == ProtocolSorter.getProtocolVersions().get(i).getVersion() ? EnumChatFormatting.GREEN.toString() : EnumChatFormatting.WHITE.toString()) + ProtocolUtils.getProtocolName(ProtocolSorter.getProtocolVersions().get(i).getVersion()) , width / 2, i2 + 2, -1);
         }
     }
+    
 }
