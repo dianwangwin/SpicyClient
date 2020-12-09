@@ -14,7 +14,6 @@ import net.minecraft.network.play.server.S3BPacketScoreboardObjective;
 import net.minecraft.network.play.server.S3CPacketUpdateScore;
 import net.minecraft.network.play.server.S3DPacketDisplayScoreboard;
 import net.minecraft.util.ChatComponentText;
-import sun.net.www.content.text.plain;
 
 public class HideName extends Module {
 	

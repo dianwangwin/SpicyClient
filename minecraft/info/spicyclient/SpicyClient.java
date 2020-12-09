@@ -27,6 +27,7 @@ import org.apache.commons.io.IOUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
+import com.github.creeper123123321.viafabric.ViaFabric;
 import com.thealtening.AltService;
 import com.thealtening.AltService.EnumAltService;
 
@@ -53,15 +54,8 @@ import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.ui.HUD;
 import info.spicyclient.util.RenderUtils;
 import info.spicyclient.util.RotationUtils;
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.event.EventHandler;
-import javafx.scene.SceneBuilder;
-import javafx.scene.control.LabelBuilder;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.stage.StageBuilder;
-import javafx.stage.WindowEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.network.NetworkPlayerInfo;
@@ -229,6 +223,12 @@ public class SpicyClient {
 			System.out.println("The " + c.name + " category has been set up");
 
 		}
+		
+		try {
+            new ViaFabric().onInitialize();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 		
 	}
 	

@@ -52,7 +52,7 @@ public class MusicManager {
 	                                        .height(240)
 	                                        .root(LabelBuilder.create()
 	                                                .font(new javafx.scene.text.Font("Arial", 54d))
-	                                                .text("Music Player Window")
+	                                                .text("Music Player")
 	                                                .build())
 	                                        .build())
 	                                .onCloseRequest(new EventHandler<WindowEvent>() {

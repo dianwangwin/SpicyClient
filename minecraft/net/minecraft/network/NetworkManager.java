@@ -1,5 +1,10 @@
 package net.minecraft.network;
 
+import com.github.creeper123123321.viafabric.handler.CommonTransformer;
+import com.github.creeper123123321.viafabric.handler.clientside.VRDecodeHandler;
+import com.github.creeper123123321.viafabric.handler.clientside.VREncodeHandler;
+import com.github.creeper123123321.viafabric.platform.VRClientSideUserConnection;
+import com.github.creeper123123321.viafabric.protocol.ViaFabricHostnameProtocol;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
@@ -48,6 +53,9 @@ import net.minecraft.util.MessageDeserializer;
 import net.minecraft.util.MessageDeserializer2;
 import net.minecraft.util.MessageSerializer;
 import net.minecraft.util.MessageSerializer2;
+import us.myles.ViaVersion.api.data.UserConnection;
+import us.myles.ViaVersion.api.protocol.ProtocolPipeline;
+import viamcp.utils.Util;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Validate;
@@ -417,6 +425,17 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
                 }
 
                 p_initChannel_1_.pipeline().addLast((String)"timeout", (ChannelHandler)(new ReadTimeoutHandler(30))).addLast((String)"splitter", (ChannelHandler)(new MessageDeserializer2())).addLast((String)"decoder", (ChannelHandler)(new MessageDeserializer(EnumPacketDirection.CLIENTBOUND))).addLast((String)"prepender", (ChannelHandler)(new MessageSerializer2())).addLast((String)"encoder", (ChannelHandler)(new MessageSerializer(EnumPacketDirection.SERVERBOUND))).addLast((String)"packet_handler", (ChannelHandler)networkmanager);
+                
+                /* ViaVersion */
+                if (p_initChannel_1_ instanceof SocketChannel) {
+                	UserConnection user = new VRClientSideUserConnection(p_initChannel_1_);
+                	new ProtocolPipeline(user).add(ViaFabricHostnameProtocol.INSTANCE);
+
+                	p_initChannel_1_.pipeline().addBefore("encoder", CommonTransformer.HANDLER_ENCODER_NAME,
+                			new VREncodeHandler(user)).addBefore("decoder", CommonTransformer.HANDLER_DECODER_NAME, new VRDecodeHandler(user));
+                }
+                /* --------- */
+                
             }
         })).channel(oclass)).connect(p_181124_0_, p_181124_1_).syncUninterruptibly();
         return networkmanager;
@@ -501,7 +520,14 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
             }
             else
             {
-                this.channel.pipeline().addBefore("decoder", "decompress", new NettyCompressionDecoder(treshold));
+            	
+            	/* ViaVersion */
+            	Util.decodeEncodePlacement(channel.pipeline(), "decoder", "decompress", new NettyCompressionDecoder(treshold));
+            	/* --------- */
+            	
+            	// Removed because viaversion
+                //this.channel.pipeline().addBefore("decoder", "decompress", new NettyCompressionDecoder(treshold));
+            
             }
 
             if (this.channel.pipeline().get("compress") instanceof NettyCompressionEncoder)
@@ -510,7 +536,13 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
             }
             else
             {
-                this.channel.pipeline().addBefore("encoder", "compress", new NettyCompressionEncoder(treshold));
+            	
+            	/* ViaVersion */
+            	Util.decodeEncodePlacement(channel.pipeline(), "encoder", "compress", new NettyCompressionEncoder(treshold));
+            	/* --------- */
+            	
+            	// Removed because viaversion
+                //this.channel.pipeline().addBefore("encoder", "compress", new NettyCompressionEncoder(treshold));
             }
         }
         else
