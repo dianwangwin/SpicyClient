@@ -527,6 +527,10 @@ public class Killaura extends Module {
 	
 	private void startBlocking() {
 		
+		if(!autoblock.isEnabled()) {
+			return;
+		}
+		
 		if (blocking) {
 			if ((mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
 				sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());

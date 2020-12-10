@@ -217,7 +217,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
         }
     }
 
-    private void refreshServerList()
+    public void refreshServerList()
     {
         this.mc.displayGuiScreen(new GuiMultiplayer(this.parentScreen));
     }

@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.autoUpdater.Updater;
 import info.spicyclient.files.Config;
 import info.spicyclient.fonts.FontManager;
 import info.spicyclient.fonts.FontRenderer;
@@ -52,7 +53,7 @@ public class NewMainMenu extends GuiScreen {
 		
 	}
 	
-	public Button singleplayer, multiplayer, altManager, settings, language;
+	public Button singleplayer, multiplayer, altManager, settings, language, update;
 	
 	// This is for the blinking warning text
 	private Timer timer = new Timer();
@@ -252,6 +253,27 @@ public class NewMainMenu extends GuiScreen {
         language.setTextScale(1.5f);
         language.setText(I18n.format("Language"));
         
+        if (Updater.getUpdater().ClientOutdated()) {
+        	
+            update = new Button(this.width / 20, (this.height / 2) + 200, (this.width / 20) + 300, (this.height / 2) - 30 + 200, 0xff202225, 0xff7289da, -1, 2, this);
+            update.setTextScale(1.5f);
+            update.setText("Update SpicyClient");
+            
+            if (isUpdating) {
+            	update.setTextScale(1.2f);
+            	update.setText("The client will close when the update is complete");
+            	
+            	singleplayer.insideColor = 0xff4d5c91;
+            	multiplayer.insideColor = 0xff4d5c91;
+            	altManager.insideColor = 0xff4d5c91;
+            	settings.insideColor = 0xff4d5c91;
+            	language.insideColor = 0xff4d5c91;
+            	update.insideColor = 0xff4d5c91;
+            	
+            }
+        	
+        }
+        
 		if (mc.gameSettings.guiScale > 2 || mc.gameSettings.guiScale == 0) {
 			
 			if (timer.hasTimeElapsed(400, true)) {
@@ -287,11 +309,25 @@ public class NewMainMenu extends GuiScreen {
 			language.insideColor = 0xff4d5c91;
 		}
 		
+		// For the update button
+		if (Updater.getUpdater().ClientOutdated()) {
+			
+			if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 200 && mouseY > (this.height / 2) - 30 + 200) {
+				update.insideColor = 0xff4d5c91;
+			}
+			
+		}
+		
 		singleplayer.draw();
 		multiplayer.draw();
 		altManager.draw();
 		settings.draw();
 		language.draw();
+		
+		if (Updater.getUpdater().ClientOutdated()) {
+			update.draw();
+		}
+		
 		
 		// To prevent the text from blinking
 		// The max fps is 30
@@ -315,8 +351,14 @@ public class NewMainMenu extends GuiScreen {
 		
 	}
 	
+	public boolean isUpdating = false;
+	
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+		
+		if (isUpdating) {
+			return;
+		}
 		
 		// For the singleplayer button
 		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < this.height / 2 && mouseY > (this.height / 2) - 30) {
@@ -341,6 +383,17 @@ public class NewMainMenu extends GuiScreen {
 		// For the language button
 		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 160 && mouseY > (this.height / 2) - 30 + 160) {
 			this.mc.displayGuiScreen(new GuiLanguage(this, this.mc.gameSettings, this.mc.getLanguageManager()));
+		}
+		
+		// For the update button
+		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 200 && mouseY > (this.height / 2) - 30 + 200) {
+			
+			isUpdating = true;
+			
+			// Auto updater
+			Updater.getUpdater().update();
+			// Auto updater
+			
 		}
 		
 	}

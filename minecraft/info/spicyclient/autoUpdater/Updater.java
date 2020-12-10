@@ -26,83 +26,46 @@ public class Updater {
 		
 	}
 	
-	public boolean updaterFound = false, checkedForUpdate = false;
+	public boolean outdated = false, checkedForUpdate = false;
 	
 	public boolean ClientOutdated() {
 		
-		return false;
-		
-	}
-	
-	public void start() {
-		
-		if (!AutoUpdaterExists()) {
+		if (!checkedForUpdate) {
 			
-			updaterFound = false;
-			new Thread() {
-				
-				@Override
-				public void run() {
+			try {
+				if (SpicyClient.currentVersionNum < getCurrentVersion()) {
 					
-					try {
-						Installer.saveFile(Referances.JarLink, Referances.JAR_FILE);
-						updaterFound = true;
-						start();
-					} catch (IOException e){
-						e.printStackTrace();
-					}
+					//System.out.println("You are using an outdated version than is released!");
+					outdated = true;
+					
+				}
+				else if (SpicyClient.currentVersionNum > getCurrentVersion()) {
+					
+					//System.out.println("You are running a newer version than is released!");
+					
+				}else {
+					
+					//System.out.println("You are using the current version than is released!");
 					
 				}
 				
-			}.start();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-		}else {
-			
-			new Thread() {
-				
-				@Override
-				public void run() {
-					
-					try {
-						ProcessBuilder builder = new ProcessBuilder("cmd.exe", "dir", "cd " + FileManager.assets.getAbsolutePath(), "java -Xms128M -Xmx4096M -jar Updater.jar");
-					        builder.redirectErrorStream(true);
-					        builder.redirectOutput();
-					        builder.redirectInput();
-					        Process p = builder.start();
-					        BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
-					        String line;
-					        while (true) {
-					            line = r.readLine();
-					            System.out.println(line);
-					        }
-						
-					        /*
-						Process cmd = Runtime.getRuntime().exec("cd " + FileManager.assets.getAbsolutePath());
-						Process proc = Runtime.getRuntime().exec("java -Xms128M -Xmx4096M -jar " + "Updater.jar");
-						System.err.println("java -Xms128M -Xmx4096M -jar " + (new File(FileManager.assets, "Updater.jar").toURI().toString().replaceFirst("file:/", "")));
-						*/
-					} catch (IOException e) {	
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-				}
-				
-			}.start();
+			checkedForUpdate = true;
 			
 		}
 		
-	}
-	
-	public boolean AutoUpdaterExists() {
-		
-		return new File(FileManager.assets, "Updater.jar").exists();
+		return outdated;
 		
 	}
 	
-	public void DownloadAutoUpdater() {
+	public void update() {
 		
-		
+		System.out.println("Updating the client...");
+		new Thread().start();
 		
 	}
 	

@@ -235,10 +235,6 @@ public class SpicyClient {
         }
 		// Via Version
 		
-		// Auto updater
-		Updater.getUpdater().start();
-		// Auto updater
-		
 	}
 	
 	public static void shutdown() {
