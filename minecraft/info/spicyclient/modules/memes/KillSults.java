@@ -31,7 +31,7 @@ import net.minecraft.network.play.client.C02PacketUseEntity.Action;
 
 public class KillSults extends Module {
 	
-	private ModeSetting messageMode = new ModeSetting("Message Type", "Furry", "Furry", "Retarded Furry", "Annoying", "SpicyClient Ads");
+	public ModeSetting messageMode = new ModeSetting("Message Type", "Furry", "Furry", "Retarded Furry", "Annoying", "SpicyClient Ads", "SpicyFacts");
 	private ModeSetting serverMode = new ModeSetting("Server Mode", "PvpLands", "PvpLands", "Hypixel", "Test");
 	
 	public BooleanSetting pvplandsPayback = new BooleanSetting("Payback", false);
@@ -47,6 +47,7 @@ public class KillSults extends Module {
 	private static ArrayList<String> retardedFurryKillsults = new ArrayList<String>();
 	private static ArrayList<String> annoyingKillsults = new ArrayList<String>();
 	private static ArrayList<String> spicyClientAdsKillsults = new ArrayList<String>();
+	private static ArrayList<String> spicyFactsKillsults = new ArrayList<String>();
 	
 	@Override
 	public void resetSettings() {
@@ -161,6 +162,11 @@ public class KillSults extends Module {
 						else if (messageMode.is("SpicyClient Ads")) {
 							
 							killsults = this.spicyClientAdsKillsults;
+							
+						}
+						else if (messageMode.is("SpicyFacts")) {
+							
+							killsults = this.spicyFactsKillsults;
 							
 						}
 						
@@ -318,7 +324,7 @@ public class KillSults extends Module {
 		
 		// Use <PlayerName> in those caps and with the <> to print out the player that you killed
 		
-		// for the furry killsults list
+		// For the furry killsults list
 		furryKillsults.add("<PlayerName> Just got killed by a furry");
 		furryKillsults.add("<PlayerName> OwO");
 		furryKillsults.add("<PlayerName> UwU");
@@ -344,7 +350,7 @@ public class KillSults extends Module {
 		furryKillsults.add("<PlayerName> Probably watches furry youtubers");
 		
 		// WARNING THE RETARDED FURRY KILLSULTS ARE NSFW
-		// for the retarded furry killsults list
+		// For the retarded furry killsults list
 		// Writing these made me cringe so hard and I refuse to make more
 		retardedFurryKillsults.add("It's <PlayerName>s time to E621 and cry");
 		retardedFurryKillsults.add("Hey <PlayerName> want to yiff with me?");
@@ -362,7 +368,7 @@ public class KillSults extends Module {
 		retardedFurryKillsults.add("Wait, <PlayerName> wants to mursuit with me?!?!?!?");
 		retardedFurryKillsults.add("<PlayerName> Enjoys e621 confirmed?!?!?!?!?!?!?!");
 		
-		// for the annoying killsults list
+		// For the annoying killsults list
 		annoyingKillsults.add("<PlayerName> L");
 		annoyingKillsults.add("<PlayerName> EZ");
 		annoyingKillsults.add("<PlayerName> bad");
@@ -376,7 +382,7 @@ public class KillSults extends Module {
 		annoyingKillsults.add("<PlayerName> bad lol");
 		annoyingKillsults.add("<PlayerName> git gud");
 		
-		// for the spicyclient ads killsults list
+		// For the spicyclient ads killsults list
 		spicyClientAdsKillsults.add("<PlayerName> SpicyClient.info is your new home");
 		spicyClientAdsKillsults.add("<PlayerName> Download SpicyClient at SpicyClient.info");
 		spicyClientAdsKillsults.add("<PlayerName> SpicyClient is the easy way to get kills");
@@ -387,6 +393,17 @@ public class KillSults extends Module {
 		spicyClientAdsKillsults.add("<PlayerName> SpicyClient is free and open source, download today at SpicyClient.info");
 		spicyClientAdsKillsults.add("<PlayerName> Is bad because they dont use SpicyClient");
 		spicyClientAdsKillsults.add("<PlayerName> Get SpicyClient noob");
+		
+		// for the spicy facts killsults list
+		spicyFactsKillsults.add("<PlayerName> [FACT] SpicyClient is open source");
+		spicyFactsKillsults.add("<PlayerName> [FACT] SpicyClient is free");
+		spicyFactsKillsults.add("<PlayerName> [FACT] SpicyClient is the best free hypixel client");
+		spicyFactsKillsults.add("<PlayerName> [FACT] You should download SpicyClient");
+		spicyFactsKillsults.add("<PlayerName> [FACT] SpicyClient uses the MIT license");
+		spicyFactsKillsults.add("<PlayerName> [FACT] SpicyClient is better than sigma");
+		spicyFactsKillsults.add("<PlayerName> [FACT] SpicyClient > Sigma");
+		spicyFactsKillsults.add("<PlayerName> [FACT] SpicyClient has tons of Hypixel bypasses");
+		spicyFactsKillsults.add("<PlayerName> [FACT] Downloading SpicyClient makes you 200% more pog");
 		
 	}
 	

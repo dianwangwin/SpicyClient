@@ -182,6 +182,8 @@ public class Config {
 			this.antiKnockback.horizontalKnockback = new NumberSetting("Horizontal Knockback", 0, 0, 100, 1);
 			this.antiKnockback.verticalKnockback = new NumberSetting("Vertical Knockback", 0, 0, 100, 1);
 			
+			this.killSults.messageMode = new ModeSetting("Message Type", this.killSults.messageMode.getMode(), "Furry", "Retarded Furry", "Annoying", "SpicyClient Ads", "SpicyFacts");
+			
 			this.inventoryManager.category = Category.PLAYER;
 			
 		}

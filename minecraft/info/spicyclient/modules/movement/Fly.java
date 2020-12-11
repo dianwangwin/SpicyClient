@@ -48,7 +48,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 
 public class Fly extends Module {
-
+	
 	public NumberSetting speed = new NumberSetting("Speed", 0.1, 0.01, 2, 0.1);
 	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "Hypixel", "HypixelFast1");
 	

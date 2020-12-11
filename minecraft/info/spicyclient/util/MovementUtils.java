@@ -101,4 +101,16 @@ public class MovementUtils {
         }
     }
     
+    public static boolean canStep(double height) {
+    	
+    	if (!mc.thePlayer.isCollidedHorizontally)
+    		return false;
+    	
+    	if (!mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().expand(0.01, 0, 0.01).offset(0.0D, height - 0.01, 0.0D)).isEmpty() && mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().expand(0.1, 0, 0.01).offset(0.0D, height + 0.1, 0.0D)).isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
 }
