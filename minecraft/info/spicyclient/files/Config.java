@@ -176,6 +176,8 @@ public class Config {
 			this.fly.hypixelBoostSpeed = new NumberSetting("Fall speed boost", 2.2, 1.0, 10, 0.1);
 			this.fly.hypixelFastFly1Speed = new NumberSetting("Speed", 0.2675, 0.01, 1.0, 0.0025);
 			this.fly.hypixelFastFly1StopOnDisable = new BooleanSetting("Stop on disable", true);
+			this.fly.hypixelFastFly1Blink = new BooleanSetting("Blink", false);
+			this.fly.hypixelFastFly1Decay = new NumberSetting("Decay", 18, 2, 35, 1);
 			
 			this.bhop.hypixelSpeed = new NumberSetting("Speed", 0.01, 0.0001, 0.03, 0.0001);
 			

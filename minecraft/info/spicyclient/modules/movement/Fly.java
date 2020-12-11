@@ -59,8 +59,11 @@ public class Fly extends Module {
 	
 	public NumberSetting hypixelFastFly1Speed = new NumberSetting("Speed", 0.2675, 0.01, 1.0, 0.0025);
 	public BooleanSetting hypixelFastFly1StopOnDisable = new BooleanSetting("Stop on disable", true);
+	public BooleanSetting hypixelFastFly1Blink = new BooleanSetting("Blink", false);
+	public NumberSetting hypixelFastFly1Decay = new NumberSetting("Decay", 18, 2, 35, 1);
 	
 	public static ArrayList<Packet> hypixelPackets = new ArrayList<Packet>();
+	public static ArrayList<Packet> hypixelFastFly1Packets = new ArrayList<Packet>();
 	
 	public Fly() {
 		super("Fly", Keyboard.KEY_NONE, Category.MOVEMENT);
@@ -70,7 +73,7 @@ public class Fly extends Module {
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
-		this.addSettings(speed, mode, hypixelTimerBoost, hypixelSpeed, hypixelBoostSpeed, hypixelFastFly1Speed, hypixelFastFly1StopOnDisable);
+		this.addSettings(speed, mode, hypixelTimerBoost, hypixelSpeed, hypixelBoostSpeed, hypixelFastFly1Speed, hypixelFastFly1StopOnDisable, hypixelFastFly1Decay);
 	}
 	
 	@Override
@@ -104,6 +107,14 @@ public class Fly extends Module {
 			
 			if (this.settings.contains(speed)) {
 				this.settings.remove(speed);
+			}
+			
+			if (this.settings.contains(hypixelFastFly1Blink)) {
+				this.settings.remove(hypixelFastFly1Blink);
+			}
+			
+			if (this.settings.contains(hypixelFastFly1Decay)) {
+				this.settings.remove(hypixelFastFly1Decay);
 			}
 			
 			reorderSettings();
@@ -144,6 +155,14 @@ public class Fly extends Module {
 				
 				if (!this.settings.contains(hypixelFastFly1StopOnDisable)) {
 					this.settings.add(hypixelFastFly1StopOnDisable);
+				}
+				
+				if (!this.settings.contains(hypixelFastFly1Blink)) {
+					this.settings.add(hypixelFastFly1Blink);
+				}
+				
+				if (!this.settings.contains(hypixelFastFly1Decay)) {
+					this.settings.add(hypixelFastFly1Decay);
 				}
 				
 			}else {
@@ -252,7 +271,7 @@ public class Fly extends Module {
 				if (mc.isSingleplayer()) {
 					
 				}else {
-					mc.getNetHandler().addToSendQueue(p);
+					mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
 				}
 				
 			}
@@ -642,11 +661,14 @@ public class Fly extends Module {
     
 	public int hypixelFastFlyStatus = 0, hypixelFastFly1 = 0;
 	public double speedAndStuff = 0;
+	public static transient boolean hypixelFastFly1Damaged = false;
 	
 	public void onEnableHypixelFastfly1() {
+		
 		hypixelFastFlyStatus = 0;
 		hypixelFastFly1 = 0;
 		speedAndStuff = 0;
+		hypixelFastFly1Damaged = false;
 		
         PlayerCapabilities playerCapabilities = new PlayerCapabilities();
         playerCapabilities.isFlying = true;
@@ -661,6 +683,8 @@ public class Fly extends Module {
 		MovementUtils.setMotion(0);
 		mc.thePlayer.jumpMovementFactor = 0;
 		
+		hypixelFastFly1Packets.clear();
+		
 	}
 	
 	public void onDisablehypixelFastFly1() {
@@ -672,10 +696,47 @@ public class Fly extends Module {
 			
 		}
 		
+		if (hypixelFastFly1Blink.isEnabled()) {
+			
+			for (Packet p : hypixelFastFly1Packets) {
+				
+				if (mc.isSingleplayer()) {
+					
+				}else {
+					mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
+				}
+				
+			}
+			hypixelFastFly1Packets.clear();
+			
+		}
+		
 	}
 	
     public void onEventHypixelFastfly1(Event e) {
-		
+    	
+    	
+		if (e instanceof EventSendPacket) {
+			
+			Block block = mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.2, mc.thePlayer.posZ)).getBlock();
+			
+			if (e.isPre() && !MovementUtils.isOnGround(0.0000001) && !block.isFullBlock() && !(block instanceof BlockGlass) && hypixelFastFly1Damaged) {
+				
+				if (((EventSendPacket)e).packet instanceof C00PacketKeepAlive || ((EventSendPacket)e).packet instanceof C00Handshake || ((EventSendPacket)e).packet instanceof C00PacketLoginStart) {
+					return;
+				}
+				
+				EventSendPacket sendPacket = (EventSendPacket) e;
+				
+				if (hypixelFastFly1Blink.isEnabled()) {
+					hypixelFastFly1Packets.add(sendPacket.packet);
+					sendPacket.setCanceled(true);
+				}
+				
+			}
+			
+		}
+    	
 		if (e instanceof EventUpdate) {
             EventUpdate em = (EventUpdate) e;
             
@@ -694,6 +755,7 @@ public class Fly extends Module {
                     		mc.thePlayer.motionY = 0.41999998688698f + 0*0.1;
                     		hypixelFastFly1 = 25;
                     		speedAndStuff = 13;
+                    		hypixelFastFly1Damaged = true;
                     	}else if(hypixelFastFly1 < 25){
                     		mc.thePlayer.motionX = 0;
                             mc.thePlayer.motionZ = 0;
@@ -711,8 +773,10 @@ public class Fly extends Module {
                     float speedf = (float) (hypixelFastFly1Speed.getValue() + 0 * 0.06f);
                     if (speedAndStuff > 0) {
                         if ((mc.thePlayer.moveForward == 0 && mc.thePlayer.moveStrafing == 0) || mc.thePlayer.isCollidedHorizontally)
-                            speedAndStuff = 0;                        
-                        speedf += speedAndStuff / 18;
+                            speedAndStuff = 0;
+                        
+                        //speedf += speedAndStuff / 18;
+                        speedf += speedAndStuff / hypixelFastFly1Decay.getValue();
                         
                         //dub-= 0.175 + 0*0.006; //0.152
                         

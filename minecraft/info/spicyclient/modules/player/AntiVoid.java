@@ -18,6 +18,7 @@ import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.notifications.Type;
 import info.spicyclient.settings.ModeSetting;
 import info.spicyclient.settings.NumberSetting;
+import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.Timer;
 import net.minecraft.block.BlockAir;
 import net.minecraft.network.play.client.C03PacketPlayer;
@@ -97,7 +98,7 @@ public class AntiVoid extends Module {
 						
 					}
 					
-			        if (!mc.thePlayer.onGround && (mc.thePlayer.fallDistance >= 20.0f || mc.thePlayer.posY < 0) && isOverVoid) {
+			        if (!MovementUtils.isOnGround(0.001) && (mc.thePlayer.fallDistance >= 20.0f || mc.thePlayer.posY < 0) && isOverVoid) {
 			        	
 			        	Random r = new Random();
 			        	
