@@ -3,6 +3,7 @@ package viamcp.gui;
 import com.github.creeper123123321.viafabric.ViaFabric;
 import com.github.creeper123123321.viafabric.util.ProtocolUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSlot;
@@ -14,6 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
@@ -54,13 +56,15 @@ public class GuiProtocolSelector extends GuiScreen {
 
     @Override
     public void drawScreen(int drawScreen, int mouseX, float mouseY) {
+    	
+    	//drawGradientRect(0, 0, width, height, 0xffff0000, 0xff00ff00);
+    	
         list.drawScreen(drawScreen, mouseX, mouseY);
 
         GL11.glPushMatrix();
         GL11.glScalef(2.0F, 2.0F, 2.0F);
         this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.BOLD.toString() + "Via Version",this.width / 4, 6, 16777215);
         GL11.glPopMatrix();
-
         super.drawScreen(drawScreen, mouseX, mouseY);
     }
     
@@ -105,6 +109,7 @@ public class GuiProtocolSelector extends GuiScreen {
         protected void drawSlot(int i, int i1, int i2, int i3, int i4, int i5) {
             drawCenteredString(mc.fontRendererObj,(ViaFabric.clientSideVersion == ProtocolSorter.getProtocolVersions().get(i).getVersion() ? EnumChatFormatting.GREEN.toString() : EnumChatFormatting.WHITE.toString()) + ProtocolUtils.getProtocolName(ProtocolSorter.getProtocolVersions().get(i).getVersion()) , width / 2, i2 + 2, -1);
         }
+        
     }
     
 }

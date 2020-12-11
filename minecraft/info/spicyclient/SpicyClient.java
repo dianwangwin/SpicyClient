@@ -81,12 +81,13 @@ public class SpicyClient {
 	
 	public static CommandManager commandManager = new CommandManager();
 	
-	public static int originalGuiScale = Minecraft.getMinecraft().gameSettings.guiScale;
+	// Removed
+	//public static int originalGuiScale = Minecraft.getMinecraft().gameSettings.guiScale;
 	
 	public static String originalUsername = "Not Set";
 	public static Boolean originalAccountOnline = false;
 	
-	public static int currentVersionNum = 0;
+	public static int currentVersionNum = 1;
 	
 	public static void StartUp() {
 		if (Minecraft.getMinecraft().getSession().getSessionType().equals(Session.Type.LEGACY)) {

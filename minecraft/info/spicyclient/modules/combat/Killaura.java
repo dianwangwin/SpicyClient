@@ -282,7 +282,7 @@ public class Killaura extends Module {
 						return;
 					}
 					
-					if (autoblock.isEnabled()) {
+					if (newAutoblock.getMode() != "None") {
 						
 						startBlocking();
 						
@@ -527,7 +527,7 @@ public class Killaura extends Module {
 	
 	private void startBlocking() {
 		
-		if(!autoblock.isEnabled()) {
+		if(newAutoblock.getMode() == "None") {
 			return;
 		}
 		

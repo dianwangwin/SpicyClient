@@ -171,7 +171,6 @@ public class Bhop extends Module {
 		
 		if (e instanceof EventUpdate) {
 			if (e.isPre()) {
-				
 				this.additionalInformation = mode.getMode();
 				
 				if (mode.getMode().equalsIgnoreCase("Vanilla") && mc.gameSettings.keyBindForward.pressed) {
@@ -222,7 +221,7 @@ public class Bhop extends Module {
 					
 					mc.thePlayer.noClip = true;
 					
-					if (mc.thePlayer.onGround) {
+					if (MovementUtils.isOnGround(0.004)) {
 						
 						mc.thePlayer.jump();
 						

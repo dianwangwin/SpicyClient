@@ -54,6 +54,9 @@ public class TestModuleOne extends Module {
 	@Override
 	public void onDisable() {
 		
+		mc.thePlayer.motionX = 0;
+		mc.thePlayer.motionZ = 0;
+		
 	}
 	
 	@Override
@@ -61,7 +64,7 @@ public class TestModuleOne extends Module {
 		
 		if (e instanceof EventUpdate) {
             EventUpdate em = (EventUpdate) e;
-            double speed = Math.max(0.02, 0.2873D);
+            double speed = Math.max(0.03, 0.2873D);
             Command.sendPrivateChatMessage(speed);
             if (true) {
             	if(!em.isPre())
@@ -134,8 +137,8 @@ public class TestModuleOne extends Module {
                                 forward = -1;
                             }
                         }
-                        mc.thePlayer.motionX = forward * speed * Math.cos(Math.toRadians(yaw + 90.0F)) + strafe * speed * Math.sin(Math.toRadians(yaw + 90.0F));
-                        mc.thePlayer.motionZ = forward * speed * Math.sin(Math.toRadians(yaw + 90.0F)) - strafe * speed * Math.cos(Math.toRadians(yaw + 90.0F));
+                        mc.thePlayer.motionX = forward * speedf * Math.cos(Math.toRadians(yaw + 90.0F)) + strafe * speedf * Math.sin(Math.toRadians(yaw + 90.0F));
+                        mc.thePlayer.motionZ = forward * speedf * Math.sin(Math.toRadians(yaw + 90.0F)) - strafe * speedf * Math.cos(Math.toRadians(yaw + 90.0F));
                     }
                     
                    // MovementUtils.setMotion(speedf);
@@ -148,7 +151,8 @@ public class TestModuleOne extends Module {
                     //status++;
                     //mc.thePlayer.lastReportedPosY = 0;
                     
-                    double offset2 = 4.496001251836E-5;
+                    //double offset2 = 4.496001251836E-5;
+                    double offset2 = 9.274936900641403E-14D;
                     
                     switch (status) {
                     
