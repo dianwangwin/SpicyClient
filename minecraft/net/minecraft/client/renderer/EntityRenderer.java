@@ -188,12 +188,12 @@ public class EntityRenderer implements IResourceManagerReloadListener
     /**
      * The texture id of the blocklight/skylight texture used for lighting effects
      */
-    private final DynamicTexture lightmapTexture;
+    public final DynamicTexture lightmapTexture;
 
     /**
      * Colors computed in updateLightmap() and loaded into the lightmap emptyTexture
      */
-    private final int[] lightmapColors;
+    public final int[] lightmapColors;
     private final ResourceLocation locationLightMap;
 
     /**
@@ -202,7 +202,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
     private boolean lightmapUpdateNeeded;
 
     /** Torch flicker X */
-    private float torchFlickerX;
+    public float torchFlickerX;
     private float torchFlickerDX;
 
     /** Rain sound counter */

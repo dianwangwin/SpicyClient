@@ -1,6 +1,7 @@
 package info.spicyclient.ui;
 
 import java.awt.Color;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import info.spicyclient.fonts.FontUtils;
 import info.spicyclient.modules.Module;
 import info.spicyclient.modules.render.SkyColor;
 import info.spicyclient.notifications.NotificationManager;
+import info.spicyclient.util.MovementUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -130,10 +132,11 @@ public class HUD {
 			}
 			
 			fr.drawString(message, 4,  (int) ((sr.getScaledHeight() - fr.FONT_HEIGHT) / 2.6 - 3), primaryColor);
-			
+			DecimalFormat decimalFormat = new DecimalFormat("#.##");
 			try {
 				GlStateManager.scale(0.5, 0.5, 1);
 				fr.drawString("Ping: " + mc.getNetHandler().getPlayerInfo((mc.thePlayer).getUniqueID()).responseTime, 8,  (int) ((sr.getScaledHeight() - fr.FONT_HEIGHT) / 1.3 - 16), primaryColor);
+				fr.drawString(decimalFormat.format(MovementUtils.getBlocksPerSecond()) + " blocks/sec", 8f,  (float) ((sr.getScaledHeight() - (fr.FONT_HEIGHT * 2)) / 1.3 - 18.75), primaryColor, false);
 				GlStateManager.scale(2, 2, 1);
 			} catch (NullPointerException e) {
 				

@@ -605,6 +605,13 @@ public class Killaura extends Module {
     public void customRots(EventMotion em, EntityLivingBase ent) {
         double randomYaw = 0.09;
 		double randomPitch = 0.09;
+		
+		Random random = new Random();
+		randomYaw = (random.nextFloat() / 10);
+		randomPitch = (random.nextFloat() / 10);
+		
+		//Command.sendPrivateChatMessage(randomYaw + " : " + randomPitch);
+		
 		float[] rotsN = getCustomRotsChange(sYaw, sPitch, target.posX + randomNumber(1,-1) * randomYaw, target.posY+ randomNumber(1,-1) * randomPitch, target.posZ+ randomNumber(1,-1) * randomYaw);
 		float targetYaw = rotsN[0];
 		float yawFactor = targetYaw*targetYaw/(4.7f * targetYaw);
@@ -625,6 +632,9 @@ public class Killaura extends Module {
 		float pitchFactor = targetPitch / 3.7F;
 		em.setPitch(sPitch + pitchFactor);
 		sPitch += pitchFactor;
+		
+		//Command.sendPrivateChatMessage(em.yaw + " : " + em.pitch);
+		
     }
     
 }

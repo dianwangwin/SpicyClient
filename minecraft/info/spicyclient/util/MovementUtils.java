@@ -1,11 +1,24 @@
 package info.spicyclient.util;
 
+import info.spicyclient.events.listeners.EventUpdate;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class MovementUtils {
 	
 	public static Minecraft mc = Minecraft.getMinecraft();
+	
+	
+	public static double getBlocksPerSecond() {
+		
+		if (mc.thePlayer == null || mc.thePlayer.ticksExisted < 1) {
+			return 0;
+		}
+		
+		return mc.thePlayer.getDistance(mc.thePlayer.lastTickPosX, mc.thePlayer.lastTickPosY, mc.thePlayer.lastTickPosZ) * 20;
+		
+	}
 	
 	public static float getSpeed() {
         return (float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ);

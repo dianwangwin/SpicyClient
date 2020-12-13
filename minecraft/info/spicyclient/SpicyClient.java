@@ -24,6 +24,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import javax.swing.SwingUtilities;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.client.methods.HttpGet;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
@@ -51,8 +52,10 @@ import info.spicyclient.modules.Module.Category;
 import info.spicyclient.modules.player.Timer;
 import info.spicyclient.modules.render.*;
 import info.spicyclient.music.MusicManager;
+import info.spicyclient.networking.NetworkManager;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.ui.HUD;
+import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.RenderUtils;
 import info.spicyclient.util.RotationUtils;
 import javafx.scene.media.Media;
@@ -102,46 +105,11 @@ public class SpicyClient {
 			originalUsername = Minecraft.getMinecraft().getSession().getUsername();
 			
 			String url = "http://spicyclient.info/api/api.php?username=" + originalUsername + "&stat_type=ping";
-		     URL obj = null;
+			
+			// This is a faster way of pinging my server
 			try {
-				obj = new URL(url);
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		     HttpURLConnection con = null;
-			try {
-				con = (HttpURLConnection) obj.openConnection();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		     //add request header
-		     con.setRequestProperty("User-Agent", "Mozilla/5.0");
-		     int responseCode = 0;
-			try {
-				responseCode = con.getResponseCode();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		     System.out.println("\nSending 'GET' request to URL : " + url);
-		     System.out.println("Response Code : " + responseCode);
-		     BufferedReader in = null;
-		     try {
-				in = new BufferedReader(
-				         new InputStreamReader(con.getInputStream()));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		     String inputLine;
-		     StringBuffer response = new StringBuffer();
-		     try {
-				in.close();
-			} catch (NullPointerException e) {
-				// TODO: handle exception
-			} catch (IOException e) {
+				NetworkManager.getNetworkManager().sendGet(new HttpGet(url));
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
