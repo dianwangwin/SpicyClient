@@ -462,6 +462,7 @@ public class SpicyClient {
 		modules.add(c.tracers);
 		modules.add(c.blockCoding);
 		modules.add(c.testModuleOne);
+		modules.add(c.hypixel5SecDisabler);
 		
 		for (Module temp : SpicyClient.modules) {
 			

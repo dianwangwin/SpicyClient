@@ -2,6 +2,7 @@ package info.spicyclient.modules.movement;
 
 import org.lwjgl.input.Keyboard;
 
+import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventPacket;
@@ -53,7 +54,7 @@ public class AntiKnockback extends Module {
 				packet.setMotionY((int) ((packet.getMotionY() / 100) * verticalKnockback.getValue()));
 				packet.setMotionZ((int) ((packet.getMotionZ() / 100) * horizontalKnockback.getValue()));
 				
-				if (horizontalKnockback.getValue() <= 0 && verticalKnockback.getValue() <= 0) {
+				if (horizontalKnockback.getValue() == 0 && verticalKnockback.getValue() == 0) {
 					e.setCanceled(true);
 				}
 				

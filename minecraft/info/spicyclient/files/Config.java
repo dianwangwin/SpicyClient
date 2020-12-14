@@ -89,6 +89,7 @@ public class Config {
 	public Tracers tracers = new Tracers();
 	public BlockCoding blockCoding = new BlockCoding();
 	public TestModuleOne testModuleOne = new TestModuleOne();
+	public Hypixel5SecDisabler hypixel5SecDisabler = new Hypixel5SecDisabler();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -148,6 +149,7 @@ public class Config {
 			this.tracers = new Tracers();
 			this.blockCoding = new BlockCoding();
 			this.testModuleOne = new TestModuleOne();
+			this.hypixel5SecDisabler = new Hypixel5SecDisabler();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
