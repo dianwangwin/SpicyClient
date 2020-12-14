@@ -10,7 +10,7 @@ import net.minecraft.util.ChatAllowedCharacters;
 
 public class TextBox {
 	
-	public TextBox(double left, double bottom, double right, double up, int outlineColor, int insideColor, int textColor, int ghostTextColor, float outlineThiccness, Boolean selected, GuiScreen screen) {
+	public TextBox(double left, double bottom, double right, double up, int outlineColor, int insideColor, int textColor, int ghostTextColor, float outlineThickness, Boolean selected, GuiScreen screen) {
 		this.left = left;
 		this.bottom = bottom;
 		this.right = right;
@@ -19,12 +19,12 @@ public class TextBox {
 		this.insideColor = insideColor;
 		this.textColor = textColor;
 		this.ghostTextColor = ghostTextColor;
-		this.outlineThiccness = outlineThiccness;
+		this.outlineThickness = outlineThickness;
 		this.selected = selected;
 		this.screen = screen;
 	}
 	
-	public double left = 0, bottom = 0, right = 0, up = 0 , outlineThiccness = 2;
+	public double left = 0, bottom = 0, right = 0, up = 0 , outlineThickness = 2;
 	public int outlineColor = -1, insideColor = 0xff000000, textColor = -1, ghostTextColor = -1;
 	public GuiScreen screen = null;
 	public String text = null, ghostText = null;
@@ -37,25 +37,25 @@ public class TextBox {
 		
 		GlStateManager.pushMatrix();
 		screen.drawRect(left, bottom, right, up, outlineColor);
-		screen.drawRect(left + outlineThiccness, bottom - outlineThiccness, right - outlineThiccness, up + outlineThiccness, insideColor);
+		screen.drawRect(left + outlineThickness, bottom - outlineThickness, right - outlineThickness, up + outlineThickness, insideColor);
 		GlStateManager.popMatrix();
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(textScale, textScale, 1);
 		if (text == null && ghostText != null && !selected) {
-			screen.drawString(Minecraft.getMinecraft().fontRendererObj, ghostText, (left + outlineThiccness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, ghostTextColor);
+			screen.drawString(Minecraft.getMinecraft().fontRendererObj, ghostText, (left + outlineThickness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, ghostTextColor);
 		}
 		else if (text == null) {
 			
 			if (blinker > System.currentTimeMillis() && selected) {
 				if (text == null) {
-					screen.drawString(Minecraft.getMinecraft().fontRendererObj, " ", (left + outlineThiccness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
+					screen.drawString(Minecraft.getMinecraft().fontRendererObj, " ", (left + outlineThickness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
 				}
 				else if (text.length() == 0) {
-					screen.drawString(Minecraft.getMinecraft().fontRendererObj, " ", (left + outlineThiccness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
+					screen.drawString(Minecraft.getMinecraft().fontRendererObj, " ", (left + outlineThickness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
 				}
 				else {
-					screen.drawString(Minecraft.getMinecraft().fontRendererObj, text, (left + outlineThiccness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
+					screen.drawString(Minecraft.getMinecraft().fontRendererObj, text, (left + outlineThickness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
 				}
 			}
 			else if (selected) {
@@ -63,31 +63,31 @@ public class TextBox {
 					blinker = System.currentTimeMillis() + 500;
 				}
 				if (text == null){
-					screen.drawString(Minecraft.getMinecraft().fontRendererObj, "_", (left + outlineThiccness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
+					screen.drawString(Minecraft.getMinecraft().fontRendererObj, "_", (left + outlineThickness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
 				}
 				else if (text.length() == 0) {
-					screen.drawString(Minecraft.getMinecraft().fontRendererObj, "_", (left + outlineThiccness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
+					screen.drawString(Minecraft.getMinecraft().fontRendererObj, "_", (left + outlineThickness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
 				}
 				else {
-					screen.drawString(Minecraft.getMinecraft().fontRendererObj, text + "_", (left + outlineThiccness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
+					screen.drawString(Minecraft.getMinecraft().fontRendererObj, text + "_", (left + outlineThickness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
 				}
 				
 			}
 			
 		}
 		else if (text.length() == 0 && ghostText != null && !selected) {
-			screen.drawString(Minecraft.getMinecraft().fontRendererObj, ghostText, (left + outlineThiccness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, ghostTextColor);
+			screen.drawString(Minecraft.getMinecraft().fontRendererObj, ghostText, (left + outlineThickness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, ghostTextColor);
 		}
 		else {
 			if (blinker > System.currentTimeMillis() && selected) {
 				if (text == null) {
-					screen.drawString(Minecraft.getMinecraft().fontRendererObj, " ", (left + outlineThiccness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
+					screen.drawString(Minecraft.getMinecraft().fontRendererObj, " ", (left + outlineThickness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
 				}
 				else if (text.length() == 0) {
-					screen.drawString(Minecraft.getMinecraft().fontRendererObj, " ", (left + outlineThiccness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
+					screen.drawString(Minecraft.getMinecraft().fontRendererObj, " ", (left + outlineThickness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
 				}
 				else {
-					screen.drawString(Minecraft.getMinecraft().fontRendererObj, text, (left + outlineThiccness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
+					screen.drawString(Minecraft.getMinecraft().fontRendererObj, text, (left + outlineThickness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
 				}
 			}
 			else if (selected) {
@@ -95,18 +95,18 @@ public class TextBox {
 					blinker = System.currentTimeMillis() + 500;
 				}
 				if (text == null){
-					screen.drawString(Minecraft.getMinecraft().fontRendererObj, "_", (left + outlineThiccness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
+					screen.drawString(Minecraft.getMinecraft().fontRendererObj, "_", (left + outlineThickness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
 				}
 				else if (text.length() == 0) {
-					screen.drawString(Minecraft.getMinecraft().fontRendererObj, "_", (left + outlineThiccness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
+					screen.drawString(Minecraft.getMinecraft().fontRendererObj, "_", (left + outlineThickness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
 				}
 				else {
-					screen.drawString(Minecraft.getMinecraft().fontRendererObj, text + "_", (left + outlineThiccness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
+					screen.drawString(Minecraft.getMinecraft().fontRendererObj, text + "_", (left + outlineThickness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
 				}
 				
 			}
 			else if (!selected) {
-				screen.drawString(Minecraft.getMinecraft().fontRendererObj, text, (left + outlineThiccness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
+				screen.drawString(Minecraft.getMinecraft().fontRendererObj, text, (left + outlineThickness) / textScale, ((((bottom - up) / 2) / 2) + up) / textScale, textColor);
 			}
 		}
 		GlStateManager.popMatrix();
@@ -198,11 +198,11 @@ public class TextBox {
 	}
 
 	public double getOutlineThiccness() {
-		return outlineThiccness;
+		return outlineThickness;
 	}
 
 	public void setOutlineThiccness(double outlineThiccness) {
-		this.outlineThiccness = outlineThiccness;
+		this.outlineThickness = outlineThiccness;
 	}
 
 	public int getOutlineColor() {

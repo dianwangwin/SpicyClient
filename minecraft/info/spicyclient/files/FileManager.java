@@ -232,4 +232,46 @@ public class FileManager {
 		
 	}
 	
+	public static boolean saveAccount(Account obj) throws IOException {
+		
+		File file = new File(getROOT_DIR(), "");
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		try {
+			writeJsonToFile(new File(file, "Account.AccountInfo"), obj);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return true;
+		
+	}
+	
+	public static Object loadAccount(Account obj) throws IOException {
+		
+		File file = new File(getROOT_DIR(), "");
+		if (!file.exists()) {
+			return null;
+		}
+		
+		try {
+			
+			Gson g = new Gson();
+			Account p = g.fromJson((String) readFromJson(new File(file, "Account.AccountInfo"), obj), Account.class);
+			
+			return p;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
 }

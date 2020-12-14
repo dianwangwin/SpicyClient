@@ -25,6 +25,8 @@ import info.spicyclient.modules.render.PlayerESP;
 import info.spicyclient.settings.BooleanSetting;
 import info.spicyclient.settings.ModeSetting;
 import info.spicyclient.settings.NumberSetting;
+import info.spicyclient.ui.account.Login;
+import info.spicyclient.ui.account.Register;
 import info.spicyclient.ui.customOpenGLWidgets.Button;
 import info.spicyclient.util.Timer;
 import net.minecraft.client.gui.Gui;
@@ -53,7 +55,7 @@ public class NewMainMenu extends GuiScreen {
 		
 	}
 	
-	public Button singleplayer, multiplayer, altManager, settings, language, update;
+	public Button singleplayer, multiplayer, altManager, settings, language, update, login, register;
 	
 	// This is for the blinking warning text
 	private Timer timer = new Timer();
@@ -254,6 +256,14 @@ public class NewMainMenu extends GuiScreen {
         language.setTextScale(1.5f);
         language.setText(I18n.format("Language"));
         
+        login = new Button(this.width - 68, 28, this.width - 4, 8, 0xff202225, 0xff7289da, -1, 2, this);
+        login.setTextScale(1.4f);
+        login.setText("Login");
+        
+        register = new Button(this.width - 152, 28, this.width - 72, 8, 0xff202225, 0xff7289da, -1, 2, this);
+        register.setTextScale(1.4f);
+        register.setText("Register");
+        
         if (Updater.getUpdater().ClientOutdated()) {
         	
             update = new Button(this.width / 20, (this.height / 2) + 200, (this.width / 20) + 300, (this.height / 2) - 30 + 200, 0xff202225, 0xff7289da, -1, 2, this);
@@ -269,6 +279,8 @@ public class NewMainMenu extends GuiScreen {
             	altManager.insideColor = 0xff4d5c91;
             	settings.insideColor = 0xff4d5c91;
             	language.insideColor = 0xff4d5c91;
+            	login.insideColor = 0xff4d5c91;
+            	register.insideColor = 0xff4d5c91;
             	update.insideColor = 0xff4d5c91;
             	
             }
@@ -285,6 +297,7 @@ public class NewMainMenu extends GuiScreen {
 		}
 		
 		// For the buttons
+		
 		// For the singleplayer button
 		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < this.height / 2 && mouseY > (this.height / 2) - 30) {
 			singleplayer.insideColor = 0xff4d5c91;
@@ -310,10 +323,20 @@ public class NewMainMenu extends GuiScreen {
 			language.insideColor = 0xff4d5c91;
 		}
 		
+		// For the login button
+		if (mouseX > this.width - 68 && mouseX < this.width - 4 && mouseY < 28 && mouseY > 8) {
+			login.insideColor = 0xff4d5c91;
+		}
+		
+		// For the register button
+		if (mouseX > this.width - 152 && mouseX < this.width - 72 && mouseY < 28 && mouseY > 8) {
+			register.insideColor = 0xff4d5c91;
+		}
+		
 		// For the update button
 		if (Updater.getUpdater().ClientOutdated()) {
 			
-			if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 200 && mouseY > (this.height / 2) - 30 + 200) {
+			if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < 28 && mouseY > 8) {
 				update.insideColor = 0xff4d5c91;
 			}
 			
@@ -325,9 +348,24 @@ public class NewMainMenu extends GuiScreen {
 		settings.draw();
 		language.draw();
 		
+		if (!SpicyClient.account.loggedIn) {
+			login.draw();
+			register.draw();
+		}else {
+			
+			double textScaling = 1.2;
+			
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(textScaling, textScaling, 1);
+			String text = "Logged in as " + SpicyClient.account.username;
+			drawString(mc.fontRendererObj, text, ((this.width) - ((mc.fontRendererObj.getStringWidth(text) * textScaling)) - 10) / textScaling, (mc.fontRendererObj.FONT_HEIGHT) / textScaling, 0xff7289da);
+			GlStateManager.popMatrix();
+		}
+		
 		if (Updater.getUpdater().ClientOutdated()) {
 			update.draw();
 		}
+		
 		
 		
 		// To prevent the text from blinking
@@ -361,6 +399,8 @@ public class NewMainMenu extends GuiScreen {
 			return;
 		}
 		
+		// For the buttons
+		
 		// For the singleplayer button
 		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < this.height / 2 && mouseY > (this.height / 2) - 30) {
 			this.mc.displayGuiScreen(new GuiSelectWorld(this));
@@ -384,6 +424,20 @@ public class NewMainMenu extends GuiScreen {
 		// For the language button
 		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 160 && mouseY > (this.height / 2) - 30 + 160) {
 			this.mc.displayGuiScreen(new GuiLanguage(this, this.mc.gameSettings, this.mc.getLanguageManager()));
+		}
+		
+		if (!SpicyClient.account.loggedIn) {
+			
+			// For the login button
+			if (mouseX > this.width - 68 && mouseX < this.width - 4 && mouseY < 28 && mouseY > 8) {
+				mc.displayGuiScreen(new Login(this));
+			}
+			
+			// For the register button
+			if (mouseX > this.width - 152 && mouseX < this.width - 72 && mouseY < 28 && mouseY > 8) {
+				mc.displayGuiScreen(new Register(this));
+			}
+			
 		}
 		
 		// For the update button

@@ -74,7 +74,7 @@ public class NetworkManager {
 
     }
 
-    public CloseableHttpResponse sendPost(HttpPost post, BasicNameValuePair... args) throws Exception {
+    public String sendPost(HttpPost post, BasicNameValuePair... args) throws Exception {
 
     	//HttpPost post = new HttpPost("https://httpbin.org/post");
 
@@ -98,8 +98,11 @@ public class NetworkManager {
         try (CloseableHttpClient httpClient = HttpClients.createDefault();
              CloseableHttpResponse response = httpClient.execute(post)) {
         	
-            System.out.println(EntityUtils.toString(response.getEntity()));
-            return response;
+        	String stringResponse = EntityUtils.toString(response.getEntity());
+        	
+            System.out.println(stringResponse);
+            //return response;
+            return stringResponse;
         }
 
     }

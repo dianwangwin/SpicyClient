@@ -2,6 +2,8 @@ package info.spicyclient;
 
 import java.awt.Font;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,6 +27,9 @@ import javax.swing.SwingUtilities;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
@@ -42,6 +47,7 @@ import info.spicyclient.events.listeners.EventChatmessage;
 import info.spicyclient.events.listeners.EventKey;
 import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.events.listeners.EventUpdate;
+import info.spicyclient.files.Account;
 import info.spicyclient.files.AltInfo;
 import info.spicyclient.files.Config;
 import info.spicyclient.files.FileManager;
@@ -53,6 +59,7 @@ import info.spicyclient.modules.player.Timer;
 import info.spicyclient.modules.render.*;
 import info.spicyclient.music.MusicManager;
 import info.spicyclient.networking.NetworkManager;
+import info.spicyclient.networking.NetworkUtils;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.ui.HUD;
 import info.spicyclient.util.MovementUtils;
@@ -84,13 +91,15 @@ public class SpicyClient {
 	
 	public static CommandManager commandManager = new CommandManager();
 	
+	public static Account account = new Account();
+	
 	// Removed
 	//public static int originalGuiScale = Minecraft.getMinecraft().gameSettings.guiScale;
 	
 	public static String originalUsername = "Not Set";
 	public static Boolean originalAccountOnline = false;
 	
-	public static int currentVersionNum = 1;
+	public static int currentVersionNum = 2;
 	
 	public static void StartUp() {
 		if (Minecraft.getMinecraft().getSession().getSessionType().equals(Session.Type.LEGACY)) {
@@ -171,6 +180,56 @@ public class SpicyClient {
 		
 		// Start the file manager
 		FileManager.init();
+		
+		// Loads the saved account and creates a new file if it doesn't exist
+		if (!new File(FileManager.ROOT_DIR, "Account.AccountInfo").exists()) {
+			
+			System.out.println("Account file not found... Creating a new one");
+			try {
+				FileManager.saveAccount(SpicyClient.account);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+		}else {
+			System.out.println("Account file found... Loading the account data");
+		}
+		
+		try {
+			SpicyClient.account = (Account) FileManager.loadAccount(SpicyClient.account);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		// Loads the saved account and creates a new file if it doesn't exist
+		
+		// Checks if the session is valid
+		try {
+			
+			JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("http://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "loginWithSession"), new BasicNameValuePair("session", account.session)));
+			
+			if (response.getBoolean("error")) {
+				
+				account.loggedIn = false;
+				account.session = "";
+				FileManager.saveAccount(account);
+				
+			}
+			
+		} catch (Exception e) {
+			
+			account.loggedIn = false;
+			account.session = "";
+			try {
+				FileManager.saveAccount(account);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			e.printStackTrace();
+		}
 		
 		// Start the discord rich presence
 		discord = new DiscordRP();
