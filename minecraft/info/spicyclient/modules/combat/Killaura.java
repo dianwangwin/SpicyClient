@@ -183,8 +183,6 @@ public class Killaura extends Module {
 			fr.drawString("Â§c❤: Â§f" + dec.format(target.getHealth()), sr.getScaledWidth() / 2 - 40 + fr.getStringWidth("HP: "), sr.getScaledHeight() / 2 + 125, color);
 			//fr.drawString(dec.format(target.getMaxHealth()) + "", sr.getScaledWidth() / 2 - 40 + fr.getStringWidth("HP: ") + fr.getStringWidth(dec.format(target.getHealth()) + " / "), sr.getScaledHeight() / 2 + 125, color);
 			
-			
-			
 			/*
 			RenderHelper.enableGUIStandardItemLighting();
 			mc.getRenderItem().renderItemAndEffectIntoGUI(target.getHeldItem(), sr.getScaledWidth() / 2 - 40, sr.getScaledHeight() / 2 + 143);
