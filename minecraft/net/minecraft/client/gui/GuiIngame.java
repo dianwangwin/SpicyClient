@@ -226,7 +226,7 @@ public class GuiIngame extends Gui
 
         if (this.mc.isDemo())
         {
-            this.renderDemo(scaledresolution);
+            //this.renderDemo(scaledresolution);
         }
 
         if (this.mc.gameSettings.showDebugInfo)

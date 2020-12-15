@@ -2,7 +2,7 @@ package info.spicyclient;
 
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.modules.Module;
-import info.spicyclient.modules.render.ClickGUI;
+import info.spicyclient.modules.render.Hud;
 import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
 import net.arikia.dev.drpc.DiscordRichPresence;
@@ -72,7 +72,7 @@ public class DiscordRP {
 		
 		for (Module m : SpicyClient.modules) {
 			
-			if (m.isEnabled() && !(m instanceof ClickGUI) && !(m instanceof info.spicyclient.modules.player.DiscordRichPresence)) {
+			if (m.isEnabled() && !(m instanceof Hud) && !(m instanceof info.spicyclient.modules.player.DiscordRichPresence)) {
 				toggled++;
 			}
 			

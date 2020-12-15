@@ -13,6 +13,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockLiquid;
@@ -75,7 +77,7 @@ public abstract class World implements IBlockAccess
     public final List<TileEntity> tickableTileEntities = Lists.<TileEntity>newArrayList();
     private final List<TileEntity> addedTileEntityList = Lists.<TileEntity>newArrayList();
     private final List<TileEntity> tileEntitiesToBeRemoved = Lists.<TileEntity>newArrayList();
-    public final List<EntityPlayer> playerEntities = Lists.<EntityPlayer>newArrayList();
+    public final CopyOnWriteArrayList<EntityPlayer> playerEntities = new CopyOnWriteArrayList<EntityPlayer>();
     public final List<Entity> weatherEffects = Lists.<Entity>newArrayList();
     protected final IntHashMap<Entity> entitiesById = new IntHashMap();
     private long cloudColour = 16777215L;

@@ -231,6 +231,15 @@ public class SpicyClient {
 			e.printStackTrace();
 		}
 		
+		try {
+			if (SpicyClient.account.loggedIn) {
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("http://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "updateCurrentAlt"), new BasicNameValuePair("session", account.session), new BasicNameValuePair("alt", originalUsername)));
+			}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		// Start the discord rich presence
 		discord = new DiscordRP();
 		discord.start();
@@ -289,6 +298,10 @@ public class SpicyClient {
 			return;
 		}
 		
+		if (account.loggedIn) {
+			account.onEvent(e);
+		}
+		
 		if (e instanceof EventChatmessage) {
 			
 			// Will check if the message is a command and if it is a command then will run it
@@ -322,7 +335,7 @@ public class SpicyClient {
 			//if (!m.toggled)
 			//	continue;
 			
-			if (m.toggled || m instanceof ClickGUI) {
+			if (m.toggled || m instanceof Hud) {
 				
 				boolean sendTwice = false;
 				
@@ -349,7 +362,7 @@ public class SpicyClient {
 				m.onEvent(e);
 				
 			}
-			else if (!m.toggled || m instanceof ClickGUI) {
+			else if (!m.toggled || m instanceof Hud) {
 				
 				boolean sendTwice = false;
 				
@@ -463,6 +476,7 @@ public class SpicyClient {
 		modules.add(c.blockCoding);
 		modules.add(c.testModuleOne);
 		modules.add(c.hypixel5SecDisabler);
+		modules.add(c.hud);
 		
 		for (Module temp : SpicyClient.modules) {
 			

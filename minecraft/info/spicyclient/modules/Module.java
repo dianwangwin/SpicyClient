@@ -104,8 +104,8 @@ public abstract class Module {
 			
 			onEnable();
 			
-			if (SpicyClient.config.clickgui.sound.isEnabled()) {
-				Minecraft.getMinecraft().thePlayer.playSound("random.click", (float) SpicyClient.config.clickgui.volume.getValue(), 0.6f);
+			if (SpicyClient.config.hud.sound.isEnabled()) {
+				Minecraft.getMinecraft().thePlayer.playSound("random.click", (float) SpicyClient.config.hud.volume.getValue(), 0.6f);
 			}
 			
 		}else {
@@ -114,8 +114,8 @@ public abstract class Module {
 			
 			onDisable();
 			
-			if (SpicyClient.config.clickgui.sound.isEnabled()) {
-				Minecraft.getMinecraft().thePlayer.playSound("random.click", (float) SpicyClient.config.clickgui.volume.getValue(), 0.4f);
+			if (SpicyClient.config.hud.sound.isEnabled()) {
+				Minecraft.getMinecraft().thePlayer.playSound("random.click", (float) SpicyClient.config.hud.volume.getValue(), 0.4f);
 			}
 			
 		}

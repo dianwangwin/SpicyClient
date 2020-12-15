@@ -57,7 +57,7 @@ public class NetworkManager {
             if (entity != null) {
                 // return it as a String
                 String result = EntityUtils.toString(entity);
-                System.out.println(result);
+                //System.out.println(result);
                 return result;
             }else {
             	System.err.println("Failed to return get request... Returning error string instead");
@@ -100,7 +100,7 @@ public class NetworkManager {
         	
         	String stringResponse = EntityUtils.toString(response.getEntity());
         	
-            System.out.println(stringResponse);
+            //System.out.println(stringResponse);
             //return response;
             return stringResponse;
         }

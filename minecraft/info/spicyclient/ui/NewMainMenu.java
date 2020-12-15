@@ -11,6 +11,7 @@ import org.newdawn.slick.Color;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.autoUpdater.Updater;
+import info.spicyclient.files.Account;
 import info.spicyclient.files.Config;
 import info.spicyclient.fonts.FontManager;
 import info.spicyclient.fonts.FontRenderer;
@@ -116,6 +117,7 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ Hypixel interact autoblock");
         changeLogs.add("+ Hypixel disabler");
         changeLogs.add("+ Hypixel inventory manager");
+        changeLogs.add("+ Hypixel 5 second disabler");
         changeLogs.add("+ Payback for pvplands killsults");
         changeLogs.add("+ Vanilla nofall");
         changeLogs.add("+ Vanilla and packet autolog");
@@ -353,13 +355,24 @@ public class NewMainMenu extends GuiScreen {
 			register.draw();
 		}else {
 			
+	        login = new Button(this.width - 68, 25, this.width - 4, 5, 0xff202225, 0xff7289da, -1, 2, this);
+	        login.setTextScale(1.3f);
+	        login.setText("Log out");
+	        
+			if (mouseX > this.width - 68 && mouseX < this.width - 4 && mouseY < 25 && mouseY > 5) {
+				login.insideColor = 0xff4d5c91;
+			}
+			
+			login.draw();
+			
 			double textScaling = 1.2;
 			
 			GlStateManager.pushMatrix();
 			GlStateManager.scale(textScaling, textScaling, 1);
 			String text = "Logged in as " + SpicyClient.account.username;
-			drawString(mc.fontRendererObj, text, ((this.width) - ((mc.fontRendererObj.getStringWidth(text) * textScaling)) - 10) / textScaling, (mc.fontRendererObj.FONT_HEIGHT) / textScaling, 0xff7289da);
+			drawString(mc.fontRendererObj, text, ((this.width) - ((mc.fontRendererObj.getStringWidth(text) * textScaling)) - 73) / textScaling, ((mc.fontRendererObj.FONT_HEIGHT) + 1) / textScaling, 0xff7289da);
 			GlStateManager.popMatrix();
+			
 		}
 		
 		if (Updater.getUpdater().ClientOutdated()) {
@@ -436,6 +449,12 @@ public class NewMainMenu extends GuiScreen {
 			// For the register button
 			if (mouseX > this.width - 152 && mouseX < this.width - 72 && mouseY < 28 && mouseY > 8) {
 				mc.displayGuiScreen(new Register(this));
+			}
+			
+		}else {
+			
+			if (mouseX > this.width - 68 && mouseX < this.width - 4 && mouseY < 25 && mouseY > 5) {
+				SpicyClient.account = new Account();
 			}
 			
 		}

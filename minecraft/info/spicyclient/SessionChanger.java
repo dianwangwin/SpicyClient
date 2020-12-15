@@ -2,11 +2,17 @@ package info.spicyclient;
 
 import java.util.UUID;
 
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
+
 import com.mojang.authlib.Agent;
 import com.mojang.authlib.AuthenticationService;
 import com.mojang.authlib.UserAuthentication;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.util.UUIDTypeAdapter;
+
+import info.spicyclient.networking.NetworkManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Session;
 
@@ -30,7 +36,6 @@ public class SessionChanger {
 		auth = authService.createUserAuthentication(Agent.MINECRAFT);
 		authService.createMinecraftSessionService();
 	}
-
 	
 	//Online mode
 	//Checks if your already logged in to the account.
@@ -44,10 +49,21 @@ public class SessionChanger {
 				this.auth.logIn();
 				Session session = new Session(this.auth.getSelectedProfile().getName(), UUIDTypeAdapter.fromUUID(auth.getSelectedProfile().getId()), this.auth.getAuthenticatedToken(), this.auth.getUserType().getName());
 				setSession(session);
+				
+				if (SpicyClient.account.loggedIn) {
+					try {
+						JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("http://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "updateCurrentAlt"), new BasicNameValuePair("session", SpicyClient.account.session), new BasicNameValuePair("alt", Minecraft.getMinecraft().session.getUsername())));
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
 			} 
 			catch (Exception e) {
 				e.printStackTrace();
 			}
+			
 		}
 
 	}
@@ -64,5 +80,15 @@ public class SessionChanger {
 		this.auth.logOut();
 		Session session = new Session(username, username, "0", "legacy");
 		setSession(session);
+		
+		try {
+			if (SpicyClient.account.loggedIn) {
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("http://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "updateCurrentAlt"), new BasicNameValuePair("session", SpicyClient.account.session), new BasicNameValuePair("alt", Minecraft.getMinecraft().session.getUsername())));
+			}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 	}
 }

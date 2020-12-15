@@ -45,8 +45,7 @@ public class HideName extends Module {
 				S02PacketChat packet = (S02PacketChat) packetEvent.packet;
 				
 				if (packet.getChatComponent().getUnformattedText().replaceAll("׼", "").contains(mc.getSession().getUsername())) {
-					mc.thePlayer.addChatComponentMessage(new ChatComponentText(packet.getChatComponent().getFormattedText().replaceAll("׼", "").replaceAll(mc.getSession().getUsername(), mode.getMode())));
-					e.setCanceled(true);
+					packet.chatComponent = new ChatComponentText(packet.getChatComponent().getFormattedText().replaceAll("׼", "").replaceAll(mc.getSession().getUsername(), mode.getMode()));
 				}
 				
 			}

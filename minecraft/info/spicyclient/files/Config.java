@@ -25,7 +25,7 @@ public class Config {
 	public String version;
 	
 	public TabGUI tabgui = new TabGUI();
-	public ClickGUI clickgui = new ClickGUI();
+	public ClickGui clickgui = new ClickGui();
 	public Killaura killaura = new Killaura();
 	public Fly fly = new Fly();
 	public Sprint sprint = new Sprint();
@@ -90,6 +90,7 @@ public class Config {
 	public BlockCoding blockCoding = new BlockCoding();
 	public TestModuleOne testModuleOne = new TestModuleOne();
 	public Hypixel5SecDisabler hypixel5SecDisabler = new Hypixel5SecDisabler();
+	public Hud hud = new Hud();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -150,6 +151,7 @@ public class Config {
 			this.blockCoding = new BlockCoding();
 			this.testModuleOne = new TestModuleOne();
 			this.hypixel5SecDisabler = new Hypixel5SecDisabler();
+			this.hud = new Hud();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
@@ -187,6 +189,15 @@ public class Config {
 			this.antiKnockback.verticalKnockback = new NumberSetting("Vertical Knockback", 0, 0, 100, 1);
 			
 			this.killSults.messageMode = new ModeSetting("Message Type", this.killSults.messageMode.getMode(), "Furry", "Retarded Furry", "Annoying", "SpicyClient Ads", "SpicyFacts");
+			
+			this.hud.sound = clickgui.sound;
+			this.hud.volume = clickgui.volume;
+			this.hud.mode = clickgui.mode;
+			this.hud.colorSettingRed = clickgui.colorSettingRed;
+			this.hud.colorSettingGreen = clickgui.colorSettingGreen;
+			this.hud.colorSettingBlue = clickgui.colorSettingBlue;
+			this.hud.name = "HUD";
+			this.hud.toggled = true;
 			
 			this.inventoryManager.category = Category.PLAYER;
 			
