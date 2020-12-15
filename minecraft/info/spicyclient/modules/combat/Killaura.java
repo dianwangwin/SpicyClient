@@ -158,12 +158,15 @@ public class Killaura extends Module {
 			
 			healthBarTarget = sr.getScaledWidth() / 2 - 41 + (((140) / (target.getMaxHealth())) * (target.getHealth()));
 			
+			// Lower is faster, higher is slower
+			double HealthBarSpeed = 6;
+			
 			if (healthBar > healthBarTarget) {
-				healthBar = ((healthBar) - ((healthBar - healthBarTarget) / 10));
+				healthBar = ((healthBar) - ((healthBar - healthBarTarget) / HealthBarSpeed));
 			}
 			else if (healthBar < healthBarTarget) {
 				//healthBar = healthBarTarget;
-				healthBar = ((healthBar) + ((healthBarTarget - healthBar) / 10));
+				healthBar = ((healthBar) + ((healthBarTarget - healthBar) / HealthBarSpeed));
 			}
 			//Command.sendPrivateChatMessage(healthBarTarget + " : " + healthBar);
 			
@@ -177,7 +180,7 @@ public class Killaura extends Module {
 			GuiInventory.drawEntityOnScreen(sr.getScaledWidth() / 2 - 75, sr.getScaledHeight() / 2 + 165, 25, 1f, 1f, target);
 			fr.drawString(target.getName(), sr.getScaledWidth() / 2 - 40, sr.getScaledHeight() / 2 + 110, -1);
 			fr.drawString("HP: ", sr.getScaledWidth() / 2 - 40, sr.getScaledHeight() / 2 + 125, -1);
-			fr.drawString("Â§câ�¤: Â§f" + dec.format(target.getHealth()), sr.getScaledWidth() / 2 - 40 + fr.getStringWidth("HP: "), sr.getScaledHeight() / 2 + 125, color);
+			fr.drawString("Â§c❤: Â§f" + dec.format(target.getHealth()), sr.getScaledWidth() / 2 - 40 + fr.getStringWidth("HP: "), sr.getScaledHeight() / 2 + 125, color);
 			//fr.drawString(dec.format(target.getMaxHealth()) + "", sr.getScaledWidth() / 2 - 40 + fr.getStringWidth("HP: ") + fr.getStringWidth(dec.format(target.getHealth()) + " / "), sr.getScaledHeight() / 2 + 125, color);
 			
 			
