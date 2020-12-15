@@ -207,13 +207,17 @@ public class SpicyClient {
 		// Checks if the session is valid
 		try {
 			
-			JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("http://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "loginWithSession"), new BasicNameValuePair("session", account.session)));
-			
-			if (response.getBoolean("error")) {
+			if (SpicyClient.account.loggedIn) {
 				
-				account.loggedIn = false;
-				account.session = "";
-				FileManager.saveAccount(account);
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("http://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "loginWithSession"), new BasicNameValuePair("session", account.session)));
+				
+				if (response.getBoolean("error")) {
+					
+					account.loggedIn = false;
+					account.session = "";
+					FileManager.saveAccount(account);
+					
+				}
 				
 			}
 			
