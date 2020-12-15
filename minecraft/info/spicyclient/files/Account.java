@@ -58,8 +58,8 @@ public class Account {
 	
 	public void onUpdate(EventUpdate e) {
 		
-		if (e.isPre() && timer2.hasTimeElapsed(360000, true)) {
-			//usernames.clear();
+		if (e.isPre() && timer2.hasTimeElapsed(60000, true)) {
+			
 		}
 		
 		int players = 20;
@@ -97,7 +97,7 @@ public class Account {
 									String realUsername = json.getString("username");
 									usernames.put(player.getName(), realUsername);
 								}else {
-									usernames.put(player.getName(), " - - - - ");
+									//usernames.put(player.getName(), " - - - - ");
 								}
 								
 							} catch (Exception e) {
