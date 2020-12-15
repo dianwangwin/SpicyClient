@@ -62,8 +62,20 @@ public class Account {
 			//usernames.clear();
 		}
 		
+		int players = 20;
+		
+		if (mc.theWorld.playerEntities.size() <= 10) {
+			
+			players = 20;
+			
+		}else {
+			
+			players = mc.theWorld.playerEntities.size();
+			
+		}
+		
 		try {
-			if (e.isPre() && timer1.hasTimeElapsed(360000, true)) {
+			if (e.isPre() && timer1.hasTimeElapsed(2000 * players, true)) {
 				
 				for (EntityPlayer player : mc.theWorld.playerEntities) {
 					

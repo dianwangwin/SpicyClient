@@ -1,6 +1,7 @@
 package info.spicyclient.modules.render;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
@@ -85,10 +86,13 @@ public class OldHitting extends Module {
 				}
 				else if (this.animationSetting.getMode() == "Spin" || this.animationSetting.is("Spin")) {
 					
-					ir.renderItem(mc.thePlayer, mc.thePlayer.getHeldItem(), TransformType.FIRST_PERSON);
-					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
-					ir.transformFirstPersonItem(0, 0.3f);
+					GlStateManager.translate(0.2f, 0.1f, -0.4f);
+					ir.transformFirstPersonItem(0, 0);
+					GlStateManager.rotate(-8, 0, 0, 1);
+					GL11.glTranslatef(-1.0f, 0.4f, 0);
 					GlStateManager.rotate(swingProgress * 360, 1, 0, -1);
+					GL11.glTranslatef(1.0f, -0.4f, 0);
+					
 					
 				}
 				else if (this.animationSetting.getMode() == "Scale" || this.animationSetting.is("Scale")) {

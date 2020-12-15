@@ -278,6 +278,15 @@ public class SpicyClient {
 		
 		discord.shutdown();
 		
+		try {
+			if (SpicyClient.account.loggedIn) {
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("http://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "updateCurrentAlt"), new BasicNameValuePair("session", account.session), new BasicNameValuePair("alt", originalUsername)));
+			}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 	}
 	
 	public static void keypress(int key) {
