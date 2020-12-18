@@ -100,12 +100,15 @@ public class Killaura extends Module {
 	}
 	
 	public void onEnable() {
+		
+		healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
 		dynamicAPS = aps.getValue();
 		aacB = 0;
 	}
 	
 	public void onDisable() {
 		
+		healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
 		RenderUtils.resetPlayerYaw();
 		RenderUtils.resetPlayerPitch();
 		
@@ -149,6 +152,7 @@ public class Killaura extends Module {
 		if (e instanceof EventRenderGUI && target != null) {
 			
 			if (target == null) {
+				healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
 				return;
 			}
 			
@@ -159,7 +163,7 @@ public class Killaura extends Module {
 			healthBarTarget = sr.getScaledWidth() / 2 - 41 + (((140) / (target.getMaxHealth())) * (target.getHealth()));
 			
 			// Lower is faster, higher is slower
-			double HealthBarSpeed = 6;
+			double HealthBarSpeed = 5;
 			
 			if (healthBar > healthBarTarget) {
 				healthBar = ((healthBar) - ((healthBar - healthBarTarget) / HealthBarSpeed));
@@ -171,6 +175,8 @@ public class Killaura extends Module {
 			//Command.sendPrivateChatMessage(healthBarTarget + " : " + healthBar);
 			
 			int color = (target.getHealth() / target.getMaxHealth() > 0.66f) ? 0xff00ff00 : (target.getHealth() / target.getMaxHealth() > 0.33f) ? 0xffff9900 : 0xffff0000;
+			
+			color = 0xff00ff00;
 			
 			Gui.drawRect(sr.getScaledWidth() / 2 - 110, sr.getScaledHeight() / 2 + 100, sr.getScaledWidth() / 2 + 110, sr.getScaledHeight() / 2 + 170, 0xff36393f);
 			Gui.drawRect(sr.getScaledWidth() / 2 - 41, sr.getScaledHeight() / 2 + 100 + 54, sr.getScaledWidth() / 2 + 100, sr.getScaledHeight() / 2 + 96 + 45, 0xff202225);
@@ -238,6 +244,7 @@ public class Killaura extends Module {
 				
 				if (targets.isEmpty()) {
 					
+					healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
 					stopBlocking();
 					RenderUtils.resetPlayerYaw();
 					RenderUtils.resetPlayerPitch();
@@ -460,6 +467,7 @@ public class Killaura extends Module {
 					
 				}else {
 					
+					healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
 					stopBlocking();
 					RenderUtils.resetPlayerYaw();
 					RenderUtils.resetPlayerPitch();

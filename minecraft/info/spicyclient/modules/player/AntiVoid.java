@@ -51,6 +51,8 @@ public class AntiVoid extends Module {
 		
 	}
 	
+	public static boolean bounced = false;
+	
 	public void onEvent(Event e) {
 		
 		if (e instanceof EventPacket) {
@@ -100,19 +102,31 @@ public class AntiVoid extends Module {
 					
 			        if (!MovementUtils.isOnGround(0.001) && (mc.thePlayer.fallDistance >= 20.0f || mc.thePlayer.posY < 0) && isOverVoid) {
 			        	
-			        	Random r = new Random();
+			        	if (!bounced) {
+			        		bounced = true;
+			        		mc.thePlayer.motionY = 0.2d*14d;
+			        		mc.thePlayer.fallDistance = 4;
+			        		mc.thePlayer.onGround = false;
+			        		Command.sendPrivateChatMessage(mc.thePlayer.motionY);
+			        	}else {
+			        		
+			        		Random r = new Random();
+				        	
+				        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
+				        	//mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY - 3, mc.thePlayer.posZ, false));
+				        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 12, mc.thePlayer.posZ, false));
+				        	//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 6, mc.thePlayer.posZ);
+				        	mc.thePlayer.fallDistance = -1;
+				        	NotificationManager.getNotificationManager().createNotification("Antivoid saved you", "", true, 2000, Type.INFO, Color.BLUE);
+				        	//mc.thePlayer.motionY = 1;
+				            //float f = mc.thePlayer.rotationYaw * 0.017453292F;
+				            //mc.thePlayer.motionX -= (double)(MathHelper.sin(f) * 0.035f);
+				            //c.thePlayer.motionZ += (double)(MathHelper.cos(f) * 0.035f);
+			        		
+			        	}
 			        	
-			        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
-			        	//mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY - 3, mc.thePlayer.posZ, false));
-			        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 12, mc.thePlayer.posZ, false));
-			        	//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 6, mc.thePlayer.posZ);
-			        	mc.thePlayer.fallDistance = -1;
-			        	NotificationManager.getNotificationManager().createNotification("Antivoid saved you", "", true, 2000, Type.INFO, Color.BLUE);
-			        	//mc.thePlayer.motionY = 1;
-			            //float f = mc.thePlayer.rotationYaw * 0.017453292F;
-			            //mc.thePlayer.motionX -= (double)(MathHelper.sin(f) * 0.035f);
-			           //c.thePlayer.motionZ += (double)(MathHelper.cos(f) * 0.035f);
-			            
+			        }else if (!isOverVoid && mc.thePlayer.fallDistance <= 2) {
+			        	bounced = false;
 			        }
 					
 				}

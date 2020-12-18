@@ -99,7 +99,7 @@ public class SpicyClient {
 	public static String originalUsername = "Not Set";
 	public static Boolean originalAccountOnline = false;
 	
-	public static int currentVersionNum = 2;
+	public static int currentVersionNum = 4;
 	
 	public static void StartUp() {
 		if (Minecraft.getMinecraft().getSession().getSessionType().equals(Session.Type.LEGACY)) {

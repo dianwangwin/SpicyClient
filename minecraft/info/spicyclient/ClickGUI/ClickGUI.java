@@ -52,7 +52,7 @@ public class ClickGUI extends GuiScreen {
 	}
 	
 	public void onGuiClosed() {
-		info.spicyclient.modules.render.Hud c = SpicyClient.config.hud;
+		info.spicyclient.modules.render.ClickGui c = SpicyClient.config.clickgui;
 		c.toggled = false;
 	}
 	
@@ -249,7 +249,7 @@ public class ClickGUI extends GuiScreen {
 			}
 			currentlySettingKeybind = false;
 		}else {
-			info.spicyclient.modules.render.Hud tempClickGui = SpicyClient.config.hud;
+			info.spicyclient.modules.render.ClickGui tempClickGui = SpicyClient.config.clickgui;
 			if (keyCode == Keyboard.KEY_ESCAPE || keyCode == tempClickGui.getKey()) {
 				mc.displayGuiScreen(this.last);
 			}
