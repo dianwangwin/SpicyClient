@@ -199,6 +199,8 @@ public class Config {
 			this.hud.name = "HUD";
 			this.hud.toggled = true;
 			
+			this.oldHitting.animationSetting.modes.add("Astolfo");
+			
 			this.inventoryManager.category = Category.PLAYER;
 			
 		}

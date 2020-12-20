@@ -49,6 +49,14 @@ public class Disabler extends Module {
 			
 			this.additionalInformation = "Hypixel";
 			
+            PlayerCapabilities playerCapabilities = new PlayerCapabilities();
+            playerCapabilities.isFlying = true;
+            playerCapabilities.allowFlying = true;
+            //playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
+            playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
+            playerCapabilities.isCreativeMode = true;
+            mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
+			
 		}
 		
 		if (e instanceof EventSendPacket && e.isPre()) {

@@ -751,6 +751,15 @@ public class Fly extends Module {
                     if (mc.thePlayer.onGround && mc.thePlayer.isCollidedVertically && MovementUtils.isOnGround(0.01)) {
                         
                     	if(mc.thePlayer.hurtResistantTime == 19){
+                    		
+                            PlayerCapabilities playerCapabilities = new PlayerCapabilities();
+                            playerCapabilities.isFlying = true;
+                            playerCapabilities.allowFlying = true;
+                            //playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
+                            playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
+                            playerCapabilities.isCreativeMode = true;
+                            mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
+                    		
                     		MovementUtils.setMotion(0.3 + 0 * 0.05f);
                     		mc.thePlayer.motionY = 0.41999998688698f + 0*0.1;
                     		hypixelFastFly1 = 25;
@@ -862,7 +871,7 @@ public class Fly extends Module {
     					break;
                     
 					}
-
+                    
                 }
 
             }

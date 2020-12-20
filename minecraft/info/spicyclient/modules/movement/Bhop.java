@@ -215,24 +215,33 @@ public class Bhop extends Module {
 						mc.thePlayer.setSprinting(true);
 					}
 				}
-				else if (mode.is("Hypixel") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
+				else if (mode.is("Hypixel") && !b.isEnabled() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
 					
 					mc.gameSettings.keyBindJump.pressed = false;
 					
-					mc.thePlayer.noClip = true;
-					
-					if (MovementUtils.isOnGround(0.004)) {
+					if (!mc.thePlayer.isInWater()) {
 						
-						mc.thePlayer.jump();
+						mc.thePlayer.noClip = true;
 						
-						e.setCanceled(true);
+						if (MovementUtils.isOnGround(0.004)) {
+							
+							mc.thePlayer.jump();
+							
+							e.setCanceled(true);
+							
+						}
+						
+						mc.thePlayer.setSprinting(true);
+						//MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + 0.01f);
+						MovementUtils.setMotion((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + ((float)hypixelSpeed.getValue()));
+						
+					}else {
+						
+						mc.thePlayer.motionY += 0.1;
+						mc.thePlayer.setIsInWater(false);
 						
 					}
 					
-					mc.thePlayer.setSprinting(true);
-					//MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + 0.01f);
-					MovementUtils.setMotion((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + ((float)hypixelSpeed.getValue()));
-
 				}
 				else if (mode.is("Test") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
 					

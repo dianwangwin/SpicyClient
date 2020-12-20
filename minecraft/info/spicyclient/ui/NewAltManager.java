@@ -298,7 +298,7 @@ public class NewAltManager extends GuiScreen {
 		
 		// To prevent the text from blinking
 		// The max fps is 30
-		long fps = 18;
+		long fps = 17;
 		try {
 			Thread.sleep(1000 / fps);
 		} catch (InterruptedException e) {

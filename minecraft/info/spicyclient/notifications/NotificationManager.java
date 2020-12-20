@@ -15,12 +15,13 @@ public class NotificationManager {
 	
 	public int defaultTargetX = 0, defaultTargetY = 0, defaultStartingX = 0, defaultStartingY = 0, defaultSpeed = 4;
 	
-	public void createNotification(String title, String text, boolean showTimer, long timeOnScreen, Type type, Color color) {
+	public Notification createNotification(String title, String text, boolean showTimer, long timeOnScreen, Type type, Color color) {
 		
 		Notification n = new Notification(title, text, showTimer, timeOnScreen, type, color, defaultTargetX, defaultTargetY, defaultStartingX, defaultStartingY, defaultSpeed);
 		ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
 		n.setDefaultY = true;
 		notificationQueue.add(n);
+		return n;
 		
 	}
 	

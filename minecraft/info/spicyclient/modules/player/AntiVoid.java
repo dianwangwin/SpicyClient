@@ -104,10 +104,10 @@ public class AntiVoid extends Module {
 			        	
 			        	if (!bounced) {
 			        		bounced = true;
-			        		mc.thePlayer.motionY = 0.2d*14d;
-			        		mc.thePlayer.fallDistance = 4;
-			        		mc.thePlayer.onGround = false;
-			        		Command.sendPrivateChatMessage(mc.thePlayer.motionY);
+			        		//mc.thePlayer.motionY = 0.2d*14d;
+			        		//mc.thePlayer.fallDistance = 4;
+			        		//mc.thePlayer.onGround = false;
+			        		//Command.sendPrivateChatMessage(mc.thePlayer.motionY);
 			        	}else {
 			        		
 			        		Random r = new Random();

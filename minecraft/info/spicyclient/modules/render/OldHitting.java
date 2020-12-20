@@ -14,10 +14,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.network.play.server.S02PacketChat;
+import net.minecraft.util.MathHelper;
 
 public class OldHitting extends Module {
 	
-	public ModeSetting animationSetting = new ModeSetting("Animation", "1.7", "1.7", "Spaz", "Spaz 2", "Jitter", "Tap", "Multi Tap", "Spin", "Scale", "Spicy");
+	public ModeSetting animationSetting = new ModeSetting("Animation", "1.7", "1.7", "Spaz", "Spaz 2", "Jitter", "Tap", "Multi Tap", "Spin", "Scale", "Spicy", "Astolfo");
 	
 	public OldHitting() {
 		super("OldHitting", Keyboard.KEY_NONE, Category.RENDER);
@@ -117,6 +118,11 @@ public class OldHitting extends Module {
 					ir.transformFirstPersonItem(f, swingProgress);
 					
 				}
+				else if (animationSetting.getMode() == "Astolfo" || this.animationSetting.is("Astolfo")) {
+					
+					astolfoCircle(mc.thePlayer.getSwingProgress(partialTicks));
+					
+				}
 				
 				ir.func_178103_d();
 				
@@ -125,5 +131,19 @@ public class OldHitting extends Module {
 		}
 		
 	}
+	
+	private static transient int astolfoTicks = 0;
+	
+	private void astolfoCircle(float swingProgress) {
+        float f1 = MathHelper.sin((float) (MathHelper.sqrt_float(swingProgress) * Math.PI));
+        this.astolfoTicks++;
+        GlStateManager.translate(-0.0F, -0.2F, -0.6F);
+        GlStateManager.rotate(-this.astolfoTicks * 0.07F * 30.0F, 0.0F, 0.0F, -1.0F);
+        GlStateManager.rotate(44.0F, 0.0F, 1.0F, 0.6F);
+        GlStateManager.rotate(44.0F, 1.0F, 0.0F, -0.6F);
+        GlStateManager.translate(1.0F, -0.2F, 0.5F);
+        GlStateManager.rotate(-44.0F, 1.0F, 0.0F, -0.6F);
+        GlStateManager.scale(0.5D, 0.5D, 0.5D);
+      }
 	
 }
