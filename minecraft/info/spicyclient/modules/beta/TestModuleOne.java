@@ -5,23 +5,32 @@ import org.lwjgl.input.Keyboard;
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
+import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventPacket;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
+import info.spicyclient.modules.combat.Killaura;
 import info.spicyclient.modules.movement.Fly;
 import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.notifications.Type;
 import info.spicyclient.util.MovementUtils;
+import info.spicyclient.util.RotationUtils;
 import info.spicyclient.util.Timer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockGlass;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.PlayerCapabilities;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBow;
+import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 
 public class TestModuleOne extends Module {
 
@@ -39,25 +48,7 @@ public class TestModuleOne extends Module {
 	
 	@Override
 	public void onEnable() {
-		status = 0;
-		dub = 0;
-		flo = 0;
-		test = 0;
-		
-        if (MovementUtils.isOnGround(0.001) && mc.thePlayer.isCollidedVertically) {
-            double x = mc.thePlayer.posX;
-            double y = mc.thePlayer.posY;
-            double z = mc.thePlayer.posZ;
-            mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.16, z, true));
-            mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.07, z, true));
-            bool1 = true;
-            NotificationManager.getNotificationManager().createNotification("Disabler: Wait 5s.", "", true, 5000, Type.INFO, Color.PINK);
-            mc.thePlayer.jump();
-            //Notifications.getManager().post("Disabler", "Wait 5s.", Notifications.Type.INFO);
-        } else {
-        	bool1 = false;
-        }
-        
+		status = -1;
 	}
 	
 	@Override
@@ -68,60 +59,17 @@ public class TestModuleOne extends Module {
 	@Override
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventSendPacket && e.isPre()) {
-			
-            if (e.isPre()) {
-            	
-                if (((EventSendPacket)e).packet instanceof C03PacketPlayer) {
-                    if (bool1) {
-                        e.setCanceled(true);
-                    }
-                    
-                }
-			
-            }
-            
-		}
-		
-		if (e instanceof EventPacket && e.isPre()) {
-			
-            if (e.isPre()) {
-            	
-                if (((EventPacket)e).packet instanceof S08PacketPlayerPosLook) {
-                	
-                    if (bool1) {
-                        toggle();
-                        NotificationManager.getNotificationManager().createNotification("Disabler: Wait 5s.", "", true, 5000, Type.INFO, Color.PINK);
-                    }
-                    
-                }
-			
-            }
-            
-		}
-		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
-			if (!bool1) {
-                if (MovementUtils.isOnGround(0.001) && mc.thePlayer.isCollidedVertically) {
-                    double x = mc.thePlayer.posX;
-                    double y = mc.thePlayer.posY;
-                    double z = mc.thePlayer.posZ;
-                    mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y, z, true));
-                    mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.16, z, true));
-                    mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.07, z, true));
-                    bool1 = true;
-                    NotificationManager.getNotificationManager().createNotification("Disabler: Wait 5s.", "", true, 5000, Type.INFO, Color.PINK);
-                    mc.thePlayer.jump();
-                }
-            } else {
-                mc.thePlayer.motionX = 0;
-                mc.thePlayer.motionY = 0;
-                mc.thePlayer.motionZ = 0;
-                mc.thePlayer.jumpMovementFactor = 0;
-                mc.thePlayer.noClip = true;
-                mc.thePlayer.onGround = false;
-            }
+			int ticks = 12;
+			
+			if (mc.thePlayer.getItemInUseDuration() == ticks && canUseItem(mc.thePlayer.getItemInUse().getItem())) {
+	        	for (int i = 0; i < 30; i++) {
+	                mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
+	            }
+	            mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+	            mc.thePlayer.stopUsingItem();
+	        }
 			
 		}
 		
@@ -131,5 +79,10 @@ public class TestModuleOne extends Module {
 	public void onEventWhenDisabled(Event e) {
 		
 	}
+	
+    private boolean canUseItem(Item item) {
+    	boolean result = !((item instanceof ItemSword) || (item instanceof ItemBow));
+        return result;
+    }
 	
 }

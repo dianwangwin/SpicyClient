@@ -45,43 +45,18 @@ public class NoClip extends Module {
 	
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventGetBlockHitbox) {
+		if (e instanceof EventMotion && e.isPre()) {
 			
-			if (e.isPre()) {
-				
-				EventGetBlockHitbox event = (EventGetBlockHitbox) e;
-				event.setCanceled(true);
-				mc.thePlayer.motionY = 0;
-				mc.thePlayer.onGround = true;
-				mc.thePlayer.noClip = true;
-				
-				if (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed) {
-					
-					float f = (float) MovementUtils.getDirection() + 180 - 45;
-					MovementUtils.forward(0.01f);
-		            //mc.thePlayer.motionX = (double)(MathHelper.sin(f) * 0.1F);
-		            //mc.thePlayer.motionZ = (double)(MathHelper.cos(f) * 0.1F) * -1;
-					
-				}
-				
-				double y, y1;
-				mc.thePlayer.motionY = 0;
-				
-				//if (mc.thePlayer.ticksExisted % 3 ==0) {
-					
-					//y = mc.thePlayer.posY - 1.0E-10D;
-					//mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, y, mc.thePlayer.posZ, true));
-					
-				//}
-				
-				//y1 = mc.thePlayer.posY + 1.0E-10D;
-				//mc.thePlayer.setPosition(mc.thePlayer.posX, y1, mc.thePlayer.posZ);
-				
-				//mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
-				
-			}
-			
-		}
+            double mx = Math.cos(Math.toRadians((double)(mc.thePlayer.rotationYaw + 90.0F)));
+            double mz = Math.sin(Math.toRadians((double)(mc.thePlayer.rotationYaw + 90.0F)));
+            double x = (double)mc.thePlayer.movementInput.moveForward * 0.4 * mx + (double)mc.thePlayer.movementInput.moveStrafe * 0.4 * mz;
+            double z = (double)mc.thePlayer.movementInput.moveForward * 0.4 * mz - (double)mc.thePlayer.movementInput.moveStrafe * 0.4 * mx;
+            if (mc.thePlayer.isCollidedHorizontally && !mc.thePlayer.isOnLadder()) {
+                mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX + x, mc.thePlayer.posY, mc.thePlayer.posZ + z, false));
+                mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 3.0D, mc.thePlayer.posZ, false));
+                mc.thePlayer.setPosition(mc.thePlayer.posX + x, mc.thePlayer.posY, mc.thePlayer.posZ + z);
+            }
+        }
 		
 	}
 	

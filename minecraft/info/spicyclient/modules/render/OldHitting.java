@@ -94,7 +94,6 @@ public class OldHitting extends Module {
 					GlStateManager.rotate(swingProgress * 360, 1, 0, -1);
 					GL11.glTranslatef(1.0f, -0.4f, 0);
 					
-					
 				}
 				else if (this.animationSetting.getMode() == "Scale" || this.animationSetting.is("Scale")) {
 					

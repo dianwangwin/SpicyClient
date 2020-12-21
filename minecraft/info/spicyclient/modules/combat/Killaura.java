@@ -538,8 +538,7 @@ public class Killaura extends Module {
 			if (blocking && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
 	        	
 	        	mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-	            //mc.gameSettings.keyBindUseItem.pressed = false;
-	            //mc.playerController.onStoppedUsingItem(mc.thePlayer);
+	            mc.gameSettings.keyBindUseItem.pressed = false;
 	            
 	        }
 		} catch (NullPointerException e) {

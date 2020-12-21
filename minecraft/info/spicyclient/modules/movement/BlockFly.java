@@ -46,28 +46,7 @@ public class BlockFly extends Module {
 		
 	}
 	
-	private BlockPos currentPos;
-	private BlockPos playerPos;
-	private EnumFacing currentFacing;
-	
 	public void onEvent(Event e) {
-		
-		if (e instanceof EventMotion && e.isPre() && mc.thePlayer.getCurrentEquippedItem() != null) {
-			
-			if (mc.theWorld.getBlockState(mc.thePlayer.getPosition().add(0, -1, 0)).getBlock() instanceof BlockAir) {
-				//currentPos = mc.thePlayer.getPosition().add(0, -1, 0);
-				currentPos = new BlockPos(mc.thePlayer.posX,mc.thePlayer.isCollidedVertically ? mc.thePlayer.posY+0:mc.thePlayer.posY-1+0, mc.thePlayer.posZ);
-				mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem(), currentPos.add(0, -1, 0), EnumFacing.UP, RotationUtils.getVectorForRotation(RotationUtils.getRotationFromPosition(currentPos.getX(), currentPos.getZ(), currentPos.getY())[1], RotationUtils.getRotationFromPosition(currentPos.getX(), currentPos.getZ(), currentPos.getY())[0]));
-				mc.thePlayer.swingItem();
-				((EventMotion)e).setYaw(RotationUtils.getRotationFromPosition(currentPos.getX(), currentPos.getZ(), currentPos.getY())[0]);
-				((EventMotion)e).setPitch(RotationUtils.getRotationFromPosition(currentPos.getX(), currentPos.getZ(), currentPos.getY())[1]);
-				
-				RenderUtils.setCustomYaw(RotationUtils.getRotationFromPosition(currentPos.getX(), currentPos.getZ(), currentPos.getY())[0]);
-				RenderUtils.setCustomPitch(RotationUtils.getRotationFromPosition(currentPos.getX(), currentPos.getZ(), currentPos.getY())[1]);
-				
-			}
-			
-		}
 		
 	}
 	

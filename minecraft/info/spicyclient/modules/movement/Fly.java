@@ -230,6 +230,7 @@ public class Fly extends Module {
 				//damage();
 				hypixelDamaged = true;
 				
+				/*
 	            PlayerCapabilities playerCapabilities = new PlayerCapabilities();
 	            playerCapabilities.isFlying = true;
 	            playerCapabilities.allowFlying = true;
@@ -237,6 +238,7 @@ public class Fly extends Module {
 	            playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
 	            playerCapabilities.isCreativeMode = true;
 	            mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
+	            */
 	            
 			}else {
 				hypixelDamaged = true;
@@ -670,6 +672,7 @@ public class Fly extends Module {
 		speedAndStuff = 0;
 		hypixelFastFly1Damaged = false;
 		
+		/*
         PlayerCapabilities playerCapabilities = new PlayerCapabilities();
         playerCapabilities.isFlying = true;
         playerCapabilities.allowFlying = true;
@@ -677,8 +680,24 @@ public class Fly extends Module {
         playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
         playerCapabilities.isCreativeMode = true;
         mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
+        */
+        
+		//SpicyClient.config.fly.damage();
 		
-		SpicyClient.config.fly.damage();
+		int damage = 1;
+		if (damage > MathHelper.floor_double(mc.thePlayer.getMaxHealth()))
+			damage = MathHelper.floor_double(mc.thePlayer.getMaxHealth());
+
+		double offset = 0.0625;
+		if (mc.thePlayer != null && mc.getNetHandler() != null && mc.thePlayer.onGround) {
+			for (int i = 0; i <= ((3 + damage) / offset); i++) {
+				mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
+						mc.thePlayer.posY + offset, mc.thePlayer.posZ, false));
+				mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
+						mc.thePlayer.posY, mc.thePlayer.posZ, (i == ((3 + damage) / offset))));
+			}
+		}
+		
 		mc.thePlayer.onGround = false;
 		MovementUtils.setMotion(0);
 		mc.thePlayer.jumpMovementFactor = 0;
@@ -750,15 +769,7 @@ public class Fly extends Module {
                 if (true) {
                     if (mc.thePlayer.onGround && mc.thePlayer.isCollidedVertically && MovementUtils.isOnGround(0.01)) {
                         
-                    	if(mc.thePlayer.hurtResistantTime == 19){
-                    		
-                            PlayerCapabilities playerCapabilities = new PlayerCapabilities();
-                            playerCapabilities.isFlying = true;
-                            playerCapabilities.allowFlying = true;
-                            //playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
-                            playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
-                            playerCapabilities.isCreativeMode = true;
-                            mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
+                    	if(mc.thePlayer.hurtResistantTime == 0){
                     		
                     		MovementUtils.setMotion(0.3 + 0 * 0.05f);
                     		mc.thePlayer.motionY = 0.41999998688698f + 0*0.1;
