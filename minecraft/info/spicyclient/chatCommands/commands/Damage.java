@@ -21,8 +21,6 @@ public class Damage extends Command {
 			
 			String[] strings = message.split(" ");
 			
-			sendPrivateChatMessage("You have been damaged");
-			
 			int damage = Integer.valueOf(strings[1]);
 			if (damage > MathHelper.floor_double(mc.thePlayer.getMaxHealth()))
 				damage = MathHelper.floor_double(mc.thePlayer.getMaxHealth());
@@ -36,6 +34,8 @@ public class Damage extends Command {
 							mc.thePlayer.posY, mc.thePlayer.posZ, (i == ((3 + damage) / offset))));
 				}
 			}
+			
+			sendPrivateChatMessage("You have been damaged");
 			
 		} catch (NumberFormatException e) {
 			incorrectParameters();
