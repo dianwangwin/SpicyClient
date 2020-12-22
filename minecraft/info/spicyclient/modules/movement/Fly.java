@@ -769,7 +769,7 @@ public class Fly extends Module {
                 if (true) {
                     if (mc.thePlayer.onGround && mc.thePlayer.isCollidedVertically && MovementUtils.isOnGround(0.01)) {
                         
-                    	if(mc.thePlayer.hurtResistantTime == 0){
+                    	if(mc.thePlayer.hurtResistantTime == 19){
                     		
                     		MovementUtils.setMotion(0.3 + 0 * 0.05f);
                     		mc.thePlayer.motionY = 0.41999998688698f + 0*0.1;
@@ -852,7 +852,7 @@ public class Fly extends Module {
                     //mc.thePlayer.lastReportedPosY = 0;
                     
                     //double offset2 = 4.496001251836E-5;
-                    double offset2 = 9.274936900641403E-14D;
+                    double offset2 = 9.274936900641403E-15D;
                     
                     switch (hypixelFastFlyStatus) {
                     

@@ -64,10 +64,10 @@ public class Disabler extends Module {
             mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
             */
 			
-            //if (ping.hasTimeElapsed(500 + new Random().nextInt(500), true) && C0FPackets.size() > 0) {
-            	//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(C0FPackets.get(0));
-            	//C0FPackets.remove(0);
-            //}
+            if (ping.hasTimeElapsed(500 + new Random().nextInt(750), true) && C0FPackets.size() > 0) {
+            	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(C0FPackets.get(0));
+            	C0FPackets.remove(0);
+            }
             
 		}
 		
@@ -77,7 +77,7 @@ public class Disabler extends Module {
 			
             if (event.packet instanceof C0FPacketConfirmTransaction) {
             	
-                //C0FPacketConfirmTransaction packetConfirmTransaction = (C0FPacketConfirmTransaction)event.packet;
+                C0FPacketConfirmTransaction packetConfirmTransaction = (C0FPacketConfirmTransaction)event.packet;
                 
                 //mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0FPacketConfirmTransaction(2147483647, packetConfirmTransaction.getUid(), false));
                 //mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0FPacketConfirmTransaction(1147483647, packetConfirmTransaction.getUid(), false));
@@ -88,14 +88,14 @@ public class Disabler extends Module {
                 //packetConfirmTransaction.setUid(Short.MAX_VALUE);
             	//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0FPacketConfirmTransaction(Integer.MIN_VALUE, Short.MAX_VALUE, true));
                 
-                //C0FPackets.add(packetConfirmTransaction);
-                //e.setCanceled(true);
+                C0FPackets.add(packetConfirmTransaction);
+                e.setCanceled(true);
             }
 
             if (event.packet instanceof C00PacketKeepAlive) {
             	
             	//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C00PacketKeepAlive(-2147483648 + (new Random()).nextInt(100)));
-                e.setCanceled(true);
+                //e.setCanceled(true);
                 
             }
             

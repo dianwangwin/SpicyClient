@@ -223,7 +223,7 @@ public class Bhop extends Module {
 						
 						mc.thePlayer.noClip = true;
 						
-						if (MovementUtils.isOnGround(0.004)) {
+						if (MovementUtils.isOnGround(0.00004)) {
 							
 							mc.thePlayer.jump();
 							

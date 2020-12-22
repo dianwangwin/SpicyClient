@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
+import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventPacket;
 import info.spicyclient.events.listeners.EventRender3D;
 import info.spicyclient.events.listeners.EventRenderGUI;
@@ -121,6 +122,13 @@ public class Account {
 	public void onPacket(EventPacket e) {
 		
 		if (e instanceof EventPacket && e.isPre()) {
+			
+			if (SpicyClient.config.killSults.isEnabled()) {
+				EventType temp = e.getType();
+				e.setType(EventType.BEFOREPRE);
+				SpicyClient.config.killSults.onEvent(e);
+				e.setType(temp);
+			}
 			
 			EventPacket packetEvent = (EventPacket) e;
 			if (packetEvent.packet instanceof S02PacketChat) {
