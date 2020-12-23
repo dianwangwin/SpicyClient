@@ -31,12 +31,12 @@ import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MathHelper;
 
 public class TestModuleOne extends Module {
 
 	public TestModuleOne() {
 		super("TestModuleOne", Keyboard.KEY_NONE, Category.BETA);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public static transient Timer timer = new Timer();
@@ -48,7 +48,7 @@ public class TestModuleOne extends Module {
 	
 	@Override
 	public void onEnable() {
-		status = -1;
+		bool1 = false;
 	}
 	
 	@Override
@@ -61,15 +61,29 @@ public class TestModuleOne extends Module {
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
-			int ticks = 12;
+			if (mc.thePlayer.isCollidedHorizontally) {
+				bool1 = !bool1;
+			}
 			
-			if (mc.thePlayer.getItemInUseDuration() == ticks && canUseItem(mc.thePlayer.getItemInUse().getItem())) {
-	        	for (int i = 0; i < 30; i++) {
-	                mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
-	            }
-	            mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-	            mc.thePlayer.stopUsingItem();
-	        }
+			Killaura k = SpicyClient.config.killaura;
+			
+			if (k.target == null) {
+				
+			}else {
+				
+				float distance = 2;
+				
+				float f = (RotationUtils.getRotations(k.target)[0] + 180 + (bool1 ? -10 : 10)) * 0.017453292F;
+				double x2 = k.target.posX, z2 = k.target.posZ;
+	            x2 -= (double)(MathHelper.sin(f) * distance * -1);
+	            z2 += (double)(MathHelper.cos(f) * distance * -1);
+	            Command.sendPrivateChatMessage("t");
+	            MovementUtils.setMotion(MovementUtils.getSpeed(), RotationUtils.getRotationFromPosition(x2, z2, mc.thePlayer.posY)[0]);
+	            
+				//mc.thePlayer.posX = x;
+				//mc.thePlayer.posZ = z;
+				
+			}
 			
 		}
 		
@@ -79,10 +93,5 @@ public class TestModuleOne extends Module {
 	public void onEventWhenDisabled(Event e) {
 		
 	}
-	
-    private boolean canUseItem(Item item) {
-    	boolean result = !((item instanceof ItemSword) || (item instanceof ItemBow));
-        return result;
-    }
 	
 }
