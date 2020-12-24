@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 
@@ -199,7 +200,7 @@ public class InventoryManager extends Module {
 			
 			this.additionalInformation = "Hypixel";
 			
-			if (!SpicyClient.config.autoArmor.timer.hasTimeElapsed(250, false)) {
+			if (!SpicyClient.config.autoArmor.timer.hasTimeElapsed(250 + new Random().nextInt(40), false)) {
 				return;
 			}
 			

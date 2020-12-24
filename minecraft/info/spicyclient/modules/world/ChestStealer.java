@@ -1,5 +1,7 @@
 package info.spicyclient.modules.world;
 
+import java.util.Random;
+
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.events.Event;
@@ -10,7 +12,10 @@ import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.settings.ModeSetting;
 import info.spicyclient.settings.NumberSetting;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.network.play.client.C16PacketClientStatus;
+import net.minecraft.network.play.client.C16PacketClientStatus.EnumState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 
@@ -18,7 +23,7 @@ public class ChestStealer extends Module {
 	
 	public static Thread chestStealerThread = null;
 	
-	NumberSetting delay = new NumberSetting("Delay", 250, 0, 2000, 50);
+	NumberSetting delay = new NumberSetting("Delay", 250, 0, 2000, 10);
 	
 	public ChestStealer() {
 		super("Chest Stealer", Keyboard.KEY_NONE, Category.WORLD);
@@ -64,10 +69,15 @@ public class ChestStealer extends Module {
 							if (slot.getStack() != null) {
 								
 								try {
-									Thread.sleep((long) delay.getValue());
+									Thread.sleep((long) delay.getValue() + new Random().nextInt(40));
 								}catch (ThreadDeath e) {
 									e.printStackTrace();
 								}
+								
+				                if (!(mc.currentScreen instanceof GuiInventory)) {
+				                    mc.getNetHandler().addToSendQueue(new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT));
+				                }
+								
 								chestEvent.chest.spicyHandleMouseInput(slot, slot.slotNumber, 0, 1);
 								
 							}
