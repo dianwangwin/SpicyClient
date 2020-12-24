@@ -71,14 +71,24 @@ public class TargetStrafe extends Module {
 				return;
 			}else {
 				
-				float f = (RotationUtils.getRotations(k.target)[0] + (direction ? -70 : 70)) * 0.017453292F;
+				double currentSpeed = MovementUtils.getSpeed();
+				
+				MovementUtils.setMotion(0);
+				
+				double yawChange = 70;
+				
+				if (mc.thePlayer.getDistanceToEntity(k.target) < distance.getValue() && mc.thePlayer.getDistanceToEntity(k.target) > distance.getValue() - 0.05) {
+					//yawChange = 10;
+				}
+				
+				float f = (float) ((RotationUtils.getRotations(k.target)[0] + (direction ? -yawChange : yawChange)) * 0.017453292F);
 				double x2 = k.target.posX, z2 = k.target.posZ;
-	            x2 -= (double)(MathHelper.sin(f) * (distance.getValue() + 0.15) * -1);
-	            z2 += (double)(MathHelper.cos(f) * (distance.getValue() + 0.15) * -1);
+	            x2 -= (double)(MathHelper.sin(f) * (distance.getValue() + 2.25) * -1);
+	            z2 += (double)(MathHelper.cos(f) * (distance.getValue() + 2.25) * -1);
 	            
-	            float currentSpeed = MovementUtils.getSpeed();
+	            float currentSpeed1 = MovementUtils.getSpeed();
 	            
-	            MovementUtils.setMotion(MovementUtils.getSpeed() + speed.getValue(), RotationUtils.getRotationFromPosition(x2, z2, mc.thePlayer.posY)[0]);
+	            MovementUtils.setMotion(currentSpeed + speed.getValue(), RotationUtils.getRotationFromPosition(x2, z2, mc.thePlayer.posY)[0]);
 	            
 	            if (currentSpeed > MovementUtils.getSpeed()) {
 	            	direction = !direction;
@@ -106,8 +116,8 @@ public class TargetStrafe extends Module {
 					
 					float f = (RotationUtils.getRotations(k.target)[0] + (direction ? -i : i)) * 0.017453292F;
 					double x2 = k.target.posX, z2 = k.target.posZ;
-		            x2 -= (double)(MathHelper.sin(f) * distance.getValue() * -1);
-		            z2 += (double)(MathHelper.cos(f) * distance.getValue() * -1);
+		            x2 -= (double)(MathHelper.sin(f) * mc.thePlayer.getDistanceToEntity(k.target)) * -1;
+		            z2 += (double)(MathHelper.cos(f) * mc.thePlayer.getDistanceToEntity(k.target)) * -1;
 		            
 		            RenderUtils.drawLine(lastLine.xCoord, lastLine.yCoord, lastLine.zCoord, x2, lastLine.yCoord, z2);
 		            lastLine.xCoord = x2;
