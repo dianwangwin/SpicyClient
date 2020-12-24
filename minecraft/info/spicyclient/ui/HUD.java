@@ -103,7 +103,7 @@ public class HUD {
 			GlStateManager.scale(0.7, 0.7, 1);
 			GlStateManager.translate(-4, -4, 0);
 			if (SpicyClient.account.loggedIn) {
-				fr.drawString(" - " + SpicyClient.account.username, 103f, 4f, -1, false);
+				fr.drawString(" - [" + SpicyClient.account.username + "]", 103f, 4f, -1, false);
 			}
 			GlStateManager.popMatrix();
 		}

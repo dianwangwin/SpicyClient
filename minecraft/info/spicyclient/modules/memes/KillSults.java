@@ -34,6 +34,8 @@ public class KillSults extends Module {
 	public ModeSetting messageMode = new ModeSetting("Message Type", "Furry", "Furry", "Retarded Furry", "Annoying", "SpicyClient Ads", "SpicyFacts");
 	private ModeSetting serverMode = new ModeSetting("Server Mode", "PvpLands", "PvpLands", "Hypixel", "Test");
 	
+	public BooleanSetting hypixelShout = new BooleanSetting("/Shout", false);
+	
 	public BooleanSetting pvplandsPayback = new BooleanSetting("Payback", false);
 	
 	public KillSults() {
@@ -52,7 +54,7 @@ public class KillSults extends Module {
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
-		this.addSettings(messageMode, serverMode, pvplandsPayback);
+		this.addSettings(messageMode, serverMode, pvplandsPayback, hypixelShout);
 	}
 	
 	@Override
@@ -61,6 +63,10 @@ public class KillSults extends Module {
 		if (e != null && e.setting != null) {
 			
 			if (e.setting.equals(serverMode)) {
+				
+				if (this.settings.contains(hypixelShout)) {
+					this.settings.remove(hypixelShout);
+				}
 				
 				if (serverMode.is("PvpLands")) {
 					
@@ -84,12 +90,18 @@ public class KillSults extends Module {
 				}
 				else if (serverMode.is("Hypixel")) {
 					
+					if (!this.settings.contains(hypixelShout)) {
+						this.settings.add(hypixelShout);
+					}
+					
 					if (this.settings.contains(pvplandsPayback)) {
 						
 						settings.remove(pvplandsPayback);
 						this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
 						
 					}
+					
+					reorderSettings();
 					
 				}
 				
@@ -206,7 +218,7 @@ public class KillSults extends Module {
 							}
 							
 				        	//if((message.toLowerCase().contains("you won! want to play again? click here!") || message.toLowerCase().contains("coins! (win)")) || message.toLowerCase().contains("experience! (win)")){
-							if((message.toLowerCase().contains("queued! use the bed to return to lobby!")) || message.toLowerCase().contains("coins! (win)") || message.toLowerCase().contains("experience! (win)")){
+							if((message.toLowerCase().contains("queued! use the bed to return to lobby!")) || message.toLowerCase().contains("coins! (win)") || message.toLowerCase().contains("experience! (win)") || message.toLowerCase().contains("you won! want to play again? click here!")){
 				        		
 								if (messageMode.is("Annoying") || messageMode.getMode() == "Annoying") {
 									Command.sendPublicChatMessage("E׼Z");
@@ -266,9 +278,9 @@ public class KillSults extends Module {
 									
 									message = message.replaceAll("<PlayerName>", playerName);
 									if (messageMode.is("Retarded Furry") || messageMode.getMode() == "Retarded Furry" || messageMode.is("Annoying") || messageMode.getMode() == "Annoying" || messageMode.is("SpicyClient Ads") || messageMode.getMode() == "SpicyClient Ads") {
-										mc.thePlayer.sendChatMessage(message);
+										mc.thePlayer.sendChatMessage((this.hypixelShout.enabled ? "/shout " : "") + message);
 									}else {
-										Command.sendPublicChatMessage(message);
+										Command.sendPublicChatMessage((this.hypixelShout.enabled ? "/shout " : "") + message);
 									}
 									return;
 			        				

@@ -852,13 +852,14 @@ public class Fly extends Module {
                     //mc.thePlayer.lastReportedPosY = 0;
                     
                     //double offset2 = 4.496001251836E-5;
-                    double offset2 = 9.274936900641403E-15D;
+                    double offset2 = 9.274936900641403E-14D;
+                    offset2 = 11.274936900641403E-11D;
                     
                     switch (hypixelFastFlyStatus) {
                     
     				case 0:
     					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-    					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY,
+    					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - 0.000000001,
     							mc.thePlayer.posZ);
     					hypixelFastFlyStatus++;
     					break;
@@ -868,7 +869,7 @@ public class Fly extends Module {
     					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
     							//mc.thePlayer.posZ);
     					if (!MovementUtils.isOnGround(0.0001)) {
-    						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -offset2, mc.thePlayer.posZ);
+    						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset2, mc.thePlayer.posZ);
     					}
     					
     					//event.setY(mc.thePlayer.posY);
@@ -876,7 +877,7 @@ public class Fly extends Module {
     					break;
     				case 2:;
     					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-    					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + (offset2),
+    					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset2,
     							mc.thePlayer.posZ);
     					hypixelFastFlyStatus = 0;
     					break;

@@ -71,7 +71,6 @@ public class NewAltManager extends GuiScreen {
 	}
 	
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		
 		if (!fontRendererInitialized) {
 			fr = mc.fontRendererObj;
 			try {

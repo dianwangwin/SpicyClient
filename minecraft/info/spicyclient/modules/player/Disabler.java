@@ -63,8 +63,8 @@ public class Disabler extends Module {
             playerCapabilities.isCreativeMode = true;
             mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
             */
-			
-            if (ping.hasTimeElapsed(500 + new Random().nextInt(750), true) && C0FPackets.size() > 0) {
+            
+            if (ping.hasTimeElapsed(1500, true) && C0FPackets.size() > 0) {
             	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(C0FPackets.get(0));
             	C0FPackets.remove(0);
             }

@@ -490,6 +490,8 @@ public class SpicyClient {
 		modules.add(c.testModuleOne);
 		modules.add(c.hypixel5SecDisabler);
 		modules.add(c.hud);
+		modules.add(c.snow);
+		modules.add(c.targetStrafe);
 		
 		for (Module temp : SpicyClient.modules) {
 			

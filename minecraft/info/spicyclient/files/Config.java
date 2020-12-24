@@ -12,6 +12,7 @@ import info.spicyclient.modules.memes.*;
 import info.spicyclient.modules.movement.*;
 import info.spicyclient.modules.player.*;
 import info.spicyclient.modules.render.*;
+import info.spicyclient.modules.render.Snow.Snowflake;
 import info.spicyclient.modules.world.*;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.settings.BooleanSetting;
@@ -91,6 +92,8 @@ public class Config {
 	public TestModuleOne testModuleOne = new TestModuleOne();
 	public Hypixel5SecDisabler hypixel5SecDisabler = new Hypixel5SecDisabler();
 	public Hud hud = new Hud();
+	public Snow snow = new Snow();
+	public TargetStrafe targetStrafe = new TargetStrafe();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -152,6 +155,8 @@ public class Config {
 			this.testModuleOne = new TestModuleOne();
 			this.hypixel5SecDisabler = new Hypixel5SecDisabler();
 			this.hud = new Hud();
+			this.snow = new Snow();
+			this.targetStrafe = new TargetStrafe();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
@@ -189,6 +194,7 @@ public class Config {
 			this.antiKnockback.verticalKnockback = new NumberSetting("Vertical Knockback", 0, 0, 100, 1);
 			
 			this.killSults.messageMode = new ModeSetting("Message Type", this.killSults.messageMode.getMode(), "Furry", "Retarded Furry", "Annoying", "SpicyClient Ads", "SpicyFacts");
+			this.killSults.hypixelShout = new BooleanSetting("/Shout", false);
 			
 			this.hud.sound = clickgui.sound;
 			this.hud.volume = clickgui.volume;
