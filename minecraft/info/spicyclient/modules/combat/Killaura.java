@@ -77,7 +77,7 @@ public class Killaura extends Module {
 	private static transient Timer dynamicAPSTimer = new Timer();
 	
 	private int[] randoms = {0,1,0};
-	public static float sYaw, sPitch, aacB;
+	public static float sYaw, sPitch, upAndDownPitch = 0;
 	
 	public static transient double healthBarTarget = 0, healthBar = 0;
 	
@@ -101,9 +101,13 @@ public class Killaura extends Module {
 	
 	public void onEnable() {
 		
+		lastSmoothYaw = mc.thePlayer.rotationYaw;
+		lastSmoothPitch = mc.thePlayer.rotationPitch;
+		
 		healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
 		dynamicAPS = aps.getValue();
-		aacB = 0;
+		upAndDownPitch = 0;
+		
 	}
 	
 	public void onDisable() {
@@ -372,16 +376,41 @@ public class Killaura extends Module {
 						if (rotationSetting.is("lock") || rotationSetting.getMode() == "lock") {
 							
 							//event.setYaw(getRotations(target)[0]+10);
-							//event.setPitch(getRotations(target)[1]);
+							//event.setPitch(RotationUtils.getRotations(target)[1]);
 							
                             float[] rotations = RotationUtils.getRotations(target);
                             event.setYaw(rotations[0]);
-                            event.setPitch(rotations[1]);
+                            event.setYaw(rotations[0] - 2);
+                            
+                            if (event.pitch < -90) {
+                            	event.setPitch(-90);
+                            }
+                            
+                            
+                            upAndDownPitch += 2 + new Random().nextDouble();
+                            
+                            if (upAndDownPitch >= 20) {
+								upAndDownPitch = 0;
+								event.setPitch(rotations[1] - upAndDownPitch);
+							}
+                            else if (upAndDownPitch >= 10) {
+                            	event.setPitch(rotations[1] + 10 - (upAndDownPitch - 10));
+                            }
+                            else {
+                            	event.setPitch(rotations[1] - upAndDownPitch);
+                            }
+                            
+                            if (event.pitch < -90) {
+                            	event.setPitch(-90);
+                            }
+                            
+                            
+                            //Command.sendPrivateChatMessage(aacB);
                             
 						}
 						else if (rotationSetting.is("smooth") || rotationSetting.getMode() == "smooth") {
 							
-                    		aacB/=2;
+                    		upAndDownPitch/=2;
                     		customRots(event, target);
                     		
 							/*
@@ -417,7 +446,7 @@ public class Killaura extends Module {
 						}
 					}
 					
-					if (timer.hasTimeElapsed((long) (1000/aps.getValue()), true)) {
+					if (timer.hasTimeElapsed((long) (1000/(aps.getValue() + new Random().nextFloat())), true)) {
 						
             			int XR = randomNumber(1, -1);
                     	int YR = randomNumber(1, -1);
@@ -631,38 +660,40 @@ public class Killaura extends Module {
     }
     
     public void customRots(EventMotion em, EntityLivingBase ent) {
-        double randomYaw = 0.09;
-		double randomPitch = 0.09;
+    	
+        if (target == null)
+            return;
+        
+        float sYaw = (float) updateRotation((float) lastSmoothYaw, (float) RotationUtils.getRotations(target)[0], (float) 50);
+		float sPitch = (float) updateRotation((float) lastSmoothPitch, (float) RotationUtils.getRotations(target)[1], (float) 50);
 		
-		Random random = new Random();
-		randomYaw = (random.nextFloat() / 10);
-		randomPitch = (random.nextFloat() / 10);
-		
-		//Command.sendPrivateChatMessage(randomYaw + " : " + randomPitch);
-		
-		float[] rotsN = getCustomRotsChange(sYaw, sPitch, target.posX + randomNumber(1,-1) * randomYaw, target.posY+ randomNumber(1,-1) * randomPitch, target.posZ+ randomNumber(1,-1) * randomYaw);
-		float targetYaw = rotsN[0];
-		float yawFactor = targetYaw*targetYaw/(4.7f * targetYaw);
-		if(targetYaw < 5){
-			yawFactor = targetYaw*targetYaw/(3.7f * targetYaw);
-		}
-		if(Math.abs(yawFactor) > 7){
-			aacB = yawFactor*7;
-			yawFactor = targetYaw*targetYaw/(3.7f * targetYaw);
-		}else{
-			yawFactor = targetYaw*targetYaw/(6.7f * targetYaw) + aacB;
-		}
-		
-	
-		em.setYaw(sYaw + yawFactor);
-		sYaw += yawFactor;
-		float targetPitch = rotsN[1];
-		float pitchFactor = targetPitch / 3.7F;
-		em.setPitch(sPitch + pitchFactor);
-		sPitch += pitchFactor;
-		
-		//Command.sendPrivateChatMessage(em.yaw + " : " + em.pitch);
-		
+		lastSmoothYaw = updateRotation(lastSmoothYaw, sYaw, 360);
+		lastSmoothYaw = sYaw;
+		lastSmoothPitch = sPitch;
+        
+        if(lastSmoothPitch > 90) {
+        	lastSmoothPitch = 90;
+        } else if (lastSmoothPitch < -90) {
+        	lastSmoothPitch = -90;
+        }
+        
+        em.setYaw(lastSmoothYaw);
+        em.setPitch(lastSmoothPitch);
+        
     }
+    
+	public static float updateRotation(float current, float intended, float factor) {
+		float var4 = MathHelper.wrapAngleTo180_float(intended - current);
+
+		if (var4 > factor) {
+			var4 = factor;
+		}
+
+		if (var4 < -factor) {
+			var4 = -factor;
+		}
+
+		return current + var4;
+	}
     
 }

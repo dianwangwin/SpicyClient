@@ -94,6 +94,7 @@ public class Config {
 	public Hud hud = new Hud();
 	public Snow snow = new Snow();
 	public TargetStrafe targetStrafe = new TargetStrafe();
+	public Eagle eagle = new Eagle();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -157,6 +158,7 @@ public class Config {
 			this.hud = new Hud();
 			this.snow = new Snow();
 			this.targetStrafe = new TargetStrafe();
+			this.eagle = new Eagle();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");

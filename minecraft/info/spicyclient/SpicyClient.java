@@ -492,6 +492,7 @@ public class SpicyClient {
 		modules.add(c.hud);
 		modules.add(c.snow);
 		modules.add(c.targetStrafe);
+		modules.add(c.eagle);
 		
 		for (Module temp : SpicyClient.modules) {
 			

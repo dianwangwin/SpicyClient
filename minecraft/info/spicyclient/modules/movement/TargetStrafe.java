@@ -75,7 +75,7 @@ public class TargetStrafe extends Module {
 				
 				MovementUtils.setMotion(0);
 				
-				double yawChange = 70;
+				double yawChange = 90;
 				
 				if (mc.thePlayer.getDistanceToEntity(k.target) < distance.getValue() && mc.thePlayer.getDistanceToEntity(k.target) > distance.getValue() - 0.05) {
 					//yawChange = 10;

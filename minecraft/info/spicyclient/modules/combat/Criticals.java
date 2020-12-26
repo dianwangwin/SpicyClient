@@ -13,6 +13,7 @@ import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.settings.NumberSetting;
+import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.Timer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.NetworkManager;
@@ -46,7 +47,7 @@ public class Criticals extends Module {
 			
 			if (packet instanceof C02PacketUseEntity) {
 				
-				if (!mc.thePlayer.onGround) {
+				if (MovementUtils.isOnGround(0.0000001)) {
 					return;
 				}
 				
@@ -58,14 +59,18 @@ public class Criticals extends Module {
 					//Crit(new Double[] {0.0, 0.3199989889898899898989898989, 0.2199989889898899898989898989, 0.0, -0.3199989889898899898989898989, -0.2199989889898899898989898989});
 					//Crit2(new Double[] {0.11, 0.1100013579, 0.0000013579});
 					
+					double[] var5;
+		            int var4 = (var5 = new double[]{0.051D, 0.011511D, 0.001D, 0.001D}).length;
+
+		            for(int var3 = 0; var3 < var4; ++var3) {
+		                double offset = var5[var3];
+		                mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset, mc.thePlayer.posZ, false));
+		            }
+					
 					if (e.isPre()) {
-						Random r = new Random();
-						mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.06240000745751 + (r.nextFloat() / 1000000000), mc.thePlayer.posZ, false));
-						mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.00000000436867 + (r.nextFloat() / 1000000000), mc.thePlayer.posZ, false));
-						mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0624000072227 + (r.nextFloat() / 1000000000), mc.thePlayer.posZ, false));
-						mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.00000000676927 + (r.nextFloat() / 1000000000), mc.thePlayer.posZ, true));
-						Command.sendPrivateChatMessage((r.nextFloat() / 1000000000));
-	                    //mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0000013579, mc.thePlayer.posZ, false));
+						
+						
+						
 					}
 					else if (e.isPost()) {
 						

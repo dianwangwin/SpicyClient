@@ -130,10 +130,10 @@ public class Notification {
 		}
 		
 		double notWidth = 170, orgX = startingX;
-		if ((fr.getStringWidth(title) * 1.4) >= 170) {
+		if ((fr.getStringWidth(title) * 1.1) + 45 >= 170) {
 			
-			notWidth = (fr.getStringWidth(title) * 1.4);
-			startingX -= (fr.getStringWidth(title) * 1.4) - 170;
+			notWidth = (fr.getStringWidth(title) * 1.1) + 50;
+			startingX -= (fr.getStringWidth(title) * 1.1) - 170 + 50;
 			
 		}
 		

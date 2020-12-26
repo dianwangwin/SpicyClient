@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemPickaxe;
@@ -70,6 +71,7 @@ public class InventoryUtils {
         }
     	return true;
     }
+    
     public static boolean isBestShovel(ItemStack stack){
     	Item item = stack.getItem();
     	if(!(item instanceof ItemSpade))
@@ -160,6 +162,61 @@ public class InventoryUtils {
     	}
     	
     	return false;
+    	
+    }
+    
+    public static Slot getBestSwordSlot(){
+    	
+    	float damage = 0;
+    	Slot bestSword = null;
+    	for (int i = 9; i < 45; i++) {
+            if (Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+            	Slot slot = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i);
+                if(slot.getStack().getItem() instanceof ItemSword)
+                	if (isBestWeapon(slot.getStack())) {
+                		bestSword = slot;
+                	}
+                	
+            }
+        }
+    	
+    	return bestSword;
+    	
+    }
+    
+    public static Slot getBestPickaxeSlot(){
+    	
+    	Slot bestPickaxe = null;
+    	for (int i = 9; i < 45; i++) {
+            if (Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+            	Slot slot = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i);
+                if(slot.getStack().getItem() instanceof ItemPickaxe)
+                	if (isBestPickaxe(slot.getStack())) {
+                		bestPickaxe = slot;
+                	}
+                	
+            }
+        }
+    	
+    	return bestPickaxe;
+    	
+    }
+    
+    public static Slot getBestAxeSlot(){
+    	
+    	Slot bestAxe = null;
+    	for (int i = 9; i < 45; i++) {
+            if (Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+            	Slot slot = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i);
+                if(slot.getStack().getItem() instanceof ItemAxe)
+                	if (isBestAxe(slot.getStack())) {
+                		bestAxe = slot;
+                	}
+                	
+            }
+        }
+    	
+    	return bestAxe;
     	
     }
     

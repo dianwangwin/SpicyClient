@@ -103,7 +103,7 @@ public class HUD {
 			GlStateManager.scale(0.7, 0.7, 1);
 			GlStateManager.translate(-4, -4, 0);
 			if (SpicyClient.account.loggedIn) {
-				fr.drawString(" - [" + SpicyClient.account.username + "]", 103f, 4f, -1, false);
+				fr.drawString(" - [ " + SpicyClient.account.username + " ]", 103f, 4f, -1, false);
 			}
 			GlStateManager.popMatrix();
 		}
@@ -141,7 +141,7 @@ public class HUD {
 				DecimalFormat decimalFormat = new DecimalFormat("#.##");
 				try {
 					GlStateManager.scale(0.5, 0.5, 1);
-					fr.drawString("Ping: " + mc.getNetHandler().getPlayerInfo((mc.thePlayer).getUniqueID()).responseTime, 8,  (int) ((sr.getScaledHeight() - fr.FONT_HEIGHT) / 1.3 - 16), primaryColor);
+					fr.drawString("Ping: " + mc.getNetHandler().getPlayerInfo((mc.thePlayer).getUniqueID()).responseTime + (SpicyClient.config.pingSpoof.isEnabled() ? " - [Spoofed]" : ""), 8,  (int) ((sr.getScaledHeight() - fr.FONT_HEIGHT) / 1.3 - 16), primaryColor);
 					fr.drawString(decimalFormat.format(MovementUtils.getBlocksPerSecond()) + " blocks/sec", 8f,  (float) ((sr.getScaledHeight() - (fr.FONT_HEIGHT * 2)) / 1.3 - 18.75), primaryColor, false);
 					GlStateManager.scale(2, 2, 1);
 				} catch (NullPointerException e) {

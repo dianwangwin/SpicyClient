@@ -118,7 +118,7 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ Hypixel disabler");
         changeLogs.add("+ Hypixel inventory manager");
         changeLogs.add("+ Hypixel 5 second disabler");
-        changeLogs.add("+ Payback for pvplands killsults");
+        changeLogs.add("+ Eagle");
         changeLogs.add("+ Vanilla nofall");
         changeLogs.add("+ Vanilla and packet autolog");
         changeLogs.add("+ Jesus");

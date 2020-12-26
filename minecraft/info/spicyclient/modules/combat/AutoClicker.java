@@ -80,7 +80,10 @@ public class AutoClicker extends Module {
 					
 				}else {
 					
-					if (!blocking) {
+					if (mc.gameSettings.keyBindUseItem.pressed && mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword) {
+						blockHypixel((EntityLivingBase) mc.objectMouseOver.entityHit);
+					}
+					else if (!blocking && mc.thePlayer.inventory.getCurrentItem() != null) {
 						mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
 						blocking = true;
 					}

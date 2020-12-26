@@ -438,7 +438,7 @@ public class PlayerControllerMP
                     }
                 }
             }
-
+            
             this.netClientHandler.addToSendQueue(new C08PacketPlayerBlockPlacement(hitPos, side.getIndex(), player.inventory.getCurrentItem(), f, f1, f2));
 
             if (!flag && this.currentGameType != WorldSettings.GameType.SPECTATOR)

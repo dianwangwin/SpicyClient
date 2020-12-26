@@ -12,6 +12,7 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.ClickGUI.ClickGUI;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
+import info.spicyclient.events.listeners.EventPacket;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
@@ -39,6 +40,7 @@ import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C0CPacketInput;
+import net.minecraft.network.play.client.C0DPacketCloseWindow;
 import net.minecraft.network.play.client.C16PacketClientStatus;
 import net.minecraft.network.play.client.C16PacketClientStatus.EnumState;
 
@@ -57,6 +59,8 @@ public class InventoryManager extends Module {
 	public NumberSetting swordSlot = new NumberSetting("Sword slot", 1, 1, 9, 1);
 	public NumberSetting pickaxeSlot = new NumberSetting("Pickaxe slot", 2, 1, 9, 1);
 	public NumberSetting axeSlot = new NumberSetting("Axe slot", 3, 1, 9, 1);
+	
+	public static transient boolean isInventoryOpen = false;
 	
 	public InventoryManager() {
 		super("Inventory Manager", Keyboard.KEY_NONE, Category.PLAYER);
@@ -225,7 +229,8 @@ public class InventoryManager extends Module {
 	            				
 	            				
 	        				}
-	    					
+	        				
+	        				openInv();
 	    					InventoryUtils.swap(i, (int)swordSlot.getValue() - 1);
 	    					sword = true;
 	    					
@@ -238,6 +243,7 @@ public class InventoryManager extends Module {
 	            				
 	        				}
 	        				
+	        				openInv();
 	    					InventoryUtils.swap(i, (int)pickaxeSlot.getValue() - 1);
 	    					pickaxe = true;
 	    					
@@ -250,6 +256,7 @@ public class InventoryManager extends Module {
 	            				
 	        				}
 	        				
+	        				openInv();
 	    					InventoryUtils.swap(i, (int)axeSlot.getValue() - 1);
 	    					axe = true;
 	    					
@@ -280,8 +287,10 @@ public class InventoryManager extends Module {
 		            				
 		        				}
 		        				
+		        				openInv();
 		    					InventoryUtils.drop(i);
 		    					SpicyClient.config.autoArmor.timer.reset();
+		    					closeInv();
 		    					return;
 		    					
 	    					}
@@ -300,8 +309,10 @@ public class InventoryManager extends Module {
 		            				
 		        				}
 		        				
+		        				openInv();
 		    					InventoryUtils.drop(i);
 		    					SpicyClient.config.autoArmor.timer.reset();
+		    					closeInv();
 		    					return;
 		    					
 	    					}
@@ -320,8 +331,10 @@ public class InventoryManager extends Module {
 			            				
 			        				}
 			        				
+			        				openInv();
 			    					InventoryUtils.drop(i);
 			    					SpicyClient.config.autoArmor.timer.reset();
+			    					closeInv();
 			    					return;
 			    					
 		    					}
@@ -334,8 +347,10 @@ public class InventoryManager extends Module {
 		            				
 		        				}
 		        				
+		        				openInv();
 		    					InventoryUtils.drop(i);
 		    					SpicyClient.config.autoArmor.timer.reset();
+		    					closeInv();
 		    					return;
 		    					
 		    				}
@@ -350,8 +365,10 @@ public class InventoryManager extends Module {
 			            				
 			        				}
 			        				
+			        				openInv();
 			    					InventoryUtils.drop(i);
 			    					SpicyClient.config.autoArmor.timer.reset();
+			    					closeInv();
 			    					return;
 			    					
 		    					}
@@ -364,8 +381,10 @@ public class InventoryManager extends Module {
 		            				
 		        				}
 		        				
+		        				openInv();
 		    					InventoryUtils.drop(i);
 		    					SpicyClient.config.autoArmor.timer.reset();
+		    					closeInv();
 		    					return;
 		    					
 		    				}
@@ -380,8 +399,10 @@ public class InventoryManager extends Module {
 			            				
 			        				}
 			        				
+			        				openInv();
 			    					InventoryUtils.drop(i);
 			    					SpicyClient.config.autoArmor.timer.reset();
+			    					closeInv();
 			    					return;
 			    					
 		    					}
@@ -394,8 +415,10 @@ public class InventoryManager extends Module {
 		            				
 		        				}
 		        				
+		        				openInv();
 		    					InventoryUtils.drop(i);
 		    					SpicyClient.config.autoArmor.timer.reset();
+		    					closeInv();
 		    					return;
 		    					
 		    				}
@@ -408,8 +431,10 @@ public class InventoryManager extends Module {
 		            				
 		        				}
 		        				
+		        				openInv();
 		    					InventoryUtils.drop(i);
 		    					SpicyClient.config.autoArmor.timer.reset();
+		    					closeInv();
 		    					return;
 		    					
 		    				}
@@ -430,8 +455,10 @@ public class InventoryManager extends Module {
 				            				
 				        				}
 				        				
+				        				openInv();
 				    					InventoryUtils.drop(i);
 				    					SpicyClient.config.autoArmor.timer.reset();
+				    					closeInv();
 				    					return;
 				    					
 				    				}
@@ -452,7 +479,66 @@ public class InventoryManager extends Module {
 				SpicyClient.config.autoArmor.timer.reset();
 			}
 			
+			closeInv();
+			
 		}
+		
+		if (e instanceof EventPacket && e.isPre()) {
+			
+			Packet packet = ((EventPacket)e).packet;
+			
+            if (packet instanceof C0DPacketCloseWindow) {
+                isInventoryOpen = false;
+            }
+            else if (packet instanceof C16PacketClientStatus) {
+                C16PacketClientStatus open = (C16PacketClientStatus)packet;
+                if (open.getStatus() == EnumState.OPEN_INVENTORY_ACHIEVEMENT) {
+                    isInventoryOpen = true;
+                }
+            }
+            
+		}
+		
+	}
+	
+	@Override
+	public void onEventWhenDisabled(Event e) {
+		
+		if (e instanceof EventPacket && e.isPre()) {
+			
+			Packet packet = ((EventPacket)e).packet;
+			
+            if (packet instanceof C0DPacketCloseWindow) {
+                isInventoryOpen = false;
+            }
+            else if (packet instanceof C16PacketClientStatus) {
+                C16PacketClientStatus open = (C16PacketClientStatus)packet;
+                if (open.getStatus() == EnumState.OPEN_INVENTORY_ACHIEVEMENT) {
+                    isInventoryOpen = true;
+                }
+            }
+            
+		}
+		
+	}
+	
+	public void openInv() {
+		
+        if (!this.isInventoryOpen) {
+            mc.thePlayer.sendQueue.addToSendQueue(new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT));
+        }
+
+        this.isInventoryOpen = true;
+        
+	}
+	
+	public void closeInv() {
+		
+		if (this.isInventoryOpen) {
+            mc.thePlayer.sendQueue.addToSendQueue(new C0DPacketCloseWindow(mc.thePlayer.inventoryContainer.windowId));
+        }
+
+        this.isInventoryOpen = false;
 		
 	}
 	
