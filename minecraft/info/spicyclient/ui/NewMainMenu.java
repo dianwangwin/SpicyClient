@@ -455,6 +455,7 @@ public class NewMainMenu extends GuiScreen {
 			
 			if (mouseX > this.width - 68 && mouseX < this.width - 4 && mouseY < 25 && mouseY > 5) {
 				SpicyClient.account = new Account();
+				info.spicyclient.files.FileManager.saveAccount(SpicyClient.account);
 			}
 			
 		}

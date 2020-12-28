@@ -16,6 +16,7 @@ import info.spicyclient.modules.Module;
 import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.notifications.Type;
+import info.spicyclient.settings.BooleanSetting;
 import info.spicyclient.settings.ModeSetting;
 import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.util.MovementUtils;
@@ -28,8 +29,7 @@ import net.minecraft.util.MathHelper;
 
 public class AntiVoid extends Module {
 	
-	
-	// Not used anymore
+	public BooleanSetting jumpFirst = new BooleanSetting("Jump first", false);
 	private ModeSetting mode = new ModeSetting("Mode", "Hypixel", "Hypixel");
 	
 	public AntiVoid() {
@@ -40,7 +40,7 @@ public class AntiVoid extends Module {
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
-		this.addSettings(mode);
+		this.addSettings(mode, jumpFirst);
 	}
 	
 	public void onEnable() {
@@ -59,8 +59,27 @@ public class AntiVoid extends Module {
 			
 			if (e.isPre()) {
 				
+				boolean isOverVoid = true;
+				BlockPos block = mc.thePlayer.getPosition();
+				
+				for (int i = (int) mc.thePlayer.posY; i > 0; i--) {
+					
+					if (isOverVoid) {
+						
+						if (!(mc.theWorld.getBlockState(block).getBlock() instanceof BlockAir)) {
+							
+							isOverVoid = false;
+							
+						}
+						
+					}
+					
+					block = block.add(0, -1, 0);
+					
+				}
+				
 				try {
-					if (((EventPacket) e).packet instanceof S08PacketPlayerPosLook) {
+					if (mode.is("Hypixel") && ((EventPacket) e).packet instanceof S08PacketPlayerPosLook && !MovementUtils.isOnGround(0.001) && (mc.thePlayer.fallDistance >= 20.0f || mc.thePlayer.posY < 0) && isOverVoid) {
 						
 						mc.thePlayer.fallDistance = 0;
 						
@@ -104,10 +123,14 @@ public class AntiVoid extends Module {
 			        	
 			        	if (!bounced) {
 			        		bounced = true;
-			        		//mc.thePlayer.motionY = 0.2d*14d;
-			        		//mc.thePlayer.fallDistance = 4;
-			        		//mc.thePlayer.onGround = false;
-			        		//Command.sendPrivateChatMessage(mc.thePlayer.motionY);
+			        		
+			        		if (jumpFirst.isEnabled()) {
+				        		mc.thePlayer.motionY = 0.2d*11d;
+				        		mc.thePlayer.fallDistance = 4;
+				        		mc.thePlayer.onGround = false;
+				        		//Command.sendPrivateChatMessage(mc.thePlayer.motionY);
+			        		}
+			        		
 			        	}else {
 			        		
 			        		Random r = new Random();

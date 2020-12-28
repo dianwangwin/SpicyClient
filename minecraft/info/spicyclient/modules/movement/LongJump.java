@@ -29,7 +29,7 @@ public class LongJump extends Module {
         playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
         playerCapabilities.isCreativeMode = true;
         mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
-		
+        
 	}
 	
 	public void onDisable() {
@@ -58,7 +58,7 @@ public class LongJump extends Module {
 				
 				mc.gameSettings.keyBindJump.pressed = false;
 
-                if (mc.thePlayer.onGround) {
+                if (MovementUtils.isOnGround(0.000001)) {
                 	
                 	MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + 1.25f);
                     mc.thePlayer.jump();

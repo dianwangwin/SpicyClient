@@ -3,6 +3,7 @@ package net.minecraft.client.entity;
 import com.mojang.authlib.GameProfile;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.modules.memes.Furries;
 
 import java.io.File;
 import net.minecraft.client.Minecraft;
@@ -97,6 +98,12 @@ public abstract class AbstractClientPlayer extends EntityPlayer
     	if (SpicyClient.config.floofyFoxes.isEnabled()) {
     		
     		return new ResourceLocation("spicy/fox.png");
+    		
+    	}
+    	
+    	if (SpicyClient.config.furries.isEnabled()) {
+    		
+    		return Furries.setSkin(this);
     		
     	}
     	

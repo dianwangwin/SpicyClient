@@ -18,6 +18,8 @@ public class CommandManager {
 		addCommand(new Damage());
 		addCommand(new Date());
 		addCommand(new Music());
+		addCommand(new Panic());
+		addCommand(new Nickname());
 		
 	}
 	

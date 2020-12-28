@@ -1,6 +1,7 @@
 package info.spicyclient.settings;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import info.spicyclient.SpicyClient;
@@ -14,7 +15,7 @@ public class ModeSetting extends Setting {
 	public ModeSetting(String name, String defaultMode, String... modes) {
 		
 		this.name = name;
-		this.modes = Arrays.asList(modes);
+		this.modes = new LinkedList<String>(Arrays.asList(modes));
 		index = this.modes.indexOf(defaultMode);
 		
 	}

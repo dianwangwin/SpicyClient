@@ -17,6 +17,11 @@ public class Eagle extends Module {
 	}
 	
 	@Override
+	public void onDisable() {
+		mc.gameSettings.keyBindSneak.pressed = false;
+	}
+	
+	@Override
 	public void onEvent(Event e) {
 		
 		if (e instanceof EventUpdate && e.isPre()) {

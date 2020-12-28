@@ -54,7 +54,6 @@ public class Disabler extends Module {
 			
 			this.additionalInformation = "Hypixel (Watchdog sucks update)";
 			
-			/*
             PlayerCapabilities playerCapabilities = new PlayerCapabilities();
             playerCapabilities.isFlying = true;
             playerCapabilities.allowFlying = true;
@@ -62,7 +61,6 @@ public class Disabler extends Module {
             playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
             playerCapabilities.isCreativeMode = true;
             mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
-            */
             
             if (ping.hasTimeElapsed(500 + (new Random()).nextInt(750), true) && C0FPackets.size() > 0) {
             	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(C0FPackets.get(0));

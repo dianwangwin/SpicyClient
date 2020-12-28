@@ -863,7 +863,7 @@ public class Fly extends Module {
                     
     				case 0:
     					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-    					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - 0.001,
+    					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - 0.0001,
     							mc.thePlayer.posZ);
     					hypixelFastFlyStatus++;
     					break;
@@ -873,7 +873,7 @@ public class Fly extends Module {
     					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
     							//mc.thePlayer.posZ);
     					if (!MovementUtils.isOnGround(0.0001)) {
-    						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.001, 
+    						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0001, 
     								mc.thePlayer.posZ);
     					}
     					

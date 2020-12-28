@@ -130,10 +130,16 @@ public class Notification {
 		}
 		
 		double notWidth = 170, orgX = startingX;
-		if ((fr.getStringWidth(title) * 1.1) + 45 >= 170) {
+		
+		if ((fr.getStringWidth(title) * 1.1) + 45 >= 170 || (fr.getStringWidth(text) * 0.9) + 43.33 >= 170) {
 			
 			notWidth = (fr.getStringWidth(title) * 1.1) + 50;
 			startingX -= (fr.getStringWidth(title) * 1.1) - 170 + 50;
+			
+			if ((fr.getStringWidth(text) * 0.9) + 43.33 >= notWidth) {
+				notWidth = (fr.getStringWidth(text) * 0.9) + 50;
+				startingX -= (fr.getStringWidth(text) * 0.9) - 170 + 72;
+			}
 			
 		}
 		
@@ -144,6 +150,13 @@ public class Notification {
 		GlStateManager.scale(1.1, 1.1, 1);
 		GlStateManager.translate(-4, -4, 0);
 		fr.drawString(title, (int) ((startingX + 45) / 1.1), (int) ((int) ((startingY + 15 - (fr.FONT_HEIGHT / 2))) / 1.1), color.color);
+		GlStateManager.popMatrix();
+		
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(4, 4, 0);
+		GlStateManager.scale(0.9, 0.9, 1);
+		GlStateManager.translate(-4, -4, 0);
+		fr.drawString(text, (float) ((startingX + 43.33) / 0.9), (float) ((float) ((startingY + 17 + (fr.FONT_HEIGHT))) / 0.9), color.color, false);
 		GlStateManager.popMatrix();
 		
 		mc.getTextureManager().bindTexture(new ResourceLocation("spicy/notifications/" + type.filePrefix + color.fileSuffix + ".png"));

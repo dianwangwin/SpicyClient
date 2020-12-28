@@ -218,7 +218,7 @@ public class KillSults extends Module {
 							}
 							
 				        	//if((message.toLowerCase().contains("you won! want to play again? click here!") || message.toLowerCase().contains("coins! (win)")) || message.toLowerCase().contains("experience! (win)")){
-							if((message.toLowerCase().contains("queued! use the bed to return to lobby!")) || message.toLowerCase().contains("coins! (win)") || message.toLowerCase().contains("experience! (win)") || message.toLowerCase().contains("you won! want to play again? click here!")){
+							if((message.toLowerCase().contains("queued! use the bed to return to lobby!")) || message.toLowerCase().contains("coins! (win)") || message.toLowerCase().contains("experience! (win)") || message.toLowerCase().contains("you won! want to play again? click here!") || message.toLowerCase().contains("you died! want to play again? click here!")){
 				        		
 								if (messageMode.is("Annoying") || messageMode.getMode() == "Annoying") {
 									Command.sendPublicChatMessage("E׼Z");
@@ -354,7 +354,7 @@ public class KillSults extends Module {
 		furryKillsults.add("<PlayerName> #LegalizeAwoo");
 		furryKillsults.add("<PlayerName> is a furry confirmed?!?!?!?!!");
 		furryKillsults.add("<PlayerName> should visit ht׼tp:׼//׼spi׼cyc׼lient׼.in׼fo/fu׼rry1.g׼if");
-		furryKillsults.add("<PlayerName> really likes this meme htt׼p:/׼/׼spicy׼clie׼nt.i׼nfo׼/furry׼2.jpg");
+		furryKillsults.add("<PlayerName> really likes this meme h׼tt׼p:/׼/׼spicy׼clie׼nt.i׼nfo׼/furry׼2.׼jpg");
 		furryKillsults.add("<PlayerName> Should check out ht׼tp׼:/׼/spicy׼client׼.i׼nfo/fur׼ry3׼.׼png׼");
 		furryKillsults.add("<PlayerName> browses furaffinity");
 		furryKillsults.add("<PlayerName> joined r/furryirl");

@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
@@ -98,7 +99,7 @@ public class Bhop extends Module {
 	}
 	
 	public void onEnable() {
-		
+		this.speed = 0.0D;
 		if (SpicyClient.config.fly.isEnabled()) {
 			toggle();
 			NotificationManager.getNotificationManager().createNotification("Don't use bhop while fly is enabled!", "", true, 5000, Type.WARNING, Color.RED);
@@ -167,8 +168,6 @@ public class Bhop extends Module {
 			
 		}
 		
-		BlockFly b = SpicyClient.config.blockFly;
-		
 		if (e instanceof EventUpdate) {
 			if (e.isPre()) {
 				this.additionalInformation = mode.getMode();
@@ -188,10 +187,8 @@ public class Bhop extends Module {
 			if (e.isBeforePost()) {
 				
 				EventMotion event = (EventMotion) e;
-				if (b == null) {
-					
-				}
-				else if (mode.getMode().equalsIgnoreCase("Pvplands") && !b.isEnabled() && !mc.thePlayer.isInWater()) {
+				
+				if (mode.getMode().equalsIgnoreCase("Pvplands") && !mc.thePlayer.isInWater()) {
 					
 					if (mc.thePlayer.onGround && mc.gameSettings.keyBindForward.pressed) {
 						mc.thePlayer.setSprinting(true);
@@ -208,15 +205,15 @@ public class Bhop extends Module {
 					}
 					
 				}
-				else if (mode.getMode().equalsIgnoreCase("Pvplands") && !b.isEnabled() && mc.thePlayer.isInWater()) {
+				else if (mode.getMode().equalsIgnoreCase("Pvplands") && mc.thePlayer.isInWater()) {
 					if (mc.thePlayer.onGround) {
 						mc.gameSettings.keyBindJump.pressed = false;
 						mc.thePlayer.jump();
 						mc.thePlayer.setSprinting(true);
 					}
 				}
-				else if (mode.is("Hypixel") && !b.isEnabled() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
-					
+				else if (mode.is("Hypixel") && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
+
 					mc.gameSettings.keyBindJump.pressed = false;
 					
 					if (!mc.thePlayer.isInWater()) {
@@ -225,6 +222,7 @@ public class Bhop extends Module {
 						
 						if (MovementUtils.isOnGround(0.00004)) {
 							
+							//MovementUtils.setMotion((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + ((float)hypixelSpeed.getValue() * 15));
 							mc.thePlayer.jump();
 							
 							e.setCanceled(true);
@@ -237,28 +235,37 @@ public class Bhop extends Module {
 						
 					}else {
 						
-						mc.thePlayer.motionY += 0.1;
-						mc.thePlayer.setIsInWater(false);
-						
 					}
 					
 				}
-				else if (mode.is("Test") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
+				else if (mode.is("Test") && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
 					
 					mc.gameSettings.keyBindJump.pressed = false;
 					
-					if (mc.thePlayer.onGround) {
+					if (!mc.thePlayer.isInWater()) {
 						
-						mc.thePlayer.jump();
-						e.setCanceled(true);
+						mc.thePlayer.noClip = true;
+						
+						if (!MovementUtils.isOnGround(1)) {
+							
+							mc.thePlayer.motionY = -0.01 + (new Random().nextDouble() / 100);
+							//e.setCanceled(true);
+							
+						}
+						else if (MovementUtils.isOnGround(0.000000000004)) {
+							mc.thePlayer.jump();
+						}
+						
+						mc.thePlayer.setSprinting(true);
+						//MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + 0.01f);
+						MovementUtils.setMotion((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + ((float)hypixelSpeed.getValue()));
+						
+					}else {
 						
 					}
 					
-					mc.thePlayer.setSprinting(true);
-					MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + 0.005511111f);
-					
 				}
-				else if (mode.is("Test 3") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
+				else if (mode.is("Test 3") && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
 					
 					if (mc.thePlayer.onGround) {
 						
@@ -310,5 +317,8 @@ public class Bhop extends Module {
 		}
 		
 	}
+	
+	public static transient float Speed = 0;
+	public static transient boolean lastDistanceReset = false;
 	
 }
