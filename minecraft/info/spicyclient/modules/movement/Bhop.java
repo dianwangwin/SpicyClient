@@ -1,6 +1,8 @@
 package info.spicyclient.modules.movement;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
@@ -12,6 +14,7 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
+import info.spicyclient.events.listeners.EventMove;
 import info.spicyclient.events.listeners.EventOnLadder;
 import info.spicyclient.events.listeners.EventPacket;
 import info.spicyclient.events.listeners.EventSendPacket;
@@ -49,6 +52,7 @@ import net.minecraft.network.status.client.C00PacketServerQuery;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
+import optifine.MathUtils;
 
 public class Bhop extends Module {
 	
@@ -265,50 +269,9 @@ public class Bhop extends Module {
 					}
 					
 				}
-				else if (mode.is("Test 3") && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
+				else if (mode.is("Test 3")) {
 					
-					if (mc.thePlayer.onGround) {
-						
-						mc.thePlayer.jump();
-						//mc.thePlayer.motionY = 0.42f;
-						e.setCanceled(true);
-						
-					}
-					
-					mc.gameSettings.keyBindJump.pressed = false;
-					
-					mc.thePlayer.onGround = true;
-					mc.thePlayer.noClip = true;
-					
-					if (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed) {
-						
-						MovementUtils.strafe(0.5F);
-						
-					}
-					
-					/*
-					switch (stage) {
-					case 0:
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-						stage++;
-						break;
-					case 1:
-						// mc.thePlayer.posY = mc.thePlayer.posY + 9.947598300641403E-14;
-						// mc.thePlayer.posY = mc.thePlayer.lastTickPosY + 0.0002000000000066393;
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
-								mc.thePlayer.posZ);
-						stage++;
-						break;
-					case 2:
-						// mc.thePlayer.posY = mc.thePlayer.posY + -9.947598300641403E-14;
-						// mc.thePlayer.posY = mc.thePlayer.lastTickPosY -0.0002000000000066393;
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
-								mc.thePlayer.posZ);
-						stage = 0;
-						break;
-					}
-					*/
-					//mc.thePlayer.motionY = 0;
+
 					
 				}
 				
@@ -316,9 +279,42 @@ public class Bhop extends Module {
 			
 		}
 		
+		if (e instanceof EventMotion && mc.thePlayer.onGround && mode.is("Test 3")) {
+            ((EventMotion)e).setY(((EventMotion)e).getY() + (double)RandomUtils.nextFloat(1.0E-5F, 9.9E-4F));
+        }
+
+        if (e instanceof EventMove && MovementUtils.isMoving() && !mc.thePlayer.isInWater() && e.isBeforePre() && mode.is("Test 3")) {
+        	forward =  0.2873D;
+            if (mc.thePlayer.onGround) {
+                ((EventMove)e).setY(mc.thePlayer.motionY = 0.41999998688697815D);
+                this.speed = forward * 2.1500000953674316D;
+                this.lastDistanceReset = true;
+            } else if (!this.lastDistanceReset && !mc.thePlayer.isCollidedHorizontally) {
+                //this.speed -= this.speed / 159.0D;
+            	this.speed -= this.speed / 165.0D;
+            } else {
+                this.speed -= 0.66D * (this.speed - forward);
+                this.lastDistanceReset = false;
+            }
+
+            MovementUtils.setMotion(Math.max(this.speed, forward));
+            ((EventMove)e).setSpeed(Math.max(this.speed, speed));
+        }
+		
 	}
 	
 	public static transient float Speed = 0;
 	public static transient boolean lastDistanceReset = false;
 	
+	public static double roundToPlace(double value, int places) {
+		if (places < 0) {
+			throw new IllegalArgumentException();
+		} else {
+			BigDecimal bd = new BigDecimal(value);
+			bd = bd.setScale(places, RoundingMode.HALF_UP);
+			return bd.doubleValue();
+		}
+	}
+    double forward;
+    double strafe;
 }

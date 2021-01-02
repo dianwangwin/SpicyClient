@@ -4,6 +4,7 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventChatmessage;
 import info.spicyclient.events.listeners.EventMotion;
+import info.spicyclient.events.listeners.EventMove;
 import info.spicyclient.events.listeners.EventUpdate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
@@ -166,7 +167,18 @@ public class EntityPlayerSP extends AbstractClientPlayer
             this.mc.getSoundHandler().playSound(new MovingSoundMinecartRiding(this, (EntityMinecart)entityIn));
         }
     }
-
+    
+    @Override
+	public void moveEntity(double x, double y, double z) {
+    	EventMove event = new EventMove(z, y, z);
+    	event.setType(EventType.PRE);
+    	event.setX(x);
+    	event.setY(y);
+    	event.setZ(z);
+    	SpicyClient.onEvent(event);
+		super.moveEntity(event.x, event.y, event.z);
+	}
+    
     /**
      * Called to update the entity's position/logic.
      */

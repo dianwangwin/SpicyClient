@@ -9,6 +9,7 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
+import info.spicyclient.events.listeners.EventPacket;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventSneaking;
 import info.spicyclient.events.listeners.EventUpdate;
@@ -29,9 +30,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import net.minecraft.network.play.server.S2FPacketSetSlot;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
@@ -40,7 +43,7 @@ import net.minecraft.util.Vec3;
 public class BlockFly extends Module {
 	
 	public BlockFly() {
-		super("Block Fly", Keyboard.KEY_NONE, Category.BETA);
+		super("Block Fly", Keyboard.KEY_NONE, Category.MOVEMENT);
 	}
 	
 	public void onEnable() {
@@ -58,6 +61,24 @@ public class BlockFly extends Module {
 	
 	public void onEvent(Event e) {
 		
+		if (e instanceof EventSneaking) {
+			
+			if (e.isPre()) {
+				
+				EventSneaking sneak = (EventSneaking) e;
+				
+				if (sneak.entity.onGround && sneak.entity instanceof EntityPlayer) {
+					sneak.sneaking = true;
+				}else {
+					sneak.sneaking = false;
+				}
+				sneak.offset = -1D;
+				sneak.revertFlagAfter = true;
+				
+			}
+			
+		}
+		
 		if (e instanceof EventSendPacket & e.isPre()) {
 			
 			if (((EventSendPacket)e).packet instanceof C03PacketPlayer) {
@@ -67,7 +88,11 @@ public class BlockFly extends Module {
 			
 		}
 		
-		if (e instanceof EventUpdate && e.isPre() && mc.gameSettings.keyBindJump.isKeyDown() && MovementUtils.isOnGround(0.4)) {
+		if (e instanceof EventUpdate && e.isPre() && MovementUtils.isOnGround(0.4)) {
+			
+			if (SpicyClient.config.killaura.isEnabled()) {
+				toggle();
+			}
 			
 			EventUpdate update = (EventUpdate)e;
 			
@@ -80,7 +105,7 @@ public class BlockFly extends Module {
 				motionZ *= -1;
 			
 			if (motionX < 0.05 && motionZ < 0.05) {
-				mc.thePlayer.jump();
+				//mc.thePlayer.motionY += 0.1;
 			}
 			
 		}

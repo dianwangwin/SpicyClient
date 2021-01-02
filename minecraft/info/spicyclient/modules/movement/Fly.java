@@ -12,6 +12,7 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
+import info.spicyclient.events.listeners.EventMove;
 import info.spicyclient.events.listeners.EventPacket;
 import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.events.listeners.EventSendPacket;
@@ -50,7 +51,7 @@ import net.minecraft.util.MathHelper;
 public class Fly extends Module {
 	
 	public NumberSetting speed = new NumberSetting("Speed", 0.1, 0.01, 2, 0.1);
-	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "Hypixel", "HypixelFast1");
+	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "Hypixel", "HypixelFast1", "HypixelFast2");
 	
 	public BooleanSetting hypixelBlink = new BooleanSetting("Blink", true);
 	public BooleanSetting hypixelTimerBoost = new BooleanSetting("Hypixel timer boost", true);
@@ -165,6 +166,25 @@ public class Fly extends Module {
 					this.settings.add(hypixelFastFly1Decay);
 				}
 				
+			}
+			else if (mode.is("HypixelFast2") || mode.getMode() == "HypixelFast2") {
+				
+				if (!this.settings.contains(hypixelFastFly1Speed)) {
+					this.settings.add(hypixelFastFly1Speed);
+				}
+				
+				if (!this.settings.contains(hypixelFastFly1StopOnDisable)) {
+					this.settings.add(hypixelFastFly1StopOnDisable);
+				}
+				
+				if (!this.settings.contains(hypixelFastFly1Blink)) {
+					this.settings.add(hypixelFastFly1Blink);
+				}
+				
+				if (!this.settings.contains(hypixelFastFly1Decay)) {
+					this.settings.add(hypixelFastFly1Decay);
+				}
+				
 			}else {
 				if (!this.settings.contains(speed)) {
 					this.settings.add(speed);
@@ -250,6 +270,13 @@ public class Fly extends Module {
 			onEnableHypixelFastfly1();
 			
 		}
+		else if (mode.is("HypixelFast2") || mode.getMode() == "HypixelFast2") {
+			
+			onEnableHypixelFastfly1();
+			
+		}
+		
+		verusStage = (int) mc.thePlayer.posY;
 		
 	}
 	
@@ -292,6 +319,12 @@ public class Fly extends Module {
 			
 		}
 		
+		else if (mode.is("HypixelFast2") || mode.getMode() == "HypixelFast2") {
+			
+			onDisablehypixelFastFly1();
+			
+		}
+		
 	}
 	
 	private static float original_fly_speed;
@@ -306,6 +339,12 @@ public class Fly extends Module {
 		if (mode.is("HypixelFast1") || mode.getMode() == "HypixelFast1") {
 			
 			onEventHypixelFastfly1(e);
+			
+		}
+		
+		if (mode.is("HypixelFast2") || mode.getMode() == "HypixelFast2") {
+			
+			onEventHypixelFastfly2(e);
 			
 		}
 		
@@ -380,7 +419,19 @@ public class Fly extends Module {
 			if (timer.hasTimeElapsed(2000 + new Random().nextInt(500), true)) {
 				// SpicyClient.config.blink.toggle();
 			}
-
+			
+		}
+		
+		if (e instanceof EventUpdate || e instanceof EventMotion) {
+			
+			if (mode.getMode().equals("Verus")) {
+				
+				mc.thePlayer.onGround = true;
+				mc.thePlayer.motionY = 0;
+				//MovementUtils.setMotion(speed.getValue());
+				
+			}
+			
 		}
 		
 		if (mode.getMode().equals("Vanilla")) {
@@ -399,6 +450,7 @@ public class Fly extends Module {
 			} catch (NullPointerException e2) {
 				e2.printStackTrace();
 			}
+			
 		}
 		
 		if (mode.getMode().equals("Vanilla")) {
@@ -498,7 +550,7 @@ public class Fly extends Module {
 					
 					
 				}
-
+				
 			}
 			
 			if (mode.getMode().equals("Hypixel") && hypixelDamaged) {
@@ -587,7 +639,7 @@ public class Fly extends Module {
 	@Override
 	public void onEventWhenDisabled(Event e) {
 		
-		if (e instanceof EventRenderGUI && e.isPre() && this.keycode.getKeycode() != Keyboard.KEY_NONE && mc.thePlayer.fallDistance >= 3 && mode.getMode().equals("Hypixel")) {
+		if (e instanceof EventRenderGUI && e.isPre() && this.keycode.getKeycode() != Keyboard.KEY_NONE && mc.thePlayer.fallDistance >= 3 && (mode.getMode().equals("Hypixel") || mode.getMode().equals("HypixelFast2"))) {
 			
 			ScaledResolution sr = new ScaledResolution(mc);
 			
@@ -684,7 +736,18 @@ public class Fly extends Module {
         
 		//SpicyClient.config.fly.damage();
 		
-		int damage = 1;
+		int damage = 0;
+		
+		if (mode.is("HypixelFast1") || mode.getMode() == "HypixelFast1") {
+			damage = 1;
+		}
+		
+		else if (mode.is("HypixelFast2") || mode.getMode() == "HypixelFast2") {
+			
+			damage = 2;
+			
+		}
+		
 		if (damage > MathHelper.floor_double(mc.thePlayer.getMaxHealth()))
 			damage = MathHelper.floor_double(mc.thePlayer.getMaxHealth());
 
@@ -733,7 +796,6 @@ public class Fly extends Module {
 	}
 	
     public void onEventHypixelFastfly1(Event e) {
-    	
     	
 		if (e instanceof EventSendPacket) {
 			
@@ -852,8 +914,8 @@ public class Fly extends Module {
                     //mc.thePlayer.lastReportedPosY = 0;
                     
                     //double offset2 = 4.496001251836E-5;
-                    //double offset2 = 9.274936900641403E-14D;
-                    //offset2 = 11.274936900641403E-11D;
+                    double offset2 = 9.274936900641403E-14D;
+                    offset2 = 11.274936900641403E-11D;
                     //offset2 = 0.001;
                     //offset2 = (new Random().nextDouble() / 1000000000000000d);
                     
@@ -863,9 +925,10 @@ public class Fly extends Module {
                     
     				case 0:
     					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-    					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - 0.0001,
+    					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - offset2,
     							mc.thePlayer.posZ);
     					hypixelFastFlyStatus++;
+    					//Command.sendPrivateChatMessage("Down");
     					break;
     				case 1:
     					// mc.thePlayer.posY = mc.thePlayer.posY + 9.947598300641403E-14;
@@ -873,19 +936,21 @@ public class Fly extends Module {
     					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
     							//mc.thePlayer.posZ);
     					if (!MovementUtils.isOnGround(0.0001)) {
-    						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0001, 
+    						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset2, 
     								mc.thePlayer.posZ);
     					}
     					
     					//event.setY(mc.thePlayer.posY);
     					hypixelFastFlyStatus++;
-    					hypixelFastFlyStatus = 0;
+    					//Command.sendPrivateChatMessage("Up");
+    					//hypixelFastFlyStatus = 0;
     					break;
-    				case 2:;
+    				case 2:
     					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
     					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0, 
     							mc.thePlayer.posZ);
     					hypixelFastFlyStatus = 0;
+    					//Command.sendPrivateChatMessage("None");
     					break;
                     
 					}
@@ -896,6 +961,223 @@ public class Fly extends Module {
             
 		}
 		
+	}
+    
+    public void onEventHypixelFastfly2(Event e) {
+    	
+    	if (e instanceof EventUpdate && e.isPre() && mc.thePlayer.fallDistance >= 3) {
+    		
+    		MovementUtils.setMotion(4);
+			this.additionalInformation = "MEGA SPEED BOOST!!!";
+			mc.thePlayer.motionY = -0.005;
+			//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer(true));
+			hypixelLagback = 0;
+			
+            double offset2 = 9.274936900641403E-14D;
+            offset2 = 11.274936900641403E-11D;
+			
+			switch (hypixelFastFlyStatus) {
+            
+			case 0:
+				//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+				mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - offset2,
+						mc.thePlayer.posZ);
+				hypixelFastFlyStatus++;
+				//Command.sendPrivateChatMessage("Down");
+				break;
+			case 1:
+				// mc.thePlayer.posY = mc.thePlayer.posY + 9.947598300641403E-14;
+				// mc.thePlayer.posY = mc.thePlayer.lastTickPosY + 0.0002000000000066393;
+				//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
+						//mc.thePlayer.posZ);
+				if (!MovementUtils.isOnGround(0.0001)) {
+					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset2, 
+							mc.thePlayer.posZ);
+				}
+				
+				//event.setY(mc.thePlayer.posY);
+				hypixelFastFlyStatus++;
+				//Command.sendPrivateChatMessage("Up");
+				//hypixelFastFlyStatus = 0;
+				break;
+			case 2:
+				//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+				mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0, 
+						mc.thePlayer.posZ);
+				hypixelFastFlyStatus = 0;
+				//Command.sendPrivateChatMessage("None");
+				break;
+            
+			}
+			
+    	}else {
+    		
+    		if (e instanceof EventSendPacket) {
+    			
+    			Block block = mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.2, mc.thePlayer.posZ)).getBlock();
+    			
+    			if (e.isPre() && !MovementUtils.isOnGround(0.0000001) && !block.isFullBlock() && !(block instanceof BlockGlass) && hypixelFastFly1Damaged) {
+    				
+    				if (((EventSendPacket)e).packet instanceof C00PacketKeepAlive || ((EventSendPacket)e).packet instanceof C00Handshake || ((EventSendPacket)e).packet instanceof C00PacketLoginStart) {
+    					return;
+    				}
+    				
+    				EventSendPacket sendPacket = (EventSendPacket) e;
+    				
+    				if (hypixelFastFly1Blink.isEnabled()) {
+    					hypixelFastFly1Packets.add(sendPacket.packet);
+    					sendPacket.setCanceled(true);
+    				}
+    				
+    			}
+    			
+    		}
+        	
+    		if (e instanceof EventUpdate) {
+                EventUpdate em = (EventUpdate) e;
+                
+                //double speed = Math.max(hypixelFastFly1Speed.getValue(), 0.2873D);
+                double speed = hypixelFastFly1Speed.getValue();
+                
+                if (true) {
+                	if(!em.isPre())
+                		return;
+                	hypixelFastFly1++;
+                    if (true) {
+                        if (mc.thePlayer.onGround && mc.thePlayer.isCollidedVertically && MovementUtils.isOnGround(0.01)) {
+                            
+                        	if(mc.thePlayer.hurtResistantTime == 19){
+                        		
+                        		MovementUtils.setMotion(0.3 + 0 * 0.05f);
+                        		mc.thePlayer.motionY = 0.41999998688698f + 0*0.1;
+                        		hypixelFastFly1 = 25;
+                        		speedAndStuff = 13;
+                        		hypixelFastFly1Damaged = true;
+                        	}else if(hypixelFastFly1 < 25){
+                        		mc.thePlayer.motionX = 0;
+                                mc.thePlayer.motionZ = 0;
+                                mc.thePlayer.jumpMovementFactor = 0;
+                                mc.thePlayer.onGround = false;
+                        	}
+                        	
+                        }
+                    }
+                    Block block = mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.2, mc.thePlayer.posZ)).getBlock();
+                    if (!MovementUtils.isOnGround(0.0000001) && !block.isFullBlock() && !(block instanceof BlockGlass)) {
+                        mc.thePlayer.motionY = 0;
+                        mc.thePlayer.motionX = 0;
+                        mc.thePlayer.motionZ = 0;
+                        float speedf = (float) (hypixelFastFly1Speed.getValue() + 0 * 0.06f);
+                        if (speedAndStuff > 0) {
+                            if ((mc.thePlayer.moveForward == 0 && mc.thePlayer.moveStrafing == 0) || mc.thePlayer.isCollidedHorizontally)
+                                speedAndStuff = 0;
+                            
+                            //speedf += speedAndStuff / 18;
+                            speedf += speedAndStuff / hypixelFastFly1Decay.getValue();
+                            
+                            //dub-= 0.175 + 0*0.006; //0.152
+                            
+                            speedAndStuff-= 0.155 + 0*0.006;
+                            
+                            /*
+                            if(((Options)settings.get("dubMODE").getValue()).getSelected().equalsIgnoreCase("OldFast")){
+                            	dub-= 1.3;
+                            }else if(((Options)settings.get("dubMODE").getValue()).getSelected().equalsIgnoreCase("Fast3")){
+                            	dub-= 0.175 + 0*0.006; //0.152
+                            }else{
+                            	dub-= 0.155 + 0*0.006; //0.152
+                            }
+                            */
+                            
+                        }
+                        
+                        //setSpecialMotion(speedf);
+                        
+                        double forward = mc.thePlayer.movementInput.moveForward;
+                        double strafe = mc.thePlayer.movementInput.moveStrafe;
+                        float yaw = mc.thePlayer.rotationYaw;
+                        if ((forward == 0.0D) && (strafe == 0.0D)) {
+                        	mc.thePlayer.motionX = 0;
+                        	mc.thePlayer.motionZ = 0;
+                        } else {
+                            if (forward != 0.0D) {
+                            	if(speedAndStuff <= 0)
+                            	 if (strafe > 0.0D) {
+                                     yaw += (forward > 0.0D ? -45 : 45);
+                                 } else if (strafe < 0.0D) {
+                                     yaw += (forward > 0.0D ? 45 : -45);
+                                 }
+                                 strafe = 0.0D;
+                                if (forward > 0.0D) {
+                                    forward = 1;
+                                } else if (forward < 0.0D) {
+                                    forward = -1;
+                                }
+                            }
+                            mc.thePlayer.motionX = forward * speedf * Math.cos(Math.toRadians(yaw + 90.0F)) + strafe * speedf * Math.sin(Math.toRadians(yaw + 90.0F));
+                            mc.thePlayer.motionZ = forward * speedf * Math.sin(Math.toRadians(yaw + 90.0F)) - strafe * speedf * Math.cos(Math.toRadians(yaw + 90.0F));
+                        }
+                        
+                       // MovementUtils.setMotion(speedf);
+                        
+                        mc.thePlayer.jumpMovementFactor = 0;
+                        mc.thePlayer.onGround = false;
+                        if (mc.gameSettings.keyBindJump.pressed) {
+                            mc.thePlayer.motionY = 0.4;
+                        }
+                        //status++;
+                        //mc.thePlayer.lastReportedPosY = 0;
+                        
+                        //double offset2 = 4.496001251836E-5;
+                        double offset2 = 9.274936900641403E-14D;
+                        offset2 = 11.274936900641403E-11D;
+                        //offset2 = 0.001;
+                        //offset2 = (new Random().nextDouble() / 1000000000000000d);
+                        
+                        //Command.sendPrivateChatMessage(new DecimalFormat("#.###########################").format(offset2));
+                        
+                        switch (hypixelFastFlyStatus) {
+                        
+        				case 0:
+        					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+        					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - offset2,
+        							mc.thePlayer.posZ);
+        					hypixelFastFlyStatus++;
+        					//Command.sendPrivateChatMessage("Down");
+        					break;
+        				case 1:
+        					// mc.thePlayer.posY = mc.thePlayer.posY + 9.947598300641403E-14;
+        					// mc.thePlayer.posY = mc.thePlayer.lastTickPosY + 0.0002000000000066393;
+        					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
+        							//mc.thePlayer.posZ);
+        					if (!MovementUtils.isOnGround(0.0001)) {
+        						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset2, 
+        								mc.thePlayer.posZ);
+        					}
+        					
+        					//event.setY(mc.thePlayer.posY);
+        					hypixelFastFlyStatus++;
+        					//Command.sendPrivateChatMessage("Up");
+        					//hypixelFastFlyStatus = 0;
+        					break;
+        				case 2:
+        					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+        					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0, 
+        							mc.thePlayer.posZ);
+        					hypixelFastFlyStatus = 0;
+        					//Command.sendPrivateChatMessage("None");
+        					break;
+                        
+    					}
+                        
+                    }
+
+                }
+                
+    		}
+    		
+    	}
+    	
 	}
     
 }

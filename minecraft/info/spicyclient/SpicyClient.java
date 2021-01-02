@@ -99,7 +99,7 @@ public class SpicyClient {
 	public static String originalUsername = "Not Set";
 	public static Boolean originalAccountOnline = false;
 	
-	public static int currentVersionNum = 4;
+	public static int currentVersionNum = 8;
 	
 	public static void StartUp() {
 		if (Minecraft.getMinecraft().getSession().getSessionType().equals(Session.Type.LEGACY)) {
@@ -124,6 +124,16 @@ public class SpicyClient {
 			}
 			
 		}
+		/*
+		else {
+			
+			System.out.println("Not pinging server, this is an offline account");
+			System.out.println("Please keep in mind that all this would send is your username and nothing else");
+			originalAccountOnline = false;
+			originalUsername = String.valueOf(new Random().nextInt(999999999));
+			
+		}
+		*/
 		
 		// Creates the font manager
 		FontManager.getFontManager();

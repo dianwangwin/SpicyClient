@@ -336,12 +336,8 @@ public class NewMainMenu extends GuiScreen {
 		}
 		
 		// For the update button
-		if (Updater.getUpdater().ClientOutdated()) {
-			
-			if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < 28 && mouseY > 8) {
-				update.insideColor = 0xff4d5c91;
-			}
-			
+		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < 28 && mouseY > 8) {
+			update.insideColor = 0xff4d5c91;
 		}
 		
 		singleplayer.draw();

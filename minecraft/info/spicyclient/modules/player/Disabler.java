@@ -19,6 +19,8 @@ import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.Timer;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.network.Packet;
+import net.minecraft.network.handshake.client.C00Handshake;
+import net.minecraft.network.login.server.S00PacketDisconnect;
 import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C0CPacketInput;
@@ -69,9 +71,21 @@ public class Disabler extends Module {
             
 		}
 		
+		if (e instanceof EventPacket && e.isPre()) {
+			
+			if (((EventPacket)e).packet instanceof S00PacketDisconnect) {
+				C0FPackets.clear();
+			}
+			
+		}
+		
 		if (e instanceof EventSendPacket && e.isPre()) {
 			
 			EventSendPacket event = (EventSendPacket) e;
+			
+			if (event.packet instanceof C00Handshake) {
+				C0FPackets.clear();
+			}
 			
             if (event.packet instanceof C0FPacketConfirmTransaction) {
             	

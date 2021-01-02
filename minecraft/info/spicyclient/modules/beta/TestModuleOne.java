@@ -16,6 +16,7 @@ import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.notifications.Type;
 import info.spicyclient.util.MovementUtils;
+import info.spicyclient.util.PlayerUtils;
 import info.spicyclient.util.RotationUtils;
 import info.spicyclient.util.Timer;
 import net.minecraft.block.Block;
@@ -25,9 +26,12 @@ import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemSword;
+import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
+import net.minecraft.network.play.client.C02PacketUseEntity.Action;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -58,34 +62,6 @@ public class TestModuleOne extends Module {
 	
 	@Override
 	public void onEvent(Event e) {
-		
-		if (e instanceof EventUpdate && e.isPre()) {
-			
-			if (mc.thePlayer.isCollidedHorizontally) {
-				bool1 = !bool1;
-			}
-			
-			Killaura k = SpicyClient.config.killaura;
-			
-			if (k.target == null) {
-				
-			}else {
-				
-				float distance = 2;
-				
-				float f = (RotationUtils.getRotations(k.target)[0] + 180 + (bool1 ? -10 : 10)) * 0.017453292F;
-				double x2 = k.target.posX, z2 = k.target.posZ;
-	            x2 -= (double)(MathHelper.sin(f) * distance * -1);
-	            z2 += (double)(MathHelper.cos(f) * distance * -1);
-	            Command.sendPrivateChatMessage("t");
-	            MovementUtils.setMotion(MovementUtils.getSpeed(), RotationUtils.getRotationFromPosition(x2, z2, mc.thePlayer.posY)[0]);
-	            
-				//mc.thePlayer.posX = x;
-				//mc.thePlayer.posZ = z;
-				
-			}
-			
-		}
 		
 	}
 	

@@ -6,6 +6,7 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
+import info.spicyclient.events.listeners.EventMove;
 import info.spicyclient.events.listeners.EventPacket;
 import info.spicyclient.events.listeners.EventRender3D;
 import info.spicyclient.events.listeners.EventSendPacket;
@@ -98,6 +99,46 @@ public class TargetStrafe extends Module {
 			
 		}
 		
+		if (e instanceof EventMove && e.isPre()) {
+			
+			EventMove event = (EventMove)e;
+			
+			if (mc.thePlayer.isCollidedHorizontally) {
+				direction = !direction;
+			}
+			
+			Killaura k = SpicyClient.config.killaura;
+			
+			if (k.target == null || !k.isEnabled()) {
+				return;
+			}else {
+				
+				double currentSpeed = MovementUtils.getSpeed();
+				
+				event.setSpeed(0);
+				
+				double yawChange = 90;
+				
+				if (mc.thePlayer.getDistanceToEntity(k.target) < distance.getValue() && mc.thePlayer.getDistanceToEntity(k.target) > distance.getValue() - 0.05) {
+					//yawChange = 10;
+				}
+				
+				float f = (float) ((RotationUtils.getRotations(k.target)[0] + (direction ? -yawChange : yawChange)) * 0.017453292F);
+				double x2 = k.target.posX, z2 = k.target.posZ;
+	            x2 -= (double)(MathHelper.sin(f) * (distance.getValue() + 2.25) * -1);
+	            z2 += (double)(MathHelper.cos(f) * (distance.getValue() + 2.25) * -1);
+	            
+	            float currentSpeed1 = MovementUtils.getSpeed();
+	            
+	            event.setSpeed(currentSpeed + speed.getValue(), RotationUtils.getRotationFromPosition(x2, z2, mc.thePlayer.posY)[0]);
+	            
+	            if (currentSpeed > MovementUtils.getSpeed()) {
+	            	direction = !direction;
+	            }
+	            
+			}
+			
+		}
 		if (e instanceof EventRender3D && e.isPre()) {
 			
 			if (mc.thePlayer.isCollidedHorizontally) {
