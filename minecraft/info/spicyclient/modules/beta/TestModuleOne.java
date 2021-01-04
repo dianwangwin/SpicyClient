@@ -63,6 +63,22 @@ public class TestModuleOne extends Module {
 	@Override
 	public void onEvent(Event e) {
 		
+		if (e instanceof EventUpdate && e.isPre()) {
+			
+			if (mc.thePlayer.isUsingItem() && !(mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword)){
+				
+				mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
+            	for (int i = 0; i < 30; i++) {
+                    mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
+                }
+            	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(PlayerUtils.getClosestPlayerToEntity(mc.thePlayer, -1), RotationUtils.getVectorForRotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch)));
+        		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(PlayerUtils.getClosestPlayerToEntity(mc.thePlayer, -1), Action.INTERACT));
+        		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
+				
+			}
+			
+		}
+		
 	}
 	
 	@Override

@@ -719,7 +719,7 @@ public class Fly extends Module {
 	
 	public void onEnableHypixelFastfly1() {
 		
-		hypixelFastFlyStatus = 0;
+		hypixelFastFlyStatus = 1;
 		hypixelFastFly1 = 0;
 		speedAndStuff = 0;
 		hypixelFastFly1Damaged = false;
@@ -914,45 +914,40 @@ public class Fly extends Module {
                     //mc.thePlayer.lastReportedPosY = 0;
                     
                     //double offset2 = 4.496001251836E-5;
-                    double offset2 = 9.274936900641403E-14D;
-                    offset2 = 11.274936900641403E-11D;
+                    double offset2 = 0.0000000000000142108547152020040000000;
                     //offset2 = 0.001;
                     //offset2 = (new Random().nextDouble() / 1000000000000000d);
                     
                     //Command.sendPrivateChatMessage(new DecimalFormat("#.###########################").format(offset2));
                     
                     switch (hypixelFastFlyStatus) {
-                    
     				case 0:
+    				case 1:
+    				case 2:
+    				case 3:
     					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-    					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - offset2,
+    					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset2,
     							mc.thePlayer.posZ);
     					hypixelFastFlyStatus++;
     					//Command.sendPrivateChatMessage("Down");
     					break;
-    				case 1:
+    				case 4:
     					// mc.thePlayer.posY = mc.thePlayer.posY + 9.947598300641403E-14;
     					// mc.thePlayer.posY = mc.thePlayer.lastTickPosY + 0.0002000000000066393;
     					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
     							//mc.thePlayer.posZ);
     					if (!MovementUtils.isOnGround(0.0001)) {
-    						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset2, 
+    						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, 
     								mc.thePlayer.posZ);
     					}
     					
     					//event.setY(mc.thePlayer.posY);
-    					hypixelFastFlyStatus++;
+    					//hypixelFastFlyStatus++;
+    					hypixelFastFlyStatus = 0;
     					//Command.sendPrivateChatMessage("Up");
     					//hypixelFastFlyStatus = 0;
     					break;
-    				case 2:
-    					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-    					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0, 
-    							mc.thePlayer.posZ);
-    					hypixelFastFlyStatus = 0;
-    					//Command.sendPrivateChatMessage("None");
-    					break;
-                    
+    					
 					}
                     
                 }
@@ -970,44 +965,48 @@ public class Fly extends Module {
     		MovementUtils.setMotion(4);
 			this.additionalInformation = "MEGA SPEED BOOST!!!";
 			mc.thePlayer.motionY = -0.005;
+			
+            if (mc.gameSettings.keyBindJump.pressed) {
+                mc.thePlayer.motionY = 0.4;
+            }
+			
 			//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer(true));
 			hypixelLagback = 0;
 			
-            double offset2 = 9.274936900641403E-14D;
-            offset2 = 11.274936900641403E-11D;
-			
-			switch (hypixelFastFlyStatus) {
+			double offset2 = 0.0000000000000142108547152020040000000;
+            //offset2 = 0.001;
+            //offset2 = (new Random().nextDouble() / 1000000000000000d);
             
+            //Command.sendPrivateChatMessage(new DecimalFormat("#.###########################").format(offset2));
+            
+            switch (hypixelFastFlyStatus) {
 			case 0:
+			case 1:
+			case 2:
+			case 3:
 				//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-				mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - offset2,
+				mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset2,
 						mc.thePlayer.posZ);
 				hypixelFastFlyStatus++;
 				//Command.sendPrivateChatMessage("Down");
 				break;
-			case 1:
+			case 4:
 				// mc.thePlayer.posY = mc.thePlayer.posY + 9.947598300641403E-14;
 				// mc.thePlayer.posY = mc.thePlayer.lastTickPosY + 0.0002000000000066393;
 				//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
 						//mc.thePlayer.posZ);
 				if (!MovementUtils.isOnGround(0.0001)) {
-					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset2, 
+					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, 
 							mc.thePlayer.posZ);
 				}
 				
 				//event.setY(mc.thePlayer.posY);
-				hypixelFastFlyStatus++;
+				//hypixelFastFlyStatus++;
+				hypixelFastFlyStatus = 0;
 				//Command.sendPrivateChatMessage("Up");
 				//hypixelFastFlyStatus = 0;
 				break;
-			case 2:
-				//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-				mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0, 
-						mc.thePlayer.posZ);
-				hypixelFastFlyStatus = 0;
-				//Command.sendPrivateChatMessage("None");
-				break;
-            
+				
 			}
 			
     	}else {
@@ -1129,45 +1128,40 @@ public class Fly extends Module {
                         //mc.thePlayer.lastReportedPosY = 0;
                         
                         //double offset2 = 4.496001251836E-5;
-                        double offset2 = 9.274936900641403E-14D;
-                        offset2 = 11.274936900641403E-11D;
+                        double offset2 = 0.0000000000000142108547152020040000000;
                         //offset2 = 0.001;
                         //offset2 = (new Random().nextDouble() / 1000000000000000d);
                         
                         //Command.sendPrivateChatMessage(new DecimalFormat("#.###########################").format(offset2));
                         
                         switch (hypixelFastFlyStatus) {
-                        
         				case 0:
+        				case 1:
+        				case 2:
+        				case 3:
         					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-        					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - offset2,
+        					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset2,
         							mc.thePlayer.posZ);
         					hypixelFastFlyStatus++;
         					//Command.sendPrivateChatMessage("Down");
         					break;
-        				case 1:
+        				case 4:
         					// mc.thePlayer.posY = mc.thePlayer.posY + 9.947598300641403E-14;
         					// mc.thePlayer.posY = mc.thePlayer.lastTickPosY + 0.0002000000000066393;
         					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
         							//mc.thePlayer.posZ);
         					if (!MovementUtils.isOnGround(0.0001)) {
-        						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset2, 
+        						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, 
         								mc.thePlayer.posZ);
         					}
         					
         					//event.setY(mc.thePlayer.posY);
-        					hypixelFastFlyStatus++;
+        					//hypixelFastFlyStatus++;
+        					hypixelFastFlyStatus = 0;
         					//Command.sendPrivateChatMessage("Up");
         					//hypixelFastFlyStatus = 0;
         					break;
-        				case 2:
-        					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-        					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0, 
-        							mc.thePlayer.posZ);
-        					hypixelFastFlyStatus = 0;
-        					//Command.sendPrivateChatMessage("None");
-        					break;
-                        
+        					
     					}
                         
                     }

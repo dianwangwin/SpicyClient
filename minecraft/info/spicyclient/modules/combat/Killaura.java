@@ -182,9 +182,20 @@ public class Killaura extends Module {
 			
 			color = 0xff00ff00;
 			
+			float[] hsb = Color.RGBtoHSB(((int)SpicyClient.config.hud.colorSettingRed.getValue()), ((int)SpicyClient.config.hud.colorSettingGreen.getValue()), ((int)SpicyClient.config.hud.colorSettingBlue.getValue()), null);
+			float hue = hsb[0];
+			float saturation = hsb[1];
+			color = Color.HSBtoRGB(hue, saturation, 1);;
+			
+			if (SpicyClient.config.rainbowgui.isEnabled()) {
+				float hue1 = System.currentTimeMillis() % (int)((100.5f - SpicyClient.config.rainbowgui.speed.getValue()) * 1000) / (float)((100.5f - SpicyClient.config.rainbowgui.speed.getValue()) * 1000);
+				color = Color.HSBtoRGB(hue1, 0.65f, 1);
+			}
+			
 			Gui.drawRect(sr.getScaledWidth() / 2 - 110, sr.getScaledHeight() / 2 + 100, sr.getScaledWidth() / 2 + 110, sr.getScaledHeight() / 2 + 170, 0xff36393f);
 			Gui.drawRect(sr.getScaledWidth() / 2 - 41, sr.getScaledHeight() / 2 + 100 + 54, sr.getScaledWidth() / 2 + 100, sr.getScaledHeight() / 2 + 96 + 45, 0xff202225);
 			Gui.drawRect(sr.getScaledWidth() / 2 - 41, sr.getScaledHeight() / 2 + 100 + 54, healthBar, sr.getScaledHeight() / 2 + 96 + 45, color);
+			//Gui.drawRect(sr.getScaledWidth() / 2 - 41, sr.getScaledHeight() / 2 + 100 + 54, healthBarTarget, sr.getScaledHeight() / 2 + 96 + 45, color);
 			
 			GlStateManager.color(1, 1, 1);
 			GuiInventory.drawEntityOnScreen(sr.getScaledWidth() / 2 - 75, sr.getScaledHeight() / 2 + 165, 25, 1f, 1f, target);
@@ -661,21 +672,43 @@ public class Killaura extends Module {
     
     public void customRots(EventMotion em, EntityLivingBase ent) {
     	
-        if (target == null)
-            return;
+        if (target == null) {
+        	
+        	lastSmoothYaw = mc.thePlayer.rotationYaw;
+        	lastSmoothPitch = mc.thePlayer.rotationPitch;
+        	
+        	return;
+        	
+        }
         
         float sYaw = (float) updateRotation((float) lastSmoothYaw, (float) RotationUtils.getRotations(target)[0], (float) 50);
 		float sPitch = (float) updateRotation((float) lastSmoothPitch, (float) RotationUtils.getRotations(target)[1], (float) 50);
 		
+		//Command.sendPrivateChatMessage("Old: " + sYaw + " : " + sPitch);
+		
+		double move = 5;
+		move = new Random().nextInt(3) + 1;
+		
+		move += new Random().nextDouble();
+        sYaw = (float) updateRotation((float) lastSmoothYaw, (float) RotationUtils.getRotations(target)[0], (float)((lastSmoothYaw - RotationUtils.getRotations(target)[0]) / move));
+		sPitch = (float) updateRotation((float) lastSmoothPitch, (float) RotationUtils.getRotations(target)[1], (float)((lastSmoothPitch - RotationUtils.getRotations(target)[1]) / move));
+		
+		//Command.sendPrivateChatMessage("New: " + sYaw + " : " + sPitch);
+		
 		lastSmoothYaw = updateRotation(lastSmoothYaw, sYaw, 360);
-		lastSmoothYaw = sYaw;
-		lastSmoothPitch = sPitch;
-        
+		//lastSmoothYaw = sYaw;
+		lastSmoothPitch = updateRotation(lastSmoothPitch, sPitch, 360);
+		
         if(lastSmoothPitch > 90) {
         	lastSmoothPitch = 90;
         } else if (lastSmoothPitch < -90) {
         	lastSmoothPitch = -90;
         }
+        
+        //Command.sendPrivateChatMessage("Done: " + sYaw + " : " + sPitch);
+        //Command.sendPrivateChatMessage("Current: " + sYaw + " : " + sPitch);
+        //Command.sendPrivateChatMessage("Intended: " + RotationUtils.getRotations(target)[0] + " : " + RotationUtils.getRotations(target)[1]);
+        //Command.sendPrivateChatMessage(" ");
         
         em.setYaw(lastSmoothYaw);
         em.setPitch(lastSmoothPitch);

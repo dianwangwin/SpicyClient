@@ -65,6 +65,10 @@ public class BlockFly extends Module {
 			
 			if (e.isPre()) {
 				
+				if (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) {
+					return;
+				}
+				
 				EventSneaking sneak = (EventSneaking) e;
 				
 				if (sneak.entity.onGround && sneak.entity instanceof EntityPlayer) {
@@ -81,6 +85,10 @@ public class BlockFly extends Module {
 		
 		if (e instanceof EventSendPacket & e.isPre()) {
 			
+			if (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) {
+				return;
+			}
+			
 			if (((EventSendPacket)e).packet instanceof C03PacketPlayer) {
 				((C03PacketPlayer)((EventSendPacket)e).packet).setYaw(lastYaw);
 				((C03PacketPlayer)((EventSendPacket)e).packet).setPitch(lastPitch);
@@ -90,8 +98,8 @@ public class BlockFly extends Module {
 		
 		if (e instanceof EventUpdate && e.isPre() && MovementUtils.isOnGround(0.4)) {
 			
-			if (SpicyClient.config.killaura.isEnabled()) {
-				toggle();
+			if (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) {
+				return;
 			}
 			
 			EventUpdate update = (EventUpdate)e;
@@ -111,6 +119,10 @@ public class BlockFly extends Module {
 		}
 		
 		if (e instanceof EventMotion && e.isPost()) {
+			
+			if (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) {
+				return;
+			}
 			
 			EventMotion event = (EventMotion) e;
 			

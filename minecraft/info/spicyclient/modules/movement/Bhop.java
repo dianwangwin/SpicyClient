@@ -233,6 +233,12 @@ public class Bhop extends Module {
 							
 						}
 						
+						if (MovementUtils.isOnGround(1)) {
+							mc.timer.ticksPerSecond = 20;
+						}else if (mc.thePlayer.fallDistance < 3) {
+							mc.timer.ticksPerSecond = 27f + new Random().nextFloat();
+						}
+						
 						mc.thePlayer.setSprinting(true);
 						//MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + 0.01f);
 						MovementUtils.setMotion((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + ((float)hypixelSpeed.getValue()));
@@ -271,7 +277,11 @@ public class Bhop extends Module {
 				}
 				else if (mode.is("Test 3")) {
 					
-
+					if (MovementUtils.isOnGround(1)) {
+						mc.timer.ticksPerSecond = 20;
+					}else if (mc.thePlayer.fallDistance < 3) {
+						mc.timer.ticksPerSecond = 27.5f + new Random().nextFloat();
+					}
 					
 				}
 				
