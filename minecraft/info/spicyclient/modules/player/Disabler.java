@@ -47,6 +47,15 @@ public class Disabler extends Module {
 	@Override
 	public void onDisable() {
 		watchdog = false;
+		
+		for (C0FPacketConfirmTransaction p : C0FPackets) {
+			
+			mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
+			
+		}
+		
+		C0FPackets.clear();
+		
 	}
 	
 	@Override

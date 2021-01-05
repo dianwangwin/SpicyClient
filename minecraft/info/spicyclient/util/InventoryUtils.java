@@ -19,6 +19,10 @@ import net.minecraft.potion.PotionEffect;
 
 public class InventoryUtils {
 	
+    public static void switchToSlot(int slot){
+    	Minecraft.getMinecraft().gameSettings.keyBindsHotbar[slot - 1].pressed = true;
+    }
+	
     public static void shiftClick(int slot){
     	Minecraft.getMinecraft().playerController.windowClick(Minecraft.getMinecraft().thePlayer.inventoryContainer.windowId, slot, 0, 1, Minecraft.getMinecraft().thePlayer);
     }

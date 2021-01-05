@@ -75,7 +75,7 @@ public class ChestStealer extends Module {
 								}
 								
 				                if (!(mc.currentScreen instanceof GuiInventory)) {
-				                    mc.getNetHandler().addToSendQueue(new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT));
+				                    //mc.getNetHandler().addToSendQueue(new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT));
 				                }
 								
 								chestEvent.chest.spicyHandleMouseInput(slot, slot.slotNumber, 0, 1);

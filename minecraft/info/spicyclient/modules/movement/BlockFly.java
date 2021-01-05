@@ -10,6 +10,7 @@ import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventRender3D;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventSneaking;
 import info.spicyclient.events.listeners.EventUpdate;
@@ -25,8 +26,10 @@ import info.spicyclient.util.RotationUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -34,6 +37,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.server.S2FPacketSetSlot;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -83,6 +87,18 @@ public class BlockFly extends Module {
 			
 		}
 		
+		if (e instanceof EventPacket && e.isPre()) {
+			
+			if (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) {
+				return;
+			}
+			
+			if (((EventPacket)e).packet instanceof S2FPacketSetSlot) {
+				e.setCanceled(true);
+			}
+			
+		}
+		
 		if (e instanceof EventSendPacket & e.isPre()) {
 			
 			if (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) {
@@ -96,15 +112,43 @@ public class BlockFly extends Module {
 			
 		}
 		
+		if (e instanceof EventRender3D && e.isPre()) {
+			
+			BlockPos below = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1D, mc.thePlayer.posZ);
+			
+			for (int i = 0; i < 5; i++) {
+				
+				RenderUtils.drawLine(below.getX(), below.getY(), below.getZ(), below.getX() + 1, below.getY(), below.getZ());
+				RenderUtils.drawLine(below.getX(), below.getY() + 1, below.getZ(), below.getX() + 1, below.getY() + 1, below.getZ());
+				RenderUtils.drawLine(below.getX(), below.getY(), below.getZ(), below.getX(), below.getY(), below.getZ() + 1);
+				RenderUtils.drawLine(below.getX(), below.getY() + 1, below.getZ(), below.getX(), below.getY() + 1, below.getZ() + 1);
+				RenderUtils.drawLine(below.getX(), below.getY(), below.getZ(), below.getX(), below.getY() + 1, below.getZ());
+				RenderUtils.drawLine(below.getX(), below.getY() + 1, below.getZ(), below.getX(), below.getY() + 1, below.getZ());
+				RenderUtils.drawLine(below.getX() + 1, below.getY(), below.getZ(), below.getX() + 1, below.getY() + 1, below.getZ());
+				RenderUtils.drawLine(below.getX() + 1, below.getY() + 1, below.getZ(), below.getX() + 1, below.getY() + 1, below.getZ());
+				RenderUtils.drawLine(below.getX(), below.getY(), below.getZ() + 1, below.getX(), below.getY() + 1, below.getZ() + 1);
+				RenderUtils.drawLine(below.getX(), below.getY() + 1, below.getZ() + 1, below.getX(), below.getY() + 1, below.getZ() + 1);
+				RenderUtils.drawLine(below.getX() + 1, below.getY(), below.getZ() + 1, below.getX(), below.getY(), below.getZ() + 1);
+				RenderUtils.drawLine(below.getX() + 1, below.getY() + 1, below.getZ() + 1, below.getX(), below.getY() + 1, below.getZ() + 1);
+				RenderUtils.drawLine(below.getX() + 1, below.getY(), below.getZ() + 1, below.getX() + 1, below.getY() + 1, below.getZ() + 1);
+				RenderUtils.drawLine(below.getX() + 1, below.getY() + 1, below.getZ(), below.getX() + 1, below.getY() + 1, below.getZ() + 1);
+				RenderUtils.drawLine(below.getX() + 1, below.getY(), below.getZ(), below.getX() + 1, below.getY(), below.getZ() + 1);
+				
+			}
+			
+		}
+		
 		if (e instanceof EventUpdate && e.isPre() && MovementUtils.isOnGround(0.4)) {
 			
 			if (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) {
 				return;
 			}
 			
+			//mc.thePlayer.onGround = false;
+			
 			EventUpdate update = (EventUpdate)e;
 			
-			Double motionX = mc.thePlayer.motionX, motionZ = mc.thePlayer.motionZ;
+			double motionX = mc.thePlayer.motionX, motionZ = mc.thePlayer.motionZ;
 			
 			if (motionX < 0)
 				motionX *= -1;
@@ -112,8 +156,8 @@ public class BlockFly extends Module {
 			if (motionZ < 0)
 				motionZ *= -1;
 			
-			if (motionX < 0.05 && motionZ < 0.05) {
-				//mc.thePlayer.motionY += 0.1;
+			if (motionX < 0.05 && motionZ < 0.05 && MovementUtils.isOnGround(0.3) && mc.gameSettings.keyBindJump.isKeyDown()) {
+				//mc.thePlayer.motionY = 0.38;
 			}
 			
 		}
@@ -145,7 +189,20 @@ public class BlockFly extends Module {
 						
 						if (mc.theWorld.getBlockState(underBelow).getBlock() != Blocks.air) {
 							
-							if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem(), underBelow, EnumFacing.UP, RotationUtils.getVectorForRotation(getRotationsHypixel(underBelow, EnumFacing.UP)[1], getRotationsHypixel(underBelow, EnumFacing.UP)[1]))) {
+							ItemStack block = mc.thePlayer.getCurrentEquippedItem();
+							
+							for (int g = 0; g < 9; g++) {
+								
+								if (mc.thePlayer.inventoryContainer.getSlot(g + 36).getHasStack() && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem() instanceof ItemBlock && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize > 0) {
+									
+									InventoryPlayer inventoryplayer = mc.thePlayer.inventory;
+									inventoryplayer.setCurrentItem(mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem(), 0, false, true);
+									
+								}
+								
+							}
+							
+							if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, block, underBelow, EnumFacing.UP, RotationUtils.getVectorForRotation(getRotationsHypixel(underBelow, EnumFacing.UP)[1], getRotationsHypixel(underBelow, EnumFacing.UP)[1])) || true) {
 								
 								mc.thePlayer.swingItem();
 								event.setYaw(getRotationsHypixel(underBelow, facing)[0]);
@@ -155,6 +212,7 @@ public class BlockFly extends Module {
 								return;
 								
 							}
+							return;
 							
 						}
 						
@@ -171,7 +229,19 @@ public class BlockFly extends Module {
 						
 						if (mc.theWorld.getBlockState(defaultPos.pos).getBlock() != Blocks.air) {
 							
-							if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem(), defaultPos.pos, defaultPos.facing, RotationUtils.getVectorForRotation(getRotationsHypixel(defaultPos.targetPos, defaultPos.facing)[0], getRotationsHypixel(defaultPos.targetPos, defaultPos.facing)[1]))) {
+							ItemStack block = mc.thePlayer.getCurrentEquippedItem();
+							
+							for (int g = 0; g < 9; g++) {
+								
+								if (mc.thePlayer.inventoryContainer.getSlot(g + 36).getHasStack() && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem() instanceof ItemBlock && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize > 0) {
+									
+									InventoryPlayer inventoryplayer = mc.thePlayer.inventory;
+									inventoryplayer.setCurrentItem(mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem(), 0, false, true);
+									
+								}
+								
+							}
+							if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, block, defaultPos.pos, defaultPos.facing, RotationUtils.getVectorForRotation(getRotationsHypixel(defaultPos.targetPos, defaultPos.facing)[0], getRotationsHypixel(defaultPos.targetPos, defaultPos.facing)[1])) || true) {
 								
 								mc.thePlayer.swingItem();
 								event.setYaw(getRotationsHypixel(defaultPos.pos, defaultPos.facing)[0]);
@@ -181,6 +251,7 @@ public class BlockFly extends Module {
 								return;
 								
 							}
+							return;
 							
 						}
 						

@@ -216,7 +216,7 @@ public class Bhop extends Module {
 						mc.thePlayer.setSprinting(true);
 					}
 				}
-				else if (mode.is("Hypixel") && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
+				else if (mode.is("Hypixel") && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed) && (!SpicyClient.config.blockFly.isEnabled() || (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null))) {
 
 					mc.gameSettings.keyBindJump.pressed = false;
 					
@@ -235,8 +235,8 @@ public class Bhop extends Module {
 						
 						if (MovementUtils.isOnGround(1)) {
 							mc.timer.ticksPerSecond = 20;
-						}else if (mc.thePlayer.fallDistance < 3) {
-							mc.timer.ticksPerSecond = 27f + new Random().nextFloat();
+						}else if (mc.thePlayer.fallDistance < 1.5) {
+							mc.timer.ticksPerSecond = 26.5f + new Random().nextFloat();
 						}
 						
 						mc.thePlayer.setSprinting(true);
@@ -246,6 +246,11 @@ public class Bhop extends Module {
 					}else {
 						
 					}
+					
+				}
+				else if (mode.is("Hypixel") && (!!SpicyClient.config.blockFly.isEnabled() || (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null))) {
+					
+					mc.timer.ticksPerSecond = 20;
 					
 				}
 				else if (mode.is("Test") && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
@@ -277,10 +282,18 @@ public class Bhop extends Module {
 				}
 				else if (mode.is("Test 3")) {
 					
-					if (MovementUtils.isOnGround(1)) {
+					if ((!SpicyClient.config.blockFly.isEnabled() || (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null))) {
+						
+						if (MovementUtils.isOnGround(1)) {
+							mc.timer.ticksPerSecond = 20;
+						}else if (mc.thePlayer.fallDistance < 3) {
+							mc.timer.ticksPerSecond = 26.5f + new Random().nextFloat();
+						}
+						
+					}else {
+						
 						mc.timer.ticksPerSecond = 20;
-					}else if (mc.thePlayer.fallDistance < 3) {
-						mc.timer.ticksPerSecond = 27.5f + new Random().nextFloat();
+						
 					}
 					
 				}
@@ -293,7 +306,7 @@ public class Bhop extends Module {
             ((EventMotion)e).setY(((EventMotion)e).getY() + (double)RandomUtils.nextFloat(1.0E-5F, 9.9E-4F));
         }
 
-        if (e instanceof EventMove && MovementUtils.isMoving() && !mc.thePlayer.isInWater() && e.isBeforePre() && mode.is("Test 3")) {
+        if (e instanceof EventMove && MovementUtils.isMoving() && !mc.thePlayer.isInWater() && e.isBeforePre() && mode.is("Test 3") && (!SpicyClient.config.blockFly.isEnabled() || (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null))) {
         	forward =  0.2873D;
             if (mc.thePlayer.onGround) {
                 ((EventMove)e).setY(mc.thePlayer.motionY = 0.41999998688697815D);
