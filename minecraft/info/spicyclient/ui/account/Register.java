@@ -3,6 +3,7 @@ package info.spicyclient.ui.account;
 import java.io.IOException;
 
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 import org.lwjgl.input.Keyboard;
@@ -135,6 +136,10 @@ public class Register extends GuiScreen {
 					
 				}
 				
+			} catch (HttpHostConnectException e) {
+				error = true;
+				errorText = "Unable to connect to the spicyclient servers (blocked, timed out, or servers are down)";
+				e.printStackTrace();
 			} catch (Exception e) {
 				error = true;
 				errorText = "An unknown error has occurred";

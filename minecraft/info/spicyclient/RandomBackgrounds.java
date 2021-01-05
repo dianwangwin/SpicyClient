@@ -6,7 +6,7 @@ public enum RandomBackgrounds {
 	
 	LAVAFLOWGLOW(new ResourceLocation("spicy/splash/lavaflowglow.png")),
 	FLOOFYFOX1(new ResourceLocation("spicy/splash/FloofyFox1.png")),
-	SPICYCLIENT(new ResourceLocation("spicy/splash/SpicyClient.png"));
+	SPICYCLIENT(new ResourceLocation("spicy/splash/SpicyClient1.png"));
 	
 	public ResourceLocation image;
 	

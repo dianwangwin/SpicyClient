@@ -56,7 +56,7 @@ public class NewMainMenu extends GuiScreen {
 		
 	}
 	
-	public Button singleplayer, multiplayer, altManager, settings, language, update, login, register;
+	public Button singleplayer, multiplayer, altManager, settings, language, update, login, register, exit;
 	
 	// This is for the blinking warning text
 	private Timer timer = new Timer();
@@ -266,12 +266,16 @@ public class NewMainMenu extends GuiScreen {
         register.setTextScale(1.4f);
         register.setText("Register");
         
+        update = new Button(this.width / 20, (this.height / 2) + 200, (this.width / 20) + 300, (this.height / 2) - 30 + 200, 0xff202225, 0xff7289da, -1, 2, this);
+        update.setTextScale(1.5f);
+        update.setText("Update SpicyClient");
+        
+        exit = new Button(4, 28, 68, 8, 0xff202225, 0xff7289da, -1, 2, this);
+        exit.setTextScale(1.4f);
+        exit.setText("Exit");
+        
         if (Updater.getUpdater().ClientOutdated()) {
         	
-            update = new Button(this.width / 20, (this.height / 2) + 200, (this.width / 20) + 300, (this.height / 2) - 30 + 200, 0xff202225, 0xff7289da, -1, 2, this);
-            update.setTextScale(1.5f);
-            update.setText("Update SpicyClient");
-            
             if (isUpdating) {
             	update.setTextScale(1.2f);
             	update.setText("The client will close when the update is complete");
@@ -284,6 +288,7 @@ public class NewMainMenu extends GuiScreen {
             	login.insideColor = 0xff4d5c91;
             	register.insideColor = 0xff4d5c91;
             	update.insideColor = 0xff4d5c91;
+            	exit.insideColor = 0xff4d5c91;
             	
             }
         	
@@ -336,8 +341,13 @@ public class NewMainMenu extends GuiScreen {
 		}
 		
 		// For the update button
-		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < 28 && mouseY > 8) {
+		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < 28 && mouseY > 8 && update != null) {
 			update.insideColor = 0xff4d5c91;
+		}
+		
+		// For the exit button
+		if (mouseX > 4 && mouseX < 68 && mouseY < 28 && mouseY > 8) {
+			exit.insideColor = 0xff4d5c91;
 		}
 		
 		singleplayer.draw();
@@ -345,6 +355,7 @@ public class NewMainMenu extends GuiScreen {
 		altManager.draw();
 		settings.draw();
 		language.draw();
+		exit.draw();
 		
 		if (!SpicyClient.account.loggedIn) {
 			login.draw();
@@ -433,6 +444,14 @@ public class NewMainMenu extends GuiScreen {
 		// For the language button
 		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 160 && mouseY > (this.height / 2) - 30 + 160) {
 			this.mc.displayGuiScreen(new GuiLanguage(this, this.mc.gameSettings, this.mc.getLanguageManager()));
+		}
+		
+		// For the exit button
+		if (mouseX > 4 && mouseX < 68 && mouseY < 28 && mouseY > 8) {
+			
+			SpicyClient.shutdown();
+			System.exit(0);
+			
 		}
 		
 		if (!SpicyClient.account.loggedIn) {

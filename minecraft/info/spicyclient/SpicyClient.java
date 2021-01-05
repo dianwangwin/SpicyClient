@@ -102,28 +102,38 @@ public class SpicyClient {
 	public static int currentVersionNum = 8;
 	
 	public static void StartUp() {
-		if (Minecraft.getMinecraft().getSession().getSessionType().equals(Session.Type.LEGACY)) {
-			System.out.println("Not pinging server, this is an offline account");
-			System.out.println("Please keep in mind that all this would send is your username and nothing else");
-			originalAccountOnline = false;
-			originalUsername = Minecraft.getMinecraft().getSession().getUsername();
-		}else {
-			System.out.println("Pinging the server, this is an online account");
-			System.out.println("Please keep in mind that all this sends is your username and nothing else");
-			originalAccountOnline = true;
-			originalUsername = Minecraft.getMinecraft().getSession().getUsername();
+		
+		try {
 			
-			String url = "http://spicyclient.info/api/api.php?username=" + originalUsername + "&stat_type=ping";
-			
-			// This is a faster way of pinging my server
-			try {
-				NetworkManager.getNetworkManager().sendGet(new HttpGet(url));
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (Minecraft.getMinecraft().getSession().getSessionType().equals(Session.Type.LEGACY)) {
+				System.out.println("Not pinging server, this is an offline account");
+				System.out.println("Please keep in mind that all this would send is your username and nothing else");
+				originalAccountOnline = false;
+				originalUsername = Minecraft.getMinecraft().getSession().getUsername();
+			}else {
+				System.out.println("Pinging the server, this is an online account");
+				System.out.println("Please keep in mind that all this sends is your username and nothing else");
+				originalAccountOnline = true;
+				originalUsername = Minecraft.getMinecraft().getSession().getUsername();
+				
+				String url = "http://spicyclient.info/api/api.php?username=" + originalUsername + "&stat_type=ping";
+				
+				// This is a faster way of pinging my server
+				try {
+					NetworkManager.getNetworkManager().sendGet(new HttpGet(url));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 			
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		
 		/*
 		else {
 			
@@ -602,6 +612,19 @@ public class SpicyClient {
 		//Minecraft.getMinecraft().mojangLogo = RandomBackgrounds.values()[new Random().nextInt(RandomBackgrounds.values().length)].image;
 		
 		Minecraft.getMinecraft().mojangLogo = RandomBackgrounds.SPICYCLIENT.image;
+		
+		int lowChance = new Random().nextInt(1000);
+		
+		if (lowChance == 1) {
+			
+			Minecraft.getMinecraft().mojangLogo = RandomBackgrounds.LAVAFLOWGLOW.image;
+			
+		}
+		else if (lowChance == 2) {
+			
+			Minecraft.getMinecraft().mojangLogo = RandomBackgrounds.FLOOFYFOX1.image;
+			
+		}
 		
 		// Uses 512x512 images
 		System.out.println("Splash screen set");
