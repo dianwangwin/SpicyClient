@@ -56,6 +56,8 @@ public class NewMainMenu extends GuiScreen {
 		
 	}
 	
+	public float mouseXOffset = 0, mouseYOffset = 0;
+	
 	public Button singleplayer, multiplayer, altManager, settings, language, update, login, register, exit;
 	
 	// This is for the blinking warning text
@@ -65,6 +67,15 @@ public class NewMainMenu extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		
+		int move = 100;
+		mouseXOffset = mouseX / move;
+		mouseYOffset = mouseY / move;
+		
+		// Removes the offset, remove this to make the menu move with the mouse
+		mouseXOffset = 0;
+		mouseYOffset = 0;
+		// Removes the offset, remove this to make the menu move with the mouse
 		
         Config temp = new Config("temp");
         String name = temp.clientName;
@@ -79,7 +90,7 @@ public class NewMainMenu extends GuiScreen {
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(1.5, 1.5, 1);
-		drawCenteredString(mc.fontRendererObj, "The open source minecraft client created by Lavaflowglow and Floofy Fox", (this.width / 2) / 1.5f, ((this.height / 10) + (mc.fontRendererObj.FONT_HEIGHT * 3.5f) + 15) / 1.5f, 0xff7289da);
+		drawCenteredString(mc.fontRendererObj, "The open source minecraft client created by Lavaflowglow and Floofy Fox", ((mouseXOffset + this.width / 2) / 1.5f), (((mouseYOffset + this.height / 10) + (mc.fontRendererObj.FONT_HEIGHT * 3.5f) + 15) / 1.5f), 0xff7289da);
 		GlStateManager.popMatrix();
 		
 		String s1 = "Source code and downloads available at https://SpicyClient.info";
@@ -94,13 +105,13 @@ public class NewMainMenu extends GuiScreen {
 		imageWidth /= 1.5;
 		imageHeight /= 1.5;
 		mc.getTextureManager().bindTexture(new ResourceLocation("spicy/SpicyClient.png"));
-		drawModalRectWithCustomSizedTexture((width / 2) - (imageWidth / 2), 8, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+		drawModalRectWithCustomSizedTexture((int) ((width / 2) - (imageWidth / 2) + mouseXOffset), (int) (8 + mouseYOffset), 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
         
         //drawRect(this.width / 2 + 100, this.height / 2 - 40, this.width / 2 + 220, this.height / 2 + 80, 0xff202225);
         //drawRect(this.width / 2 - 60, this.height / 2 - 40, this.width / 2 + 60, this.height / 2 + 80, 0xff202225);
         //drawRect(this.width / 2 - 220, this.height / 2 - 40, this.width / 2 - 100, this.height / 2 + 80, 0xff202225);
         
-        drawRect((this.width / 2) - 20, (this.height / 2) - 30, this.width, (this.height / 2) + 160, 0xff202225);
+        drawRect(mouseXOffset + (this.width / 2) - 20, mouseYOffset + (this.height / 2) - 30, mouseXOffset + this.width + 100, mouseYOffset + (this.height / 2) + 160, 0xff202225);
         
         ArrayList<String> changeLogs = new ArrayList<String>();
         changeLogs.add("Change logs for SpicyClient " + version);
@@ -178,55 +189,55 @@ public class NewMainMenu extends GuiScreen {
         	if (s.startsWith("+")) {
         		
         		if (line >= 28) {
-        			drawString(mc.fontRendererObj, s, (this.width / 2) - 20 + 10 + maxSize1 + maxSize2, ((this.height / 2) - 35) + ((line - 26) * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xff43b581);
+        			drawString(mc.fontRendererObj, s, mouseXOffset + (this.width / 2) - 20 + 10 + maxSize1 + maxSize2, mouseYOffset + ((this.height / 2) - 35) + ((line - 26) * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xff43b581);
         		}
         		else if (line >= 15) {
-        			drawString(mc.fontRendererObj, s, (this.width / 2) - 20 + 10 + maxSize1, ((this.height / 2) - 35) + ((line - 13) * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xff43b581);
+        			drawString(mc.fontRendererObj, s, mouseXOffset + (this.width / 2) - 20 + 10 + maxSize1, mouseYOffset + ((this.height / 2) - 35) + ((line - 13) * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xff43b581);
         		}else {
-        			drawString(mc.fontRendererObj, s, (this.width / 2) - 20 + 10, ((this.height / 2) - 35) + (line * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xff43b581);
+        			drawString(mc.fontRendererObj, s, mouseXOffset + (this.width / 2) - 20 + 10, mouseYOffset + ((this.height / 2) - 35) + (line * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xff43b581);
         		}
         		
         	}
         	else if (s.startsWith("*")) {
         		
         		if (line >= 28) {
-        			drawString(mc.fontRendererObj, s, (this.width / 2) - 20 + 10 + maxSize1 + maxSize2, ((this.height / 2) - 35) + ((line - 26) * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xfffaa61a);
+        			drawString(mc.fontRendererObj, s, mouseXOffset + (this.width / 2) - 20 + 10 + maxSize1 + maxSize2, mouseYOffset + ((this.height / 2) - 35) + ((line - 26) * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xfffaa61a);
         		}
         		else if (line >= 15 && line <= 27) {
-        			drawString(mc.fontRendererObj, s, (this.width / 2) - 20 + 10 + maxSize1, ((this.height / 2) - 35) + ((line - 13) * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xfffaa61a);
+        			drawString(mc.fontRendererObj, s, mouseXOffset + (this.width / 2) - 20 + 10 + maxSize1, mouseYOffset + ((this.height / 2) - 35) + ((line - 13) * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xfffaa61a);
         		}else {
-        			drawString(mc.fontRendererObj, s, (this.width / 2) - 20 + 10, ((this.height / 2) - 35) + (line * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xfffaa61a);
+        			drawString(mc.fontRendererObj, s, mouseXOffset + (this.width / 2) - 20 + 10, mouseYOffset + ((this.height / 2) - 35) + (line * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xfffaa61a);
         		}
         		
         	}
         	else if (s.startsWith("-")) {
         		
         		if (line >= 28) {
-        			drawString(mc.fontRendererObj, s, (this.width / 2) - 20 + 10 + maxSize1 + maxSize2, ((this.height / 2) - 35) + ((line - 26) * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xfff04747);
+        			drawString(mc.fontRendererObj, s, mouseXOffset + (this.width / 2) - 20 + 10 + maxSize1 + maxSize2, mouseYOffset + ((this.height / 2) - 35) + ((line - 26) * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xfff04747);
         		}
         		else if (line >= 15) {
-        			drawString(mc.fontRendererObj, s, (this.width / 2) - 20 + 10 + maxSize1, ((this.height / 2) - 35) + ((line - 13) * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xfff04747);
+        			drawString(mc.fontRendererObj, s, mouseXOffset + (this.width / 2) - 20 + 10 + maxSize1, mouseYOffset + ((this.height / 2) - 35) + ((line - 13) * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xfff04747);
         		}else {
-        			drawString(mc.fontRendererObj, s, (this.width / 2) - 20 + 10, ((this.height / 2) - 35) + (line * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xfff04747);
+        			drawString(mc.fontRendererObj, s, mouseXOffset + (this.width / 2) - 20 + 10, mouseYOffset + ((this.height / 2) - 35) + (line * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xfff04747);
         		}
         		
         	}
         	else if (s.startsWith("[WARN]")) {
         		
         		if (line == 40) {
-        			drawString(mc.fontRendererObj, s.replace("[WARN]", ""), (this.width / 2) - 20 + 10 + maxSize1 + maxSize2, ((this.height / 2) - 35) + ((line - 26) * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xffff0000);
+        			drawString(mc.fontRendererObj, s.replace("[WARN]", ""), mouseXOffset + (this.width / 2) - 20 + 10 + maxSize1 + maxSize2, mouseYOffset + ((this.height / 2) - 35) + ((line - 26) * (mc.fontRendererObj.FONT_HEIGHT + 4)), 0xffff0000);
         		}
         		
         	}
         	else {
         		
         		if (line >= 28) {
-        			drawString(mc.fontRendererObj, s, (this.width / 2) - 20 + 10 + maxSize1 + maxSize2, ((this.height / 2) - 35) + ((line - 26) * (mc.fontRendererObj.FONT_HEIGHT + 4)), -1);
+        			drawString(mc.fontRendererObj, s, mouseXOffset + (this.width / 2) - 20 + 10 + maxSize1 + maxSize2, mouseYOffset + ((this.height / 2) - 35) + ((line - 26) * (mc.fontRendererObj.FONT_HEIGHT + 4)), -1);
         		}
         		else if (line >= 15) {
-        			drawString(mc.fontRendererObj, s, (this.width / 2) - 20 + 10 + maxSize1, ((this.height / 2) - 35) + ((line - 13) * (mc.fontRendererObj.FONT_HEIGHT + 4)), -1);
+        			drawString(mc.fontRendererObj, s, mouseXOffset + (this.width / 2) - 20 + 10 + maxSize1, mouseYOffset + ((this.height / 2) - 35) + ((line - 13) * (mc.fontRendererObj.FONT_HEIGHT + 4)), -1);
         		}else {
-        			drawString(mc.fontRendererObj, s, (this.width / 2) - 20 + 10, ((this.height / 2) - 35) + (line * (mc.fontRendererObj.FONT_HEIGHT + 4)), -1);
+        			drawString(mc.fontRendererObj, s, mouseXOffset + (this.width / 2) - 20 + 10, mouseYOffset + ((this.height / 2) - 35) + (line * (mc.fontRendererObj.FONT_HEIGHT + 4)), -1);
         		}
         		
         	}
@@ -238,31 +249,31 @@ public class NewMainMenu extends GuiScreen {
         //drawString(mc.fontRendererObj, string, ((((this.width) - (this.width / 2) - 20)) / 2) + ((this.width / 2) - 20), (this.height / 2), -1);
         //mc.fontRendererObj.drawStringWithQuadShadow("Click on here to see the change logs", ((((this.width) - (this.width / 2) - 20)) / 2) + ((this.width / 2) - 20), ((((this.height / 2) + 160) - ((this.height / 2))) / 2) + ((this.height / 2)), -1, 100);
         
-        singleplayer = new Button(this.width / 20, this.height / 2, (this.width / 20) + 300, (this.height / 2) - 30, 0xff202225, 0xff7289da, -1, 2, this);
+        singleplayer = new Button(mouseXOffset + this.width / 20, mouseYOffset + this.height / 2, mouseXOffset + (this.width / 20) + 300, mouseYOffset + (this.height / 2) - 30, 0xff202225, 0xff7289da, -1, 2, this);
         singleplayer.setTextScale(1.5f);
         singleplayer.setText(I18n.format("menu.singleplayer"));
         
-        multiplayer = new Button(this.width / 20, (this.height / 2) + 40, (this.width / 20) + 300, (this.height / 2) - 30 + 40, 0xff202225, 0xff7289da, -1, 2, this);
+        multiplayer = new Button(mouseXOffset + this.width / 20, mouseYOffset + (this.height / 2) + 40, mouseXOffset + (this.width / 20) + 300, mouseYOffset + (this.height / 2) - 30 + 40, 0xff202225, 0xff7289da, -1, 2, this);
         multiplayer.setTextScale(1.5f);
         multiplayer.setText(I18n.format("menu.multiplayer"));
         
-        altManager = new Button(this.width / 20, (this.height / 2) + 80, (this.width / 20) + 300, (this.height / 2) - 30 + 80, 0xff202225, 0xff7289da, -1, 2, this);
+        altManager = new Button(mouseXOffset + this.width / 20, mouseYOffset + (this.height / 2) + 80, mouseXOffset + (this.width / 20) + 300, mouseYOffset + (this.height / 2) - 30 + 80, 0xff202225, 0xff7289da, -1, 2, this);
         altManager.setTextScale(1.5f);
         altManager.setText(I18n.format("Alt Manager"));
         
-        settings = new Button(this.width / 20, (this.height / 2) + 120, (this.width / 20) + 300, (this.height / 2) - 30 + 120, 0xff202225, 0xff7289da, -1, 2, this);
+        settings = new Button(mouseXOffset + this.width / 20, mouseYOffset + (this.height / 2) + 120, mouseXOffset + (this.width / 20) + 300, mouseYOffset + (this.height / 2) - 30 + 120, 0xff202225, 0xff7289da, -1, 2, this);
         settings.setTextScale(1.5f);
         settings.setText(I18n.format("Settings"));
         
-        language = new Button(this.width / 20, (this.height / 2) + 160, (this.width / 20) + 300, (this.height / 2) - 30 + 160, 0xff202225, 0xff7289da, -1, 2, this);
+        language = new Button(mouseXOffset + this.width / 20, mouseYOffset + (this.height / 2) + 160, mouseXOffset + (this.width / 20) + 300, mouseYOffset + (this.height / 2) - 30 + 160, 0xff202225, 0xff7289da, -1, 2, this);
         language.setTextScale(1.5f);
         language.setText(I18n.format("Language"));
         
-        login = new Button(this.width - 68, 28, this.width - 4, 8, 0xff202225, 0xff7289da, -1, 2, this);
+        login = new Button(mouseXOffset + this.width - 68, mouseYOffset + 28, mouseXOffset + this.width - 4, mouseYOffset + 8, 0xff202225, 0xff7289da, -1, 2, this);
         login.setTextScale(1.4f);
         login.setText("Login");
         
-        register = new Button(this.width - 152, 28, this.width - 72, 8, 0xff202225, 0xff7289da, -1, 2, this);
+        register = new Button(mouseXOffset + this.width - 152, mouseYOffset + 28, mouseXOffset + this.width - 72, mouseYOffset + 8, 0xff202225, 0xff7289da, -1, 2, this);
         register.setTextScale(1.4f);
         register.setText("Register");
         
@@ -270,7 +281,7 @@ public class NewMainMenu extends GuiScreen {
         update.setTextScale(1.5f);
         update.setText("Update SpicyClient");
         
-        exit = new Button(4, 28, 68, 8, 0xff202225, 0xff7289da, -1, 2, this);
+        exit = new Button(mouseXOffset + 4, mouseYOffset + 28, mouseXOffset + 68, mouseYOffset + 8, 0xff202225, 0xff7289da, -1, 2, this);
         exit.setTextScale(1.4f);
         exit.setText("Exit");
         
@@ -306,47 +317,47 @@ public class NewMainMenu extends GuiScreen {
 		// For the buttons
 		
 		// For the singleplayer button
-		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < this.height / 2 && mouseY > (this.height / 2) - 30) {
+		if (mouseX > mouseXOffset + mouseXOffset + this.width / 20 && mouseX < mouseXOffset + (this.width / 20) + 300 && mouseY < this.height / 2 && mouseY > (this.height / 2) - 30) {
 			singleplayer.insideColor = 0xff4d5c91;
 		}
 
 		// For the multiplayer button
-		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 40 && mouseY > (this.height / 2) - 30 + 40) {
+		if (mouseX > mouseXOffset + this.width / 20 && mouseX < mouseXOffset + (this.width / 20) + 300 && mouseY < (this.height / 2) + 40 && mouseY > (this.height / 2) - 30 + 40) {
 			multiplayer.insideColor = 0xff4d5c91;
 		}
 
 		// For the alt manager button
-		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 80 && mouseY > (this.height / 2) - 30 + 80) {
+		if (mouseX > mouseXOffset + this.width / 20 && mouseX < mouseXOffset + (this.width / 20) + 300 && mouseY < (this.height / 2) + 80 && mouseY > (this.height / 2) - 30 + 80) {
 			altManager.insideColor = 0xff4d5c91;
 		}
 
 		// For the settings button
-		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 120 && mouseY > (this.height / 2) - 30 + 120) {
+		if (mouseX > mouseXOffset + this.width / 20 && mouseX < mouseXOffset + (this.width / 20) + 300 && mouseY < (this.height / 2) + 120 && mouseY > (this.height / 2) - 30 + 120) {
 			settings.insideColor = 0xff4d5c91;
 		}
 
 		// For the language button
-		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 160 && mouseY > (this.height / 2) - 30 + 160) {
+		if (mouseX > mouseXOffset + this.width / 20 && mouseX < mouseXOffset + (this.width / 20) + 300 && mouseY < (this.height / 2) + 160 && mouseY > (this.height / 2) - 30 + 160) {
 			language.insideColor = 0xff4d5c91;
 		}
 		
 		// For the login button
-		if (mouseX > this.width - 68 && mouseX < this.width - 4 && mouseY < 28 && mouseY > 8) {
+		if (mouseX > mouseXOffset + this.width - 68 && mouseX < mouseXOffset + this.width - 4 && mouseY < 28 && mouseY > 8) {
 			login.insideColor = 0xff4d5c91;
 		}
 		
 		// For the register button
-		if (mouseX > this.width - 152 && mouseX < this.width - 72 && mouseY < 28 && mouseY > 8) {
+		if (mouseX > mouseXOffset + this.width - 152 && mouseX < mouseXOffset + this.width - 72 && mouseY < 28 && mouseY > 8) {
 			register.insideColor = 0xff4d5c91;
 		}
 		
 		// For the update button
-		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < 28 && mouseY > 8 && update != null) {
+		if (mouseX > mouseXOffset + this.width / 20 && mouseX < mouseXOffset + (this.width / 20) + 300 && mouseY < 28 && mouseY > 8 && update != null) {
 			update.insideColor = 0xff4d5c91;
 		}
 		
 		// For the exit button
-		if (mouseX > 4 && mouseX < 68 && mouseY < 28 && mouseY > 8) {
+		if (mouseX > mouseXOffset + 4 && mouseX < mouseXOffset + 68 && mouseY < 28 && mouseY > 8) {
 			exit.insideColor = 0xff4d5c91;
 		}
 		
@@ -422,32 +433,32 @@ public class NewMainMenu extends GuiScreen {
 		// For the buttons
 		
 		// For the singleplayer button
-		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < this.height / 2 && mouseY > (this.height / 2) - 30) {
+		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < mouseYOffset + this.height / 2 && mouseY > mouseYOffset + (this.height / 2) - 30) {
 			this.mc.displayGuiScreen(new GuiSelectWorld(this));
 		}
 		
 		// For the multiplayer button
-		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 40 && mouseY > (this.height / 2) - 30 + 40) {
+		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < mouseYOffset + (this.height / 2) + 40 && mouseY > mouseYOffset + (this.height / 2) - 30 + 40) {
 			this.mc.displayGuiScreen(new GuiMultiplayer(this));
 		}
 		
 		// For the alt manager button
-		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 80 && mouseY > (this.height / 2) - 30 + 80) {
+		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < mouseYOffset + (this.height / 2) + 80 && mouseY > mouseYOffset + (this.height / 2) - 30 + 80) {
 			mc.displayGuiScreen(new NewAltManager(this));
 		}
 		
 		// For the settings button
-		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 120 && mouseY > (this.height / 2) - 30 + 120) {
+		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < mouseYOffset + (this.height / 2) + 120 && mouseY > mouseYOffset + (this.height / 2) - 30 + 120) {
 			this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
 		}
 		
 		// For the language button
-		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < (this.height / 2) + 160 && mouseY > (this.height / 2) - 30 + 160) {
+		if (mouseX > this.width / 20 && mouseX < (this.width / 20) + 300 && mouseY < mouseYOffset + (this.height / 2) + 160 && mouseY > mouseYOffset + (this.height / 2) - 30 + 160) {
 			this.mc.displayGuiScreen(new GuiLanguage(this, this.mc.gameSettings, this.mc.getLanguageManager()));
 		}
 		
 		// For the exit button
-		if (mouseX > 4 && mouseX < 68 && mouseY < 28 && mouseY > 8) {
+		if (mouseXOffset + mouseX > 4 && mouseX < mouseXOffset + 68 && mouseY < mouseYOffset + 28 && mouseY > mouseYOffset + 8) {
 			
 			SpicyClient.shutdown();
 			System.exit(0);
