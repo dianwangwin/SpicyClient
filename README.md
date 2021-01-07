@@ -1,8 +1,6 @@
 # SpicyClient
 
 # (READ) This is an outdated guide, It will be updated later
-# (READ) This is an outdated guide, It will be updated later
-# (READ) This is an outdated guide, It will be updated later
 
 ## Introduction
 
