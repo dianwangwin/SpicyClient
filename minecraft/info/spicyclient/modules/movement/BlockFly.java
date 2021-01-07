@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
+import org.newdawn.slick.tests.xml.ItemContainer;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
@@ -23,6 +24,7 @@ import info.spicyclient.settings.SettingChangeEvent.type;
 import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.RenderUtils;
 import info.spicyclient.util.RotationUtils;
+import info.spicyclient.util.Timer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.client.Minecraft;
@@ -31,6 +33,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
@@ -62,6 +65,7 @@ public class BlockFly extends Module {
 	}
 	
 	public static transient float lastYaw = 0, lastPitch = 0;
+	public static transient Timer timer = new Timer();
 	
 	public void onEvent(Event e) {
 		
@@ -157,8 +161,18 @@ public class BlockFly extends Module {
 				motionZ *= -1;
 			
 			if (motionX < 0.05 && motionZ < 0.05 && MovementUtils.isOnGround(0.3) && mc.gameSettings.keyBindJump.isKeyDown()) {
-				//mc.thePlayer.motionY = 0.38;
+				if (mc.gameSettings.keyBindJump.isKeyDown() && MovementUtils.isOnGround(0.25)) {
+					
+		            //mc.thePlayer.motionX = 0.0D;
+		            //mc.thePlayer.motionZ = 0.0D;
+		            //mc.thePlayer.motionY = 0.375;
+		            if (timer.hasTimeElapsed(1500, true)) {
+		               //mc.thePlayer.motionY = -0.28D;
+		            }
+					
+				}
 			}
+			
 			
 		}
 		
@@ -193,7 +207,7 @@ public class BlockFly extends Module {
 							
 							for (int g = 0; g < 9; g++) {
 								
-								if (mc.thePlayer.inventoryContainer.getSlot(g + 36).getHasStack() && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem() instanceof ItemBlock && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize > 0) {
+								if (mc.thePlayer.inventoryContainer.getSlot(g + 36).getHasStack() && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem() instanceof ItemBlock && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize > 0 && !((ItemBlock)mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock().getLocalizedName().toLowerCase().contains("chest") && !((ItemBlock)mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock().getLocalizedName().toLowerCase().contains("table")) {
 									
 									InventoryPlayer inventoryplayer = mc.thePlayer.inventory;
 									inventoryplayer.setCurrentItem(mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem(), 0, false, true);
@@ -233,7 +247,7 @@ public class BlockFly extends Module {
 							
 							for (int g = 0; g < 9; g++) {
 								
-								if (mc.thePlayer.inventoryContainer.getSlot(g + 36).getHasStack() && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem() instanceof ItemBlock && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize > 0) {
+								if (mc.thePlayer.inventoryContainer.getSlot(g + 36).getHasStack() && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem() instanceof ItemBlock && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize > 0 && !((ItemBlock)mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock().getLocalizedName().toLowerCase().contains("chest") && !((ItemBlock)mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock().getLocalizedName().toLowerCase().contains("table")) {
 									
 									InventoryPlayer inventoryplayer = mc.thePlayer.inventory;
 									inventoryplayer.setCurrentItem(mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem(), 0, false, true);

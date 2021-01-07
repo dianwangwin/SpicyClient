@@ -217,7 +217,7 @@ public class Bhop extends Module {
 					}
 				}
 				else if (mode.is("Hypixel") && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed) && (!SpicyClient.config.blockFly.isEnabled() || (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null))) {
-
+					
 					mc.gameSettings.keyBindJump.pressed = false;
 					
 					if (!mc.thePlayer.isInWater()) {

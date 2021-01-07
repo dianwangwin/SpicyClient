@@ -681,17 +681,19 @@ public class Killaura extends Module {
         	
         }
         
-        float sYaw = (float) updateRotation((float) lastSmoothYaw, (float) RotationUtils.getRotations(target)[0], (float) 50);
-		float sPitch = (float) updateRotation((float) lastSmoothPitch, (float) RotationUtils.getRotations(target)[1], (float) 50);
+        float speed = 180;
+        
+        float sYaw = (float) updateRotation((float) lastSmoothYaw, (float) RotationUtils.getRotations(target)[0], speed);
+		float sPitch = (float) updateRotation((float) lastSmoothPitch, (float) RotationUtils.getRotations(target)[1], speed);
 		
 		//Command.sendPrivateChatMessage("Old: " + sYaw + " : " + sPitch);
 		
-		double move = 5;
-		move = new Random().nextInt(3) + 1;
+		//double move = 5;
+		//move = new Random().nextInt(3) + 1;
 		
-		move += new Random().nextDouble();
-        sYaw = (float) updateRotation((float) lastSmoothYaw, (float) RotationUtils.getRotations(target)[0], (float)((lastSmoothYaw - RotationUtils.getRotations(target)[0]) / move));
-		sPitch = (float) updateRotation((float) lastSmoothPitch, (float) RotationUtils.getRotations(target)[1], (float)((lastSmoothPitch - RotationUtils.getRotations(target)[1]) / move));
+		//move += new Random().nextDouble();
+        //sYaw = (float) updateRotation((float) lastSmoothYaw, (float) RotationUtils.getRotations(target)[0], (float)((lastSmoothYaw - RotationUtils.getRotations(target)[0]) / move));
+		//sPitch = (float) updateRotation((float) lastSmoothPitch, (float) RotationUtils.getRotations(target)[1], (float)((lastSmoothPitch - RotationUtils.getRotations(target)[1]) / move));
 		
 		//Command.sendPrivateChatMessage("New: " + sYaw + " : " + sPitch);
 		

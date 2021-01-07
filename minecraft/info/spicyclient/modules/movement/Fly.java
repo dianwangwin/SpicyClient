@@ -45,6 +45,7 @@ import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
 import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 
@@ -736,7 +737,7 @@ public class Fly extends Module {
         
 		//SpicyClient.config.fly.damage();
 		
-		int damage = 0;
+		float damage = 0;
 		
 		if (mode.is("HypixelFast1") || mode.getMode() == "HypixelFast1") {
 			damage = 1;
@@ -744,7 +745,7 @@ public class Fly extends Module {
 		
 		else if (mode.is("HypixelFast2") || mode.getMode() == "HypixelFast2") {
 			
-			damage = 2;
+			damage = 1;
 			
 		}
 		
@@ -756,8 +757,19 @@ public class Fly extends Module {
 			for (int i = 0; i <= ((3 + damage) / offset); i++) {
 				mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
 						mc.thePlayer.posY + offset, mc.thePlayer.posZ, false));
-				mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
-						mc.thePlayer.posY, mc.thePlayer.posZ, (i == ((3 + damage) / offset))));
+				//mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
+						//mc.thePlayer.posY, mc.thePlayer.posZ, (i == ((3 + damage) / offset))));
+				
+				if (mode.is("HypixelFast1") || mode.getMode() == "HypixelFast1") {
+					mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
+							mc.thePlayer.posY, mc.thePlayer.posZ, (i == ((3 + damage) / offset))));
+				}
+				
+				else if (mode.is("HypixelFast2") || mode.getMode() == "HypixelFast2") {
+					mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
+							mc.thePlayer.posY, mc.thePlayer.posZ, false));
+				}
+				
 			}
 		}
 		
@@ -979,7 +991,7 @@ public class Fly extends Module {
             
             //Command.sendPrivateChatMessage(new DecimalFormat("#.###########################").format(offset2));
             
-            switch (hypixelFastFlyStatus) {
+			switch (hypixelFastFlyStatus) {
 			case 0:
 			case 1:
 			case 2:
@@ -1045,13 +1057,14 @@ public class Fly extends Module {
                     if (true) {
                         if (mc.thePlayer.onGround && mc.thePlayer.isCollidedVertically && MovementUtils.isOnGround(0.01)) {
                             
-                        	if(mc.thePlayer.hurtResistantTime == 19){
+                        	if(true){
                         		
                         		MovementUtils.setMotion(0.3 + 0 * 0.05f);
                         		mc.thePlayer.motionY = 0.41999998688698f + 0*0.1;
                         		hypixelFastFly1 = 25;
-                        		speedAndStuff = 13;
+                        		speedAndStuff = 20;
                         		hypixelFastFly1Damaged = true;
+                        		
                         	}else if(hypixelFastFly1 < 25){
                         		mc.thePlayer.motionX = 0;
                                 mc.thePlayer.motionZ = 0;
@@ -1074,9 +1087,21 @@ public class Fly extends Module {
                             //speedf += speedAndStuff / 18;
                             speedf += speedAndStuff / hypixelFastFly1Decay.getValue();
                             
+                            double baseSpeed = 0.2873D;
+                            if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
+                               int amplifier = mc.thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier();
+                               baseSpeed *= 1.0D + 0.2D * (double)(amplifier + 1);
+                            }
+                            
+                            if (speedf < baseSpeed) {
+                            	
+                            	speedf = (float) baseSpeed;
+                            	
+                            }
+                            
                             //dub-= 0.175 + 0*0.006; //0.152
                             
-                            speedAndStuff-= 0.155 + 0*0.006;
+                            speedAndStuff-= 0.155;
                             
                             /*
                             if(((Options)settings.get("dubMODE").getValue()).getSelected().equalsIgnoreCase("OldFast")){
@@ -1087,6 +1112,15 @@ public class Fly extends Module {
                             	dub-= 0.155 + 0*0.006; //0.152
                             }
                             */
+                            
+                        }else {
+                            double baseSpeed = 0.2873D;
+                            if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
+                               int amplifier = mc.thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier();
+                               baseSpeed *= 1.0D + 0.2D * (double)(amplifier + 1);
+                            }
+                            
+                            speedf = (float) baseSpeed;
                             
                         }
                         
