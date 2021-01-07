@@ -1,5 +1,9 @@
 # SpicyClient
 
+# (READ) This is an outdated guide, It will be updated later
+# (READ) This is an outdated guide, It will be updated later
+# (READ) This is an outdated guide, It will be updated later
+
 ## Introduction
 
 > The point of SpicyClient is to allow people to create a Minecraft client without starting from scratch
