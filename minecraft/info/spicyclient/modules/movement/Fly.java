@@ -737,7 +737,7 @@ public class Fly extends Module {
         
 		//SpicyClient.config.fly.damage();
 		
-		float damage = 0;
+		double damage = 0;
 		
 		if (mode.is("HypixelFast1") || mode.getMode() == "HypixelFast1") {
 			damage = 1;
@@ -745,7 +745,7 @@ public class Fly extends Module {
 		
 		else if (mode.is("HypixelFast2") || mode.getMode() == "HypixelFast2") {
 			
-			damage = 1;
+			damage = 0.85;
 			
 		}
 		
