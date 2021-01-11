@@ -21,6 +21,7 @@ import info.spicyclient.settings.BooleanSetting;
 import info.spicyclient.settings.ModeSetting;
 import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.settings.SettingChangeEvent;
+import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.RenderUtils;
 import info.spicyclient.util.RotationUtils;
 import info.spicyclient.util.Timer;
@@ -42,6 +43,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C02PacketUseEntity.Action;
+import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C0APacketAnimation;
@@ -459,13 +461,6 @@ public class Killaura extends Module {
 					
 					if (timer.hasTimeElapsed((long) (1000/(aps.getValue() + new Random().nextFloat())), true)) {
 						
-            			int XR = randomNumber(1, -1);
-                    	int YR = randomNumber(1, -1);
-                    	int ZR = randomNumber(1, -1);
-                    	randoms[0] = XR;
-                    	randoms[1] = YR;
-                    	randoms[2] = ZR;
-                    	
 						if (s.toggled) {
 							mc.thePlayer.setSprinting(true);
 						}
@@ -502,6 +497,11 @@ public class Killaura extends Module {
 							//Random r = new Random();
 							//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.410153517, -0.4083644, -0.4186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
 						}
+						
+						//if (dynamicAPSTimer.hasTimeElapsed(10000 + (new Random().nextInt(10) * 1000), true) && mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel")) {
+							//Command.sendPrivateChatMessage("Packet sent");
+							//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C05PacketPlayerLook(0, 0, MovementUtils.isOnGround(0.000001)));
+						//}
 						
 					}
 					

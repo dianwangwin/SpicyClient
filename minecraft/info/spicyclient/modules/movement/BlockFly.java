@@ -258,8 +258,8 @@ public class BlockFly extends Module {
 							if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, block, defaultPos.pos, defaultPos.facing, RotationUtils.getVectorForRotation(getRotationsHypixel(defaultPos.targetPos, defaultPos.facing)[0], getRotationsHypixel(defaultPos.targetPos, defaultPos.facing)[1])) || true) {
 								
 								mc.thePlayer.swingItem();
-								event.setYaw(getRotationsHypixel(defaultPos.pos, defaultPos.facing)[0]);
-								event.setPitch(getRotationsHypixel(defaultPos.pos, defaultPos.facing)[1]);
+								event.setYaw(getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[0]);
+								event.setPitch(getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[1]);
 								lastYaw = event.yaw;
 								lastPitch = event.pitch;
 								return;
@@ -325,8 +325,10 @@ public class BlockFly extends Module {
 	}
 	
 	public float[] getRotationsHypixel(BlockPos paramBlockPos, EnumFacing paramEnumFacing) {
-        double d1 = (double)paramBlockPos.getX() + 0.5D - mc.thePlayer.posX + (double)paramEnumFacing.getFrontOffsetX() / 2.0D;
-        double d2 = (double)paramBlockPos.getZ() + 0.5D - mc.thePlayer.posZ + (double)paramEnumFacing.getFrontOffsetZ() / 2.0D;
+		double offset = 0.5;
+		offset = 1;
+        double d1 = (double)paramBlockPos.getX() + offset - mc.thePlayer.posX + (double)paramEnumFacing.getFrontOffsetX() / 2.0D;
+        double d2 = (double)paramBlockPos.getZ() + offset - mc.thePlayer.posZ + (double)paramEnumFacing.getFrontOffsetZ() / 2.0D;
         double d3 = mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight() - ((double)paramBlockPos.getY() + 0.5D);
         double d4 = (double)MathHelper.sqrt_double(d1 * d1 + d2 * d2);
         float f1 = (float)(Math.atan2(d2, d1) * 180.0D / 3.141592653589793D) - 90.0F;
@@ -334,6 +336,18 @@ public class BlockFly extends Module {
         if (f1 < 0.0F) {
             f1 += 360.0F;
         }
+        
+        //f1 += 180;
+        f1 = MathHelper.wrapAngleTo180_float(f1);
+        f2 += 30;
+        
+        if (f2 > 90)
+        	f2 = 90;
+        
+        if (f2 < -90)
+        	f2 = -90;
+        
+        //Command.sendPrivateChatMessage(f1 + " : " + f2);
         
         return new float[]{f1, f2};
     }

@@ -63,7 +63,7 @@ public class Disabler extends Module {
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
-			this.additionalInformation = "Hypixel (Watchdog sucks update)";
+			this.additionalInformation = "Hypixel";
 			
             PlayerCapabilities playerCapabilities = new PlayerCapabilities();
             playerCapabilities.isFlying = true;
@@ -72,6 +72,11 @@ public class Disabler extends Module {
             playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
             playerCapabilities.isCreativeMode = true;
             mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
+            
+            // Added this
+            if (SpicyClient.config.fly.isEnabled()) {
+            	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
+            }
             
             if (ping.hasTimeElapsed(500 + (new Random()).nextInt(750), true) && C0FPackets.size() > 0) {
             	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(C0FPackets.get(0));
