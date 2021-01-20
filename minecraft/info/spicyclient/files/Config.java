@@ -253,9 +253,17 @@ public class Config {
 		Minecraft.getMinecraft().timer.ticksPerSecond = 20;
 		
 		for (Module m : SpicyClient.modules) {
-			m.resetSettings();
-			m.toggle();
-			m.toggle();
+			
+			if (m instanceof BlueScreenOfDeathWithChrome) {
+				if (m.isEnabled()) {
+					m.toggle();
+				}
+			}else {
+				m.resetSettings();
+				m.toggle();
+				m.toggle();
+			}
+			
 		}
 		
 		SpicyClient.config = this;
