@@ -99,7 +99,7 @@ public class SpicyClient {
 	public static String originalUsername = "Not Set";
 	public static Boolean originalAccountOnline = false;
 	
-	public static int currentVersionNum = 8;
+	public static int currentVersionNum = 9;
 	
 	public static void StartUp() {
 		
@@ -628,6 +628,73 @@ public class SpicyClient {
 		
 		// Uses 512x512 images
 		System.out.println("Splash screen set");
+		
+	}
+	
+	// This is at the start of the minecraft crash report
+	public static void setCrashReportHeader(StringBuilder builder) {
+		
+		builder.append("---- SpicyClient ----");
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Version: " + SpicyClient.currentVersionNum);
+		} catch (Exception e) {
+			builder.append("Version: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Config version: " + SpicyClient.config.version);
+		} catch (Exception e) {
+			builder.append("Config version: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Config display name: " + SpicyClient.config.clientName);
+		} catch (Exception e) {
+			builder.append("Config display name: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Config display version: " + SpicyClient.config.clientVersion);
+		} catch (Exception e) {
+			builder.append("Config display version: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Discord rp running: " + discord.running);
+		} catch (Exception e) {
+			builder.append("Discord rp running: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Is using premium account: " + originalAccountOnline);
+		} catch (Exception e) {
+			builder.append("Is using premium account: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Account username: " + originalUsername);
+		} catch (Exception e) {
+			builder.append("Account username: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		builder.append("---- SpicyClient ----");
 		
 	}
 	

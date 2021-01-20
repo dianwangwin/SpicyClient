@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
+import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.files.FileManager;
 import info.spicyclient.music.MusicManager;
@@ -18,7 +19,8 @@ public class Music extends Command {
 	@Override
 	public void commandAction(String message) {
 		
-
+		SpicyClient.discord.refresh();
+		
 		String[] splitMessage = message.split(" ");
 		String musicName = "";;
 		for (int i = 0; i < splitMessage.length; i++) {

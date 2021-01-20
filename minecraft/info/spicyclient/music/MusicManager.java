@@ -9,6 +9,8 @@ import java.util.Random;
 
 import javax.swing.SwingUtilities;
 
+import info.spicyclient.DiscordRP;
+import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.files.FileManager;
@@ -77,6 +79,7 @@ public class MusicManager {
 	public Notification musicNotification;
 	public boolean playingMusic = false, shuffle = false;
 	public Double volume = 1.0;
+	public String songName = "";
 	
 	public void playMp3(String filepath) {
 		
@@ -86,6 +89,9 @@ public class MusicManager {
 			stopPlaying();
 			
 		}
+		
+		songName = (filepath.split("/")[filepath.split("/").length - 1]).replaceAll("%20", " ").replaceAll("%5B", "[").replaceAll("%5D", "]");
+		SpicyClient.discord.refresh();
 		
 		musicNotification = new Notification("Playing - " + ((filepath.split("/")[filepath.split("/").length - 1]).contains(".mp3") ? (filepath.split("/")[filepath.split("/").length - 1]) : (filepath.split("/")[filepath.split("/").length - 1]) + ".mp3").replaceAll("%20", " ").replaceAll("%5B", "[").replaceAll("%5D", "]"), "", true, 2000L, Type.INFO, Color.values()[new Random().nextInt(Color.values().length)], NotificationManager.getNotificationManager().defaultTargetX, NotificationManager.getNotificationManager().defaultTargetY, NotificationManager.getNotificationManager().defaultStartingX, NotificationManager.getNotificationManager().defaultStartingY, NotificationManager.getNotificationManager().defaultSpeed);
 		musicNotification.setDefaultY = true;

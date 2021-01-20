@@ -73,7 +73,7 @@ public class Killaura extends Module {
 	
 	private static transient boolean blocking = false;
 	
-	private static transient float lastSmoothYaw, lastSmoothPitch;
+	private static transient float lastSmoothYaw, lastSmoothPitch, lastHypixelYaw, lastHypixelPitch;
 	
 	private static transient double dynamicAPS = 14;
 	private static transient Timer dynamicAPSTimer = new Timer();
@@ -105,6 +105,9 @@ public class Killaura extends Module {
 		
 		lastSmoothYaw = mc.thePlayer.rotationYaw;
 		lastSmoothPitch = mc.thePlayer.rotationPitch;
+		
+		lastHypixelYaw = mc.thePlayer.rotationYaw;
+		lastHypixelPitch = mc.thePlayer.rotationPitch;
 		
 		healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
 		dynamicAPS = aps.getValue();
@@ -444,6 +447,11 @@ public class Killaura extends Module {
 							*/
 							
 						}
+						else if (rotationSetting.is("Hypixel") || rotationSetting.getMode() == "Hypixel") {
+							
+							hypixelRots(event);
+							
+						}
 						
 						// Put client side rotation code here later
 						
@@ -681,10 +689,18 @@ public class Killaura extends Module {
         	
         }
         
-        float speed = 180;
+        float yawSpeed = (RotationUtils.getRotations(target)[0] - lastSmoothYaw) / 1.1f,
+        		pitchSpeed = (RotationUtils.getRotations(target)[1] - lastSmoothPitch) / 1.1f;
         
-        float sYaw = (float) updateRotation((float) lastSmoothYaw, (float) RotationUtils.getRotations(target)[0], speed);
-		float sPitch = (float) updateRotation((float) lastSmoothPitch, (float) RotationUtils.getRotations(target)[1], speed);
+        if (yawSpeed < 0)
+        	yawSpeed *= -1;
+        
+        if (pitchSpeed < 0) {
+        	pitchSpeed *= -1;
+        }
+        
+        float sYaw = (float) updateRotation((float) lastSmoothYaw, (float) RotationUtils.getRotations(target)[0], yawSpeed);
+		float sPitch = (float) updateRotation((float) lastSmoothPitch, (float) RotationUtils.getRotations(target)[1], pitchSpeed);
 		
 		//Command.sendPrivateChatMessage("Old: " + sYaw + " : " + sPitch);
 		
@@ -730,5 +746,12 @@ public class Killaura extends Module {
 
 		return current + var4;
 	}
-    
+	
+	public void hypixelRots(EventMotion em) {
+		
+		// Removed so I'll just use smooth rots
+		customRots(em, target);
+		
+	}
+	
 }

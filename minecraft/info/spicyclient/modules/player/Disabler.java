@@ -73,13 +73,12 @@ public class Disabler extends Module {
             playerCapabilities.isCreativeMode = true;
             mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
             
-            // Added this
-            if (SpicyClient.config.fly.isEnabled()) {
-            	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
-            }
+           int basePing = 2250;
+           //basePing += 1500;
             
-            if (ping.hasTimeElapsed(500 + (new Random()).nextInt(750), true) && C0FPackets.size() > 0) {
+            if (ping.hasTimeElapsed(basePing + (new Random()).nextInt(750), true) && C0FPackets.size() > 0) {
             	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(C0FPackets.get(0));
+            	//Command.sendPrivateChatMessage(C0FPackets.get(0).getUid() + " : " + C0FPackets.get(0).getWindowId());
             	C0FPackets.remove(0);
             }
             
@@ -108,13 +107,15 @@ public class Disabler extends Module {
                 //mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0FPacketConfirmTransaction(2147483647, packetConfirmTransaction.getUid(), false));
                 //mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0FPacketConfirmTransaction(1147483647, packetConfirmTransaction.getUid(), false));
                 
-                
                 //packetConfirmTransaction.setAccepted(new Random().nextBoolean());
                 //packetConfirmTransaction.setWindowId(Integer.MIN_VALUE + new Random().nextInt(1000));
                 //packetConfirmTransaction.setUid(Short.MAX_VALUE);
             	//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0FPacketConfirmTransaction(Integer.MIN_VALUE, Short.MAX_VALUE, true));
                 
-                C0FPackets.add(packetConfirmTransaction);
+                if (!SpicyClient.config.fly.isEnabled()) {
+                	C0FPackets.add(packetConfirmTransaction);
+                }
+                
                 e.setCanceled(true);
             }
 

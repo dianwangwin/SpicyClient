@@ -1,6 +1,9 @@
 package net.minecraft.crash;
 
 import com.google.common.collect.Lists;
+
+import info.spicyclient.SpicyClient;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -260,6 +263,12 @@ public class CrashReport
         Reflector.call(Reflector.CoreModManager_onCrash, new Object[] {stringbuilder});
         stringbuilder.append("// ");
         stringbuilder.append(getWittyComment());
+        stringbuilder.append("\n\n");
+        
+        // For SpicyClient
+        SpicyClient.setCrashReportHeader(stringbuilder);
+        // For SpicyClient
+        
         stringbuilder.append("\n\n");
         stringbuilder.append("Time: ");
         stringbuilder.append((new SimpleDateFormat()).format(new Date()));

@@ -3,6 +3,7 @@ package info.spicyclient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.modules.Module;
 import info.spicyclient.modules.render.Hud;
+import info.spicyclient.music.MusicManager;
 import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
 import net.arikia.dev.drpc.DiscordRichPresence;
@@ -60,6 +61,14 @@ public class DiscordRP {
 		if (Minecraft.getMinecraft().currentScreen == null && !Minecraft.getMinecraft().isSingleplayer()) {
 			lastLine = "Hacking on " + Minecraft.getMinecraft().getCurrentServerData().serverIP;
 		}
+		else if (Minecraft.getMinecraft().currentScreen == null && Minecraft.getMinecraft().isSingleplayer()) {
+			lastLine = "Hacking in singleplayer";
+		}
+		
+		if (MusicManager.getMusicManager().playingMusic) {
+			lastLine = "Listening to " + MusicManager.getMusicManager().songName;
+		}
+		
 		update(lastLine);
 		
 	}
@@ -79,7 +88,7 @@ public class DiscordRP {
 		}
 		
 		DiscordRichPresence.Builder b = new DiscordRichPresence.Builder(secondline);
-		b.setBigImage("profile4", "Hacking in minecraft with " + SpicyClient.config.clientName + SpicyClient.config.clientVersion);
+		b.setBigImage("spicyclientlogo512x512", "Hacking in minecraft with " + SpicyClient.config.clientName + SpicyClient.config.clientVersion);
 		
 		if (SpicyClient.originalAccountOnline && SpicyClient.originalUsername.toLowerCase().equals("lavaflowglow")){
 			b.setSmallImage("gabe_thumbs_up", "Normal SpicyClient Developer");

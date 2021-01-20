@@ -483,17 +483,19 @@ public class InventoryManager extends Module {
 			
 		}
 		
-		if (e instanceof EventPacket && e.isPre()) {
+		if (e instanceof EventSendPacket && e.isPre()) {
 			
-			Packet packet = ((EventPacket)e).packet;
+			Packet packet = ((EventSendPacket)e).packet;
 			
             if (packet instanceof C0DPacketCloseWindow) {
                 isInventoryOpen = false;
+                //Command.sendPrivateChatMessage("Closed");
             }
             else if (packet instanceof C16PacketClientStatus) {
                 C16PacketClientStatus open = (C16PacketClientStatus)packet;
                 if (open.getStatus() == EnumState.OPEN_INVENTORY_ACHIEVEMENT) {
                     isInventoryOpen = true;
+                    //Command.sendPrivateChatMessage("Opened");
                 }
             }
             
@@ -504,9 +506,9 @@ public class InventoryManager extends Module {
 	@Override
 	public void onEventWhenDisabled(Event e) {
 		
-		if (e instanceof EventPacket && e.isPre()) {
+		if (e instanceof EventSendPacket && e.isPre()) {
 			
-			Packet packet = ((EventPacket)e).packet;
+			Packet packet = ((EventSendPacket)e).packet;
 			
             if (packet instanceof C0DPacketCloseWindow) {
                 isInventoryOpen = false;
