@@ -515,6 +515,7 @@ public class SpicyClient {
 		modules.add(c.eagle);
 		modules.add(c.parkour);
 		modules.add(c.furries);
+		modules.add(c.blueScreenOfDeath);
 		
 		for (Module temp : SpicyClient.modules) {
 			

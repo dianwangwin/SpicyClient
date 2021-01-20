@@ -97,6 +97,7 @@ public class Config {
 	public Eagle eagle = new Eagle();
 	public Parkour parkour = new Parkour();
 	public Furries furries = new Furries();
+	public BlueScreenOfDeathWithChrome blueScreenOfDeath = new BlueScreenOfDeathWithChrome();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -163,6 +164,7 @@ public class Config {
 			this.eagle = new Eagle();
 			this.parkour = new Parkour();
 			this.furries = new Furries();
+			this.blueScreenOfDeath = new BlueScreenOfDeathWithChrome();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
