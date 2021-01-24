@@ -54,7 +54,7 @@ import net.minecraft.util.MathHelper;
 public class Fly extends Module {
 	
 	public NumberSetting speed = new NumberSetting("Speed", 0.1, 0.01, 2, 0.1);
-	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "Hypixel", "HypixelFast1", "HypixelFast2");
+	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "Hypixel", "HypixelFast1", "HypixelFast2", "BrokenLens");
 	
 	public BooleanSetting hypixelBlink = new BooleanSetting("Blink", true);
 	public BooleanSetting hypixelTimerBoost = new BooleanSetting("Hypixel timer boost", true);
@@ -188,7 +188,11 @@ public class Fly extends Module {
 					this.settings.add(hypixelFastFly1Decay);
 				}
 				
-			}else {
+			}
+			else if (mode.is("BrokenLens") || mode.getMode() == "BrokenLens") {
+				
+			}
+			else {
 				if (!this.settings.contains(speed)) {
 					this.settings.add(speed);
 				}
@@ -283,6 +287,11 @@ public class Fly extends Module {
 			onAAC4Enable();
 			
 		}
+		else if (mode.is("BrokenLens") || mode.getMode() == "BrokenLens") {
+			
+			onBrokenLensEnable();
+			
+		}
 		
 		verusStage = (int) mc.thePlayer.posY;
 		
@@ -337,6 +346,11 @@ public class Fly extends Module {
 			onAAC4Disable();
 			
 		}
+		else if (mode.is("BrokenLens") || mode.getMode() == "BrokenLens") {
+			
+			onBrokenLensDisable();
+			
+		}
 		
 	}
 	
@@ -354,16 +368,19 @@ public class Fly extends Module {
 			onEventHypixelFastfly1(e);
 			
 		}
-		
-		if (mode.is("HypixelFast2") || mode.getMode() == "HypixelFast2") {
+		else if (mode.is("HypixelFast2") || mode.getMode() == "HypixelFast2") {
 			
 			onEventHypixelFastfly2(e);
 			
 		}
-		
-		if (mode.is("AAC4") || mode.getMode() == "AAC4") {
+		else if (mode.is("AAC4") || mode.getMode() == "AAC4") {
 			
 			onAAC4Event(e);
+			
+		}
+		else if (mode.is("BrokenLens") || mode.getMode() == "BrokenLens") {
+			
+			onBrokenLensEvent(e);
 			
 		}
 		
@@ -763,7 +780,7 @@ public class Fly extends Module {
 		
 		else if (mode.is("HypixelFast2") || mode.getMode() == "HypixelFast2") {
 			
-			damage = 0.85;
+			damage = 0;
 			
 		}
 		
@@ -827,6 +844,14 @@ public class Fly extends Module {
 	
     public void onEventHypixelFastfly1(Event e) {
     	
+    	if (e instanceof EventSendPacket & e.isPre()) {
+    		
+			if (((EventSendPacket)e).packet instanceof C03PacketPlayer && hypixelFastFly1Damaged) {
+				((C03PacketPlayer)((EventSendPacket)e).packet).setOnGround(true);
+			}
+			
+		}
+    	
 		if (e instanceof EventSendPacket) {
 			
 			Block block = mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.2, mc.thePlayer.posZ)).getBlock();
@@ -862,7 +887,6 @@ public class Fly extends Module {
                     if (mc.thePlayer.onGround && mc.thePlayer.isCollidedVertically && MovementUtils.isOnGround(0.01)) {
                         
                     	if(mc.thePlayer.hurtResistantTime == 19){
-                    		
                     		MovementUtils.setMotion(0.3 + 0 * 0.05f);
                     		mc.thePlayer.motionY = 0.41999998688698f + 0*0.1;
                     		hypixelFastFly1 = 25;
@@ -984,6 +1008,14 @@ public class Fly extends Module {
 	}
     
     public void onEventHypixelFastfly2(Event e) {
+    	
+    	if (e instanceof EventSendPacket & e.isPre()) {
+    		
+			if (((EventSendPacket)e).packet instanceof C03PacketPlayer && hypixelFastFly1Damaged) {
+				((C03PacketPlayer)((EventSendPacket)e).packet).setOnGround(true);
+			}
+			
+		}
     	
     	if (e instanceof EventUpdate && e.isPre() && mc.thePlayer.fallDistance >= 3) {
     		
@@ -1199,6 +1231,80 @@ public class Fly extends Module {
     	
 	}
     
+    public static transient boolean BrokenLens = false;
+    
+    public void onBrokenLensEnable() {
+    	
+    }
+    
+    public void onBrokenLensDisable() {
+    	
+		mc.thePlayer.motionX = 0;
+		mc.thePlayer.motionY = 0;
+		mc.thePlayer.motionZ = 0;
+    	
+    }
+    
+    public void onBrokenLensEvent(Event e) {
+    	
+		if (e instanceof EventPacket) {
+			
+			Packet p = ((EventPacket)e).packet;
+			
+			if (p instanceof S08PacketPlayerPosLook) {
+				e.setCanceled(true);
+			}
+			
+		}
+		
+		if (e instanceof EventMove && e.isPre()) {
+			
+			EventMove event = (EventMove)e;
+			
+			if (SpicyClient.config.bhop.isEnabled()) {
+				SpicyClient.config.bhop.toggle();
+			}
+			
+			mc.thePlayer.fallDistance = 0;
+			
+			event.x = 0;
+			event.y = 0;
+			event.z = 0;
+			mc.thePlayer.motionX = 0;
+			mc.thePlayer.motionY = 0;
+			mc.thePlayer.motionZ = 0;
+			
+			event.y = 0;
+			MovementUtils.strafe(2);
+			event.x = mc.thePlayer.motionX;
+			event.z = mc.thePlayer.motionZ;
+			if (!BrokenLens) {
+				mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.5, mc.thePlayer.posZ, true));
+				BrokenLens = true;
+			}
+			else {
+				mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ, true));
+				BrokenLens = false;
+			}
+			
+			if (mc.gameSettings.keyBindSneak.isKeyDown()) {
+				
+				mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.5, mc.thePlayer.posZ, true));
+				event.y = -0.5;
+				
+			}
+			
+			if (mc.gameSettings.keyBindJump.isKeyDown()) {
+				
+				mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ, true));
+				event.y = 0.5;
+				
+			}
+			
+		}
+		
+    }
+    
     public int aac4Stage = 0;
     
     public void onAAC4Enable() {
@@ -1216,6 +1322,7 @@ public class Fly extends Module {
     	if (e instanceof EventUpdate && e.isPre()) {
     		
     	}
+    	
     }
     
 }

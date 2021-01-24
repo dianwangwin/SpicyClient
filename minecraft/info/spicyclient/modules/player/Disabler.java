@@ -69,7 +69,7 @@ public class Disabler extends Module {
             playerCapabilities.isFlying = true;
             playerCapabilities.allowFlying = true;
             //playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
-            playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
+            playerCapabilities.setFlySpeed((float) (9.0 + (new Random()).nextDouble() * (9.8 - 9.0)));
             playerCapabilities.isCreativeMode = true;
             mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
             
@@ -112,7 +112,7 @@ public class Disabler extends Module {
                 //packetConfirmTransaction.setUid(Short.MAX_VALUE);
             	//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0FPacketConfirmTransaction(Integer.MIN_VALUE, Short.MAX_VALUE, true));
                 
-                if (!SpicyClient.config.fly.isEnabled()) {
+                if (!SpicyClient.config.fly.isEnabled() && !SpicyClient.config.testModuleOne.isEnabled()) {
                 	C0FPackets.add(packetConfirmTransaction);
                 }
                 

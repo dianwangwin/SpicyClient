@@ -129,6 +129,9 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ Hypixel disabler");
         changeLogs.add("+ Hypixel inventory manager");
         changeLogs.add("+ Hypixel 5 second disabler");
+        changeLogs.add("+ Hypixel bed breaker");
+        changeLogs.add("+ BrokenLens fly");
+        changeLogs.add("+ Autotool");
         changeLogs.add("+ Eagle");
         changeLogs.add("+ Vanilla nofall");
         changeLogs.add("+ Vanilla and packet autolog");

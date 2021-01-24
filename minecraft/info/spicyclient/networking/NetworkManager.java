@@ -100,7 +100,6 @@ public class NetworkManager {
         	
         	String stringResponse = EntityUtils.toString(response.getEntity());
         	
-            //System.out.println(stringResponse);
             //return response;
             return stringResponse;
         }

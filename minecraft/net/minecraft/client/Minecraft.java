@@ -277,7 +277,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     public final File mcDataDir;
     private final File fileAssets;
     private final String launchedVersion;
-    private final Proxy proxy;
+    public Proxy proxy;
     private ISaveFormat saveLoader;
 
     /**

@@ -65,7 +65,7 @@ public class Killaura extends Module {
 	private BooleanSetting disableOnDeath = new BooleanSetting("DisableOnDeath", false);
 	public BooleanSetting dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", true);
 	public ModeSetting targetsSetting = new ModeSetting("Targets", "Players", "Players", "Animals", "Mobs", "Everything");
-	public ModeSetting rotationSetting = new ModeSetting("Rotation setting", "lock", "lock", "smooth");
+	public ModeSetting rotationSetting = new ModeSetting("Rotation setting", "lock", "lock", "smooth", "Hypixel");
 	public ModeSetting newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
 	public ModeSetting targetingMode = new ModeSetting("Targeting mode", "Single", "Single", "Switch");
 	public NumberSetting switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
@@ -396,30 +396,11 @@ public class Killaura extends Module {
 							
                             float[] rotations = RotationUtils.getRotations(target);
                             event.setYaw(rotations[0]);
-                            event.setYaw(rotations[0] - 2);
+                            event.setPitch(rotations[1]);
                             
                             if (event.pitch < -90) {
                             	event.setPitch(-90);
                             }
-                            
-                            
-                            upAndDownPitch += 2 + new Random().nextDouble();
-                            
-                            if (upAndDownPitch >= 20) {
-								upAndDownPitch = 0;
-								event.setPitch(rotations[1] - upAndDownPitch);
-							}
-                            else if (upAndDownPitch >= 10) {
-                            	event.setPitch(rotations[1] + 10 - (upAndDownPitch - 10));
-                            }
-                            else {
-                            	event.setPitch(rotations[1] - upAndDownPitch);
-                            }
-                            
-                            if (event.pitch < -90) {
-                            	event.setPitch(-90);
-                            }
-                            
                             
                             //Command.sendPrivateChatMessage(aacB);
                             
@@ -454,6 +435,8 @@ public class Killaura extends Module {
 						}
 						
 						// Put client side rotation code here later
+						RenderUtils.setCustomYaw(event.yaw);
+						RenderUtils.setCustomPitch(event.pitch);
 						
 					}
 					
@@ -547,6 +530,11 @@ public class Killaura extends Module {
 	
     public boolean sendUseItem(EntityPlayer playerIn, World worldIn, ItemStack itemStackIn)
     {
+    	
+    	if (newAutoblock.is("None") || newAutoblock.getMode() == "None") {
+    		return false;
+    	}
+    	
         if (mc.playerController.currentGameType == WorldSettings.GameType.SPECTATOR)
         {
             return false;
@@ -692,6 +680,9 @@ public class Killaura extends Module {
         float yawSpeed = (RotationUtils.getRotations(target)[0] - lastSmoothYaw) / 1.1f,
         		pitchSpeed = (RotationUtils.getRotations(target)[1] - lastSmoothPitch) / 1.1f;
         
+        yawSpeed = 70;
+        pitchSpeed = 70;
+        
         if (yawSpeed < 0)
         	yawSpeed *= -1;
         
@@ -749,9 +740,65 @@ public class Killaura extends Module {
 	
 	public void hypixelRots(EventMotion em) {
 		
-		// Removed so I'll just use smooth rots
-		customRots(em, target);
+		if (target == null)
+			return;
 		
+		float[] rotations = RotationUtils.getRotations(target);
+		em.setYaw(rotations[0]);
+		em.setPitch(rotations[1]);
+        
+        if (em.pitch < -90) {
+        	em.setPitch(-90);
+        }
+        
+        upAndDownPitch += 1;
+        
+        double
+        	MaxPitch = RotationUtils.getRotationFromPosition(target.posX, target.posZ, target.boundingBox.maxY + 1.2 - 0.15)[1],
+        	MinPitch = RotationUtils.getRotationFromPosition(target.posX, target.posZ, target.boundingBox.minY + 1.2 + 0.15)[1],
+        	PitchRange = MaxPitch - MinPitch,
+        	Percent = 0,
+        	Pitch;
+        
+        if (MaxPitch <= MinPitch) {
+        	double temp = MinPitch;
+        	MaxPitch = MinPitch;
+        	MaxPitch = temp;
+        	//PitchRange = MaxPitch - MinPitch;
+        }
+        
+        if (upAndDownPitch < 100) {
+        	
+        	Percent = upAndDownPitch;
+        	
+        }
+        else if (upAndDownPitch >= 100) {
+        	
+        	Percent = (100 - (upAndDownPitch - 100));
+        	
+        }
+        
+        if (PitchRange <= 0) {
+        	PitchRange *= -1;
+        }
+        
+        Pitch = MinPitch + ((PitchRange / 100) * Percent);
+        
+        //Command.sendPrivateChatMessage(Pitch);
+        
+        em.setPitch((float) Pitch);
+        
+        if (upAndDownPitch >= 200) {
+        	upAndDownPitch = 0;
+        }
+        
+        if (em.pitch < -90) {
+        	em.setPitch(-90);
+        }
+        else if (em.pitch > 90) {
+        	em.setPitch(90);
+        }
+        
 	}
 	
 }

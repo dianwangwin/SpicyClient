@@ -17,7 +17,7 @@ public class DiscordRP {
 	public String lastLine = "";
 	private long created = 0;
 	
-	public void start() {
+	public void start() throws Exception {
 		
 		this.running = true;
 		this.created = System.currentTimeMillis();
@@ -51,12 +51,18 @@ public class DiscordRP {
 	
 	public void shutdown() {
 		
+		if (SpicyClient.discordFailedToStart)
+			return;
+		
 		running = false;
 		DiscordRPC.discordShutdown();
 		
 	}
 	
 	public void refresh() {
+		
+		if (SpicyClient.discordFailedToStart)
+			return;
 		
 		if (Minecraft.getMinecraft().currentScreen == null && !Minecraft.getMinecraft().isSingleplayer()) {
 			lastLine = "Hacking on " + Minecraft.getMinecraft().getCurrentServerData().serverIP;
@@ -74,6 +80,9 @@ public class DiscordRP {
 	}
 	
 	public void update(String secondline) {
+		
+		if (SpicyClient.discordFailedToStart)
+			return;
 		
 		lastLine = secondline;
 		

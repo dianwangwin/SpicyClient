@@ -9,7 +9,7 @@ import info.spicyclient.modules.Module;
 public class BlueScreenOfDeathWithChrome extends Module {
 
 	public BlueScreenOfDeathWithChrome() {
-		super("BlueScreenOfDeathWithChrome", Keyboard.KEY_NONE, Category.MEMES);
+		super("BSODWithChrome", Keyboard.KEY_NONE, Category.MEMES);
 	}
 	
 	@Override

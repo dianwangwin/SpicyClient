@@ -1,11 +1,14 @@
 package info.spicyclient.modules.beta;
 
+import java.util.Random;
+
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
+import info.spicyclient.events.listeners.EventMove;
 import info.spicyclient.events.listeners.EventPacket;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
@@ -26,6 +29,7 @@ import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemSword;
+import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
@@ -33,6 +37,7 @@ import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.network.play.client.C02PacketUseEntity.Action;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
@@ -52,28 +57,70 @@ public class TestModuleOne extends Module {
 	
 	@Override
 	public void onEnable() {
-		bool1 = false;
+		
 	}
 	
 	@Override
 	public void onDisable() {
-		
+		mc.thePlayer.motionX = 0;
+		mc.thePlayer.motionY = 0;
+		mc.thePlayer.motionZ = 0;
 	}
 	
 	@Override
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventUpdate && e.isPre()) {
+		if (e instanceof EventPacket) {
 			
-			if (mc.thePlayer.isUsingItem() && !(mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword)){
+			Packet p = ((EventPacket)e).packet;
+			
+			if (p instanceof S08PacketPlayerPosLook) {
+				e.setCanceled(true);
+			}
+			
+		}
+		
+		if (e instanceof EventMove && e.isPre()) {
+			
+			EventMove event = (EventMove)e;
+			
+			if (SpicyClient.config.bhop.isEnabled()) {
+				SpicyClient.config.bhop.toggle();
+			}
+			
+			mc.thePlayer.fallDistance = 0;
+			
+			event.x = 0;
+			event.y = 0;
+			event.z = 0;
+			mc.thePlayer.motionX = 0;
+			mc.thePlayer.motionY = 0;
+			mc.thePlayer.motionZ = 0;
+			
+			event.y = 0;
+			MovementUtils.strafe(2);
+			event.x = mc.thePlayer.motionX;
+			event.z = mc.thePlayer.motionZ;
+			if (!bool1) {
+				mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.5, mc.thePlayer.posZ, true));
+				bool1 = true;
+			}
+			else {
+				mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ, true));
+				bool1 = false;
+			}
+			
+			if (mc.gameSettings.keyBindSneak.isKeyDown()) {
 				
-				mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
-            	for (int i = 0; i < 30; i++) {
-                    mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
-                }
-            	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(PlayerUtils.getClosestPlayerToEntity(mc.thePlayer, -1), RotationUtils.getVectorForRotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch)));
-        		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(PlayerUtils.getClosestPlayerToEntity(mc.thePlayer, -1), Action.INTERACT));
-        		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
+				mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.5, mc.thePlayer.posZ, true));
+				event.y = -0.5;
+				
+			}
+			
+			if (mc.gameSettings.keyBindJump.isKeyDown()) {
+				
+				mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ, true));
+				event.y = 0.5;
 				
 			}
 			

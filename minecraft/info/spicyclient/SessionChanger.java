@@ -1,5 +1,6 @@
 package info.spicyclient;
 
+import java.net.Proxy;
 import java.util.UUID;
 
 import org.apache.http.client.methods.HttpPost;
@@ -40,6 +41,10 @@ public class SessionChanger {
 	//Online mode
 	//Checks if your already logged in to the account.
 	public void setUser(String email, String password) {
+		
+		Proxy temp = Minecraft.getMinecraft().proxy;
+		Minecraft.getMinecraft().proxy = Proxy.NO_PROXY;
+		
 		if(!Minecraft.getMinecraft().getSession().getUsername().equals(email) || Minecraft.getMinecraft().getSession().getToken().equals("0")){
 
 			this.auth.logOut();
@@ -65,7 +70,9 @@ public class SessionChanger {
 			}
 			
 		}
-
+		
+		Minecraft.getMinecraft().proxy = temp;
+		
 	}
 
 	//Sets the session.

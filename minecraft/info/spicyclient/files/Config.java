@@ -98,6 +98,8 @@ public class Config {
 	public Parkour parkour = new Parkour();
 	public Furries furries = new Furries();
 	public BlueScreenOfDeathWithChrome blueScreenOfDeath = new BlueScreenOfDeathWithChrome();
+	public AutoTool autoTool = new AutoTool();
+	public BedBreaker bedBreaker = new BedBreaker();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -165,6 +167,8 @@ public class Config {
 			this.parkour = new Parkour();
 			this.furries = new Furries();
 			this.blueScreenOfDeath = new BlueScreenOfDeathWithChrome();
+			this.autoTool = new AutoTool();
+			this.bedBreaker = new BedBreaker();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
@@ -174,7 +178,7 @@ public class Config {
 			this.killaura.switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
 			this.killaura.targetsSetting.index = this.killaura.targetModeSetting.index;
 			this.killaura.targetsSetting = this.killaura.targetModeSetting;
-			this.killaura.rotationSetting = new ModeSetting("Rotation setting", "lock", "lock", "smooth");
+			this.killaura.rotationSetting = new ModeSetting("Rotation setting", "lock", "lock", "smooth", "Hypixel");
 			this.killaura.hitOnHurtTime = new BooleanSetting("Hit on hurt time", false);
 			
 			this.tabgui.mode = new ModeSetting("Mode", "original", "compressed", "original");

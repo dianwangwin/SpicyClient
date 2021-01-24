@@ -151,6 +151,9 @@ public class BlockFly extends Module {
 			
 			//mc.thePlayer.onGround = false;
 			
+			RenderUtils.setCustomYaw(lastYaw);
+			RenderUtils.setCustomPitch(lastPitch);
+			
 			EventUpdate update = (EventUpdate)e;
 			
 			double motionX = mc.thePlayer.motionX, motionZ = mc.thePlayer.motionZ;
@@ -224,6 +227,8 @@ public class BlockFly extends Module {
 								event.setPitch(getRotationsHypixel(underBelow, facing)[1]);
 								lastYaw = event.yaw;
 								lastPitch = event.pitch;
+								RenderUtils.setCustomYaw(lastYaw);
+								RenderUtils.setCustomPitch(lastPitch);
 								return;
 								
 							}
@@ -263,6 +268,8 @@ public class BlockFly extends Module {
 								event.setPitch(getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[1]);
 								lastYaw = event.yaw;
 								lastPitch = event.pitch;
+								RenderUtils.setCustomYaw(lastYaw);
+								RenderUtils.setCustomPitch(lastPitch);
 								return;
 								
 							}

@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.Proxy;
+import java.net.Proxy.Type;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -99,7 +101,9 @@ public class SpicyClient {
 	public static String originalUsername = "Not Set";
 	public static Boolean originalAccountOnline = false;
 	
-	public static int currentVersionNum = 9;
+	public static boolean discordFailedToStart = false;
+	
+	public static int currentVersionNum = 11;
 	
 	public static void StartUp() {
 		
@@ -264,9 +268,13 @@ public class SpicyClient {
 			e1.printStackTrace();
 		}
 		
-		// Start the discord rich presence
-		discord = new DiscordRP();
-		discord.start();
+		try {
+			// Start the discord rich presence
+			discord = new DiscordRP();
+			discord.start();
+		} catch (Exception e) {
+			discordFailedToStart = true;
+		}
 		
 		info.spicyclient.modules.Module.CategoryList = Arrays.asList(Category.values());
 		
@@ -516,6 +524,8 @@ public class SpicyClient {
 		modules.add(c.parkour);
 		modules.add(c.furries);
 		modules.add(c.blueScreenOfDeath);
+		modules.add(c.autoTool);
+		modules.add(c.bedBreaker);
 		
 		for (Module temp : SpicyClient.modules) {
 			
@@ -675,6 +685,14 @@ public class SpicyClient {
 			builder.append("Discord rp running: " + discord.running);
 		} catch (Exception e) {
 			builder.append("Discord rp running: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Discord failed to start: " + discordFailedToStart);
+		} catch (Exception e) {
+			builder.append("Discord failed to start: ERROR");
 		}
 		
 		builder.append("\n");

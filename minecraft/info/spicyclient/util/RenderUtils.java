@@ -24,6 +24,7 @@ public class RenderUtils {
 	public static void setCustomYaw(float customYaw) {
 		CustomYaw = customYaw;
 		SetCustomYaw = true;
+		mc.thePlayer.rotationYawHead = customYaw;
 	}
 	
 	public static void resetPlayerYaw() {

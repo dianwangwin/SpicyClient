@@ -10,6 +10,7 @@ import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
+import info.spicyclient.util.RenderUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -42,6 +43,7 @@ public class NoHead extends Module {
 				EventMotion event = (EventMotion) e;
 				
 				event.setPitch(180);
+				RenderUtils.setCustomPitch(180);
 				
 			}
 			
