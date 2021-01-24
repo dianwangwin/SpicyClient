@@ -19,33 +19,39 @@ public class DiscordRP {
 	
 	public void start() throws Exception {
 		
-		this.running = true;
-		this.created = System.currentTimeMillis();
-		
-		DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().setReadyEventHandler(new ReadyCallback() {
+		try {
 			
-			public void apply(DiscordUser user) {
-				
-				
-				
-			}
+			this.running = true;
+			this.created = System.currentTimeMillis();
 			
-		}).build();
-		
-		DiscordRPC.discordInitialize("733832488199389246", handlers, true);
-		
-		new Thread("Discord RPC Callback") {
-			
-			@Override
-			public void run() {
+			DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().setReadyEventHandler(new ReadyCallback() {
 				
-				while(running) {
-					DiscordRPC.discordRunCallbacks();
+				public void apply(DiscordUser user) {
+					
+					
+					
 				}
 				
-			}
+			}).build();
 			
-		}.start();
+			DiscordRPC.discordInitialize("733832488199389246", handlers, true);
+			
+			new Thread("Discord RPC Callback") {
+				
+				@Override
+				public void run() {
+					
+					while(running) {
+						DiscordRPC.discordRunCallbacks();
+					}
+					
+				}
+				
+			}.start();
+			
+		} catch (Exception e) {
+			
+		}
 		
 	}
 	

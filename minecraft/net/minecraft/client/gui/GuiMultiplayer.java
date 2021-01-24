@@ -1,7 +1,5 @@
 package net.minecraft.client.gui;
 
-import com.github.creeper123123321.viafabric.ViaFabric;
-import com.github.creeper123123321.viafabric.util.ProtocolUtils;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import java.io.IOException;
@@ -15,9 +13,6 @@ import net.minecraft.client.network.LanServerDetector;
 import net.minecraft.client.network.OldServerPinger;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumChatFormatting;
-import viamcp.gui.GuiProtocolSelector;
-import viamcp.gui.GuiProtocolSelector.SlotList;
-import viamcp.utils.ProtocolSorter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,9 +41,6 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
     private LanServerDetector.LanServerList lanServerList;
     private LanServerDetector.ThreadLanServerFind lanServerDetector;
     private boolean initialized;
-    
-    public boolean ViaVersionSelectorOpened = false;
-    public SlotList ViaVersionList;
     
     public GuiMultiplayer(GuiScreen parentScreen)
     {
@@ -111,12 +103,6 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
         this.buttonList.add(new GuiButton(8, this.width / 2 + 4, this.height - 28, 70, 20, I18n.format("selectServer.refresh", new Object[0])));
         this.buttonList.add(new GuiButton(0, this.width / 2 + 4 + 76, this.height - 28, 75, 20, I18n.format("gui.cancel", new Object[0])));
         
-        // Viaversion
-        //new GuiButton(buttonId, x, y, buttonText)
-        //String text = "Spicy Portal ("  + ProtocolUtils.getProtocolName(ViaFabric.clientSideVersion) + ")";
-        String text = "Via Version ("  + ProtocolUtils.getProtocolName(ViaFabric.clientSideVersion) + ")";
-        buttonList.add(new GuiButton(12345, this.width - mc.fontRendererObj.getStringWidth(text) - 23, 5, 20 + mc.fontRendererObj.getStringWidth(text), 20, text));
-        
         this.selectServer(this.serverListSelector.func_148193_k());
     }
 
@@ -161,13 +147,6 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
         if (button.enabled)
         {
             GuiListExtended.IGuiListEntry guilistextended$iguilistentry = this.serverListSelector.func_148193_k() < 0 ? null : this.serverListSelector.getListEntry(this.serverListSelector.func_148193_k());
-            
-            /* ViaVersion */
-            if (button.id == 12345) {
-            	//ViaVersionSelectorOpened = !ViaVersionSelectorOpened;
-            	mc.displayGuiScreen(new GuiProtocolSelector(this));
-            }
-            /* ---------- */
             
             if (button.id == 2 && guilistextended$iguilistentry instanceof ServerListEntryNormal)
             {
@@ -404,52 +383,6 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
             this.drawHoveringText(Lists.newArrayList(Splitter.on("\n").split(this.hoveringText)), mouseX, mouseY);
         }
         
-        if (ViaVersionSelectorOpened){
-        	
-        	/*
-        	String text = "Via Version ("  + ProtocolUtils.getProtocolName(ViaFabric.clientSideVersion) + ")";
-            //buttonList.add(new GuiButton(12345, this.width - mc.fontRendererObj.getStringWidth(text) - 23, 5, 20 + mc.fontRendererObj.getStringWidth(text), 20, text));
-        	
-        	//ViaVersionList = new SlotList(mc, width, height, 32, height - 32, 10);
-        	ViaVersionList = new SlotList(mc, 30, 200, 0, 200 - 32, 10);
-        	
-        	ViaVersionList.drawScreen(mouseX, mouseY, partialTicks);
-        	*/
-        	
-        }
-        
-    }
-    
-    public class SlotList extends GuiSlot {
-    	
-        public SlotList(Minecraft p_i1052_1_, int p_i1052_2_, int p_i1052_3_, int p_i1052_4_, int p_i1052_5_, int p_i1052_6_) {
-            super(p_i1052_1_, p_i1052_2_, p_i1052_3_, p_i1052_4_, p_i1052_5_, p_i1052_6_);
-        }
-
-        @Override
-        protected int getSize() {
-            return ProtocolSorter.getProtocolVersions().size();
-        }
-
-        @Override
-        protected void elementClicked(int i, boolean b, int i1, int i2) {
-            ViaFabric.clientSideVersion = ProtocolSorter.getProtocolVersions().get(i).getVersion();
-        }
-
-        @Override
-        protected boolean isSelected(int i) {
-            return false;
-        }
-
-        @Override
-        protected void drawBackground() {
-            //drawDefaultBackground();
-        }
-
-        @Override
-        protected void drawSlot(int i, int i1, int i2, int i3, int i4, int i5) {
-            drawCenteredString(mc.fontRendererObj,(ViaFabric.clientSideVersion == ProtocolSorter.getProtocolVersions().get(i).getVersion() ? EnumChatFormatting.GREEN.toString() : EnumChatFormatting.WHITE.toString()) + ProtocolUtils.getProtocolName(ProtocolSorter.getProtocolVersions().get(i).getVersion()) , width / 2, i2 + 2, -1);
-        }
     }
     
     public void connectToSelected()

@@ -887,8 +887,8 @@ public class Fly extends Module {
                     if (mc.thePlayer.onGround && mc.thePlayer.isCollidedVertically && MovementUtils.isOnGround(0.01)) {
                         
                     	if(mc.thePlayer.hurtResistantTime == 19){
-                    		MovementUtils.setMotion(0.3 + 0 * 0.05f);
-                    		mc.thePlayer.motionY = 0.41999998688698f + 0*0.1;
+                    		//MovementUtils.setMotion(0.3 + 0 * 0.05f);
+                    		//mc.thePlayer.motionY = 0.41999998688698f + 0*0.1;
                     		hypixelFastFly1 = 25;
                     		speedAndStuff = 13;
                     		hypixelFastFly1Damaged = true;
@@ -898,8 +898,13 @@ public class Fly extends Module {
                             mc.thePlayer.jumpMovementFactor = 0;
                             mc.thePlayer.onGround = false;
                     	}
+                    	else if (hypixelFastFly1Damaged) {
+                    		MovementUtils.setMotion(0.3 + 0 * 0.05f);
+                    		mc.thePlayer.motionY = 0.41999998688698f + 0*0.1;
+                    	}
                     	
                     }
+                    
                 }
                 Block block = mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.2, mc.thePlayer.posZ)).getBlock();
                 if (!MovementUtils.isOnGround(0.0000001) && !block.isFullBlock() && !(block instanceof BlockGlass)) {
@@ -1093,19 +1098,21 @@ public class Fly extends Module {
                     if (true) {
                         if (mc.thePlayer.onGround && mc.thePlayer.isCollidedVertically && MovementUtils.isOnGround(0.01)) {
                             
-                        	if(true){
+                        	if(mc.thePlayer.hurtResistantTime == 19){
                         		
-                        		MovementUtils.setMotion(0.3 + 0 * 0.05f);
-                        		mc.thePlayer.motionY = 0.41999998688698f + 0*0.1;
                         		hypixelFastFly1 = 25;
                         		speedAndStuff = 20;
                         		hypixelFastFly1Damaged = true;
                         		
                         	}else if(hypixelFastFly1 < 25){
-                        		mc.thePlayer.motionX = 0;
-                                mc.thePlayer.motionZ = 0;
-                                mc.thePlayer.jumpMovementFactor = 0;
-                                mc.thePlayer.onGround = false;
+                        		//mc.thePlayer.motionX = 0;
+                                //mc.thePlayer.motionZ = 0;
+                                //mc.thePlayer.jumpMovementFactor = 0;
+                                //mc.thePlayer.onGround = false;
+                        	}
+                        	else if (hypixelFastFly1Damaged) {
+                        		MovementUtils.setMotion(0.3 + 0 * 0.05f);
+                        		mc.thePlayer.motionY = 0.41999998688698f + 0*0.1;
                         	}
                         	
                         }

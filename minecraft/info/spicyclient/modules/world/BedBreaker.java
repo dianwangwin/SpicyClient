@@ -2,6 +2,7 @@ package info.spicyclient.modules.world;
 
 import org.lwjgl.input.Keyboard;
 
+import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
@@ -206,11 +207,13 @@ public class BedBreaker extends Module {
 			
 			EventMotion event = (EventMotion)e;
 			
-			float[] rots = RotationUtils.getRotationFromPosition(bed.getX(), bed.getZ(), bed.getY());
-			event.setYaw(rots[0]);
-			event.setPitch(rots[1]);
-			RenderUtils.setCustomYaw(rots[0]);
-			RenderUtils.setCustomPitch(rots[1]);
+			if (!SpicyClient.config.killaura.isEnabled() || (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target == null)) {
+				float[] rots = RotationUtils.getRotationFromPosition(bed.getX(), bed.getZ(), bed.getY());
+				event.setYaw(rots[0]);
+				event.setPitch(rots[1]);
+				RenderUtils.setCustomYaw(rots[0]);
+				RenderUtils.setCustomPitch(rots[1]);
+			}
 			
 			mc.playerController.onPlayerDamageBlock(bed, bedFace);
 			

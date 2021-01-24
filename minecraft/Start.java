@@ -2,6 +2,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
+import info.spicyclient.SpicyClient;
 import net.minecraft.client.main.Main;
 
 public class Start

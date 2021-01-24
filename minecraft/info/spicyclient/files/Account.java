@@ -130,6 +130,8 @@ public class Account {
 				e.setType(temp);
 			}
 			
+			String color = "§b";
+			
 			EventPacket packetEvent = (EventPacket) e;
 			if (packetEvent.packet instanceof S02PacketChat) {
 				
@@ -145,7 +147,7 @@ public class Account {
 				for (String username : usernames.keySet()) {
 					
 					if (packet.getChatComponent().getUnformattedText().replaceAll("׼", "").contains(username) && usernames.get(username) != " - - - - ") {
-						packet.chatComponent = new ChatComponentText(packet.getChatComponent().getFormattedText().replaceAll("׼", "").replaceAll(username, username + " §7{§a" + ChatBypass.insertPeriodically(usernames.get(username), "⛍⛗⛌⛗⛘⛉⛡⛍⛗⛉⛍⛘⛜⛍⛠⛘⛟⛏⛡⛏⛗⛏⛍⛉⛋׼", 1) + "§7} "));
+						packet.chatComponent = new ChatComponentText(packet.getChatComponent().getFormattedText().replaceAll("׼", "").replaceAll(username, username + " §7(" + color + ChatBypass.insertPeriodically(usernames.get(username), "⛍⛗⛌⛗⛘⛉⛡⛍⛗⛉⛍⛘⛜⛍⛠⛘⛟⛏⛡⛏⛗⛏⛍⛉⛋׼", 1) + "§7) "));
 					}
 					
 				}
@@ -155,11 +157,11 @@ public class Account {
 				S3CPacketUpdateScore packet = (S3CPacketUpdateScore) packetEvent.packet;
 				
 				if (packet.getObjectiveName().replaceAll("׼", "").contains(mc.getSession().getUsername())){
-					packet.setObjective(packet.getObjectiveName().replaceAll("׼", "").replaceAll(mc.getSession().getUsername(), mc.getSession().getUsername() + " §f(§a" + SpicyClient.account.username + "§f)"));
+					packet.setObjective(packet.getObjectiveName().replaceAll("׼", "").replaceAll(mc.getSession().getUsername(), mc.getSession().getUsername() + " §f(" + color + SpicyClient.account.username + "§f)"));
 				}
 				
 				if (packet.getName().replaceAll("׼", "").contains(mc.getSession().getUsername())){
-					packet.setName(packet.getName().replaceAll("׼", "").replaceAll(mc.getSession().getUsername(), mc.getSession().getUsername() + " §f(§a" + SpicyClient.account.username + "§f)"));
+					packet.setName(packet.getName().replaceAll("׼", "").replaceAll(mc.getSession().getUsername(), mc.getSession().getUsername() + " §f(" + color + SpicyClient.account.username + "§f)"));
 				}
 				
 			}

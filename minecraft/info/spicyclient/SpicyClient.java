@@ -35,7 +35,6 @@ import org.json.JSONObject;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
-import com.github.creeper123123321.viafabric.ViaFabric;
 import com.thealtening.AltService;
 import com.thealtening.AltService.EnumAltService;
 
@@ -94,9 +93,6 @@ public class SpicyClient {
 	public static CommandManager commandManager = new CommandManager();
 	
 	public static Account account = new Account();
-	
-	// Removed
-	//public static int originalGuiScale = Minecraft.getMinecraft().gameSettings.guiScale;
 	
 	public static String originalUsername = "Not Set";
 	public static Boolean originalAccountOnline = false;
@@ -295,14 +291,6 @@ public class SpicyClient {
 			System.out.println("The " + c.name + " category has been set up");
 
 		}
-		
-		// Via Version
-		try {
-            new ViaFabric().onInitialize();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-		// Via Version
 		
 	}
 	
