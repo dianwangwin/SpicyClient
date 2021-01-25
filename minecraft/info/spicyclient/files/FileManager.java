@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import com.google.gson.Gson;
+import java.nio.file.FileSystems;
 
 import info.spicyclient.SpicyClient;
 
@@ -126,7 +127,7 @@ public class FileManager {
 		    if (file.isFile()) {
 		    	
 		    	file.renameTo(new File(configs + 
-                        "\\" + file.getName().replaceAll(".SpicyClientConfig", ".con"))); 
+                        FileSystems.getDefault().getSeparator() + file.getName().replaceAll(".SpicyClientConfig", ".con")));
 		    	
 		    }
 		}
@@ -162,8 +163,8 @@ public class FileManager {
 		for (File file : files) {
 		    if (file.isFile()) {
 		    	
-		    	file.renameTo(new File(configs + 
-                        "\\" + file.getName().replaceAll(".SpicyClientConfig", ".con"))); 
+		    	file.renameTo(new File(configs +
+						FileSystems.getDefault().getSeparator() + file.getName().replaceAll(".SpicyClientConfig", ".con")));
 		    	
 		    }
 		}
