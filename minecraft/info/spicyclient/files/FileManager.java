@@ -126,7 +126,7 @@ public class FileManager {
 		    if (file.isFile()) {
 		    	
 		    	file.renameTo(new File(configs + 
-                        "\\" + file.getName().replaceAll(".SpicyClientConfig", ".con"))); 
+                        "/" + file.getName().replaceAll(".SpicyClientConfig", ".con")));
 		    	
 		    }
 		}
@@ -162,8 +162,8 @@ public class FileManager {
 		for (File file : files) {
 		    if (file.isFile()) {
 		    	
-		    	file.renameTo(new File(configs + 
-                        "\\" + file.getName().replaceAll(".SpicyClientConfig", ".con"))); 
+		    	file.renameTo(new File(configs +
+						"/" + file.getName().replaceAll(".SpicyClientConfig", ".con")));
 		    	
 		    }
 		}
