@@ -7,6 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.events.Event;
+import info.spicyclient.music.MusicManager;
 import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.notifications.Type;
@@ -17,7 +18,10 @@ import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.settings.Setting;
 import info.spicyclient.settings.SettingChangeEvent;
 import info.spicyclient.settings.SettingChangeEvent.type;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 
 public abstract class Module {
 	

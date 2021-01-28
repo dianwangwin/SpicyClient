@@ -16,6 +16,9 @@ import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventSneaking;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
+import info.spicyclient.notifications.Color;
+import info.spicyclient.notifications.NotificationManager;
+import info.spicyclient.notifications.Type;
 import info.spicyclient.settings.BooleanSetting;
 import info.spicyclient.settings.ModeSetting;
 import info.spicyclient.settings.NumberSetting;
@@ -149,6 +152,8 @@ public class BlockFly extends Module {
 				return;
 			}
 			
+			//mc.thePlayer.setSprinting(false);
+			
 			//mc.thePlayer.onGround = false;
 			
 			RenderUtils.setCustomYaw(lastYaw);
@@ -169,9 +174,9 @@ public class BlockFly extends Module {
 					
 		            //mc.thePlayer.motionX = 0.0D;
 		            //mc.thePlayer.motionZ = 0.0D;
-		            //mc.thePlayer.motionY = 0.375;
-		            if (timer.hasTimeElapsed(1500, true)) {
-		               //mc.thePlayer.motionY = -0.28D;
+		            //mc.thePlayer.motionY = 0.372;
+		            if (timer.hasTimeElapsed(500, true)) {
+		               //mc.thePlayer.motionY = -0.4D;
 		            }
 					
 				}
@@ -395,7 +400,10 @@ public class BlockFly extends Module {
 	}
 	
 	public float[] getRotationsHypixel(BlockPos paramBlockPos, EnumFacing paramEnumFacing) {
+		
+		/*
 		double offset = 0.1;
+		offset = new Random().nextDouble() / 5;
 		//offset = 1;
         double d1 = (double)paramBlockPos.getX() + offset - mc.thePlayer.posX + (double)paramEnumFacing.getFrontOffsetX() / 2.0D;
         double d2 = (double)paramBlockPos.getZ() + offset - mc.thePlayer.posZ + (double)paramEnumFacing.getFrontOffsetZ() / 2.0D;
@@ -422,12 +430,48 @@ public class BlockFly extends Module {
         //Command.sendPrivateChatMessage(f1 + " : " + f2);
         
         return new float[]{f1, f2};
+        */
+		
+		return new float[] {mc.thePlayer.rotationYaw, 85};
+		
     }
 	
 	private class BlockInfo {
 		
 		BlockPos pos, targetPos;
 		EnumFacing facing;
+		
+	}
+	
+	@Override
+	public void toggle() {
+		
+		toggled = !toggled;
+		if (toggled) {
+			
+			NotificationManager.getNotificationManager().createNotification("Enabled: " + name, "Thank you to kot from kot client for giving me rots", true, 1500, Type.INFO, Color.GREEN);
+			
+			onEnable();
+			
+			if (SpicyClient.config.hud.sound.isEnabled()) {
+				Minecraft.getMinecraft().thePlayer.playSound("random.click", (float) SpicyClient.config.hud.volume.getValue(), 0.6f);
+			}
+			
+		}else {
+			
+			NotificationManager.getNotificationManager().createNotification("Disabled: " + name, "Thank you to kot from kot client for giving me rots", true, 1500, Type.INFO, Color.RED);
+			
+			onDisable();
+			
+			if (SpicyClient.config.hud.sound.isEnabled()) {
+				Minecraft.getMinecraft().thePlayer.playSound("random.click", (float) SpicyClient.config.hud.volume.getValue(), 0.4f);
+			}
+			
+		}
+		
+		if (SpicyClient.discord != null && SpicyClient.discord.running) {
+			SpicyClient.discord.refresh();
+		}
 		
 	}
 	

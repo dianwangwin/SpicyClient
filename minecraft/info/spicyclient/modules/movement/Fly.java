@@ -64,7 +64,7 @@ public class Fly extends Module {
 	public NumberSetting hypixelFastFly1Speed = new NumberSetting("Speed", 0.2675, 0.01, 1.0, 0.0025);
 	public BooleanSetting hypixelFastFly1StopOnDisable = new BooleanSetting("Stop on disable", true);
 	public BooleanSetting hypixelFastFly1Blink = new BooleanSetting("Blink", false);
-	public NumberSetting hypixelFastFly1Decay = new NumberSetting("Decay", 18, 2, 35, 1);
+	public NumberSetting hypixelFastFly1Decay = new NumberSetting("Decay", 18, 2, 35, 0.1);
 	
 	public static ArrayList<Packet> hypixelPackets = new ArrayList<Packet>();
 	public static ArrayList<Packet> hypixelFastFly1Packets = new ArrayList<Packet>();
@@ -897,10 +897,15 @@ public class Fly extends Module {
                             mc.thePlayer.motionZ = 0;
                             mc.thePlayer.jumpMovementFactor = 0;
                             mc.thePlayer.onGround = false;
+                            //mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX + ((new Random().nextDouble() - 0.5) / 10), mc.thePlayer.posY, mc.thePlayer.posZ + ((new Random().nextDouble() - 0.5) / 10), MovementUtils.isOnGround(0.0001)));
                     	}
                     	else if (hypixelFastFly1Damaged) {
-                    		MovementUtils.setMotion(0.3 + 0 * 0.05f);
-                    		mc.thePlayer.motionY = 0.41999998688698f + 0*0.1;
+                    		
+                    		Double randSpeed = new Random().nextDouble() / 1000000000;
+                    		//Command.sendPrivateChatMessage(randSpeed);
+                    		MovementUtils.setMotion(0.3 - randSpeed);
+                    		mc.thePlayer.motionY = 0.40999998688698f;
+                    		
                     	}
                     	
                     }
@@ -1111,8 +1116,12 @@ public class Fly extends Module {
                                 //mc.thePlayer.onGround = false;
                         	}
                         	else if (hypixelFastFly1Damaged) {
-                        		MovementUtils.setMotion(0.3 + 0 * 0.05f);
-                        		mc.thePlayer.motionY = 0.41999998688698f + 0*0.1;
+                        		
+                        		Double randSpeed = new Random().nextDouble() / 1000000000;
+                        		//Command.sendPrivateChatMessage(randSpeed);
+                        		MovementUtils.setMotion(0.3 - randSpeed);
+                        		mc.thePlayer.motionY = 0.40999998688698f;
+                        		
                         	}
                         	
                         }

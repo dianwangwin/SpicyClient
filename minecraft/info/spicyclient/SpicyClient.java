@@ -514,6 +514,7 @@ public class SpicyClient {
 		modules.add(c.blueScreenOfDeath);
 		modules.add(c.autoTool);
 		modules.add(c.bedBreaker);
+		modules.add(c.infinitePlace);
 		
 		for (Module temp : SpicyClient.modules) {
 			

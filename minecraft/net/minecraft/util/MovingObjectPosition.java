@@ -4,7 +4,7 @@ import net.minecraft.entity.Entity;
 
 public class MovingObjectPosition
 {
-    private BlockPos blockPos;
+    public BlockPos blockPos;
 
     /** What type of ray trace hit was this? 0 = block, 1 = entity */
     public MovingObjectPosition.MovingObjectType typeOfHit;

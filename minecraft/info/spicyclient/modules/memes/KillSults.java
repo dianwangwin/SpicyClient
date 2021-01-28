@@ -31,7 +31,7 @@ import net.minecraft.network.play.client.C02PacketUseEntity.Action;
 
 public class KillSults extends Module {
 	
-	public ModeSetting messageMode = new ModeSetting("Message Type", "Furry", "Furry", "Retarded Furry", "Annoying", "SpicyClient Ads", "SpicyFacts");
+	public ModeSetting messageMode = new ModeSetting("Message Type", "Furry", "Furry", "Retarded Furry", "Annoying", "SpicyClient Ads", "SpicyFacts", "Cereal");
 	private ModeSetting serverMode = new ModeSetting("Server Mode", "PvpLands", "PvpLands", "Hypixel", "Test");
 	
 	public BooleanSetting hypixelShout = new BooleanSetting("/Shout", false);
@@ -50,6 +50,7 @@ public class KillSults extends Module {
 	private static ArrayList<String> annoyingKillsults = new ArrayList<String>();
 	private static ArrayList<String> spicyClientAdsKillsults = new ArrayList<String>();
 	private static ArrayList<String> spicyFactsKillsults = new ArrayList<String>();
+	private static ArrayList<String> cerealKillsults = new ArrayList<String>();
 	
 	@Override
 	public void resetSettings() {
@@ -179,6 +180,11 @@ public class KillSults extends Module {
 						else if (messageMode.is("SpicyFacts")) {
 							
 							killsults = this.spicyFactsKillsults;
+							
+						}
+						else if (messageMode.is("Cereal")) {
+							
+							killsults = this.cerealKillsults;
 							
 						}
 						
@@ -416,6 +422,14 @@ public class KillSults extends Module {
 		spicyFactsKillsults.add("<PlayerName> [FACT] SpicyClient > Sigma");
 		spicyFactsKillsults.add("<PlayerName> [FACT] SpicyClient has tons of Hypixel bypasses");
 		spicyFactsKillsults.add("<PlayerName> [FACT] Downloading SpicyClient makes you 200% more pog");
+		
+		// for the cereal killsults list
+		cerealKillsults.add("<PlayerName> No hax just a well balanced breakfast");
+		cerealKillsults.add("<PlayerName> R-double e-s-e-s YES, P-to the u-double f-s YES");
+		cerealKillsults.add("<PlayerName> My lucky charms were extra lucky");
+		cerealKillsults.add("<PlayerName> SpicyClient is part of a well balanced breakfast");
+		cerealKillsults.add("<PlayerName> Cheerios cereal now comes with spicyclient");
+		cerealKillsults.add("<PlayerName> ׼W׼h׼a׼t ׼t׼h׼e ׼f׼u׼c׼k׼ ׼a׼r׼e׼ ׼w׼h׼e׼a׼t׼i׼e׼s׼?");
 		
 	}
 	

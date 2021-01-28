@@ -100,6 +100,7 @@ public class Config {
 	public BlueScreenOfDeathWithChrome blueScreenOfDeath = new BlueScreenOfDeathWithChrome();
 	public AutoTool autoTool = new AutoTool();
 	public BedBreaker bedBreaker = new BedBreaker();
+	public InfinitePlace infinitePlace = new InfinitePlace();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -169,6 +170,7 @@ public class Config {
 			this.blueScreenOfDeath = new BlueScreenOfDeathWithChrome();
 			this.autoTool = new AutoTool();
 			this.bedBreaker = new BedBreaker();
+			this.infinitePlace = new InfinitePlace();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
