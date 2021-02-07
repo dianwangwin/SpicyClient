@@ -1,15 +1,8 @@
-# SpicyClient
-
-# (READ) This is an outdated guide, It will be updated later
-
-## Introduction
-
-> The point of SpicyClient is to allow people to create a Minecraft client without starting from scratch
+# SpicyClient - The open source hypixel client
+Spicy is an open source Minecraft client that I create in my free time, you are free to reference and copy my code. There are two reasons why made it open source, The first one is that protecting the jar is annoying and the second is that I want people to be able to reference code whenever they need to. If you find any bugs or a hack is not currently bypassing then feel free to contact me. If you have any code that you want added to the client then you may also contact me
 
 ## How to modify the code
+Coming soon
 
-> To get started with the source code just download the newest source code from https://SpicyClient.info and run it, then all you have to do is to go to the src folder and replace the Minecraft folder with the Minecraft folder on github, then open eclipse and select the eclipse folder as your workspace. if no projects show up just create a new one and name is Client with a capital c and then you should see the the source code. Sometimes not all of the libraries will be found, if this happens to you just go to your build path and set the library's location's again.
-
-## Exporting your client
-
-> To export your code just build your code in eclipse and open the jar file in winar, then download the built SpicyClient jar file from https://SpicyClient.info and open it in winrar. then replace the net and info.spicyclient packages in the SpicyClient jar with the ones from the jar you created, after all that you should be able to run your code in the Minecraft launcher.
+## Exporting the client into a jar
+Coming soon
