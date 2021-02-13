@@ -137,7 +137,7 @@ public class Bhop extends Module {
 				
 				if (packetEvent.packet instanceof S08PacketPlayerPosLook) {
 					
-					if (lagbackCheck >= 3) {
+					if (lagbackCheck >= 1) {
 						
 						lagbackCheck = 0;
 						lastLagback = System.currentTimeMillis() - (5*1000);
@@ -250,7 +250,7 @@ public class Bhop extends Module {
 				}
 				else if (mode.is("Hypixel") && (!!SpicyClient.config.blockFly.isEnabled() || (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null))) {
 					
-					mc.timer.ticksPerSecond = 20;
+					//mc.timer.ticksPerSecond = 20;
 					
 				}
 				else if (mode.is("Test") && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {

@@ -101,6 +101,8 @@ public class Config {
 	public AutoTool autoTool = new AutoTool();
 	public BedBreaker bedBreaker = new BedBreaker();
 	public InfinitePlace infinitePlace = new InfinitePlace();
+	public DragonWings dragonWings = new DragonWings();
+	public EntityDesync entityDesync = new EntityDesync();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -114,7 +116,7 @@ public class Config {
 	}
 	
 	public boolean updateConfig() {
-		
+		this.entityDesync = new EntityDesync();
 		Config temp = new Config("temp");
 		
 		if (this.version.equalsIgnoreCase(temp.version)) {
@@ -171,6 +173,8 @@ public class Config {
 			this.autoTool = new AutoTool();
 			this.bedBreaker = new BedBreaker();
 			this.infinitePlace = new InfinitePlace();
+			this.dragonWings = new DragonWings();
+			this.entityDesync = new EntityDesync();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");

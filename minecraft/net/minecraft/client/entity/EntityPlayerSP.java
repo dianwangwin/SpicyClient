@@ -177,6 +177,8 @@ public class EntityPlayerSP extends AbstractClientPlayer
     	event.setZ(z);
     	SpicyClient.onEvent(event);
 		super.moveEntity(event.x, event.y, event.z);
+		event.setType(EventType.POST);
+		SpicyClient.onEvent(event);
 	}
     
     /**

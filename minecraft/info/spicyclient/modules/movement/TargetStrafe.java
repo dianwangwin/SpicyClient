@@ -25,6 +25,7 @@ import info.spicyclient.util.RotationUtils;
 import info.spicyclient.util.Timer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockGlass;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.item.Item;
@@ -49,7 +50,7 @@ public class TargetStrafe extends Module {
 	public NumberSetting speed = new NumberSetting("Speed", 0, 0, 1, 0.01);
 	public NumberSetting distance = new NumberSetting("Distance", 3, 0.1, 6, 0.1);
 	
-	public static transient boolean direction = false;
+	public static transient boolean direction = false, forward = false, left = false, right = false, back = false;
 	
 	@Override
 	public void resetSettings() {
@@ -58,10 +59,20 @@ public class TargetStrafe extends Module {
 	}
 	
 	@Override
+	public void onEnable() {
+		
+		forward = mc.gameSettings.keyBindForward.pressed;
+		left = mc.gameSettings.keyBindLeft.pressed;
+		right = mc.gameSettings.keyBindRight.pressed;
+		back = mc.gameSettings.keyBindBack.pressed;
+		
+	}
+	
+	@Override
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventMotion && e.isPost()) {
-			
+		if ((e instanceof EventMotion && e.isPost()) || (e instanceof EventUpdate && e.isPre())) {
+			//Command.sendPrivateChatMessage("\nMotion X: " + mc.thePlayer.motionX + "\nMotion Y: " + mc.thePlayer.motionY + "\nMotion Z: " + mc.thePlayer.motionZ);
 			if (mc.thePlayer.isCollidedHorizontally) {
 				direction = !direction;
 			}
@@ -117,7 +128,7 @@ public class TargetStrafe extends Module {
 				
 				event.setSpeed(0);
 				
-				double yawChange = 90;
+				double yawChange = 45;
 				
 				if (mc.thePlayer.getDistanceToEntity(k.target) < distance.getValue() && mc.thePlayer.getDistanceToEntity(k.target) > distance.getValue() - 0.05) {
 					//yawChange = 10;
@@ -125,8 +136,8 @@ public class TargetStrafe extends Module {
 				
 				float f = (float) ((RotationUtils.getRotations(k.target)[0] + (direction ? -yawChange : yawChange)) * 0.017453292F);
 				double x2 = k.target.posX, z2 = k.target.posZ;
-	            x2 -= (double)(MathHelper.sin(f) * (distance.getValue() + 2.25) * -1);
-	            z2 += (double)(MathHelper.cos(f) * (distance.getValue() + 2.25) * -1);
+	            x2 -= (double)(MathHelper.sin(f) * (distance.getValue()) * -1);
+	            z2 += (double)(MathHelper.cos(f) * (distance.getValue()) * -1);
 	            
 	            float currentSpeed1 = MovementUtils.getSpeed();
 	            
@@ -139,6 +150,7 @@ public class TargetStrafe extends Module {
 			}
 			
 		}
+		
 		if (e instanceof EventRender3D && e.isPre()) {
 			
 			if (mc.thePlayer.isCollidedHorizontally) {
@@ -153,14 +165,18 @@ public class TargetStrafe extends Module {
 				
 				Vec3 lastLine = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
 				
-				for (int i = 0; i < 360; i++) {
+				for (int i = 0; i <= 360; i++) {
 					
 					float f = (RotationUtils.getRotations(k.target)[0] + (direction ? -i : i)) * 0.017453292F;
 					double x2 = k.target.posX, z2 = k.target.posZ;
-		            x2 -= (double)(MathHelper.sin(f) * mc.thePlayer.getDistanceToEntity(k.target)) * -1;
-		            z2 += (double)(MathHelper.cos(f) * mc.thePlayer.getDistanceToEntity(k.target)) * -1;
+		            x2 -= (double)(MathHelper.sin(f) * distance.getValue()) * -1;
+		            z2 += (double)(MathHelper.cos(f) * distance.getValue()) * -1;
 		            
-		            RenderUtils.drawLine(lastLine.xCoord, lastLine.yCoord, lastLine.zCoord, x2, lastLine.yCoord, z2);
+		            if (i != 0) {
+		            	RenderUtils.drawLine(lastLine.xCoord, lastLine.yCoord, lastLine.zCoord, x2, lastLine.yCoord, z2);
+		            }
+		            
+		            //RenderUtils.drawLine(lastLine.xCoord, lastLine.yCoord, lastLine.zCoord, x2, lastLine.yCoord, z2);
 		            lastLine.xCoord = x2;
 		            lastLine.zCoord = z2;
 					

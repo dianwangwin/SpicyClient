@@ -54,7 +54,7 @@ import net.minecraft.util.MathHelper;
 public class Fly extends Module {
 	
 	public NumberSetting speed = new NumberSetting("Speed", 0.1, 0.01, 2, 0.1);
-	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "Hypixel", "HypixelFast1", "HypixelFast2", "BrokenLens");
+	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "Hypixel", "HypixelFast1", "HypixelFast2", "BrokenLens", "Verus");
 	
 	public BooleanSetting hypixelBlink = new BooleanSetting("Blink", true);
 	public BooleanSetting hypixelTimerBoost = new BooleanSetting("Hypixel timer boost", true);
@@ -64,7 +64,7 @@ public class Fly extends Module {
 	public NumberSetting hypixelFastFly1Speed = new NumberSetting("Speed", 0.2675, 0.01, 1.0, 0.0025);
 	public BooleanSetting hypixelFastFly1StopOnDisable = new BooleanSetting("Stop on disable", true);
 	public BooleanSetting hypixelFastFly1Blink = new BooleanSetting("Blink", false);
-	public NumberSetting hypixelFastFly1Decay = new NumberSetting("Decay", 18, 2, 35, 0.1);
+	public NumberSetting hypixelFastFly1Decay = new NumberSetting("Decay", 18, 2, 35, 0.01);
 	
 	public static ArrayList<Packet> hypixelPackets = new ArrayList<Packet>();
 	public static ArrayList<Packet> hypixelFastFly1Packets = new ArrayList<Packet>();
@@ -190,6 +190,9 @@ public class Fly extends Module {
 				
 			}
 			else if (mode.is("BrokenLens") || mode.getMode() == "BrokenLens") {
+				
+			}
+			else if (mode.is("Verus") || mode.getMode() == "Verus") {
 				
 			}
 			else {
@@ -614,13 +617,20 @@ public class Fly extends Module {
 				if (mc.thePlayer.fallDistance >= 3) {
 					MovementUtils.setMotion(hypixelBoostSpeed.getValue());
 					this.additionalInformation = "MEGA SPEED BOOST!!!";
-					mc.thePlayer.motionY = -0.005;
 					//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer(true));
 					hypixelLagback = 0;
 				}else {
 					MovementUtils.setMotion(hypixelSpeed.getValue());
 					offset2 = 4.496001251836E-4;
 					//offset2 += ((float)new Random().nextInt(99999)) / 100000000000f; 
+				}
+				
+				if (mc.gameSettings.keyBindSneak.isKeyDown()) {
+					mc.thePlayer.motionY = -0.4;
+				}
+				
+				if (mc.gameSettings.keyBindJump.isKeyDown()) {
+					mc.thePlayer.motionY = 0.4;
 				}
 				
 				//int time = (int) ((System.currentTimeMillis() - hypixelStartTime) / 1000);
@@ -1182,9 +1192,11 @@ public class Fly extends Module {
                         double strafe = mc.thePlayer.movementInput.moveStrafe;
                         float yaw = mc.thePlayer.rotationYaw;
                         if ((forward == 0.0D) && (strafe == 0.0D)) {
-                        	mc.thePlayer.motionX = 0;
-                        	mc.thePlayer.motionZ = 0;
+                        	//mc.thePlayer.motionX = 0;
+                        	//mc.thePlayer.motionZ = 0;
                         } else {
+                        	MovementUtils.strafe(speedf);
+                        	/*
                             if (forward != 0.0D) {
                             	if(speedAndStuff <= 0)
                             	 if (strafe > 0.0D) {
@@ -1201,6 +1213,7 @@ public class Fly extends Module {
                             }
                             mc.thePlayer.motionX = forward * speedf * Math.cos(Math.toRadians(yaw + 90.0F)) + strafe * speedf * Math.sin(Math.toRadians(yaw + 90.0F));
                             mc.thePlayer.motionZ = forward * speedf * Math.sin(Math.toRadians(yaw + 90.0F)) - strafe * speedf * Math.cos(Math.toRadians(yaw + 90.0F));
+                            */
                         }
                         
                        // MovementUtils.setMotion(speedf);
@@ -1213,7 +1226,7 @@ public class Fly extends Module {
                         switch (hypixelFastFlyStatus) {
         				case 0:
         					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-        					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.001,
+        					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 1.0E-10, 
         							mc.thePlayer.posZ);
         					hypixelFastFlyStatus++;
         					//Command.sendPrivateChatMessage("Down");
@@ -1223,19 +1236,27 @@ public class Fly extends Module {
         					// mc.thePlayer.posY = mc.thePlayer.lastTickPosY + 0.0002000000000066393;
         					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
         							//mc.thePlayer.posZ);
-        					if (!MovementUtils.isOnGround(0.0001)) {
-        						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - (new Random().nextDouble() / 1000000000000d), 
-        								mc.thePlayer.posZ);
-        					}
+        					
+    						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 1.0E-10, 
+    								mc.thePlayer.posZ);
         					
         					//event.setY(mc.thePlayer.posY);
-        					//hypixelFastFlyStatus++;
-        					hypixelFastFlyStatus = 0;
+        					hypixelFastFlyStatus++;
+        					//hypixelFastFlyStatus = 0;
         					//Command.sendPrivateChatMessage("Up");
         					//hypixelFastFlyStatus = 0;
         					break;
-        					
-    					}
+        				case 2:
+    						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - 1.0E-10, 
+    								mc.thePlayer.posZ);
+        					hypixelFastFlyStatus = 0;
+        					break;
+        				default:
+        					hypixelFastFlyStatus = 0;
+        					break;
+                        }
+                        
+                        //Command.sendPrivateChatMessage(new DecimalFormat("#.######################################################################").format(mc.thePlayer.posY));
                         
                     }
 

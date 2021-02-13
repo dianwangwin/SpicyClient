@@ -23,6 +23,7 @@ import net.minecraft.network.handshake.client.C00Handshake;
 import net.minecraft.network.login.server.S00PacketDisconnect;
 import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.network.play.client.C0CPacketInput;
 import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
@@ -35,7 +36,7 @@ public class Disabler extends Module {
 	}
 	
 	public static transient boolean watchdog = false;
-	public static transient ArrayList<C0FPacketConfirmTransaction> C0FPackets = new ArrayList<C0FPacketConfirmTransaction>();
+	public static transient ArrayList<Packet> packets = new ArrayList<Packet>();
 	public static transient Timer ping = new Timer();
 	
 	@Override
@@ -48,13 +49,13 @@ public class Disabler extends Module {
 	public void onDisable() {
 		watchdog = false;
 		
-		for (C0FPacketConfirmTransaction p : C0FPackets) {
+		for (Packet p : packets) {
 			
 			mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
 			
 		}
 		
-		C0FPackets.clear();
+		packets.clear();
 		
 	}
 	
@@ -63,8 +64,23 @@ public class Disabler extends Module {
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
-			this.additionalInformation = "Hypixel";
+			this.additionalInformation = "Hypixel (fixed motherboard edition)";
 			
+			if (SpicyClient.config.pingSpoof.isEnabled()) {
+				SpicyClient.config.pingSpoof.toggle();
+				NotificationManager.getNotificationManager().createNotification("Disabler", "Pingspoof was disabled to prevent flags", true, 2000, Type.INFO, Color.RED);
+			}
+			
+			if (mc.thePlayer.ticksExisted < 5) {
+				for (Packet p : packets) {
+					
+					mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
+					
+				}
+				packets.clear();
+			}
+			
+			/*
             PlayerCapabilities playerCapabilities = new PlayerCapabilities();
             playerCapabilities.isFlying = true;
             playerCapabilities.allowFlying = true;
@@ -72,14 +88,26 @@ public class Disabler extends Module {
             playerCapabilities.setFlySpeed((float) (9.0 + (new Random()).nextDouble() * (9.8 - 9.0)));
             playerCapabilities.isCreativeMode = true;
             mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
-            
-           int basePing = 2250;
-           //basePing += 1500;
-            
-            if (ping.hasTimeElapsed(basePing + (new Random()).nextInt(750), true) && C0FPackets.size() > 0) {
-            	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(C0FPackets.get(0));
-            	//Command.sendPrivateChatMessage(C0FPackets.get(0).getUid() + " : " + C0FPackets.get(0).getWindowId());
-            	C0FPackets.remove(0);
+            */
+			
+           int basePing = 5000;
+           
+            if (ping.hasTimeElapsed(basePing + new Random().nextInt(2000), true) && packets.size() > 0) {
+            	
+				for (Packet p : packets) {
+					
+					mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
+					
+				}
+				packets.clear();
+				
+            }else {
+                PlayerCapabilities playerCapabilities = new PlayerCapabilities();
+                playerCapabilities.isFlying = true;
+                playerCapabilities.allowFlying = true;
+                playerCapabilities.setFlySpeed((float) (9.0 + (new Random()).nextDouble() * (9.8 - 9.0)));
+                playerCapabilities.isCreativeMode = true;
+                mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
             }
             
 		}
@@ -87,7 +115,7 @@ public class Disabler extends Module {
 		if (e instanceof EventPacket && e.isPre()) {
 			
 			if (((EventPacket)e).packet instanceof S00PacketDisconnect) {
-				C0FPackets.clear();
+				packets.clear();
 			}
 			
 		}
@@ -95,10 +123,6 @@ public class Disabler extends Module {
 		if (e instanceof EventSendPacket && e.isPre()) {
 			
 			EventSendPacket event = (EventSendPacket) e;
-			
-			if (event.packet instanceof C00Handshake) {
-				C0FPackets.clear();
-			}
 			
             if (event.packet instanceof C0FPacketConfirmTransaction) {
             	
@@ -112,23 +136,22 @@ public class Disabler extends Module {
                 //packetConfirmTransaction.setUid(Short.MAX_VALUE);
             	//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0FPacketConfirmTransaction(Integer.MIN_VALUE, Short.MAX_VALUE, true));
                 
-                if (!SpicyClient.config.fly.isEnabled() && !SpicyClient.config.testModuleOne.isEnabled()) {
-                	C0FPackets.add(packetConfirmTransaction);
+                /*
+                if (!SpicyClient.config.fly.isEnabled()) {
+                	packets.add(packetConfirmTransaction);
                 }
+                */
                 
+                packets.add(packetConfirmTransaction);
                 e.setCanceled(true);
             }
 
             if (event.packet instanceof C00PacketKeepAlive) {
             	
-            	//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C00PacketKeepAlive(-2147483648 + (new Random()).nextInt(100)));
-                //e.setCanceled(true);
-                
+                packets.add(event.packet);
+                e.setCanceled(true);
+            	
             }
-            
-			if (event.packet instanceof C0CPacketInput) {
-				e.setCanceled(true);
-			}
             
 		}
 		

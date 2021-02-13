@@ -110,7 +110,7 @@ public class Killaura extends Module {
 		lastHypixelPitch = mc.thePlayer.rotationPitch;
 		
 		healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
-		dynamicAPS = aps.getValue();
+		dynamicAPS = (randomNumber((int) aps.getValue(), ((int)aps.getValue() - 2)));
 		upAndDownPitch = 0;
 		
 	}
@@ -342,12 +342,19 @@ public class Killaura extends Module {
 						
 	                    try {
 	                        if (mc.getNetHandler().getPlayerInfo(((EntityPlayer)target).getUniqueID()).responseTime > 1) {
-	                        	Command.sendPrivateChatMessage("A watchdog bot was removed from your game");
+	                        	Command.sendPrivateChatMessage("A watchdog bot was removed from your game (ping check)");
+	                        	mc.theWorld.removeEntity(target);
+	                        	return;
+	                        }
+	                        else if (target.isPlayerSleeping()) {
+	                        	Command.sendPrivateChatMessage("A watchdog bot was removed from your game (sleep check)");
 	                        	mc.theWorld.removeEntity(target);
 	                        	return;
 	                        }
 						} catch (NullPointerException e1) {
-							e1.printStackTrace();
+							
+							//e1.printStackTrace();
+							
 						}
 						
 					}
@@ -365,24 +372,42 @@ public class Killaura extends Module {
 					}
 					
 					if (target != lastTarget) {
-						/*
-						Command.sendPrivateChatMessage("F: " + target.getDisplayName().getFormattedText());
-						Command.sendPrivateChatMessage("U: " + target.getDisplayName().getUnformattedText());
-						Command.sendPrivateChatMessage("UC: " + target.getDisplayName().getUnformattedTextForChat());
-						Command.sendPrivateChatMessage("C: " + target.getCustomNameTag());
+						lastTarget = target;
 						
-						if (target instanceof EntityPlayer) {
+						try {
 							
-							Command.sendPrivateChatMessage("Ping: " + mc.getNetHandler().getPlayerInfo(((EntityPlayer)target).getUniqueID()).responseTime);
+							Command.sendPrivateChatMessage("F: " + target.getDisplayName().getFormattedText());
+							Command.sendPrivateChatMessage("U: " + target.getDisplayName().getUnformattedText());
+							Command.sendPrivateChatMessage("UC: " + target.getDisplayName().getUnformattedTextForChat());
+							Command.sendPrivateChatMessage("C: " + target.getCustomNameTag());
+							
+							if (target instanceof EntityPlayer) {
+								
+								Command.sendPrivateChatMessage("Ping: " + mc.getNetHandler().getPlayerInfo(((EntityPlayer)target).getUniqueID()).responseTime);
+								
+							}
+							
+						} catch (Exception e2) {
+							// TODO: handle exception
+						}
+						
+						/*
+						if (rotationSetting.is("Hypixel") || rotationSetting.getMode() == "Hypixel") {
+							
+							float[] rotations = RotationUtils.getRotations(target);
+							
+							float lockRots = mc.thePlayer.rotationYaw + ((mc.thePlayer.rotationYaw - rotations[0]) / 2);
+							//Command.sendPrivateChatMessage(lockRots);
+							event.setYaw(lockRots);
+							return;
 							
 						}
 						*/
+						
 					}
 					
 					// if (mc.netHandler.getPlayerInfo(entity.asEntityPlayer().uniqueID)?.responseTime == 0)
 	                // return true
-					
-					lastTarget = target;
 					
 					// This mostly removes a bug which would cause you get get kicked for invalid player movement
 					if (target.posX == mc.thePlayer.posX && target.posY == mc.thePlayer.posY && target.posZ == mc.thePlayer.posZ) {
@@ -432,6 +457,16 @@ public class Killaura extends Module {
 							
 							hypixelRots(event);
 							
+							/*
+                            float[] rotations = RotationUtils.getRotations(target);
+                            event.setYaw(rotations[0]);
+                            event.setPitch(rotations[1]);
+                            */
+							
+                            if (event.pitch < -90) {
+                            	event.setPitch(-90);
+                            }
+							
 						}
 						
 						// Put client side rotation code here later
@@ -450,7 +485,12 @@ public class Killaura extends Module {
 						}
 					}
 					
-					if (timer.hasTimeElapsed((long) (1000/(aps.getValue() + new Random().nextFloat())), true)) {
+					//if (timer.hasTimeElapsed((long) (1000/(aps.getValue() + new Random().nextFloat())), true)) {
+					//if (timer.hasTimeElapsed((long) (1000/dynamicAPS), true)) {
+					if (timer.hasTimeElapsed((long) (1000/aps.getValue()), true)) {
+						
+						dynamicAPS = (randomNumber((int) aps.getValue(), ((int)aps.getValue() - 2)));
+						//Command.sendPrivateChatMessage(dynamicAPS);
 						
 						if (s.toggled) {
 							mc.thePlayer.setSprinting(true);
@@ -522,8 +562,8 @@ public class Killaura extends Module {
 		sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());
 		
 		float[] rotations = RotationUtils.getRotations(target);
-		//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(ent, RotationUtils.getVectorForRotation(rotations[0], rotations[1])));
-		//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(ent, Action.INTERACT));
+		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(ent, RotationUtils.getVectorForRotation(rotations[0], rotations[1])));
+		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(ent, Action.INTERACT));
 		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
 		
 	}
@@ -573,8 +613,8 @@ public class Killaura extends Module {
 		try {
 			if (blocking && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
 	        	
-	        	//mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-				mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, new BlockPos(-0.8, -0.8, -0.8), EnumFacing.DOWN));
+	        	mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+				//mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, new BlockPos(-0.8, -0.8, -0.8), EnumFacing.DOWN));
 	            mc.gameSettings.keyBindUseItem.pressed = false;
 	            
 	        }

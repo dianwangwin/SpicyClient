@@ -293,120 +293,125 @@ public class BlockFly extends Module {
 		}
 		
 	}
-	
+
 	private BlockInfo findFacingAndBlockPosForBlock(BlockPos input) {
-		
+
 		if (SpicyClient.config.inventoryManager.isInventoryOpen) {
 			mc.thePlayer.sendQueue.addToSendQueue(new C0DPacketCloseWindow());
 		}
-		
+
 		BlockInfo output = new BlockInfo();
-		output.pos = input;		
-		
+		output.pos = input;
+
 		// One block
 		for (EnumFacing face : EnumFacing.VALUES) {
-			
+
 			if (mc.theWorld.getBlockState(output.pos.offset(face)).getBlock() != Blocks.air) {
-				
+
 				output.pos = output.pos.offset(face);
 				output.facing = face.getOpposite();
 				output.targetPos = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1D, mc.thePlayer.posZ);
 				return output;
-				
+
 			}
-			
+
 		}
-		
+
 		// Two blocks
 		for (EnumFacing face : EnumFacing.VALUES) {
-			
+
 			if (mc.theWorld.getBlockState(output.pos.offset(face)).getBlock() == Blocks.air) {
-				
+
 				for (EnumFacing face1 : EnumFacing.VALUES) {
-					
+
 					if (mc.theWorld.getBlockState(output.pos.offset(face).offset(face1)).getBlock() != Blocks.air) {
-						
+
 						output.pos = output.pos.offset(face).offset(face1);
 						output.facing = face.getOpposite();
 						output.targetPos = output.pos.offset(face);
 						return output;
-						
+
 					}
-					
+
 				}
-				
+
 			}
-			
+
 		}
-		
+
 		// Three blocks
 		for (EnumFacing face2 : EnumFacing.VALUES) {
-			
+
 			for (EnumFacing face : EnumFacing.VALUES) {
-				
+
 				if (mc.theWorld.getBlockState(output.pos.offset(face).offset(face2)).getBlock() == Blocks.air) {
-					
+
 					for (EnumFacing face1 : EnumFacing.VALUES) {
-						
-						if (mc.theWorld.getBlockState(output.pos.offset(face).offset(face1).offset(face2)).getBlock() != Blocks.air) {
-							
+
+						if (mc.theWorld.getBlockState(output.pos.offset(face).offset(face1).offset(face2))
+								.getBlock() != Blocks.air) {
+
 							output.pos = output.pos.offset(face).offset(face1).offset(face2);
 							output.facing = face2.getOpposite();
 							output.targetPos = output.pos.offset(face).offset(face2);
 							return output;
-							
+
 						}
-						
+
 					}
-					
+
 				}
-				
+
 			}
-			
+
 		}
-		
+
 		// Four blocks
 		for (EnumFacing face3 : EnumFacing.VALUES) {
-			
+
 			for (EnumFacing face2 : EnumFacing.VALUES) {
-				
+
 				for (EnumFacing face : EnumFacing.VALUES) {
-					
-					if (mc.theWorld.getBlockState(output.pos.offset(face).offset(face2).offset(face3)).getBlock() == Blocks.air) {
-						
+
+					if (mc.theWorld.getBlockState(output.pos.offset(face).offset(face2).offset(face3))
+							.getBlock() == Blocks.air) {
+
 						for (EnumFacing face1 : EnumFacing.VALUES) {
-							
-							if (mc.theWorld.getBlockState(output.pos.offset(face).offset(face1).offset(face2).offset(face3)).getBlock() != Blocks.air) {
-								
+
+							if (mc.theWorld
+									.getBlockState(output.pos.offset(face).offset(face1).offset(face2).offset(face3))
+									.getBlock() != Blocks.air) {
+
 								output.pos = output.pos.offset(face).offset(face1).offset(face2).offset(face3);
 								output.facing = face3.getOpposite();
 								output.targetPos = output.pos.offset(face).offset(face2).offset(face3);
 								return output;
-								
+
 							}
-							
+
 						}
-						
+
 					}
-					
+
 				}
-				
+
 			}
-			
+
 		}
-		
+
 		return null;
-		
+
 	}
-	
+
 	public float[] getRotationsHypixel(BlockPos paramBlockPos, EnumFacing paramEnumFacing) {
 		
-		/*
-		double offset = 0.1;
-		offset = new Random().nextDouble() / 5;
-		//offset = 1;
-        double d1 = (double)paramBlockPos.getX() + offset - mc.thePlayer.posX + (double)paramEnumFacing.getFrontOffsetX() / 2.0D;
-        double d2 = (double)paramBlockPos.getZ() + offset - mc.thePlayer.posZ + (double)paramEnumFacing.getFrontOffsetZ() / 2.0D;
+		//paramEnumFacing = paramEnumFacing.getOpposite();
+		
+		
+		double offsetX = 0.5, offsetZ = 0.5;
+		
+        double d1 = (double)paramBlockPos.getX() + offsetX - mc.thePlayer.posX + (double)paramEnumFacing.getFrontOffsetX() / 2.0D;
+        double d2 = (double)paramBlockPos.getZ() + offsetZ - mc.thePlayer.posZ + (double)paramEnumFacing.getFrontOffsetZ() / 2.0D;
         double d3 = mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight() - ((double)paramBlockPos.getY() + 0.5D);
         double d4 = (double)MathHelper.sqrt_double(d1 * d1 + d2 * d2);
         float f1 = (float)(Math.atan2(d2, d1) * 180.0D / 3.141592653589793D) - 90.0F;
@@ -430,9 +435,10 @@ public class BlockFly extends Module {
         //Command.sendPrivateChatMessage(f1 + " : " + f2);
         
         return new float[]{f1, f2};
-        */
+        
 		
-		return new float[] {mc.thePlayer.rotationYaw, 85};
+		//return (new Random().nextBoolean()) ? new float[] {mc.thePlayer.rotationYaw + 180, 83} : new float[] {mc.thePlayer.rotationYaw, 85};
+		//return new float[] {mc.thePlayer.rotationYaw, 85};
 		
     }
 	

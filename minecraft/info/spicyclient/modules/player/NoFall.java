@@ -50,6 +50,8 @@ public class NoFall extends Module {
 			
 			if (e.isPre()) {
 				
+				this.additionalInformation = noFallMode.getMode();
+				
 				if (mc.thePlayer.fallDistance > 3 && noFallMode.is("Packet") && !SpicyClient.config.fly.isEnabled()) {
 					
 					mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));

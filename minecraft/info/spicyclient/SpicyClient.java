@@ -99,7 +99,7 @@ public class SpicyClient {
 	
 	public static boolean discordFailedToStart = false;
 	
-	public static int currentVersionNum = 11;
+	public static int currentVersionNum = 12;
 	
 	public static void StartUp() {
 		
@@ -515,6 +515,8 @@ public class SpicyClient {
 		modules.add(c.autoTool);
 		modules.add(c.bedBreaker);
 		modules.add(c.infinitePlace);
+		modules.add(c.dragonWings);
+		modules.add(c.entityDesync);
 		
 		for (Module temp : SpicyClient.modules) {
 			
