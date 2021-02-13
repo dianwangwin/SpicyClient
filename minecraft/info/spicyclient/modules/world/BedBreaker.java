@@ -95,7 +95,9 @@ public class BedBreaker extends Module {
 		try {
 			
 			if (lastBed != null && mc.thePlayer.getDistance(lastBed.pos.getX(), lastBed.pos.getY(), lastBed.pos.getZ()) <= 4) {
-				return lastBed;
+				if (mc.theWorld.getBlockState(lastBed.pos).getBlock() instanceof BlockBed) {
+					return lastBed;
+				}
 			}
 			
 		} catch (Exception e) {

@@ -80,17 +80,15 @@ public class TestModuleOne extends Module {
 
 	@Override
 	public void onEvent(Event e) {
-		
-	}
-
-	@Override
-	public void onEventWhenDisabled(Event e) {
-		
 		if (e instanceof EventSendPacket && e.isPre()) {
 			if (((EventSendPacket)e).packet instanceof C0APacketAnimation) {
 				e.setCanceled(true);
 			}
 		}
+	}
+
+	@Override
+	public void onEventWhenDisabled(Event e) {
 		
 	}
 	
