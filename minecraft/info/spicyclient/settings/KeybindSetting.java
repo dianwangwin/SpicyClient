@@ -12,7 +12,12 @@ public class KeybindSetting extends Setting {
 		this.code = code;
 		this.name = "Keybind";
 	}
-
+	
+	public KeybindSetting(String name, int code) {
+		this.name = name;
+		this.code = code;
+	}
+	
 	public int getKeycode() {
 		return code;
 	}

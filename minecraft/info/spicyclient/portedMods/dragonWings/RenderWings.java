@@ -1,4 +1,4 @@
-package info.spicyclient.dragon;
+package info.spicyclient.portedMods.dragonWings;
 
 import org.lwjgl.opengl.GL11;
 
@@ -62,7 +62,7 @@ public class RenderWings extends ModelBase {
 		GL11.glScaled(-scale, -scale, scale);
 		GL11.glRotated(180 + rotate, 0, 1, 0); // Rotate the wings to be with the player.
 		GL11.glTranslated(0, -(1.28) / scale, 0); // Move wings correct amount up.
-		GL11.glTranslated(0, 0, 0.1 / scale);
+		GL11.glTranslated(0, 0, (mc.thePlayer.getCurrentArmor(2) == null ? 0.1 : 0.17) / scale);
 
 		if (player.isSneaking()) {
 			GL11.glTranslated(0D, 0.125D / scale, 0D);

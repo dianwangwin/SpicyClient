@@ -28,6 +28,7 @@ public class InventoryUtils {
     }
 
     public static void drop(int slot){
+    	Minecraft.getMinecraft().thePlayer.swingItem();
     	Minecraft.getMinecraft().playerController.windowClick(Minecraft.getMinecraft().thePlayer.inventoryContainer.windowId, slot, 1, 4, Minecraft.getMinecraft().thePlayer);
     }
     

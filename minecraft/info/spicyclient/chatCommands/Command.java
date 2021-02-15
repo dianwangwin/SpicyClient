@@ -44,6 +44,16 @@ public class Command {
 		Minecraft.getMinecraft().thePlayer.addChatComponentMessage(new ChatComponentText("§6[ §f" + prefix + " §6] §f" + text.toString()));
 	}
 	
+	// This shows a chat message to the player
+	public static void sendPrivateChatMessage(String prefix, boolean useExactPrefix, Object text) {
+		
+		if (!useExactPrefix) {
+			prefix = "§6[ §f" + prefix + " §6] §f";
+		}
+		
+		Minecraft.getMinecraft().thePlayer.addChatComponentMessage(new ChatComponentText(prefix + text.toString()));
+	}
+	
 	// This shows a chat message to the everyone
 	public static void sendPublicChatMessage(Object text) {
 		Minecraft.getMinecraft().thePlayer.sendQueue.addToSendQueue(new C01PacketChatMessage(text.toString()));

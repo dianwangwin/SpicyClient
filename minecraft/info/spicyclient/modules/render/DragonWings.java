@@ -2,11 +2,11 @@ package info.spicyclient.modules.render;
 
 import org.lwjgl.input.Keyboard;
 
-import info.spicyclient.dragon.RenderWings;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventPlayerRender;
 import info.spicyclient.events.listeners.EventRender3D;
 import info.spicyclient.modules.Module;
+import info.spicyclient.portedMods.dragonWings.RenderWings;
 
 public class DragonWings extends Module {
 

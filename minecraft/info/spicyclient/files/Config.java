@@ -103,6 +103,7 @@ public class Config {
 	public InfinitePlace infinitePlace = new InfinitePlace();
 	public DragonWings dragonWings = new DragonWings();
 	public EntityDesync entityDesync = new EntityDesync();
+	public AntiAntiXray antiAntiXray = new AntiAntiXray();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -175,6 +176,7 @@ public class Config {
 			this.infinitePlace = new InfinitePlace();
 			this.dragonWings = new DragonWings();
 			this.entityDesync = new EntityDesync();
+			this.antiAntiXray = new AntiAntiXray();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");

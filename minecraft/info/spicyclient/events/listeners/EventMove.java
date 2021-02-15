@@ -61,8 +61,10 @@ public class EventMove extends Event {
 
             double xDist = (double)forward * moveSpeed * Math.cos(Math.toRadians((double)(yaw + 90.0F))) + (double)strafe * moveSpeed * Math.sin(Math.toRadians((double)(yaw + 90.0F)));
             double zDist = (double)forward * moveSpeed * Math.sin(Math.toRadians((double)(yaw + 90.0F))) - (double)strafe * moveSpeed * Math.cos(Math.toRadians((double)(yaw + 90.0F)));
-            this.setX(Minecraft.getMinecraft().thePlayer.motionX = xDist);
-            this.setZ(Minecraft.getMinecraft().thePlayer.motionZ = zDist);
+            Minecraft.getMinecraft().thePlayer.motionX = xDist;
+            Minecraft.getMinecraft().thePlayer.motionZ = zDist;
+            this.setX(xDist);
+            this.setZ(zDist);
         }
 
     }
@@ -91,8 +93,10 @@ public class EventMove extends Event {
 
             double xDist = (double)forward * moveSpeed * Math.cos(Math.toRadians((double)(yaw + 90.0F))) + (double)strafe * moveSpeed * Math.sin(Math.toRadians((double)(yaw + 90.0F)));
             double zDist = (double)forward * moveSpeed * Math.sin(Math.toRadians((double)(yaw + 90.0F))) - (double)strafe * moveSpeed * Math.cos(Math.toRadians((double)(yaw + 90.0F)));
-            this.setX(Minecraft.getMinecraft().thePlayer.motionX = xDist);
-            this.setZ(Minecraft.getMinecraft().thePlayer.motionZ = zDist);
+            Minecraft.getMinecraft().thePlayer.motionX = xDist;
+            Minecraft.getMinecraft().thePlayer.motionZ = zDist;
+            this.setX(xDist);
+            this.setZ(zDist);
         }
 
     }

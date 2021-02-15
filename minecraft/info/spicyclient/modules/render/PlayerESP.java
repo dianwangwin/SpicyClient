@@ -26,6 +26,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 
@@ -68,9 +69,23 @@ public class PlayerESP extends Module {
 				EventPlayerRender event = (EventPlayerRender) e;
 				
 				if (boxes.isEnabled()) {
-					AbstractClientPlayer player = event.entity;
-					//RenderUtils.renderAxisAlignedBB(player.boundingBox);
-					RenderUtils.drawPlayerBox(player.posX, player.posY, player.posZ, player);
+					
+					try {
+						
+						if (event.entity instanceof EntityPlayer && SpicyClient.config.antibot.isEnabled() && !mc.isSingleplayer() && mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel") && mc.getNetHandler().getPlayerInfo(((EntityPlayer)event.entity).getUniqueID()).responseTime > 1) {
+							
+						}else {
+							
+							AbstractClientPlayer player = event.entity;
+							//RenderUtils.renderAxisAlignedBB(player.boundingBox);
+							RenderUtils.drawPlayerBox(player.posX, player.posY, player.posZ, player);
+							
+						}
+						
+					} catch (Exception e2) {
+						
+					}
+					
 				}
 				
 				//GlStateManager.enableDepth();

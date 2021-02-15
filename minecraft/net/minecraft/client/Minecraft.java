@@ -15,6 +15,8 @@ import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.events.EventType;
+import info.spicyclient.events.listeners.EventTick;
 import info.spicyclient.files.Config;
 import info.spicyclient.ui.NewMainMenu;
 
@@ -1740,6 +1742,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage
      */
     public void runTick() throws IOException
     {
+    	
+    	EventTick event = new EventTick();
+    	event.setType(EventType.PRE);
+    	SpicyClient.onEvent(event);
+    	
         if (this.rightClickDelayTimer > 0)
         {
             --this.rightClickDelayTimer;
@@ -2271,6 +2278,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         this.mcProfiler.endSection();
         this.systemTime = getSystemTime();
+        
+    	event.setType(EventType.POST);
+    	SpicyClient.onEvent(event);
+        
     }
 
     /**

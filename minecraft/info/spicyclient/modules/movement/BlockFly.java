@@ -408,7 +408,7 @@ public class BlockFly extends Module {
 		//paramEnumFacing = paramEnumFacing.getOpposite();
 		
 		
-		double offsetX = 0.5, offsetZ = 0.5;
+		double offsetX = 0.6, offsetZ = 0.4;
 		
         double d1 = (double)paramBlockPos.getX() + offsetX - mc.thePlayer.posX + (double)paramEnumFacing.getFrontOffsetX() / 2.0D;
         double d2 = (double)paramBlockPos.getZ() + offsetZ - mc.thePlayer.posZ + (double)paramEnumFacing.getFrontOffsetZ() / 2.0D;

@@ -10,14 +10,15 @@ import com.sun.javafx.geom.Vec3d;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
-import info.spicyclient.dragon.RenderWings;
 import info.spicyclient.events.Event;
+import info.spicyclient.events.listeners.EventKey;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventMove;
 import info.spicyclient.events.listeners.EventPacket;
 import info.spicyclient.events.listeners.EventPlayerRender;
 import info.spicyclient.events.listeners.EventRender3D;
 import info.spicyclient.events.listeners.EventSendPacket;
+import info.spicyclient.events.listeners.EventTick;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.modules.combat.Killaura;
@@ -25,6 +26,9 @@ import info.spicyclient.modules.movement.Fly;
 import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.notifications.Type;
+import info.spicyclient.portedMods.antiantixray.AntiAntiXray;
+import info.spicyclient.portedMods.antiantixray.Mixins.TickMixin;
+import info.spicyclient.portedMods.dragonWings.RenderWings;
 import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.PlayerUtils;
 import info.spicyclient.util.RenderUtils;
@@ -80,11 +84,7 @@ public class TestModuleOne extends Module {
 
 	@Override
 	public void onEvent(Event e) {
-		if (e instanceof EventSendPacket && e.isPre()) {
-			if (((EventSendPacket)e).packet instanceof C0APacketAnimation) {
-				e.setCanceled(true);
-			}
-		}
+		
 	}
 
 	@Override

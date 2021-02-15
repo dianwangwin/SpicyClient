@@ -1,4 +1,4 @@
-package info.spicyclient.modules.player;
+package info.spicyclient.modules.combat;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.lwjgl.input.Keyboard;

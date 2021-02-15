@@ -27,6 +27,7 @@ import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.settings.SettingChangeEvent;
 import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.PlayerUtils;
+import info.spicyclient.util.RandomUtils;
 import info.spicyclient.util.RotationUtils;
 import info.spicyclient.util.Timer;
 import net.minecraft.block.Block;
@@ -54,7 +55,7 @@ import net.minecraft.util.MathHelper;
 public class Fly extends Module {
 	
 	public NumberSetting speed = new NumberSetting("Speed", 0.1, 0.01, 2, 0.1);
-	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "Hypixel", "HypixelFast1", "HypixelFast2", "BrokenLens", "Verus");
+	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "Hypixel", "HypixelFast1", "HypixelFast2", "BrokenLens", "Verus", "Test");
 	
 	public BooleanSetting hypixelBlink = new BooleanSetting("Blink", true);
 	public BooleanSetting hypixelTimerBoost = new BooleanSetting("Hypixel timer boost", true);
@@ -285,9 +286,9 @@ public class Fly extends Module {
 			onEnableHypixelFastfly1();
 			
 		}
-		else if (mode.is("AAC4") || mode.getMode() == "AAC4") {
+		else if (mode.is("Test") || mode.getMode() == "Test") {
 			
-			onAAC4Enable();
+			onTestEnable();
 			
 		}
 		else if (mode.is("BrokenLens") || mode.getMode() == "BrokenLens") {
@@ -344,9 +345,9 @@ public class Fly extends Module {
 			onDisablehypixelFastFly1();
 			
 		}
-		else if (mode.is("AAC4") || mode.getMode() == "AAC4") {
+		else if (mode.is("Test") || mode.getMode() == "Test") {
 			
-			onAAC4Disable();
+			onTestDisable();
 			
 		}
 		else if (mode.is("BrokenLens") || mode.getMode() == "BrokenLens") {
@@ -376,9 +377,9 @@ public class Fly extends Module {
 			onEventHypixelFastfly2(e);
 			
 		}
-		else if (mode.is("AAC4") || mode.getMode() == "AAC4") {
+		else if (mode.is("Test") || mode.getMode() == "Test") {
 			
-			onAAC4Event(e);
+			onTestEvent(e);
 			
 		}
 		else if (mode.is("BrokenLens") || mode.getMode() == "BrokenLens") {
@@ -1226,7 +1227,7 @@ public class Fly extends Module {
                         switch (hypixelFastFlyStatus) {
         				case 0:
         					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-        					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 1.0E-10, 
+        					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 4.496001251836E-43, 
         							mc.thePlayer.posZ);
         					hypixelFastFlyStatus++;
         					//Command.sendPrivateChatMessage("Down");
@@ -1342,21 +1343,93 @@ public class Fly extends Module {
 		
     }
     
-    public int aac4Stage = 0;
+    public static transient int testStage = 0;
+    public static transient double testDub1 = 0, testDub2 = 0;
+    public static transient boolean testBool1 = false, testBool2 = false;
     
-    public void onAAC4Enable() {
-    	aac4Stage = 1;
+    public void onTestEnable() {
+    	testStage = 0;
+    	testDub1 = 0;
+    	testDub2 = 0;
+    	testBool1 = false;
+    	testBool2 = false;
+    	MovementUtils.setMotion(0);
     }
     
-    public void onAAC4Disable() {
-    	
-    	mc.timer.ticksPerSecond = 20;
+    public void onTestDisable() {
     	
     }
     
-    public void onAAC4Event(Event e) {
+    public void onTestEvent(Event e) {
     	
-    	if (e instanceof EventUpdate && e.isPre()) {
+    	if (e instanceof EventMotion && e.isPost()) {
+    		
+    		if (MovementUtils.isOnGround(0.001)) {
+    			
+    			if (!testBool1) {
+        			RandomUtils.damagePlayer(2);
+        			testBool1 = true;
+        		}else {
+        			
+        			
+        			
+        			if (mc.thePlayer.hurtResistantTime == 19) {
+        				testDub1 = 20;
+        				double speed = 0.2;
+        				speed += testDub1/18;
+        				if (speed < RandomUtils.getBaseMoveSpeed()) {
+        					speed = RandomUtils.getBaseMoveSpeed();
+        				}
+        				MovementUtils.setMotion(speed);
+        				mc.thePlayer.motionY = 0.40999998688698f;
+        				testBool2 = true;
+        			}
+        			else if (testDub2 == 20) {
+        				testDub1 = RandomUtils.getBaseMoveSpeed();
+        				MovementUtils.setMotion(testDub1);
+        				mc.thePlayer.motionY = 0.40999998688698f;
+        				testBool2 = true;
+        			}
+        			else {
+        				testDub2++;
+        			}
+        			
+        		}
+    			
+    		}else {
+    			
+    			if (testBool2) {
+    				double speed = 0.2;
+    				speed += testDub1/18;
+    				testDub1 -= 0.155;
+    				Command.sendPrivateChatMessage(testDub1);
+    				if (speed < RandomUtils.getBaseMoveSpeed()) {
+    					speed = RandomUtils.getBaseMoveSpeed();
+    				}
+    				MovementUtils.setMotion(speed);
+    				mc.thePlayer.motionY = 0;
+    				mc.thePlayer.onGround = true;
+    				
+    				switch (testStage) {
+					case 0:
+					case 1:
+						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 1.0E-10D, 
+								mc.thePlayer.posZ);
+						testStage++;
+						break;
+					case 2:
+						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - 1.0E-10D, 
+								mc.thePlayer.posZ);
+						testStage = 0;
+						break;
+
+					default:
+						testStage = 0;
+						break;
+					}
+    			}
+    			
+    		}
     		
     	}
     	

@@ -346,11 +346,6 @@ public class Killaura extends Module {
 	                        	mc.theWorld.removeEntity(target);
 	                        	return;
 	                        }
-	                        else if (target.isPlayerSleeping()) {
-	                        	Command.sendPrivateChatMessage("A watchdog bot was removed from your game (sleep check)");
-	                        	mc.theWorld.removeEntity(target);
-	                        	return;
-	                        }
 						} catch (NullPointerException e1) {
 							
 							//e1.printStackTrace();
@@ -376,6 +371,7 @@ public class Killaura extends Module {
 						
 						try {
 							
+							/*
 							Command.sendPrivateChatMessage("F: " + target.getDisplayName().getFormattedText());
 							Command.sendPrivateChatMessage("U: " + target.getDisplayName().getUnformattedText());
 							Command.sendPrivateChatMessage("UC: " + target.getDisplayName().getUnformattedTextForChat());
@@ -386,6 +382,7 @@ public class Killaura extends Module {
 								Command.sendPrivateChatMessage("Ping: " + mc.getNetHandler().getPlayerInfo(((EntityPlayer)target).getUniqueID()).responseTime);
 								
 							}
+							*/
 							
 						} catch (Exception e2) {
 							// TODO: handle exception
