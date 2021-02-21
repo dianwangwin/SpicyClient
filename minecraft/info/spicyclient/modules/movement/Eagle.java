@@ -5,6 +5,7 @@ import org.lwjgl.input.Keyboard;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
+import info.spicyclient.util.MovementUtils;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -26,17 +27,13 @@ public class Eagle extends Module {
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
-			ItemStack i = mc.thePlayer.getCurrentEquippedItem();
-			BlockPos Bp = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1D, mc.thePlayer.posZ);
-			if(i != null) {
-				if(i.getItem() instanceof ItemBlock) {
-					mc.gameSettings.keyBindSneak.pressed = false;
-					if(mc.theWorld.getBlockState(Bp).getBlock() == Blocks.air) {
-						mc.gameSettings.keyBindSneak.pressed = true;
-					}
-					
-				}
-	        }
+			if (mc.thePlayer.ticksExisted > 0 && MovementUtils.isOnGround(0.000000001) && mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1, mc.thePlayer.posZ)).getBlock() != null && mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1, mc.thePlayer.posZ)).getBlock() == Blocks.air) {
+				
+				mc.gameSettings.keyBindSneak.pressed = true;
+				
+			}else {
+				mc.gameSettings.keyBindSneak.pressed = false;
+			}
 			
 		}
 		

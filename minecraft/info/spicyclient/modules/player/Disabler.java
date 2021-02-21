@@ -64,7 +64,7 @@ public class Disabler extends Module {
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
-			this.additionalInformation = "Hypixel (fixed motherboard edition)";
+			this.additionalInformation = "Hypixel";
 			
 			if (SpicyClient.config.pingSpoof.isEnabled()) {
 				SpicyClient.config.pingSpoof.toggle();
@@ -77,37 +77,40 @@ public class Disabler extends Module {
 					mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
 					
 				}
+				//Command.sendPrivateChatMessage("Sent a thing");
 				packets.clear();
 			}
 			
-			/*
-            PlayerCapabilities playerCapabilities = new PlayerCapabilities();
-            playerCapabilities.isFlying = true;
-            playerCapabilities.allowFlying = true;
-            //playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
-            playerCapabilities.setFlySpeed((float) (9.0 + (new Random()).nextDouble() * (9.8 - 9.0)));
-            playerCapabilities.isCreativeMode = true;
-            mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
-            */
+			if (mc.thePlayer.ticksExisted % 20 == 0) {
+				
+				packets.add(new C13PacketPlayerAbilities(mc.thePlayer.capabilities));
+				//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(mc.thePlayer.capabilities));
+				//Command.sendPrivateChatMessage("Sent a thing");
+				
+			}
 			
            int basePing = 5000;
            
-            if (ping.hasTimeElapsed(basePing + new Random().nextInt(2000), true) && packets.size() > 0) {
+            if (ping.hasTimeElapsed(basePing + new Random().nextInt(4000), true) && packets.size() > 0) {
             	
 				for (Packet p : packets) {
 					
 					mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
 					
 				}
+				//Command.sendPrivateChatMessage("Sent a thing");
 				packets.clear();
-				
+            	
             }else {
+            	// Flags staff
+            	/*
                 PlayerCapabilities playerCapabilities = new PlayerCapabilities();
                 playerCapabilities.isFlying = true;
                 playerCapabilities.allowFlying = true;
                 playerCapabilities.setFlySpeed((float) (9.0 + (new Random()).nextDouble() * (9.8 - 9.0)));
                 playerCapabilities.isCreativeMode = true;
                 mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
+                */
             }
             
 		}

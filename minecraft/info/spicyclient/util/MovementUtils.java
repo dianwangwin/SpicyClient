@@ -4,6 +4,7 @@ import info.spicyclient.events.listeners.EventUpdate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
 
 public class MovementUtils {
 	
@@ -145,11 +146,46 @@ public class MovementUtils {
     	if (!mc.thePlayer.isCollidedHorizontally || !isOnGround(0.001))
     		return false;
     	
-    	if (!mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().expand(0.01, 0, 0.01).offset(0.0D, height - 0.01, 0.0D)).isEmpty() && mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().expand(0.1, 0, 0.01).offset(0.0D, height + 0.1, 0.0D)).isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
+		if ((!mc.theWorld
+				.getCollidingBoundingBoxes(mc.thePlayer,
+						mc.thePlayer.getEntityBoundingBox().expand(0.1, 0, 0).offset(0.0D, height - 0.1, 0.0D))
+				.isEmpty()
+				&& mc.theWorld
+						.getCollidingBoundingBoxes(mc.thePlayer,
+								mc.thePlayer.getEntityBoundingBox().expand(0.1, 0, 0).offset(0.0D, height + 0.1, 0.0D))
+						.isEmpty())
+				|| (!mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer,
+						mc.thePlayer.getEntityBoundingBox().expand(-0.1, 0, 0).offset(0.0D, height - 0.1, 0.0D))
+						.isEmpty()
+						&& mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer,
+								mc.thePlayer.getEntityBoundingBox().expand(-0.1, 0, 0).offset(0.0D, height + 0.1,
+										0.0D))
+								.isEmpty())
+				|| (!mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer,
+						mc.thePlayer.getEntityBoundingBox().expand(0, 0, 0.1).offset(0.0D, height - 0.1, 0.0D))
+						.isEmpty()
+						&& mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer,
+								mc.thePlayer.getEntityBoundingBox().expand(0, 0, 0.1).offset(0.0D, height + 0.1, 0.0D))
+								.isEmpty())
+				|| (!mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer,
+						mc.thePlayer.getEntityBoundingBox().expand(0, 0, -0.1).offset(0.0D, height - 0.1, 0.0D))
+						.isEmpty()
+						&& mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox()
+								.expand(0, 0, -0.1).offset(0.0D, height + 0.1, 0.0D)).isEmpty())) {
+			return true;
+		} else {
+			return false;
+		}
     }
+
+	public static double getBaseMoveSpeed() {
+		double baseSpeed = 0.2873D;
+		if (Minecraft.getMinecraft().thePlayer.isPotionActive(Potion.moveSpeed)) {
+			int amplifier = Minecraft.getMinecraft().thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier();
+			baseSpeed *= 1.0D + 0.2D * (double) (amplifier + 1);
+		}
+
+		return baseSpeed;
+	}
     
 }

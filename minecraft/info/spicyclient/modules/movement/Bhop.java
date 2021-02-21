@@ -86,7 +86,7 @@ public class Bhop extends Module {
 			if (mode.is("Hypixel") || mode.getMode() == "Hypixel") {
 				
 				if (!this.settings.contains(hypixelSpeed)) {
-					this.settings.add(hypixelSpeed);
+					//this.settings.add(hypixelSpeed);
 				}
 				reorderSettings();
 				
@@ -216,41 +216,23 @@ public class Bhop extends Module {
 						mc.thePlayer.setSprinting(true);
 					}
 				}
-				else if (mode.is("Hypixel") && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed) && (!SpicyClient.config.blockFly.isEnabled() || (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) || true)) {
+				else if (mode.is("Hypixel") && MovementUtils.isMoving() && (!SpicyClient.config.blockFly.isEnabled() || (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) || true)) {
 					
 					mc.gameSettings.keyBindJump.pressed = false;
 					
-					if (!mc.thePlayer.isInWater()) {
-						
-						mc.thePlayer.noClip = true;
-						
-						if (MovementUtils.isOnGround(0.00004)) {
-							
-							//MovementUtils.setMotion((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + ((float)hypixelSpeed.getValue() * 15));
-							mc.thePlayer.jump();
-							
-							e.setCanceled(true);
-							
-						}
-						
-						if (MovementUtils.isOnGround(1)) {
-							mc.timer.ticksPerSecond = 20;
-						}else if (mc.thePlayer.fallDistance < 1.5) {
-							mc.timer.ticksPerSecond = 26.5f + new Random().nextFloat();
-						}
-						
-						mc.thePlayer.setSprinting(true);
-						//MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + 0.01f);
-						MovementUtils.setMotion((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + ((float)hypixelSpeed.getValue()));
-						
+					mc.thePlayer.noClip = true;
+					
+					if (mc.thePlayer.ticksExisted % 2 == 0) {
+						mc.timer.ticksPerSecond = 28;
 					}else {
-						
+						mc.timer.ticksPerSecond = 20;
 					}
 					
-				}
-				else if (mode.is("Hypixel") && (!!SpicyClient.config.blockFly.isEnabled() || (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null))) {
+					MovementUtils.strafe();
 					
-					//mc.timer.ticksPerSecond = 20;
+					if (MovementUtils.isOnGround(0.000001)) {
+						mc.thePlayer.jump();
+					}
 					
 				}
 				else if (mode.is("Test") && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
@@ -282,47 +264,10 @@ public class Bhop extends Module {
 				}
 				else if (mode.is("Test 3")) {
 					
-					if ((!SpicyClient.config.blockFly.isEnabled() || (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null))) {
-						
-						if (MovementUtils.isOnGround(1)) {
-							mc.timer.ticksPerSecond = 20;
-						}else if (mc.thePlayer.fallDistance < 3) {
-							mc.timer.ticksPerSecond = 26.5f + new Random().nextFloat();
-						}
-						
-					}else {
-						
-						mc.timer.ticksPerSecond = 20;
-						
-					}
-					
 				}
-				
 			}
 			
 		}
-		
-		if (e instanceof EventMotion && mc.thePlayer.onGround && mode.is("Test 3")) {
-            ((EventMotion)e).setY(((EventMotion)e).getY() + (double)RandomUtils.nextFloat(1.0E-5F, 9.9E-4F));
-        }
-
-        if (e instanceof EventMove && MovementUtils.isMoving() && !mc.thePlayer.isInWater() && e.isBeforePre() && mode.is("Test 3") && (!SpicyClient.config.blockFly.isEnabled() || (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null))) {
-        	forward =  0.2873D;
-            if (mc.thePlayer.onGround) {
-                ((EventMove)e).setY(mc.thePlayer.motionY = 0.41999998688697815D);
-                this.speed = forward * 2.1500000953674316D;
-                this.lastDistanceReset = true;
-            } else if (!this.lastDistanceReset && !mc.thePlayer.isCollidedHorizontally) {
-                //this.speed -= this.speed / 159.0D;
-            	this.speed -= this.speed / 165.0D;
-            } else {
-                this.speed -= 0.66D * (this.speed - forward);
-                this.lastDistanceReset = false;
-            }
-
-            MovementUtils.setMotion(Math.max(this.speed, forward));
-            ((EventMove)e).setSpeed(Math.max(this.speed, speed));
-        }
 		
 	}
 	

@@ -22,7 +22,7 @@ public class TheAlteningAPI {
 	}
 		   
 	public static JSONObject call_me() throws Exception {
-	     String url = "http://api.thealtening.com/v2/generate?key=" + SpicyClient.altInfo.API_Key;
+	     String url = "https://api.thealtening.com/v2/generate?key=" + SpicyClient.altInfo.API_Key;
 	     URL obj = new URL(url);
 	     HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 	     // optional default is GET

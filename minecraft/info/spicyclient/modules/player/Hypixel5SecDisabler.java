@@ -36,9 +36,10 @@ public class Hypixel5SecDisabler extends Module {
             double x = mc.thePlayer.posX;
             double y = mc.thePlayer.posY;
             double z = mc.thePlayer.posZ;
-            mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y, z, true));
-            mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.21D, z, true));
-            mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.11D, z, true));
+            //mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y, z, true));
+            //mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.21D, z, true));
+            //mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.11D, z, true));
+            mc.thePlayer.motionY = 0.21;
             watchdog = true;
             NotificationManager.getNotificationManager().createNotification("Disabler", "Please wait 5s.", true, 5000, Type.INFO, Color.PINK);
             //mc.thePlayer.jump();
@@ -62,7 +63,7 @@ public class Hypixel5SecDisabler extends Module {
             if (e.isPre()) {
             	
                 if (((EventSendPacket)e).packet instanceof C03PacketPlayer) {
-                    if (watchdog) {
+                    if (watchdog && mc.thePlayer.motionY <= 0) {
                         e.setCanceled(true);
                     }
                     
@@ -98,14 +99,15 @@ public class Hypixel5SecDisabler extends Module {
                     double x = mc.thePlayer.posX;
                     double y = mc.thePlayer.posY;
                     double z = mc.thePlayer.posZ;
-                    mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y, z, true));
-                    mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.21D, z, true));
-                    mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.11D, z, true));
+                    //mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y, z, true));
+                    //mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.21D, z, true));
+                    //mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.11D, z, true));
+                    mc.thePlayer.motionY = 0.4;
                     watchdog = true;
                     NotificationManager.getNotificationManager().createNotification("Disabler: Wait 5s.", "", true, 5000, Type.INFO, Color.PINK);
                     //mc.thePlayer.jump();
                 }
-            } else {
+            } else if (mc.thePlayer.motionY <= 0) {
                 mc.thePlayer.motionX = 0;
                 mc.thePlayer.motionY = 0;
                 mc.thePlayer.motionZ = 0;

@@ -31,24 +31,33 @@ import info.spicyclient.portedMods.antiantixray.Mixins.TickMixin;
 import info.spicyclient.portedMods.dragonWings.RenderWings;
 import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.PlayerUtils;
+import info.spicyclient.util.RandomUtils;
 import info.spicyclient.util.RenderUtils;
 import info.spicyclient.util.RotationUtils;
 import info.spicyclient.util.Timer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.PlayerCapabilities;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.Packet;
+import net.minecraft.network.handshake.client.C00Handshake;
+import net.minecraft.network.login.client.C00PacketLoginStart;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C0APacketAnimation;
+import net.minecraft.network.play.client.C10PacketCreativeInventoryAction;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
+import net.minecraft.network.play.client.C14PacketTabComplete;
 import net.minecraft.network.play.client.C18PacketSpectate;
 import net.minecraft.network.play.client.C02PacketUseEntity.Action;
 import net.minecraft.network.play.server.S02PacketChat;
@@ -74,7 +83,9 @@ public class TestModuleOne extends Module {
 	
 	@Override
 	public void onEnable() {
-		
+		status = 1;
+		bool2 = false;
+		bool1 = false;
 	}
 
 	@Override
@@ -84,6 +95,10 @@ public class TestModuleOne extends Module {
 
 	@Override
 	public void onEvent(Event e) {
+		
+    	if (e instanceof EventRender3D && e.isPre()) {
+    		
+    	}
 		
 	}
 

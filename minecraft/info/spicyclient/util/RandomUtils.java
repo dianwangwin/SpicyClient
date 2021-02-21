@@ -1,9 +1,15 @@
 package info.spicyclient.util;
 
 import info.spicyclient.chatCommands.Command;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockCarpet;
+import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockLadder;
+import net.minecraft.block.BlockSkull;
+import net.minecraft.block.BlockSnow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.play.client.C03PacketPlayer;
-import net.minecraft.potion.Potion;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 
 public class RandomUtils {
@@ -27,19 +33,14 @@ public class RandomUtils {
 		
 	}
 	
-	public static double getBaseMoveSpeed() {
-		 double baseSpeed = 0.11785905;
-		 
-		 if (Minecraft.getMinecraft().thePlayer.isSprinting()) {
-			 baseSpeed = 0.15320922;
-		 }
-		 
-         if (Minecraft.getMinecraft().thePlayer.isPotionActive(Potion.moveSpeed)) {
-            int amplifier = Minecraft.getMinecraft().thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier();
-            baseSpeed *= 1.0D + 0.2D * (double)(amplifier + 1);
-         }
-         
-         return baseSpeed;
-	}
+    private boolean isPosSolid(BlockPos pos) {
+        Block block = Minecraft.getMinecraft().theWorld.getBlockState(pos).getBlock();
+        if ((block.getMaterial().isSolid() || !block.isTranslucent() || block instanceof BlockLadder || block instanceof BlockCarpet
+                || block instanceof BlockSnow || block instanceof BlockSkull)
+                && !block.getMaterial().isLiquid() && !(block instanceof BlockContainer)) {
+            return true;
+        }
+        return false;
+    }
 	
 }

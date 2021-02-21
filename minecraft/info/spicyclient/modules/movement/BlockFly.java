@@ -405,9 +405,7 @@ public class BlockFly extends Module {
 
 	public float[] getRotationsHypixel(BlockPos paramBlockPos, EnumFacing paramEnumFacing) {
 		
-		//paramEnumFacing = paramEnumFacing.getOpposite();
-		
-		
+		/*
 		double offsetX = 0.6, offsetZ = 0.4;
 		
         double d1 = (double)paramBlockPos.getX() + offsetX - mc.thePlayer.posX + (double)paramEnumFacing.getFrontOffsetX() / 2.0D;
@@ -439,6 +437,11 @@ public class BlockFly extends Module {
 		
 		//return (new Random().nextBoolean()) ? new float[] {mc.thePlayer.rotationYaw + 180, 83} : new float[] {mc.thePlayer.rotationYaw, 85};
 		//return new float[] {mc.thePlayer.rotationYaw, 85};
+		*/
+		
+		paramBlockPos = paramBlockPos.offset(paramEnumFacing.getOpposite());
+		
+		return RotationUtils.getRotationFromPosition(paramBlockPos.getX() + 0.5, paramBlockPos.getZ() + 0.5, paramBlockPos.getY());
 		
     }
 	

@@ -257,6 +257,11 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
     }
     
     public void sendPacketNoEvent(Packet packet) {
+    	
+    	if (SpicyClient.currentlyLoadingConfig) {
+    		return;
+    	}
+    	
         if (channel != null && channel.isOpen()) {
             flushOutboundQueue();
             dispatchPacket(packet, null);

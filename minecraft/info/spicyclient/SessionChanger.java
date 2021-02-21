@@ -57,7 +57,7 @@ public class SessionChanger {
 				
 				if (SpicyClient.account.loggedIn) {
 					try {
-						JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("http://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "updateCurrentAlt"), new BasicNameValuePair("session", SpicyClient.account.session), new BasicNameValuePair("alt", Minecraft.getMinecraft().session.getUsername())));
+						JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "updateCurrentAlt"), new BasicNameValuePair("session", SpicyClient.account.session), new BasicNameValuePair("alt", Minecraft.getMinecraft().session.getUsername())));
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -90,7 +90,7 @@ public class SessionChanger {
 		
 		try {
 			if (SpicyClient.account.loggedIn) {
-				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("http://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "updateCurrentAlt"), new BasicNameValuePair("session", SpicyClient.account.session), new BasicNameValuePair("alt", Minecraft.getMinecraft().session.getUsername())));
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "updateCurrentAlt"), new BasicNameValuePair("session", SpicyClient.account.session), new BasicNameValuePair("alt", Minecraft.getMinecraft().session.getUsername())));
 			}
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block

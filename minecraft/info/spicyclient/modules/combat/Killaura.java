@@ -388,7 +388,6 @@ public class Killaura extends Module {
 							// TODO: handle exception
 						}
 						
-						/*
 						if (rotationSetting.is("Hypixel") || rotationSetting.getMode() == "Hypixel") {
 							
 							float[] rotations = RotationUtils.getRotations(target);
@@ -396,10 +395,11 @@ public class Killaura extends Module {
 							float lockRots = mc.thePlayer.rotationYaw + ((mc.thePlayer.rotationYaw - rotations[0]) / 2);
 							//Command.sendPrivateChatMessage(lockRots);
 							event.setYaw(lockRots);
+							RenderUtils.setCustomYaw(event.yaw);
+							RenderUtils.setCustomPitch(event.pitch);
 							return;
 							
 						}
-						*/
 						
 					}
 					
@@ -466,7 +466,6 @@ public class Killaura extends Module {
 							
 						}
 						
-						// Put client side rotation code here later
 						RenderUtils.setCustomYaw(event.yaw);
 						RenderUtils.setCustomPitch(event.pitch);
 						

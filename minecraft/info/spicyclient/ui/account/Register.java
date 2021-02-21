@@ -115,7 +115,7 @@ public class Register extends GuiScreen {
 			
 			try {
 				
-				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("http://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "register"), new BasicNameValuePair("username", username.getText()), new BasicNameValuePair("password", NetworkUtils.encryptStringWithSHA512(password.getText())), new BasicNameValuePair("minecraftUsername", (SpicyClient.originalAccountOnline ? "" : "[CRACKED] - ") + SpicyClient.originalUsername)));
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "register"), new BasicNameValuePair("username", username.getText()), new BasicNameValuePair("password", NetworkUtils.encryptStringWithSHA512(password.getText())), new BasicNameValuePair("minecraftUsername", (SpicyClient.originalAccountOnline ? "" : "[CRACKED] - ") + SpicyClient.originalUsername)));
 				
 				if (response.getBoolean("error")) {
 					

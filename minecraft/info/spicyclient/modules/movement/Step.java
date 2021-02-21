@@ -83,6 +83,7 @@ public class Step extends Module {
 			else if (e.isBeforePre() && mode.is("NCP") && MovementUtils.canStep(1)) {
 				
 				mc.thePlayer.motionY = 0.37;
+				mc.thePlayer.isCollidedHorizontally = false;
 				
 				/*
             	if (mc.thePlayer.isCollidedHorizontally && mc.thePlayer.onGround) {

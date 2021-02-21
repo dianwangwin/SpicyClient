@@ -7,13 +7,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.Proxy;
 import java.net.Proxy.Type;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.ByteBuffer;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,6 +30,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
 import javax.swing.SwingUtilities;
 
 import org.apache.commons.io.IOUtils;
@@ -35,6 +45,7 @@ import org.json.JSONObject;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
+import com.sun.javafx.PlatformUtil;
 import com.thealtening.AltService;
 import com.thealtening.AltService.EnumAltService;
 
@@ -101,7 +112,46 @@ public class SpicyClient {
 	
 	public static int currentVersionNum = 13;
 	
+	public static boolean currentlyLoadingConfig = false;
+	
 	public static void StartUp() {
+		
+		// This is so we can use https with the spicy client servers
+		
+		// Create a trust manager that does not validate certificate chains
+        TrustManager[] trustAllCerts = new TrustManager[] {new TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                }
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                }
+            }
+        };
+ 
+        // Install the all-trusting trust manager
+        SSLContext sc;
+		try {
+			sc = SSLContext.getInstance("SSL");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+		} catch (NoSuchAlgorithmException | KeyManagementException e2) {
+			e2.printStackTrace();
+		}
+ 
+        // Create all-trusting host name verifier
+        HostnameVerifier allHostsValid = new HostnameVerifier() {
+        	@Override
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        };
+ 
+        // Install the all-trusting host verifier
+        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+        
+		// This is so we can use https with the spicy client servers
 		
 		try {
 			
@@ -116,7 +166,7 @@ public class SpicyClient {
 				originalAccountOnline = true;
 				originalUsername = Minecraft.getMinecraft().getSession().getUsername();
 				
-				String url = "http://spicyclient.info/api/api.php?username=" + originalUsername + "&stat_type=ping";
+				String url = "https://spicyclient.info/api/api.php?username=" + originalUsername + "&stat_type=ping";
 				
 				// This is a faster way of pinging my server
 				try {
@@ -229,7 +279,7 @@ public class SpicyClient {
 			
 			if (SpicyClient.account.loggedIn) {
 				
-				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("http://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "loginWithSession"), new BasicNameValuePair("session", account.session)));
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "loginWithSession"), new BasicNameValuePair("session", account.session)));
 				
 				if (response.getBoolean("error")) {
 					
@@ -257,19 +307,24 @@ public class SpicyClient {
 		
 		try {
 			if (SpicyClient.account.loggedIn) {
-				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("http://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "updateCurrentAlt"), new BasicNameValuePair("session", account.session), new BasicNameValuePair("alt", originalUsername)));
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "updateCurrentAlt"), new BasicNameValuePair("session", account.session), new BasicNameValuePair("alt", originalUsername)));
 			}
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
-		try {
-			// Start the discord rich presence
-			discord = new DiscordRP();
-			discord.start();
-		} catch (Exception e) {
+		discord = new DiscordRP();
+		
+		if (PlatformUtil.isMac()) {
 			discordFailedToStart = true;
+		}else {
+			try {
+				// Start the discord rich presence
+				discord.start();
+			} catch (Exception e) {
+				discordFailedToStart = true;
+			}
 		}
 		
 		info.spicyclient.modules.Module.CategoryList = Arrays.asList(Category.values());
@@ -300,7 +355,7 @@ public class SpicyClient {
 		
 		try {
 			if (SpicyClient.account.loggedIn) {
-				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("http://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "updateCurrentAlt"), new BasicNameValuePair("session", account.session), new BasicNameValuePair("alt", originalUsername)));
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "updateCurrentAlt"), new BasicNameValuePair("session", account.session), new BasicNameValuePair("alt", originalUsername)));
 			}
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -324,6 +379,11 @@ public class SpicyClient {
 	public static void onEvent(Event e) {
 		
 		if (Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null) {
+			return;
+		}
+		
+		if (currentlyLoadingConfig) {
+			e.setCanceled(true);
 			return;
 		}
 		
@@ -518,6 +578,7 @@ public class SpicyClient {
 		modules.add(c.dragonWings);
 		modules.add(c.entityDesync);
 		modules.add(c.antiAntiXray);
+		modules.add(c.firstPerson);
 		
 		for (Module temp : SpicyClient.modules) {
 			

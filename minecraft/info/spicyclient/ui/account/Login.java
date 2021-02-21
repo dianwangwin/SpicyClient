@@ -114,7 +114,7 @@ public class Login extends GuiScreen {
 			
 			try {
 				
-				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("http://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "loginWithUsernameAndPassword"), new BasicNameValuePair("username", username.getText()), new BasicNameValuePair("password", NetworkUtils.encryptStringWithSHA512(password.getText()))));
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "loginWithUsernameAndPassword"), new BasicNameValuePair("username", username.getText()), new BasicNameValuePair("password", NetworkUtils.encryptStringWithSHA512(password.getText()))));
 				
 				if (response.getBoolean("error")) {
 					

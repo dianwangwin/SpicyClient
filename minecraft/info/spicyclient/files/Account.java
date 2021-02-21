@@ -92,7 +92,7 @@ public class Account {
 									return;
 								}
 								
-								json = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("http://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "checkIfUserIsUsingSpicyClient"), new BasicNameValuePair("username", player.getName())));
+								json = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "checkIfUserIsUsingSpicyClient"), new BasicNameValuePair("username", player.getName())));
 								
 								if (json.getBoolean("alt")) {
 									String realUsername = json.getString("username");

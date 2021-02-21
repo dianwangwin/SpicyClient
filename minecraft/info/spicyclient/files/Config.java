@@ -104,6 +104,7 @@ public class Config {
 	public DragonWings dragonWings = new DragonWings();
 	public EntityDesync entityDesync = new EntityDesync();
 	public AntiAntiXray antiAntiXray = new AntiAntiXray();
+	public FirstPerson firstPerson = new FirstPerson();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -117,7 +118,7 @@ public class Config {
 	}
 	
 	public boolean updateConfig() {
-		this.entityDesync = new EntityDesync();
+		
 		Config temp = new Config("temp");
 		
 		if (this.version.equalsIgnoreCase(temp.version)) {
@@ -130,7 +131,7 @@ public class Config {
 		
 		if (this.version.equalsIgnoreCase("B1") || this.version.equalsIgnoreCase("B2 Beta")) {
 			
-			Command.sendPrivateChatMessage("Legacy configs are not supported, legacy configs are configs from the versions B1 and B2 Beta");
+			Command.sendPrivateChatMessage("Could not load config (Outdated?)");
 			return true;
 			
 		}
@@ -177,6 +178,7 @@ public class Config {
 			this.dragonWings = new DragonWings();
 			this.entityDesync = new EntityDesync();
 			this.antiAntiXray = new AntiAntiXray();
+			this.firstPerson = new FirstPerson();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
@@ -199,14 +201,10 @@ public class Config {
 			this.clickgui.colorSettingBlue = new NumberSetting("Red", 255, 0, 255, 1);
 			
 			this.fly.mode = new ModeSetting("Mode", this.fly.mode.getMode(), "Vanilla", "Hypixel", "HypixelFast1");
-			this.fly.hypixelBlink = new BooleanSetting("Blink", true);
-			this.fly.hypixelTimerBoost = new BooleanSetting("Hypixel timer boost", true);
-			this.fly.hypixelSpeed = new NumberSetting("Speed", 0.18, 0.05, 0.2, 0.005);
-			this.fly.hypixelBoostSpeed = new NumberSetting("Fall speed boost", 2.2, 1.0, 10, 0.1);
-			this.fly.hypixelFastFly1Speed = new NumberSetting("Speed", 0.2675, 0.01, 1.0, 0.0025);
-			this.fly.hypixelFastFly1StopOnDisable = new BooleanSetting("Stop on disable", true);
-			this.fly.hypixelFastFly1Blink = new BooleanSetting("Blink", false);
-			this.fly.hypixelFastFly1Decay = new NumberSetting("Decay", 18, 2, 35, 1);
+			this.fly.hypixelFreecamHorizontalFlySpeed = new NumberSetting("Speed", 2, 1, 10, 0.2);
+			this.fly.hypixelFreecamVerticalFlySpeed = new NumberSetting("Vertical Speed", 0.4, 0.1, 1, 0.1);
+			this.fly.viewBobbingSetting = new BooleanSetting("View Bobbing", false);
+			this.fly.stopOnDisable = new BooleanSetting("Stop on disable", true);
 			
 			this.bhop.hypixelSpeed = new NumberSetting("Speed", 0.01, 0.0001, 0.03, 0.0001);
 			
@@ -252,7 +250,13 @@ public class Config {
 			return;
 		}
 		
-		// This does not work because the gson lib is shit
+		SpicyClient.currentlyLoadingConfig = true;
+		
+		double originalX = Minecraft.getMinecraft().thePlayer.posX, originalY = Minecraft.getMinecraft().thePlayer.posY,
+				originalZ = Minecraft.getMinecraft().thePlayer.posZ,
+				originalMotionX = Minecraft.getMinecraft().thePlayer.motionX,
+				originalMotionY = Minecraft.getMinecraft().thePlayer.motionY,
+				originalMotionZ = Minecraft.getMinecraft().thePlayer.motionZ;
 		
 		if (this.clientVersion.toLowerCase().replace(this.version.toLowerCase(), "").length() == 0) {
 			Config temp = new Config("temp");
@@ -288,6 +292,12 @@ public class Config {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		Minecraft.getMinecraft().thePlayer.setPosition(originalX, originalY, originalZ);
+		Minecraft.getMinecraft().thePlayer.motionX = originalMotionX;
+		Minecraft.getMinecraft().thePlayer.motionY = originalMotionY;
+		Minecraft.getMinecraft().thePlayer.motionZ = originalMotionZ;
+		SpicyClient.currentlyLoadingConfig = false;
 		
 	}
 	

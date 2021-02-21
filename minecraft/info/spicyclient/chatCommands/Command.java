@@ -4,6 +4,7 @@ import info.spicyclient.SpicyClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.play.client.C01PacketChatMessage;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
 
 public class Command {
 	
@@ -52,6 +53,19 @@ public class Command {
 		}
 		
 		Minecraft.getMinecraft().thePlayer.addChatComponentMessage(new ChatComponentText(prefix + text.toString()));
+	}
+	
+	// This shows a chat message to the player
+	public static void sendPrivateChatMessage(String prefix, boolean useExactPrefix, Object text, ChatStyle style) {
+
+		if (!useExactPrefix) {
+			prefix = "§6[ §f" + prefix + " §6] §f";
+		}
+
+		ChatComponentText message = new ChatComponentText(prefix + text.toString());
+		message.setChatStyle(style);
+
+		Minecraft.getMinecraft().thePlayer.addChatComponentMessage(message);
 	}
 	
 	// This shows a chat message to the everyone
