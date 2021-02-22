@@ -105,6 +105,7 @@ public class Config {
 	public EntityDesync entityDesync = new EntityDesync();
 	public AntiAntiXray antiAntiXray = new AntiAntiXray();
 	public FirstPerson firstPerson = new FirstPerson();
+	public Spammer spammer = new Spammer();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -179,6 +180,7 @@ public class Config {
 			this.entityDesync = new EntityDesync();
 			this.antiAntiXray = new AntiAntiXray();
 			this.firstPerson = new FirstPerson();
+			this.spammer = new Spammer();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");

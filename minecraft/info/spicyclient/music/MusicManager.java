@@ -149,7 +149,7 @@ public class MusicManager {
 					
 					musicNotification.timeOnScreen = 0;
 					e.printStackTrace();
-					Command.sendPrivateChatMessage("Failed to play song (Wrong file name?)");
+					Command.sendPrivateChatMessage("§b[ §fMusic §b] §f", true, "Failed to play song (Wrong file name?)");
 					
 				}
 				
@@ -173,12 +173,12 @@ public class MusicManager {
 	public void changeNotificationColor(EventUpdate e) {
 		
 		if (shuffle && musicNotification.left && musicNotification.joined) {
-			Command.sendPrivateChatMessage("Playing next song...");
+			Command.sendPrivateChatMessage("§b[ §fMusic §b] §f", true, "Playing next song...");
 			File[] files = FileManager.music.listFiles();
 			
 			if (files == null) {
 				
-				Command.sendPrivateChatMessage("You have 0 mp3 files");
+				Command.sendPrivateChatMessage("§b[ §fMusic §b] §f", true, "You have 0 mp3 files");
 				return;
 				
 			}
