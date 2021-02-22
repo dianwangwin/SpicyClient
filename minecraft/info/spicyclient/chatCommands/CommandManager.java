@@ -20,6 +20,7 @@ public class CommandManager {
 		addCommand(new Music());
 		addCommand(new Panic());
 		addCommand(new Nickname());
+		addCommand(new SetSpamMessage());
 		
 	}
 	

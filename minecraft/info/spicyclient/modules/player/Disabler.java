@@ -83,7 +83,7 @@ public class Disabler extends Module {
 			
 			if (mc.thePlayer.ticksExisted % 20 == 0) {
 				
-				packets.add(new C13PacketPlayerAbilities(mc.thePlayer.capabilities));
+				//packets.add(new C13PacketPlayerAbilities(mc.thePlayer.capabilities));
 				//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(mc.thePlayer.capabilities));
 				//Command.sendPrivateChatMessage("Sent a thing");
 				

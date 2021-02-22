@@ -131,15 +131,17 @@ public class Notification {
 		
 		double notWidth = 170, orgX = startingX;
 		
-		if ((fr.getStringWidth(title) * 1.1) + 45 >= 170 || (fr.getStringWidth(text) * 0.9) + 43.33 >= 170) {
+		if ((fr.getStringWidth(title) * 1.1) + 45 >= 170) {
 			
 			notWidth = (fr.getStringWidth(title) * 1.1) + 50;
 			startingX -= (fr.getStringWidth(title) * 1.1) - 170 + 50;
 			
-			if ((fr.getStringWidth(text) * 0.9) + 43.33 >= notWidth) {
-				notWidth = (fr.getStringWidth(text) * 0.9) + 50;
-				startingX -= (fr.getStringWidth(text) * 0.9) - 170 + 72;
-			}
+		}
+		
+		if ((fr.getStringWidth(text) * 0.9) + 43.33 >= notWidth) {
+			
+			notWidth = (fr.getStringWidth(text) * 0.9) + 50;
+			startingX -= (fr.getStringWidth(text) * 0.9) - 170 + 50;
 			
 		}
 		

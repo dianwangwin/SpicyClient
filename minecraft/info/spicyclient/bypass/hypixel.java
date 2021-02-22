@@ -156,7 +156,7 @@ public class Hypixel {
                     if (watchdog) {
                         //toggle();
                     	disabled = true;
-                        NotificationManager.getNotificationManager().createNotification("Teleporting you to your current position", " ", true, 5000, Type.INFO, Color.PINK);
+                        NotificationManager.getNotificationManager().createNotification("Fly", "Teleporting you to your current position", true, 5000, Type.INFO, Color.PINK);
                         //mc.thePlayer.motionY += 1;
                         //SpicyClient.config.fly.toggle();
                     }

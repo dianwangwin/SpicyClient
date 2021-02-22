@@ -20,7 +20,7 @@ public class Spammer extends Module {
 	}
 	
 	public NumberSetting delay = new NumberSetting("Delay", 3100, 100, 10000, 100);
-	public String message = "%r%r%r%r%r%r%r%r%r%r%r%r%r%r%rhttps://youtube.com/channel/UC3AAb3RnZHlf3y5F6BYt5zg";
+	public String message = "%r%r%r%r%r%r%r%rSpicyClient%r.%rinfo";
 	public static transient Timer timer = new Timer();
 	
 	@Override
