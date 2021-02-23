@@ -48,6 +48,7 @@ public class NotificationManager {
 		defaultTargetX = sr.getScaledWidth() - 180;
 		defaultTargetY = 0;
 		defaultTargetY = sr.getScaledHeight() - 54 - (54 * notifications.size());
+		defaultStartingY = defaultTargetY;
 		
 		for (Notification not : notifications) {
 			not.onRender(notifications.indexOf(not));
