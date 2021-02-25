@@ -15,6 +15,7 @@ import info.spicyclient.modules.Module;
 import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.notifications.Type;
+import info.spicyclient.util.InventoryUtils;
 import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.RotationUtils;
 import net.minecraft.client.Minecraft;
@@ -209,9 +210,22 @@ public class Hypixel {
 								threwEnderPearl = true;
 								NotificationManager.getNotificationManager().createNotification("Fly",
 										"Found ender pearl, throwing it", true, 3000, Type.INFO, Color.BLUE);
+								
 								int heldItemBeforeThrow = mc.thePlayer.inventory.currentItem;
-								Minecraft.getMinecraft().getNetHandler().getNetworkManager()
-										.sendPacketNoEvent( new C09PacketHeldItemChange(i - 36));
+								if (i - 36 < 0) {
+									
+									InventoryUtils.swap(i, 8);
+									
+									Minecraft.getMinecraft().getNetHandler().getNetworkManager()
+											.sendPacketNoEvent(new C09PacketHeldItemChange(8));
+									
+								}else {
+									
+									Minecraft.getMinecraft().getNetHandler().getNetworkManager()
+											.sendPacketNoEvent(new C09PacketHeldItemChange(i - 36));
+									
+								}
+								
 								Minecraft.getMinecraft().getNetHandler().getNetworkManager()
 										.sendPacketNoEvent(new C03PacketPlayer.C05PacketPlayerLook(
 												Minecraft.getMinecraft().thePlayer.rotationYaw, 90,

@@ -470,7 +470,7 @@ public class BlockFly extends Module {
 		toggled = !toggled;
 		if (toggled) {
 			
-			NotificationManager.getNotificationManager().createNotification("Enabled: " + name, "Thank you to kot from kot client for giving me rots", true, 1500, Type.INFO, Color.GREEN);
+			NotificationManager.getNotificationManager().createNotification("Enabled: " + name, "Thank you to kot from kot client for donating code", true, 1500, Type.INFO, Color.GREEN);
 			
 			onEnable();
 			
@@ -480,7 +480,7 @@ public class BlockFly extends Module {
 			
 		}else {
 			
-			NotificationManager.getNotificationManager().createNotification("Disabled: " + name, "Thank you to kot from kot client for giving me rots", true, 1500, Type.INFO, Color.RED);
+			NotificationManager.getNotificationManager().createNotification("Disabled: " + name, "Thank you to kot from kot client for donating code", true, 1500, Type.INFO, Color.RED);
 			
 			onDisable();
 			
