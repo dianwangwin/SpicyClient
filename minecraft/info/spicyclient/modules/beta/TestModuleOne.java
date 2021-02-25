@@ -62,6 +62,11 @@ import net.minecraft.network.play.client.C18PacketSpectate;
 import net.minecraft.network.play.client.C02PacketUseEntity.Action;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+import net.minecraft.network.play.server.S12PacketEntityVelocity;
+import net.minecraft.network.play.server.S14PacketEntity;
+import net.minecraft.network.play.server.S18PacketEntityTeleport;
+import net.minecraft.network.play.server.S19PacketEntityHeadLook;
+import net.minecraft.network.play.server.S29PacketSoundEffect;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -96,9 +101,14 @@ public class TestModuleOne extends Module {
 	@Override
 	public void onEvent(Event e) {
 		
-    	if (e instanceof EventRender3D && e.isPre()) {
-    		
-    	}
+		if (e instanceof EventSendPacket && e.isPre() && !(((EventSendPacket) e).packet instanceof C03PacketPlayer)
+				&& !(((EventSendPacket) e).packet instanceof S14PacketEntity)
+				&& !(((EventSendPacket) e).packet instanceof S18PacketEntityTeleport)
+				&& !(((EventSendPacket) e).packet instanceof S12PacketEntityVelocity)
+				&& !(((EventSendPacket) e).packet instanceof S29PacketSoundEffect)
+				&& !(((EventSendPacket) e).packet instanceof S19PacketEntityHeadLook)) {
+			Command.sendPrivateChatMessage(((EventSendPacket)e).packet);
+		}
 		
 	}
 

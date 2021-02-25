@@ -44,6 +44,7 @@ import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
+import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.network.play.client.C0DPacketCloseWindow;
 import net.minecraft.network.play.server.S2FPacketSetSlot;
 import net.minecraft.util.BlockPos;
@@ -72,6 +73,17 @@ public class BlockFly extends Module {
 	public static transient Timer timer = new Timer();
 	
 	public void onEvent(Event e) {
+		
+		// Test this when you are home because the school blocks hypixel
+		// Donated by kot client <<< pog
+        if (e instanceof EventSendPacket) {
+            EventSendPacket event = (EventSendPacket) e;
+            if (event.packet instanceof C0BPacketEntityAction) {
+                event.setCanceled(true);
+            }
+            mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SPRINTING));
+        }
+        // Donated by kot client <<< pog
 		
 		if (e instanceof EventSneaking) {
 			

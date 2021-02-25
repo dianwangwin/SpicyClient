@@ -16,14 +16,22 @@ import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.notifications.Type;
 import info.spicyclient.util.MovementUtils;
+import info.spicyclient.util.RotationUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemEnderPearl;
+import net.minecraft.item.ItemPickaxe;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.network.login.server.S00PacketDisconnect;
 import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 
 public class Hypixel {
@@ -52,7 +60,7 @@ public class Hypixel {
 		
 	}
 	
-	public static transient boolean disabled = false, watchdog = false, shouldCancelPackets = false;
+	public static transient boolean disabled = false, watchdog = false, shouldCancelPackets = false, threwEnderPearl = false;
 	public static transient double originalX, originalY, originalZ, originalMotionX, originalMotionY, originalMotionZ;
 	public static transient int status = 0;
 	public static transient CopyOnWriteArrayList<Packet> packets = new CopyOnWriteArrayList<Packet>();
@@ -62,6 +70,7 @@ public class Hypixel {
 		disabled = false;
 		watchdog = false;
 		shouldCancelPackets = false;
+		threwEnderPearl = false;
 		packets.clear();
 		status = 0;
 		originalX = Minecraft.getMinecraft().thePlayer.posX;
@@ -74,6 +83,8 @@ public class Hypixel {
 	}
 	
 	public static void onFlyDisable() {
+		
+		threwEnderPearl = false;
 		
 		if (!disabled) {
 			Minecraft.getMinecraft().thePlayer.setPosition(originalX, originalY, originalZ);
@@ -181,10 +192,42 @@ public class Hypixel {
                     watchdog = true;
                     NotificationManager.getNotificationManager().createNotification("Fly: Wait 5s.", "", true, 5000, Type.INFO, Color.PINK);
                     //mc.thePlayer.jump();
+                    
                 }
             }
 			else if (mc.thePlayer.motionY <= 0 && watchdog) {
 				shouldCancelPackets = true;
+				
+				if (!threwEnderPearl) {
+					
+					for (int i = 0; i < 45; i++) {
+						
+						if (Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+							ItemStack is = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getStack();
+							
+							if (is.getItem() instanceof ItemEnderPearl && !threwEnderPearl) {
+								threwEnderPearl = true;
+								NotificationManager.getNotificationManager().createNotification("Fly",
+										"Found ender pearl, throwing it", true, 3000, Type.INFO, Color.BLUE);
+								int heldItemBeforeThrow = mc.thePlayer.inventory.currentItem;
+								Minecraft.getMinecraft().getNetHandler().getNetworkManager()
+										.sendPacketNoEvent( new C09PacketHeldItemChange(i - 36));
+								Minecraft.getMinecraft().getNetHandler().getNetworkManager()
+										.sendPacketNoEvent(new C03PacketPlayer.C05PacketPlayerLook(
+												Minecraft.getMinecraft().thePlayer.rotationYaw, 90,
+												MovementUtils.isOnGround(0.0001)));
+								Minecraft.getMinecraft().getNetHandler().getNetworkManager()
+										.sendPacketNoEvent(new C08PacketPlayerBlockPlacement(is));
+								mc.thePlayer.inventory.currentItem = heldItemBeforeThrow;
+								Minecraft.getMinecraft().getNetHandler().getNetworkManager()
+									.sendPacketNoEvent( new C09PacketHeldItemChange(heldItemBeforeThrow));
+							}
+							
+						}
+						
+					}
+				}
+				
 			}
 			else if (shouldCancelPackets) {
                 //mc.thePlayer.motionX = 0;
