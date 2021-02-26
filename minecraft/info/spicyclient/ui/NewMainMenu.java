@@ -400,8 +400,6 @@ public class NewMainMenu extends GuiScreen {
 			update.draw();
 		}
 		
-		
-		
 		// To prevent the text from blinking
 		// The max fps is 30
 		long fps = 18;

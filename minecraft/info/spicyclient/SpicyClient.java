@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -114,6 +115,8 @@ public class SpicyClient {
 	
 	public static boolean currentlyLoadingConfig = false;
 	
+	public static HashMap<String, ResourceLocation> cachedImages = new HashMap<>();
+	
 	public static void StartUp() {
 		
 		try {
@@ -168,6 +171,16 @@ public class SpicyClient {
 		MusicManager.getMusicManager();
 		MusicManager.getMusicManager().mediaPlayer = new MediaPlayer(tempMedia);
 		
+		for (info.spicyclient.notifications.Type notType : info.spicyclient.notifications.Type.values()) {
+			for (info.spicyclient.notifications.Color notColor : info.spicyclient.notifications.Color.values()) {
+				
+				System.out.println("Caching " + "spicy/notifications/" + notType.filePrefix + notColor.fileSuffix + ".png");
+				cachedImages.put("spicy/notifications/" + notType.filePrefix + notColor.fileSuffix + ".png",
+						new ResourceLocation(
+								"spicy/notifications/" + notType.filePrefix + notColor.fileSuffix + ".png"));
+				
+			}
+		}
 		
 		// Creates a new config with the default values
 		config = new Config("Default");
@@ -543,6 +556,7 @@ public class SpicyClient {
 		modules.add(c.antiAntiXray);
 		modules.add(c.firstPerson);
 		modules.add(c.spammer);
+		modules.add(c.fpsBooster);
 		
 		for (Module temp : SpicyClient.modules) {
 			

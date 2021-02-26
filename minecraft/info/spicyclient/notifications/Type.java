@@ -6,7 +6,7 @@ public enum Type {
 	WARNING("warning"),
 	DEBUG("debug");
 	
-	String filePrefix;
+	public String filePrefix;
 	
 	Type(String filePrefix) {
 		

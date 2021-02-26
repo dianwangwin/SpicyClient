@@ -76,7 +76,7 @@ public class HUD {
 		GlStateManager.scale(2, 2, 1);
 		GlStateManager.translate(-4, -4, 0);
 		
-		if (SpicyClient.config.clientVersion != SpicyClient.config.version) {
+		if (SpicyClient.config.clientVersion != SpicyClient.config.version || SpicyClient.config.fpsBooster.isEnabled()) {
 			
 			//fr.drawStringWithShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor);
 			//fr.drawStringWithQuadShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor, 0.3f);

@@ -1,5 +1,6 @@
 package info.spicyclient.notifications;
 
+import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -35,7 +36,7 @@ public class Notification {
 	public long originalTime;
 	public final Type type;
 	public Color color;
-	public int targetX, targetY, startingX, startingY, speed;
+	public float targetX, targetY, startingX, startingY, speed;
 	
 	// So notifications don't get stuck
 	public boolean leaving = false, left = false;
@@ -69,7 +70,7 @@ public class Notification {
 			targetY = sr.getScaledHeight() - 54 - (54 * Num);
 		}
 		
-		int orgSpeed = speed;
+		float orgSpeed = speed;
 		
 		if ((targetX - startingX) < 0 && (startingX != targetX)) {
 			
@@ -161,9 +162,11 @@ public class Notification {
 		fr.drawString(text, (float) ((startingX + 43.33) / 0.9), (float) ((float) ((startingY + 17 + (fr.FONT_HEIGHT))) / 0.9), color.color, false);
 		GlStateManager.popMatrix();
 		
-		mc.getTextureManager().bindTexture(new ResourceLocation("spicy/notifications/" + type.filePrefix + color.fileSuffix + ".png"));
-		int size = 30;
-		Gui.drawModalRectWithCustomSizedTexture(startingX + 4, startingY + 5, 0, 0, size, size, size, size);
+		if (!SpicyClient.config.fpsBooster.isEnabled()) {
+			mc.getTextureManager().bindTexture(SpicyClient.cachedImages.get("spicy/notifications/" + type.filePrefix + color.fileSuffix + ".png"));
+			int size = 30;
+			Gui.drawModalRectWithCustomSizedTexture((int)startingX + 4, (int)startingY + 5, 0, 0, size, size, size, size);
+		}
 		
 		if (showTimer && timeOnScreen - System.currentTimeMillis() > 0) {
 			

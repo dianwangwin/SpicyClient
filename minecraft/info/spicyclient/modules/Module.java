@@ -155,8 +155,8 @@ public abstract class Module {
 		PLAYER("Player"),
 		RENDER("Render"),
 		MEMES("Memes"),
-		BETA("Beta Modules"),
-		WORLD("World");
+		WORLD("World"),
+		BETA("Beta Modules");
 		
 		public String name;
 		

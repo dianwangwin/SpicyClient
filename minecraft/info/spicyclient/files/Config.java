@@ -106,6 +106,7 @@ public class Config {
 	public AntiAntiXray antiAntiXray = new AntiAntiXray();
 	public FirstPerson firstPerson = new FirstPerson();
 	public Spammer spammer = new Spammer();
+	public FpsBooster fpsBooster = new FpsBooster();
 	
 	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
 	
@@ -181,6 +182,7 @@ public class Config {
 			this.antiAntiXray = new AntiAntiXray();
 			this.firstPerson = new FirstPerson();
 			this.spammer = new Spammer();
+			this.fpsBooster = new FpsBooster();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
