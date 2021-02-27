@@ -228,7 +228,7 @@ public class Bhop extends Module {
 						mc.timer.ticksPerSecond = 20;
 					}
 					
-					MovementUtils.strafe();
+					MovementUtils.strafe((float) hypixelSpeed.getValue() * 20);
 					
 					if (MovementUtils.isOnGround(0.000001)) {
 						mc.thePlayer.jump();

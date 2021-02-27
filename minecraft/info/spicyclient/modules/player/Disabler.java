@@ -83,15 +83,15 @@ public class Disabler extends Module {
 			
 			if (mc.thePlayer.ticksExisted % 20 == 0) {
 				
-				packets.add(new C13PacketPlayerAbilities(mc.thePlayer.capabilities));
+				//packets.add(new C13PacketPlayerAbilities(mc.thePlayer.capabilities));
 				//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(mc.thePlayer.capabilities));
 				//Command.sendPrivateChatMessage("Sent a thing");
 				
 			}
 			
-           int basePing = 5000;
+           int basePing = 3000;
            
-            if (ping.hasTimeElapsed(basePing + new Random().nextInt(4000), true) && packets.size() > 0) {
+            if (ping.hasTimeElapsed(basePing, true) && packets.size() > 0) {
             	
 				for (Packet p : packets) {
 					
@@ -145,8 +145,12 @@ public class Disabler extends Module {
                 }
                 */
                 
-                packets.add(packetConfirmTransaction);
-                e.setCanceled(true);
+                if (packetConfirmTransaction.getUid() < 0) {
+                    packets.add(packetConfirmTransaction);
+                    e.setCanceled(true);
+                }else {
+                	Command.sendPrivateChatMessage(packetConfirmTransaction.getUid());
+                }
             }
 
             if (event.packet instanceof C00PacketKeepAlive) {

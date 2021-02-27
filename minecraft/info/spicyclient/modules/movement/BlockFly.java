@@ -81,10 +81,15 @@ public class BlockFly extends Module {
             if (event.packet instanceof C0BPacketEntityAction) {
                 event.setCanceled(true);
             }
-            mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SPRINTING));
+            //mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SPRINTING));
         }
         // Donated by kot client <<< pog
-		
+        
+        if (e instanceof EventUpdate && e.isPre()) {
+			mc.getNetHandler().getNetworkManager().sendPacketNoEvent(
+					new C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SPRINTING));
+        }
+        
 		if (e instanceof EventSneaking) {
 			
 			if (e.isPre()) {

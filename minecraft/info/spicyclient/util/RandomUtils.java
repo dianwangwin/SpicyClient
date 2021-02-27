@@ -33,7 +33,7 @@ public class RandomUtils {
 		
 	}
 	
-    private boolean isPosSolid(BlockPos pos) {
+    public static boolean isPosSolid(BlockPos pos) {
         Block block = Minecraft.getMinecraft().theWorld.getBlockState(pos).getBlock();
         if ((block.getMaterial().isSolid() || !block.isTranslucent() || block instanceof BlockLadder || block instanceof BlockCarpet
                 || block instanceof BlockSnow || block instanceof BlockSkull)
