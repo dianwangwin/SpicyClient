@@ -1,39 +1,68 @@
 package info.spicyclient.modules.memes;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventRender3D;
 import info.spicyclient.events.listeners.EventSendPacket;
+import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.modules.render.SkyColor;
+import info.spicyclient.settings.NumberSetting;
+import info.spicyclient.util.RandomObjectArraylist;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.network.play.client.C02PacketUseEntity;
+import net.minecraft.network.play.client.C02PacketUseEntity.Action;
+import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 
 public class SuperHeroFX extends Module {
 
 	public SuperHeroFX() {
 		super("SuperHeroFX", Keyboard.KEY_NONE, Category.MEMES);
+		resetSettings();
 	}
 	
-	public CopyOnWriteArrayList<FX> effects = new CopyOnWriteArrayList<>();
+	@Override
+	public void resetSettings() {
+		this.settings.clear();
+		this.addSettings(scale, amount, ttl);
+	}
+	
+	public NumberSetting scale = new NumberSetting("Scale", 0.03, 0.01, 0.1, 0.005),
+			amount = new NumberSetting("Amount", 1, 1, 10, 1),
+			ttl = new NumberSetting("Time to live", 2000, 500, 10000, 200);
+	
+	private static transient CopyOnWriteArrayList<FX> effects = new CopyOnWriteArrayList<>();
+	private static transient RandomObjectArraylist<String> strings = new RandomObjectArraylist<String>("Boom", "Kaboom",
+			"Pow", "Wam", "Zap", "Bam", "Zap", "Slap", "Kapow", "Wow", "BOOM", "KABOOM", "POW", "WAM", "ZAP", "BAM",
+			"ZAP", "SLAP", "KAPOW", "WOW");
+	private static transient RandomObjectArraylist<Integer> colors = new RandomObjectArraylist<Integer>(0xff0000,
+			0x00ff00, 0x0000ff, 0xffff00, 0xff00ff, 0x00ffff, 0xffffff, 0x000000);
 	
 	@Override
 	public void onEvent(Event e) {
+		
+		if (e instanceof EventUpdate && e.isPre()) {
+			this.additionalInformation = "Best module";
+		}
 		
 		if (e instanceof EventRender3D && e.isPre()) {
 			
@@ -45,33 +74,34 @@ public class SuperHeroFX extends Module {
 					effects.remove(f);
 				}else {
 					
+					String text = f.text;
 					GlStateManager.pushMatrix();
-		            Tessellator tessellator = Tessellator.getInstance();
-		            WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-		            this.mc.getTextureManager().bindTexture(new ResourceLocation("spicy/SpicyClientBlack.png"));
-		            int imageWidth = 500, imageHeight = 122;
-					imageWidth /= 6;
-					imageHeight /= 6;
-					imageWidth = 0;
-					imageHeight = 0;
-					/*
-		            worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
-		            worldrenderer.pos(f.x + imageWidth, f.y, f.z).tex(1.0, 0).normal(0, 0, -1).endVertex();
-		            worldrenderer.pos(f.x + imageWidth, f.y + imageHeight, f.z).tex(1.0, 1.0).normal(0, 0, -1).endVertex();
-		            worldrenderer.pos(f.x, f.y + imageHeight, f.z).tex(0, 1.0).normal(0, 0, -1).endVertex();
-		            worldrenderer.pos(f.x, f.y, f.z).tex(0, 0).normal(0, 0, -1).endVertex();
-		            worldrenderer.pos(f.x + imageWidth, f.y, f.z).tex(1.0, 0).normal(0, 0, 1).endVertex();
-		            worldrenderer.pos(f.x + imageWidth, f.y + imageHeight, f.z).tex(1.0, 1.0).normal(0, 0, 1).endVertex();
-		            worldrenderer.pos(f.x, f.y + imageHeight, f.z).tex(0, 1.0).normal(0, 0, 1).endVertex();
-		            worldrenderer.pos(f.x, f.y, f.z).tex(0, 0).normal(0, 0, 1).endVertex();
-		            */
-					worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-	                worldrenderer.pos(-100.0D, -100.0D, -100.0D).tex(0.0D, 0.0D).color(40, 40, 40, 255).endVertex();
-	                worldrenderer.pos(-100.0D, -100.0D, 100.0D).tex(0.0D, 16.0D).color(40, 40, 40, 255).endVertex();
-	                worldrenderer.pos(100.0D, -100.0D, 100.0D).tex(16.0D, 16.0D).color(40, 40, 40, 255).endVertex();
-	                worldrenderer.pos(100.0D, -100.0D, -100.0D).tex(16.0D, 0.0D).color(40, 40, 40, 255).endVertex();
-	                tessellator.draw();
-	                GlStateManager.popMatrix();
+					RenderHelper.enableStandardItemLighting();
+					GlStateManager.enablePolygonOffset();
+					GL11.glPolygonOffset(1.0f, -1100000.0f);
+					GlStateManager.disableLighting();
+					GlStateManager.disableDepth();
+					GlStateManager.enableBlend();
+					double scale = f.scale;
+					GlStateManager.scale(1/scale, 1/scale, 1/scale);
+					GlStateManager.rotate(180, 1, 0, 0);
+					GlStateManager.enableTexture2D();
+					GlStateManager.translate((f.x - mc.getRenderManager().renderPosX) * scale,
+							(f.y - mc.getRenderManager().renderPosY) * -scale, (f.z - mc.getRenderManager().renderPosZ) * -scale);
+					GlStateManager.rotate((float) f.yaw, 0, 1, 0);
+					GlStateManager.rotate((float) f.pitch, 1, 0, 0);
+					mc.fontRendererObj.drawString(text, (float) (f.x - (mc.fontRendererObj.getStringWidth(text) / 2) - mc.getRenderManager().renderPosX),
+							0f, f.color, true);
+					GlStateManager.rotate(180, 0, 1, 0);
+					mc.fontRendererObj.drawString(text, (float) (f.x - (mc.fontRendererObj.getStringWidth(text) / 2) - mc.getRenderManager().renderPosX),
+							0f, f.color, true);
+					GlStateManager.disableTexture2D();
+					GlStateManager.disableBlend();
+					GlStateManager.enableDepth();
+					GlStateManager.enableLighting();
+					GlStateManager.disablePolygonOffset();
+					RenderHelper.disableStandardItemLighting();
+					GlStateManager.popMatrix();
 					
 				}
 				
@@ -79,26 +109,44 @@ public class SuperHeroFX extends Module {
 			
 		}
 		
-		if (e instanceof EventSendPacket && ((EventSendPacket)e).packet instanceof C02PacketUseEntity) {
-			C02PacketUseEntity packet = ((C02PacketUseEntity)((EventSendPacket)e).packet);
-			effects.add(new FX(5000, packet.getEntityFromWorld(mc.theWorld).posX - mc.getRenderManager().renderPosX,
-					packet.getEntityFromWorld(mc.theWorld).posY - mc.getRenderManager().renderPosY,
-					packet.getEntityFromWorld(mc.theWorld).posZ - mc.getRenderManager().renderPosZ));
+		if (e instanceof EventSendPacket && ((EventSendPacket)e).packet instanceof C0APacketAnimation) {
+			
+			if (mc.objectMouseOver.typeOfHit == MovingObjectType.ENTITY) {
+				
+				for (int i = 0; i < amount.getValue(); i++) {
+					effects.add(new FX((long) ttl.getValue(),
+							mc.objectMouseOver.entityHit.posX + new Random().nextInt(3) + new Random().nextDouble() - 2,
+							mc.objectMouseOver.entityHit.posY + new Random().nextInt(2) + new Random().nextDouble()
+									- 0.5,
+							mc.objectMouseOver.entityHit.posZ + new Random().nextInt(3) + new Random().nextDouble() - 2,
+							new Random().nextInt(360), new Random().nextInt(180) - 90, 1 / scale.getValue(),
+							strings.getRandomObject(), colors.getRandomObject()));
+				}
+				
+			}
+			
 		}
 		
 	}
 	
 	public class FX {
 		
-		public FX(long ttl, double x, double y, double z) {
+		public FX(long ttl, double x, double y, double z, double yaw, double pitch, double scale, String text, int color) {
 			this.ttl = System.currentTimeMillis() + ttl;
 			this.x = x;
 			this.y = y;
 			this.z = z;
+			this.yaw = yaw;
+			this.pitch = pitch;
+			this.scale = scale;
+			this.text = text;
+			this.color = color;
 		}
 		
 		public long ttl;
-		public double x, y, z;
+		public double x, y, z, yaw, pitch, scale;
+		public String text;
+		public int color;
 		
 	}
 	

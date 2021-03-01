@@ -4,6 +4,7 @@ import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.EventDirection;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventPacket;

@@ -55,6 +55,7 @@ import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C0APacketAnimation;
+import net.minecraft.network.play.client.C0CPacketInput;
 import net.minecraft.network.play.client.C10PacketCreativeInventoryAction;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.network.play.client.C14PacketTabComplete;
@@ -88,9 +89,7 @@ public class TestModuleOne extends Module {
 	
 	@Override
 	public void onEnable() {
-		status = 1;
-		bool2 = false;
-		bool1 = false;
+		
 	}
 
 	@Override
@@ -100,15 +99,6 @@ public class TestModuleOne extends Module {
 
 	@Override
 	public void onEvent(Event e) {
-		
-		if (e instanceof EventSendPacket && e.isPre() && !(((EventSendPacket) e).packet instanceof C03PacketPlayer)
-				&& !(((EventSendPacket) e).packet instanceof S14PacketEntity)
-				&& !(((EventSendPacket) e).packet instanceof S18PacketEntityTeleport)
-				&& !(((EventSendPacket) e).packet instanceof S12PacketEntityVelocity)
-				&& !(((EventSendPacket) e).packet instanceof S29PacketSoundEffect)
-				&& !(((EventSendPacket) e).packet instanceof S19PacketEntityHeadLook)) {
-			Command.sendPrivateChatMessage(((EventSendPacket)e).packet);
-		}
 		
 	}
 

@@ -164,12 +164,7 @@ public class InfinitePlace extends Module {
 							double x = mc.thePlayer.posX;
 							double y = mc.thePlayer.posY;
 							double z = mc.thePlayer.posZ;
-							mc.thePlayer.sendQueue.getNetworkManager()
-									.sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y, z, true));
-							mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(
-									new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.21D, z, true));
-							mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(
-									new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.11D, z, true));
+							mc.thePlayer.motionY = 0.21;
 							watchdog = true;
 							NotificationManager.getNotificationManager().createNotification("Disabler: Wait 5s.", "",
 									true, 5000, Type.INFO, Color.PINK);
@@ -181,7 +176,7 @@ public class InfinitePlace extends Module {
 						
 						sendPacketsForPathAndPlaceBlock();
 						
-					}else if (!watchdogDisabled) {
+					}else if (!watchdogDisabled && mc.thePlayer.motionY <= 0) {
 						mc.thePlayer.motionX = 0;
 						mc.thePlayer.motionY = 0;
 						mc.thePlayer.motionZ = 0;
@@ -209,8 +204,8 @@ public class InfinitePlace extends Module {
 				clicked = true;
 				e.setCanceled(true);
 			}
-			else if (event.packet instanceof C03PacketPlayer) {
-				if (watchdog) {
+			if (event.packet instanceof C03PacketPlayer) {
+				if (watchdog && mc.thePlayer.motionY <= 0) {
                     e.setCanceled(true);
                 }
 			}
@@ -242,29 +237,24 @@ public class InfinitePlace extends Module {
 		
 		Vec3 temp = null;
 		
-		for (double i = 1; i < 100; i += 2) {
-			Double currentPosX = lastPos1.xCoord - ((xRange / 100) * i),
-					currentPosY = lastPos1.yCoord - ((yRange / 100) * i),
-					currentPosZ = lastPos1.zCoord - ((zRange / 100) * i);
-			//Command.sendPrivateChatMessage(i);
+		//mc.getNetHandler().getNetworkManager().sendPacket(new C03PacketPlayer.C06PacketPlayerPosLook(
+				//mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch, new Random().nextBoolean()));
+		
+		for (double i = 0; i < 209; i++) {
+			Double currentPosX = lastPos1.xCoord - ((xRange / 209) * i),
+					currentPosY = lastPos1.yCoord - ((yRange / 209) * i),
+					currentPosZ = lastPos1.zCoord - ((zRange / 209) * i);
+			Command.sendPrivateChatMessage(i);
 			
-			int hi = 3;
-			Double offset1 = (new Random().nextDouble() - 0.5) / hi,
-					offset2 = (new Random().nextDouble() - 0.5) / hi;
-			mc.getNetHandler().getNetworkManager().sendPacket(new C03PacketPlayer.C04PacketPlayerPosition(currentPosX + 0.5 + offset1, currentPosY, currentPosZ + 0.5 + offset2, false));
+			mc.getNetHandler().getNetworkManager().sendPacket(new C03PacketPlayer.C04PacketPlayerPosition(
+					currentPosX, currentPosY, currentPosZ, new Random().nextBoolean()));
 			temp = new Vec3(currentPosX + 0.5, currentPosY, currentPosZ + 0.5);
-			Command.sendPrivateChatMessage(temp.xCoord);
-			Command.sendPrivateChatMessage(temp.yCoord);
-			Command.sendPrivateChatMessage(temp.zCoord);
 		}
 		
 		if (temp != null) {
 			
-			Command.sendPrivateChatMessage(temp.xCoord);
-			Command.sendPrivateChatMessage(temp.yCoord);
-			Command.sendPrivateChatMessage(temp.zCoord);
 			mc.thePlayer.setPosition(temp.xCoord, temp.yCoord, temp.zCoord);
-			//mc.refreshResources();
+			mc.getNetHandler().getNetworkManager().sendPacket(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
 			toggle();
 			
 		}

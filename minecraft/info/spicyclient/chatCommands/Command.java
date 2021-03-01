@@ -36,7 +36,7 @@ public class Command {
 	// This shows a chat message to the player
 	public static void sendPrivateChatMessage(Object text) {
 		
-		String prefix = SpicyClient.config.clientName;
+		String prefix = SpicyClient.config.clientName + SpicyClient.config.clientVersion;
 		
 		if (SpicyClient.config.clientVersion != SpicyClient.config.version) {
 			prefix = SpicyClient.config.clientName;
