@@ -51,7 +51,11 @@ public class NotificationManager {
 		//defaultStartingY = defaultTargetY;
 		
 		for (Notification not : notifications) {
-			not.onRender(notifications.indexOf(not));
+			try {
+				not.onRender(notifications.indexOf(not));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}

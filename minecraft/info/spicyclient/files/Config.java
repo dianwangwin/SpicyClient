@@ -1,6 +1,7 @@
 package info.spicyclient.files;
 
 import java.io.IOException;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
@@ -107,8 +108,103 @@ public class Config {
 	public FirstPerson firstPerson = new FirstPerson();
 	public Spammer spammer = new Spammer();
 	public FpsBooster fpsBooster = new FpsBooster();
+	public SuperHeroFX superHeroFX = new SuperHeroFX();
+	public NameTags nameTags = new NameTags();
 	
-	public String clientName = "SpicyClient ", clientVersion = "B3 Beta";
+	public String clientName = "Spicy ", clientVersion = "B3 Beta";
+	
+	public static CopyOnWriteArrayList<Module> getModulesForConfig(Config con){
+		
+		CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<>();
+		
+		modules.add(con.tabgui);
+		modules.add(con.clickgui);
+		modules.add(con.killaura);
+		modules.add(con.fly);
+		modules.add(con.sprint);
+		modules.add(con.bhop);
+		modules.add(con.rainbowgui);
+		modules.add(con.fullbright);
+		modules.add(con.nofall);
+		modules.add(con.keystrokes);
+		modules.add(con.fastplace);
+		modules.add(con.step);
+		modules.add(con.noHead);
+		modules.add(con.oldHitting);
+		modules.add(con.noSlow);
+		modules.add(con.owoifier);
+		modules.add(con.chatBypass);
+		modules.add(con.safewalk);
+		modules.add(con.blockFly);
+		modules.add(con.playerESP);
+		modules.add(con.antiVoid);
+		modules.add(con.longJump);
+		modules.add(con.spider);
+		modules.add(con.altManager);
+		modules.add(con.timer);
+		modules.add(con.antiKnockback);
+		modules.add(con.back);
+		modules.add(con.noClip);
+		modules.add(con.blink);
+		modules.add(con.autoClicker);
+		modules.add(con.fastBreak);
+		modules.add(con.inventoryManager);
+		modules.add(con.tophat);
+		modules.add(con.worldTime);
+		modules.add(con.chestStealer);
+		modules.add(con.noRotate);
+		modules.add(con.skyColor);
+		modules.add(con.reach);
+		modules.add(con.csgoSpinbot);
+		modules.add(con.yawAndPitchSpoof);
+		modules.add(con.antibot);
+		modules.add(con.pingSpoof);
+		modules.add(con.killSults);
+		modules.add(con.autoLog);
+		modules.add(con.floofyFoxes);
+		modules.add(con.jesus);
+		modules.add(con.phase);
+		modules.add(con.dougDimmadome);
+		modules.add(con.criticals);
+		modules.add(con.wtap);
+		modules.add(con.triggerBot);
+		modules.add(con.trail);
+		modules.add(con.reachNotify);
+		modules.add(con.hideName);
+		modules.add(con.discordRichPresence);
+		modules.add(con.autoArmor);
+		modules.add(con.antiLava);
+		modules.add(con.invWalk);
+		modules.add(con.mike);
+		modules.add(con.disabler);
+		modules.add(con.smallItems);
+		modules.add(con.lsd);
+		modules.add(con.tracers);
+		modules.add(con.blockCoding);
+		modules.add(con.testModuleOne);
+		modules.add(con.hypixel5SecDisabler);
+		modules.add(con.hud);
+		modules.add(con.snow);
+		modules.add(con.targetStrafe);
+		modules.add(con.eagle);
+		modules.add(con.parkour);
+		modules.add(con.furries);
+		modules.add(con.blueScreenOfDeath);
+		modules.add(con.autoTool);
+		modules.add(con.bedBreaker);
+		modules.add(con.infinitePlace);
+		modules.add(con.dragonWings);
+		modules.add(con.entityDesync);
+		modules.add(con.antiAntiXray);
+		modules.add(con.firstPerson);
+		modules.add(con.spammer);
+		modules.add(con.fpsBooster);
+		modules.add(con.superHeroFX);
+		modules.add(con.nameTags);
+		
+		return modules;
+		
+	}
 	
 	public Config(String name) {
 		this.name = name;
@@ -183,6 +279,8 @@ public class Config {
 			this.firstPerson = new FirstPerson();
 			this.spammer = new Spammer();
 			this.fpsBooster = new FpsBooster();
+			this.superHeroFX = new SuperHeroFX();
+			this.nameTags = new NameTags();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");

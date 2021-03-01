@@ -36,7 +36,7 @@ public class EntityFX extends Entity
     protected float particleAlpha;
 
     /** The icon field from which the given particle pulls its texture. */
-    protected TextureAtlasSprite particleIcon;
+    public TextureAtlasSprite particleIcon;
     public static double interpPosX;
     public static double interpPosY;
     public static double interpPosZ;

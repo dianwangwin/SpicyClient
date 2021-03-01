@@ -41,6 +41,7 @@ import net.minecraft.util.MathHelper;
 
 public class Hypixel {
 	
+	// This does not work anymore
 	public static void damageHypixel(double damage) {
 		
 		Minecraft mc = Minecraft.getMinecraft();
@@ -64,6 +65,7 @@ public class Hypixel {
 		}
 		
 	}
+	// This does not work anymore
 	
 	public static transient boolean disabled = false, watchdog = false, shouldCancelPackets = false, threwEnderPearl = false, fireball = false;
 	public static transient double originalX, originalY, originalZ, originalMotionX, originalMotionY, originalMotionZ;

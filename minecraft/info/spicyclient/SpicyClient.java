@@ -472,95 +472,40 @@ public class SpicyClient {
 	public static void loadConfig(Config c) {
 		
 		modules.clear();
+		modules = Config.getModulesForConfig(c);
 		
-		// Normal modules
-		
-		modules.add(c.tabgui);
-		modules.add(c.clickgui);
-		modules.add(c.killaura);
-		modules.add(c.fly);
-		modules.add(c.sprint);
-		modules.add(c.bhop);
-		modules.add(c.rainbowgui);
-		modules.add(c.fullbright);
-		modules.add(c.nofall);
-		modules.add(c.keystrokes);
-		modules.add(c.fastplace);
-		modules.add(c.step);
-		modules.add(c.noHead);
-		modules.add(c.oldHitting);
-		modules.add(c.noSlow);
-		modules.add(c.owoifier);
-		modules.add(c.chatBypass);
-		modules.add(c.safewalk);
-		modules.add(c.blockFly);
-		modules.add(c.playerESP);
-		modules.add(c.antiVoid);
-		modules.add(c.longJump);
-		modules.add(c.spider);
-		modules.add(c.altManager);
-		modules.add(c.timer);
-		modules.add(c.antiKnockback);
-		modules.add(c.back);
-		modules.add(c.noClip);
-		modules.add(c.blink);
-		modules.add(c.autoClicker);
-		modules.add(c.fastBreak);
-		modules.add(c.inventoryManager);
-		modules.add(c.tophat);
-		modules.add(c.worldTime);
-		modules.add(c.chestStealer);
-		modules.add(c.noRotate);
-		modules.add(c.skyColor);
-		modules.add(c.reach);
-		modules.add(c.csgoSpinbot);
-		modules.add(c.yawAndPitchSpoof);
-		modules.add(c.antibot);
-		modules.add(c.pingSpoof);
-		modules.add(c.killSults);
-		modules.add(c.autoLog);
-		modules.add(c.floofyFoxes);
-		modules.add(c.jesus);
-		modules.add(c.phase);
-		modules.add(c.dougDimmadome);
-		modules.add(c.criticals);
-		modules.add(c.wtap);
-		modules.add(c.triggerBot);
-		modules.add(c.trail);
-		modules.add(c.reachNotify);
-		modules.add(c.hideName);
-		modules.add(c.discordRichPresence);
-		modules.add(c.autoArmor);
-		modules.add(c.antiLava);
-		modules.add(c.invWalk);
-		modules.add(c.mike);
-		modules.add(c.disabler);
-		modules.add(c.smallItems);
-		modules.add(c.lsd);
-		modules.add(c.tracers);
-		modules.add(c.blockCoding);
-		modules.add(c.testModuleOne);
-		modules.add(c.hypixel5SecDisabler);
-		modules.add(c.hud);
-		modules.add(c.snow);
-		modules.add(c.targetStrafe);
-		modules.add(c.eagle);
-		modules.add(c.parkour);
-		modules.add(c.furries);
-		modules.add(c.blueScreenOfDeath);
-		modules.add(c.autoTool);
-		modules.add(c.bedBreaker);
-		modules.add(c.infinitePlace);
-		modules.add(c.dragonWings);
-		modules.add(c.entityDesync);
-		modules.add(c.antiAntiXray);
-		modules.add(c.firstPerson);
-		modules.add(c.spammer);
-		modules.add(c.fpsBooster);
+		int failedToLoad = 0;
 		
 		for (Module temp : SpicyClient.modules) {
 			
-			temp.name = temp.name.replaceAll("\\s+","");
+			if (temp == null) {
+				modules.remove(temp);
+				failedToLoad++;
+			}else {
+				temp.name = temp.name.replaceAll("\\s+","");
+			}
+			
+		}
+		
+		if (failedToLoad > 0) {
+			
+			Command.sendPrivateChatMessage("There are missing modules in this config (outdated?), attempting to restore them");
+			
+			CopyOnWriteArrayList<Module> restoreModules = new CopyOnWriteArrayList<>();
+			restoreModules = Config.getModulesForConfig(new Config("Restore Modules"));
+			
+			for (Module m : modules) {
+				for (Module r : restoreModules) {
+					if (m.getClass().getName().equals(r.getClass().getName())) {
+						restoreModules.remove(r);
+					}
+				}
+			}
+			
+			for (Module merge : restoreModules) {
+				modules.add(merge);
+				Command.sendPrivateChatMessage("Successfully restored the " + merge.name + " module");
+			}
 			
 		}
 		
@@ -708,6 +653,14 @@ public class SpicyClient {
 			builder.append("Config display version: " + SpicyClient.config.clientVersion);
 		} catch (Exception e) {
 			builder.append("Config display version: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Currently loading config: " + currentlyLoadingConfig);
+		} catch (Exception e) {
+			builder.append("Currently loading config: ERROR");
 		}
 		
 		builder.append("\n");
