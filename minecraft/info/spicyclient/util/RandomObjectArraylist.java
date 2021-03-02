@@ -18,7 +18,7 @@ public class RandomObjectArraylist<E> extends ArrayList<E> {
 		if (this.size() == 0) {
 			return null;
 		}else {
-			return this.get(new Random().nextInt(this.size()));
+			return this.get(new Random().nextInt(this.size() - 1));
 		}
 		
 	}

@@ -197,6 +197,7 @@ public class Fly extends Module {
 		
 		if (stopOnDisable.isEnabled()) {
 			MovementUtils.setMotion(0);
+			mc.thePlayer.motionY = 0;
 		}
 		
 		hypixelDamaged = false;

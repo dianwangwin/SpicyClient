@@ -111,18 +111,22 @@ public class SuperHeroFX extends Module {
 		
 		if (e instanceof EventSendPacket && ((EventSendPacket)e).packet instanceof C0APacketAnimation) {
 			
-			if (mc.objectMouseOver.typeOfHit == MovingObjectType.ENTITY) {
-				
-				for (int i = 0; i < amount.getValue(); i++) {
-					effects.add(new FX((long) ttl.getValue(),
-							mc.objectMouseOver.entityHit.posX + new Random().nextInt(3) + new Random().nextDouble() - 2,
-							mc.objectMouseOver.entityHit.posY + new Random().nextInt(2) + new Random().nextDouble()
-									- 0.5,
-							mc.objectMouseOver.entityHit.posZ + new Random().nextInt(3) + new Random().nextDouble() - 2,
-							new Random().nextInt(360), new Random().nextInt(180) - 90, 1 / scale.getValue(),
-							strings.getRandomObject(), colors.getRandomObject()));
+			try {
+				if (mc.objectMouseOver.typeOfHit == MovingObjectType.ENTITY) {
+					
+					for (int i = 0; i < amount.getValue(); i++) {
+						effects.add(new FX((long) ttl.getValue(),
+								mc.objectMouseOver.entityHit.posX + new Random().nextInt(3) + new Random().nextDouble() - 2,
+								mc.objectMouseOver.entityHit.posY + new Random().nextInt(2) + new Random().nextDouble()
+										- 0.5,
+								mc.objectMouseOver.entityHit.posZ + new Random().nextInt(3) + new Random().nextDouble() - 2,
+								new Random().nextInt(360), new Random().nextInt(180) - 90, 1 / scale.getValue(),
+								strings.getRandomObject(), colors.getRandomObject()));
+					}
+					
 				}
-				
+			} catch (Exception e2) {
+				// TODO: handle exception
 			}
 			
 		}

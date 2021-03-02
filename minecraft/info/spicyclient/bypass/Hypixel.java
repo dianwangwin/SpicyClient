@@ -8,6 +8,7 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventSneaking;
 import info.spicyclient.events.listeners.EventUpdate;
@@ -21,6 +22,7 @@ import info.spicyclient.util.PlayerUtils;
 import info.spicyclient.util.RandomUtils;
 import info.spicyclient.util.RotationUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemEnderPearl;
 import net.minecraft.item.ItemFireball;
@@ -67,10 +69,12 @@ public class Hypixel {
 	}
 	// This does not work anymore
 	
-	public static transient boolean disabled = false, watchdog = false, shouldCancelPackets = false, threwEnderPearl = false, fireball = false;
-	public static transient double originalX, originalY, originalZ, originalMotionX, originalMotionY, originalMotionZ;
-	public static transient int status = 0;
-	public static transient CopyOnWriteArrayList<Packet> packets = new CopyOnWriteArrayList<Packet>();
+	private static transient boolean disabled = false, watchdog = false, shouldCancelPackets = false,
+			threwEnderPearl = false, fireball = false, shouldToggleOnGround = false;
+	private static transient double originalX, originalY, originalZ, originalMotionX, originalMotionY, originalMotionZ;
+	private static transient int status = 0;
+	private static transient CopyOnWriteArrayList<Packet> packets = new CopyOnWriteArrayList<Packet>();
+	private static transient long disabledUntil = System.currentTimeMillis();
 	
 	public static void onFlyEnable() {
 		
@@ -79,8 +83,11 @@ public class Hypixel {
 		shouldCancelPackets = false;
 		threwEnderPearl = false;
 		fireball = false;
+		shouldToggleOnGround = false;
 		packets.clear();
 		status = 0;
+		disabledUntil = System.currentTimeMillis();
+		
 		originalX = Minecraft.getMinecraft().thePlayer.posX;
 		originalY = Minecraft.getMinecraft().thePlayer.posY;
 		originalZ = Minecraft.getMinecraft().thePlayer.posZ;
@@ -133,10 +140,54 @@ public class Hypixel {
 			
 			MovementUtils.setMotion(SpicyClient.config.fly.hypixelFreecamHorizontalFlySpeed.getValue());
 			
+			if (shouldToggleOnGround && MovementUtils.isOnGround(0.0001)) {
+				module.toggle();
+			}
+			
+			if (disabled) {
+				switch (status) {
+				case 0:
+				case 1:
+					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 10E-12D, mc.thePlayer.posZ);
+					status++;
+					break;
+				case 2:
+					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - 10E-12D, mc.thePlayer.posZ);
+					status = 0;
+					break;
+
+				default:
+					break;
+				}
+			}
+			
 		}
 		
 		if (e instanceof EventSneaking && e.isPre()) {
 			((EventSneaking)e).sneaking = false;
+		}
+		
+		if (e instanceof EventRenderGUI && e.isPre() && disabled) {
+			if (System.currentTimeMillis() < disabledUntil) {
+				
+				String timeLeft = new DecimalFormat("#.#")
+						.format(((double) disabledUntil - System.currentTimeMillis()) / 1000);
+				
+				mc.fontRendererObj.drawString(timeLeft + " secs left",
+						((float) (new ScaledResolution(mc).getScaledWidth_double() / 2)
+								- (mc.fontRendererObj.getStringWidth(timeLeft + " secs left") / 2)),
+						((float) (new ScaledResolution(mc).getScaledHeight_double() / 2)
+								- (mc.fontRendererObj.FONT_HEIGHT - 18)),
+						-1, false);
+				
+			} else {
+				mc.fontRendererObj.drawString("0.0 secs left",
+						((float) (new ScaledResolution(mc).getScaledWidth_double() / 2)
+								- (mc.fontRendererObj.getStringWidth("0.00 secs left") / 2)),
+						((float) (new ScaledResolution(mc).getScaledHeight_double() / 2)
+								- (mc.fontRendererObj.FONT_HEIGHT - 18)),
+						0xff2121, false);
+			}
 		}
 		
 		if (e instanceof EventUpdate && e.isPre() && disabled && packets.size() > 0) {
@@ -154,7 +205,11 @@ public class Hypixel {
 			
 			packets.clear();
 			
-			Minecraft.getMinecraft().thePlayer.setPosition(tpX, tpY, tpZ);
+			mc.thePlayer.setPosition(tpX, tpY, tpZ);
+			
+			if (threwEnderPearl || fireball) {
+				shouldToggleOnGround = true;
+			}
 			
 		}
 		
@@ -182,17 +237,17 @@ public class Hypixel {
                     if (watchdog) {
                     	disabled = true;
                         NotificationManager.getNotificationManager().createNotification("Fly", "Teleporting you to your current position", true, 5000, Type.INFO, Color.PINK);
+                        disabledUntil = System.currentTimeMillis() + 5000;
+                        if (threwEnderPearl) {
+                        	disabledUntil = System.currentTimeMillis() + 3000;
+                        }
                     }
                     
                 }
                 else if (((EventPacket)e).packet instanceof S27PacketExplosion && fireball) {
                 	disabled = true;
                     NotificationManager.getNotificationManager().createNotification("Fly", "Teleporting you to your current position", true, 5000, Type.INFO, Color.PINK);
-                    //packets.clear();
-        			//Minecraft.getMinecraft().thePlayer.setPosition(originalX, originalY, originalZ);
-        			//Minecraft.getMinecraft().thePlayer.motionX = originalMotionX;
-        			//Minecraft.getMinecraft().thePlayer.motionY = originalMotionY;
-        			//Minecraft.getMinecraft().thePlayer.motionZ = originalMotionZ;
+                    disabledUntil = System.currentTimeMillis() + 3000;
                 }
 			
             }
