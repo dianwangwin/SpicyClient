@@ -19,6 +19,7 @@ import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.settings.Setting;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class TabGUI extends Module {
 	
@@ -467,6 +468,10 @@ public class TabGUI extends Module {
 			
 			if (e.isPre()) {
 				
+				if (SpicyClient.config.jelloForSpicy.isEnabled()) {
+					GlStateManager.translate(0, 13, 0);
+				}
+				
 				FontRenderer fr = mc.fontRendererObj;
 				
 				float hue = System.currentTimeMillis() % (int)(rainbowTimer * 1000) / (float)(rainbowTimer * 1000);
@@ -755,7 +760,9 @@ public class TabGUI extends Module {
 					catNum++;
 					
 				}
-				
+				if (SpicyClient.config.jelloForSpicy.isEnabled()) {
+					GlStateManager.translate(0, -13, 0);
+				}
 			}
 			
 		}

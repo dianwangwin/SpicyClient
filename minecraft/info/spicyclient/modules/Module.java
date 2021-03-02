@@ -32,6 +32,11 @@ public abstract class Module {
 	public transient boolean ClickGuiExpanded = false;
 	public transient int index;
 	
+	// For Jello
+	public transient float animation = 0;
+	public transient float hoverPercent = 0;
+	public transient float lastHoverPercent = 0;
+	
 	public boolean isToggled() {
 		return toggled;
 	}

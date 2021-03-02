@@ -110,6 +110,7 @@ public class Config {
 	public FpsBooster fpsBooster = new FpsBooster();
 	public SuperHeroFX superHeroFX = new SuperHeroFX();
 	public NameTags nameTags = new NameTags();
+	public JelloForSpicy jelloForSpicy = new JelloForSpicy();
 	
 	public String clientName = "Spicy ", clientVersion = "B3 Beta";
 	
@@ -201,6 +202,7 @@ public class Config {
 		modules.add(con.fpsBooster);
 		modules.add(con.superHeroFX);
 		modules.add(con.nameTags);
+		modules.add(con.jelloForSpicy);
 		
 		return modules;
 		
@@ -281,6 +283,7 @@ public class Config {
 			this.fpsBooster = new FpsBooster();
 			this.superHeroFX = new SuperHeroFX();
 			this.nameTags = new NameTags();
+			this.jelloForSpicy = new JelloForSpicy();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");

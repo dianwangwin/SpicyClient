@@ -14,11 +14,10 @@ import org.lwjgl.opengl.GL11;
 import info.spicyclient.SpicyClient;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventRenderGUI;
-import info.spicyclient.fonts.FontManager;
-import info.spicyclient.fonts.FontUtils;
 import info.spicyclient.modules.Module;
 import info.spicyclient.modules.render.SkyColor;
 import info.spicyclient.notifications.NotificationManager;
+import info.spicyclient.ui.Jello.JelloHud;
 import info.spicyclient.util.MovementUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -51,6 +50,16 @@ public class HUD {
 	public void draw() {
 		
 		NotificationManager.getNotificationManager().onRender();
+		
+		if (SpicyClient.config.jelloForSpicy.isEnabled()) {
+			drawJelloHud();
+		}else {
+			drawSpicyHud();
+		}
+		
+	}
+	
+	public void drawSpicyHud() {
 		
 		ScaledResolution sr = new ScaledResolution(mc);
 		FontRenderer fr = mc.fontRendererObj;
@@ -213,6 +222,13 @@ public class HUD {
 		event.setType(EventType.PRE);
 		
 		info.spicyclient.SpicyClient.onEvent(event);
+		
+	}
+	
+	public void drawJelloHud() {
+		
+		//this.mc.displayGuiScreen(new JelloHud());
+		new JelloHud().renderScreen();
 		
 	}
 	

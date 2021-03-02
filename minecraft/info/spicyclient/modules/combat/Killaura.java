@@ -341,10 +341,32 @@ public class Killaura extends Module {
 					if (target instanceof EntityPlayer && SpicyClient.config.antibot.isEnabled() && !mc.isSingleplayer() && mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel")) {
 						
 	                    try {
+	                    	
 	                        if (mc.getNetHandler().getPlayerInfo(((EntityPlayer)target).getUniqueID()).responseTime > 1) {
 	                        	Command.sendPrivateChatMessage("A watchdog bot was removed from your game (ping check)");
 	                        	mc.theWorld.removeEntity(target);
 	                        	return;
+	                        }else {
+		                    	new Thread("Bot checker thread") {
+		                    		public void run() {
+
+										if (mc.getNetHandler()
+												.getPlayerInfo(((EntityPlayer) target).getUniqueID()) == null) {
+											Command.sendPrivateChatMessage(
+													"A watchdog bot was removed from your game (null npi check)");
+											mc.theWorld.removeEntity(target);
+											return;
+										} else if (mc.getNetHandler()
+												.getPlayerInfo(((EntityPlayer) target).getUniqueID())
+												.getGameProfile() == null) {
+											Command.sendPrivateChatMessage(
+													"A watchdog bot was removed from your game (null game profile check)");
+											mc.theWorld.removeEntity(target);
+											return;
+										}
+
+		                    		};
+		                    	}.start();
 	                        }
 						} catch (NullPointerException e1) {
 							

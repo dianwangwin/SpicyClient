@@ -13,8 +13,6 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.autoUpdater.Updater;
 import info.spicyclient.files.Account;
 import info.spicyclient.files.Config;
-import info.spicyclient.fonts.FontManager;
-import info.spicyclient.fonts.FontRenderer;
 import info.spicyclient.modules.combat.Criticals;
 import info.spicyclient.modules.memes.DougDimmadome;
 import info.spicyclient.modules.memes.FloofyFoxes;
@@ -94,8 +92,8 @@ public class NewMainMenu extends GuiScreen {
 		GlStateManager.popMatrix();
 		
 		String s1 = "Source code and downloads available at https://SpicyClient.info";
-        //this.drawString(this.fontRendererObj, s1, this.width - this.fontRendererObj.getStringWidth(s1) - 2, this.height - 10, 0xff7289da);
-		FontRenderer.drawstring(s1, this.width - this.fontRendererObj.getStringWidth(s1) + 12, this.height - 10, new Color(114, 137, 218, 255));
+        this.drawString(this.fontRendererObj, s1, this.width - this.fontRendererObj.getStringWidth(s1) - 2, this.height - 10, 0xff7289da);
+		//FontRenderer.drawstring(s1, this.width - this.fontRendererObj.getStringWidth(s1) + 12, this.height - 10, new Color(114, 137, 218, 255));
 		
 		// Logo
 		GlStateManager.enableBlend();

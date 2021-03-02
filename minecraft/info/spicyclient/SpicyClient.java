@@ -59,13 +59,12 @@ import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventChatmessage;
 import info.spicyclient.events.listeners.EventKey;
 import info.spicyclient.events.listeners.EventRenderGUI;
+import info.spicyclient.events.listeners.EventTick;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.files.Account;
 import info.spicyclient.files.AltInfo;
 import info.spicyclient.files.Config;
 import info.spicyclient.files.FileManager;
-import info.spicyclient.fonts.FontManager;
-import info.spicyclient.fonts.FontRenderer;
 import info.spicyclient.modules.Module;
 import info.spicyclient.modules.Module.Category;
 import info.spicyclient.modules.player.Timer;
@@ -111,7 +110,7 @@ public class SpicyClient {
 	
 	public static boolean discordFailedToStart = false;
 	
-	public static int currentVersionNum = 15;
+	public static int currentVersionNum = 16;
 	
 	public static boolean currentlyLoadingConfig = false;
 	
@@ -160,11 +159,6 @@ public class SpicyClient {
 			
 		}
 		*/
-		
-		// Creates the font manager
-		FontManager.getFontManager();
-		// Sets the font renderer's font to the default font
-		FontRenderer.setCurrentFont(FontManager.getFontManager().getUniFont("opensans"));
 		
 		// Does music player stuff
 		Media tempMedia = new Media("http://google.com/SpicyClient.mp3");
