@@ -89,6 +89,11 @@ extends CFont {
         }
         CFont.CharData[] currentData = this.charData;
         float alpha = (float)(color >> 24 & 255) / 255.0f;
+        
+        // Was added because superherofx
+        alpha = GlStateManager.colorState.alpha;
+        // Was added because superherofx
+        
         boolean randomCase = false;
         boolean bold = false;
         boolean italic = false;

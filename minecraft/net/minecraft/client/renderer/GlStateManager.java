@@ -29,7 +29,7 @@ public class GlStateManager
     private static int activeShadeModel = 7425;
     private static GlStateManager.BooleanState rescaleNormalState = new GlStateManager.BooleanState(32826);
     private static GlStateManager.ColorMask colorMaskState = new GlStateManager.ColorMask((GlStateManager.GlStateManager$1)null);
-    private static GlStateManager.Color colorState = new GlStateManager.Color();
+    public static GlStateManager.Color colorState = new GlStateManager.Color();
     private static final String __OBFID = "CL_00002558";
     public static boolean clearEnabled = true;
 
@@ -733,7 +733,7 @@ public class GlStateManager
         }
     }
 
-    static class Color
+    public static class Color
     {
         public float red = 1.0F;
         public float green = 1.0F;

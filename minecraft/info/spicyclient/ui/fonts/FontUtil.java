@@ -96,4 +96,7 @@ public class FontUtil {
 	public static JelloFontRenderer fontBig = JelloFontRenderer.createFontRenderer(getJelloFontRegular((int)(33)));
 	public static JelloFontRenderer fontSmall = JelloFontRenderer.createFontRenderer(getJelloFontRegular((int)(14)));
 	
+	public static JelloFontRenderer superherofx1 = JelloFontRenderer.createFontRenderer(getFont(14, false, new ResourceLocation("spicy/superherofx/1.ttf")));
+	public static JelloFontRenderer superherofx2 = JelloFontRenderer.createFontRenderer(getFont(14, false, new ResourceLocation("spicy/superherofx/2.ttf")));
+	
 }

@@ -16,7 +16,10 @@ import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.modules.render.SkyColor;
 import info.spicyclient.settings.NumberSetting;
+import info.spicyclient.ui.fonts.FontUtil;
+import info.spicyclient.ui.fonts.JelloFontRenderer;
 import info.spicyclient.util.RandomObjectArraylist;
+import info.spicyclient.util.RotationUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.particle.EntityFX;
@@ -55,7 +58,7 @@ public class SuperHeroFX extends Module {
 			"Pow", "Wam", "Zap", "Bam", "Zap", "Slap", "Kapow", "Wow", "BOOM", "KABOOM", "POW", "WAM", "ZAP", "BAM",
 			"ZAP", "SLAP", "KAPOW", "WOW");
 	private static transient RandomObjectArraylist<Integer> colors = new RandomObjectArraylist<Integer>(0xff0000,
-			0x00ff00, 0x0000ff, 0xffff00, 0xff00ff, 0x00ffff, 0xffffff, 0x000000);
+			0x00ff00, 0x0000ff, 0xffff00, 0xff00ff, 0x00ffff, 0xffffff);
 	
 	@Override
 	public void onEvent(Event e) {
@@ -70,9 +73,20 @@ public class SuperHeroFX extends Module {
 			
 			for (FX f : effects) {
 				
-				if (System.currentTimeMillis() > f.ttl) {
+				if (System.currentTimeMillis() > f.ttl && f.opacity <= 5) {
 					effects.remove(f);
 				}else {
+					
+					if (System.currentTimeMillis() > f.ttl) {
+						f.opacity -= f.opacity/200;
+					}
+					
+					f.x += (f.motX / 10);
+					f.y += (f.motY / 10);
+					f.z += (f.motZ / 10);
+					f.motX -= f.motX / 20;
+					f.motY -= f.motY / 20;
+					f.motZ -= f.motZ / 20;
 					
 					String text = f.text;
 					GlStateManager.pushMatrix();
@@ -90,11 +104,16 @@ public class SuperHeroFX extends Module {
 							(f.y - mc.getRenderManager().renderPosY) * -scale, (f.z - mc.getRenderManager().renderPosZ) * -scale);
 					GlStateManager.rotate((float) f.yaw, 0, 1, 0);
 					GlStateManager.rotate((float) f.pitch, 1, 0, 0);
-					mc.fontRendererObj.drawString(text, (float) (f.x - (mc.fontRendererObj.getStringWidth(text) / 2) - mc.getRenderManager().renderPosX),
-							0f, f.color, true);
+					JelloFontRenderer fr = FontUtil.superherofx1;
+					GlStateManager.color(1, 1, 1, (float) (f.opacity/100));
+					fr.drawString(text, (float) (f.x - (mc.fontRendererObj.getStringWidth(text) / 2)
+							- mc.getRenderManager().renderPosX), 0f, f.color);
 					GlStateManager.rotate(180, 0, 1, 0);
-					mc.fontRendererObj.drawString(text, (float) (f.x - (mc.fontRendererObj.getStringWidth(text) / 2) - mc.getRenderManager().renderPosX),
-							0f, f.color, true);
+					GlStateManager.color(1, 1, 1, 1);
+					GlStateManager.color(1, 1, 1, (float) (f.opacity/100));
+					fr.drawString(text, (float) (f.x - (mc.fontRendererObj.getStringWidth(text) / 2)
+							- mc.getRenderManager().renderPosX), 0f, f.color);
+					GlStateManager.color(1, 1, 1, 1);
 					GlStateManager.disableTexture2D();
 					GlStateManager.disableBlend();
 					GlStateManager.enableDepth();
@@ -116,10 +135,12 @@ public class SuperHeroFX extends Module {
 					
 					for (int i = 0; i < amount.getValue(); i++) {
 						effects.add(new FX((long) ttl.getValue(),
-								mc.objectMouseOver.entityHit.posX + new Random().nextInt(3) + new Random().nextDouble() - 2,
+								mc.objectMouseOver.entityHit.posX + new Random().nextInt(3) + new Random().nextDouble()
+										- 2,
 								mc.objectMouseOver.entityHit.posY + new Random().nextInt(2) + new Random().nextDouble()
 										- 0.5,
-								mc.objectMouseOver.entityHit.posZ + new Random().nextInt(3) + new Random().nextDouble() - 2,
+								mc.objectMouseOver.entityHit.posZ + new Random().nextInt(3) + new Random().nextDouble()
+										- 2,
 								new Random().nextInt(360), new Random().nextInt(180) - 90, 1 / scale.getValue(),
 								strings.getRandomObject(), colors.getRandomObject()));
 					}
@@ -140,15 +161,19 @@ public class SuperHeroFX extends Module {
 			this.x = x;
 			this.y = y;
 			this.z = z;
+			this.motX = ((double)(new Random().nextInt(3))) - 1.0;
+			this.motY = new Random().nextDouble();
+			this.motZ = ((double)(new Random().nextInt(3))) - 1.0;
 			this.yaw = yaw;
 			this.pitch = pitch;
 			this.scale = scale;
 			this.text = text;
 			this.color = color;
+			this.opacity = 100;
 		}
 		
 		public long ttl;
-		public double x, y, z, yaw, pitch, scale;
+		public double x, y, z, yaw, pitch, scale, motX, motY, motZ, opacity;
 		public String text;
 		public int color;
 		

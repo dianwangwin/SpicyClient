@@ -74,6 +74,7 @@ import info.spicyclient.networking.NetworkManager;
 import info.spicyclient.networking.NetworkUtils;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.ui.HUD;
+import info.spicyclient.ui.fonts.FontUtil;
 import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.RenderUtils;
 import info.spicyclient.util.RotationUtils;
@@ -110,7 +111,7 @@ public class SpicyClient {
 	
 	public static boolean discordFailedToStart = false;
 	
-	public static int currentVersionNum = 16;
+	public static int currentVersionNum = 17;
 	
 	public static boolean currentlyLoadingConfig = false;
 	
@@ -316,6 +317,9 @@ public class SpicyClient {
 			System.out.println("The " + c.name + " category has been set up");
 
 		}
+		
+		FontUtil.superherofx1.toString();
+		FontUtil.superherofx2.toString();
 		
 	}
 	
