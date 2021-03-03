@@ -8,6 +8,9 @@ import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.modules.Module;
+import info.spicyclient.settings.BooleanSetting;
+import info.spicyclient.settings.KeybindSetting;
+import info.spicyclient.settings.ModeSetting;
 import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.settings.Setting;
 import info.spicyclient.ui.fonts.FontUtil;
@@ -51,6 +54,15 @@ public class NewClickGui extends GuiScreen {
 		
 		int notToggled = 0xfff5f5f5, toggled = 0xffc4c4c4, borderLines = 0xff000000, textColor = 0xff000000,
 				sliderColor = 0xffd4d4d4;
+		
+		float hue = System.currentTimeMillis() % (int) (SpicyClient.hud.rainbowTimer * 1000)
+				/ (float) (SpicyClient.hud.rainbowTimer * 1000);
+		//int primColor = Color.HSBtoRGB(hue, 0.45f, 1);
+		Color color = new Color(Color.HSBtoRGB(hue, 0.45f, 1), false);
+		
+		if (SpicyClient.config.rainbowgui.isEnabled()) {
+			accentColor = Color.HSBtoRGB(hue, 0.45f, 1);
+		}
 		
 		toggled = 0xb9171717;
 		notToggled = 0xbf2e2e2e;
@@ -117,10 +129,6 @@ public class NewClickGui extends GuiScreen {
 								((float) SpicyClient.config.hud.colorSettingGreen.getValue()),
 								((float) SpicyClient.config.hud.colorSettingBlue.getValue()));
 						if (SpicyClient.config.rainbowgui.isEnabled()) {
-							float hue = System.currentTimeMillis() % (int) (SpicyClient.hud.rainbowTimer * 1000)
-									/ (float) (SpicyClient.hud.rainbowTimer * 1000);
-							//int primColor = Color.HSBtoRGB(hue, 0.45f, 1);
-							Color color = new Color(Color.HSBtoRGB(hue, 0.45f, 1), false);
 							GlStateManager.color(((float) color.getRed()) / 255, ((float) color.getGreen()) / 255,
 									((float) color.getBlue()) / 255);
 						}
@@ -183,14 +191,42 @@ public class NewClickGui extends GuiScreen {
 				
 				int settingAmount = 0;
 				for (Setting s : selectedModule.settings) {
+					double offset = (settingAmount * (FONT_HEIGHT + 4));
 					
 					if (s instanceof NumberSetting) {
-						double offset = (settingAmount * (FONT_HEIGHT + 4));
 						GlStateManager.pushMatrix();
 						NumberSetting num = (NumberSetting) s;
 						GlStateManager.color(1, 1, 1, 1);
 						fr.drawString(num.name + ": " + num.getValue(), (this.width / 4) + 10,
 								(float) ((this.height / 4) + 25 + offset), textColor);
+						GlStateManager.popMatrix();
+					}
+					else if (s instanceof BooleanSetting) {
+						GlStateManager.pushMatrix();
+						BooleanSetting bool = (BooleanSetting) s;
+						GlStateManager.color(1, 1, 1, 1);
+						fr.drawString(bool.name + ": " + bool.isEnabled(), (this.width / 4) + 10,
+								(float) ((this.height / 4) + 25 + offset), textColor);
+						GlStateManager.popMatrix();
+					}
+					else if (s instanceof KeybindSetting) {
+						GlStateManager.pushMatrix();
+						KeybindSetting key = (KeybindSetting) s;
+						GlStateManager.color(1, 1, 1, 1);
+						fr.drawString(key.name + ": " + Keyboard.getKeyName(key.getKeycode()), (this.width / 4) + 10,
+								(float) ((this.height / 4) + 25 + offset), textColor);
+						GlStateManager.popMatrix();
+					}
+					else if (s instanceof ModeSetting) {
+						GlStateManager.pushMatrix();
+						ModeSetting mode = (ModeSetting) s;
+						GlStateManager.color(1, 1, 1, 1);
+						fr.drawString(mode.name + ":", (this.width / 4) + 10,
+								(float) ((this.height / 4) + 25 + offset), textColor);
+						GlStateManager.color(1, 1, 1);
+						fr.drawString(mode.getMode(), (this.width / 4) + 10 + fr.getStringWidth(mode.name + ": "),
+								(float) ((this.height / 4) + 25 + offset), textColor);
+						GlStateManager.color(1, 1, 1);
 						GlStateManager.popMatrix();
 					}
 					
@@ -269,6 +305,23 @@ public class NewClickGui extends GuiScreen {
 				
 			}
 		}else {
+			
+			double percent = startSettingAnimation;
+			
+			if (closingSettings) {
+				percent = (double) (100 - startSettingAnimation);
+			}
+			double left = (this.width / 4) + (((((this.width / 2)) - (this.width / 4)) / 100) * percent),
+					up = (this.height / 4) + ((((this.height / 2) - (this.height / 4)) / 100) * percent),
+					right = ((this.width / 4) * 3) - (((((this.width / 4) * 3) - (this.width / 2)) / 100) * percent),
+					down = ((this.height / 4) * 3) - ((((((this.height / 4) * 3) - (this.height / 2))) / 100) * percent);
+			
+			if (mouseX > left && mouseX < right && mouseY > up && mouseY < down) {
+				
+			}else {
+				startSettingAnimation = 100;
+				closingSettings = true;
+			}
 			
 		}
 		
