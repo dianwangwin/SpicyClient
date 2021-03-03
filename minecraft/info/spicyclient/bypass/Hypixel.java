@@ -266,7 +266,7 @@ public class Hypixel {
                     //mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.11D, z, true));
                     mc.thePlayer.motionY = 0.21;
                     watchdog = true;
-                    NotificationManager.getNotificationManager().createNotification("Fly: Wait 5s.", "", true, 5000, Type.INFO, Color.PINK);
+                    NotificationManager.getNotificationManager().createNotification("Fly", "Please wait 5s.", true, 5000, Type.INFO, Color.PINK);
                     //mc.thePlayer.jump();
                     
                 }
@@ -303,7 +303,7 @@ public class Hypixel {
 								
 								Minecraft.getMinecraft().getNetHandler().getNetworkManager()
 										.sendPacketNoEvent(new C03PacketPlayer.C05PacketPlayerLook(
-												Minecraft.getMinecraft().thePlayer.rotationYaw, 89 + new Random().nextFloat(),
+												Minecraft.getMinecraft().thePlayer.rotationYaw, 88.99f + new Random().nextFloat(),
 												MovementUtils.isOnGround(0.0001)));
 								Minecraft.getMinecraft().getNetHandler().getNetworkManager()
 										.sendPacketNoEvent(new C08PacketPlayerBlockPlacement(is));
@@ -345,8 +345,8 @@ public class Hypixel {
 								
 								Minecraft.getMinecraft().getNetHandler().getNetworkManager()
 										.sendPacketNoEvent(new C03PacketPlayer.C05PacketPlayerLook(
-												Minecraft.getMinecraft().thePlayer.rotationYaw, 89,
-												MovementUtils.isOnGround(0.0001)));
+												Minecraft.getMinecraft().thePlayer.rotationYaw,
+												88.99f + new Random().nextFloat(), MovementUtils.isOnGround(0.0001)));
 								Minecraft.getMinecraft().getNetHandler().getNetworkManager()
 										.sendPacketNoEvent(new C08PacketPlayerBlockPlacement(is));
 								mc.thePlayer.inventory.currentItem = heldItemBeforeThrow;
