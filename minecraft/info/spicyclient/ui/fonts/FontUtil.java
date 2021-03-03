@@ -99,4 +99,6 @@ public class FontUtil {
 	public static JelloFontRenderer superherofx1 = JelloFontRenderer.createFontRenderer(getFont(14, false, new ResourceLocation("spicy/superherofx/1.ttf")));
 	public static JelloFontRenderer superherofx2 = JelloFontRenderer.createFontRenderer(getFont(14, false, new ResourceLocation("spicy/superherofx/2.ttf")));
 	
+	public static JelloFontRenderer spicyClickGuiFont = JelloFontRenderer.createFontRenderer(getJelloFont((int)(23), false));
+	
 }

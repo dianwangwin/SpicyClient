@@ -50,6 +50,7 @@ import com.sun.javafx.PlatformUtil;
 import com.thealtening.AltService;
 import com.thealtening.AltService.EnumAltService;
 
+import info.spicyclient.ClickGUI.NewClickGui;
 import info.spicyclient.ClickGUI.Tab;
 import info.spicyclient.autoUpdater.Updater;
 import info.spicyclient.chatCommands.Command;
@@ -313,6 +314,7 @@ public class SpicyClient {
 			temp.setOffsetX(0);
 			temp.setOffsetY(0);
 			info.spicyclient.ClickGUI.ClickGUI.tabs.add(temp);
+			NewClickGui.tabs.add(temp);
 			catOffset += Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 20;
 			System.out.println("The " + c.name + " category has been set up");
 

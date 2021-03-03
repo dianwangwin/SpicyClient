@@ -6,6 +6,7 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.ClickGUI.NewClickGui;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventKey;
 import info.spicyclient.events.listeners.EventRenderGUI;
@@ -110,6 +111,7 @@ public class Hud extends Module{
 				float brightness = hsb[2];
 				
 				info.spicyclient.ClickGUI.ClickGUI.accentColor = Color.HSBtoRGB(hue, saturation, 1);
+				NewClickGui.accentColor = Color.HSBtoRGB(hue, saturation, 1);
 				SpicyClient.hud.primaryColor = Color.HSBtoRGB(hue, saturation, 1);
 				SpicyClient.hud.secondaryColor = Color.HSBtoRGB(hue, saturation, 0.6f);
 				SpicyClient.config.tabgui.primaryColor = Color.HSBtoRGB(hue, saturation, 1);

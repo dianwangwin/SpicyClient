@@ -12,6 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.lwjgl.opengl.GL11;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.ClickGUI.NewClickGui;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.modules.Module;
@@ -71,6 +72,7 @@ public class HUD {
 		if (rainbowEnabled) {
 			primaryColor = primColor;
 			secondaryColor = secColor;
+			NewClickGui.accentColor = primColor;
 		}
 		
 		// This is here so the modules don't move when you toggle them

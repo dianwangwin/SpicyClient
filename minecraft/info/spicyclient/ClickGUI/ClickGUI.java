@@ -49,6 +49,7 @@ public class ClickGUI extends GuiScreen {
 	
 	public void initGui() {
 		currentlySettingKeybind = false;
+		mc.displayGuiScreen(NewClickGui.getClickGui());
 	}
 	
 	public void onGuiClosed() {
