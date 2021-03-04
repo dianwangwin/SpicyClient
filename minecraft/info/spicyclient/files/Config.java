@@ -304,6 +304,8 @@ public class Config {
 			this.clickgui.colorSettingRed = new NumberSetting("Red", 255, 0, 255, 1);
 			this.clickgui.colorSettingGreen = new NumberSetting("Red", 255, 0, 255, 1);
 			this.clickgui.colorSettingBlue = new NumberSetting("Red", 255, 0, 255, 1);
+			this.clickgui.clickguiMode = new ModeSetting("ClickGui", "Spicy V2", "Spicy V1", "Spicy V2");
+			this.clickgui.padding = new NumberSetting("Padding", 8, 5.5, 10, 0.1);
 			
 			this.fly.mode = new ModeSetting("Mode", this.fly.mode.getMode(), "Vanilla", "Hypixel", "HypixelFast1");
 			this.fly.hypixelFreecamHorizontalFlySpeed = new NumberSetting("Speed", 2, 1, 10, 0.2);

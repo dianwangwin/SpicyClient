@@ -28,7 +28,10 @@ public class ModeSetting extends Setting {
 	
 	public boolean is(String mode) {
 		
-		return index == modes.indexOf(mode);
+		if (getMode().equals(mode) || index == modes.indexOf(mode)) {
+			return true;
+		}
+		return false;
 		
 	}
 	
@@ -50,6 +53,19 @@ public class ModeSetting extends Setting {
 				index = 0;
 			}
 			
+		}
+		
+		SettingChangeEvent settingMode = new SettingChangeEvent(type.MODE, getSetting());
+		SpicyClient.onSettingChange(settingMode);
+		
+	}
+	
+	public void setMode(String mode) {
+		
+		for (String string : modes) {
+			if (string.equals(mode)) {
+				index = modes.indexOf(string);
+			}
 		}
 		
 		SettingChangeEvent settingMode = new SettingChangeEvent(type.MODE, getSetting());

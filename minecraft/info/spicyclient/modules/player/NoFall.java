@@ -39,7 +39,7 @@ public class NoFall extends Module {
 	
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventMotion && e.isPre() && noFallMode.is("Vanilla") && mc.thePlayer.fallDistance > 2) {
+		if (e instanceof EventMotion && e.isPre() && noFallMode.is("Vanilla") && mc.thePlayer.fallDistance > 3) {
 			
 			EventMotion event = (EventMotion) e;
 			event.onGround = true;

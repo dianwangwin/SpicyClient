@@ -96,11 +96,14 @@ public class Hypixel {
 		originalMotionZ = Minecraft.getMinecraft().thePlayer.motionZ;
 		MovementUtils.setMotion(0);
 		
+		// Removed
+		/*
 		if (!RandomUtils.isPosSolid(Minecraft.getMinecraft().thePlayer.getPosition().add(0, -1, 0))) {
 			SpicyClient.config.fly.toggle();
 			NotificationManager.getNotificationManager().createNotification("Fly", "Please stand on a solid block",
 					true, 2500, Type.WARNING, Color.RED);
 		}
+		*/
 		
 	}
 	

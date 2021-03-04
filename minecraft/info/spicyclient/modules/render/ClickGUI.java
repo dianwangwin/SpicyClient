@@ -6,6 +6,8 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.ClickGUI.ClickGUI;
+import info.spicyclient.ClickGUI.NewClickGui;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventKey;
 import info.spicyclient.events.listeners.EventRenderGUI;
@@ -36,8 +38,20 @@ public class ClickGui extends Module{
 	public NumberSetting colorSettingGreen = new NumberSetting("Green", 255, 0, 255, 1);
 	public NumberSetting colorSettingBlue = new NumberSetting("Blue", 255, 0, 255, 1);
 	
+	public ModeSetting clickguiMode = new ModeSetting("ClickGui", "Spicy V2", "Spicy V1", "Spicy V2");
+	public NumberSetting padding = new NumberSetting("Padding", 8, 5.5, 10, 0.1);
+	
 	public ClickGui() {
 		super("ClickGUI", Keyboard.KEY_RSHIFT, Category.RENDER);
+		resetSettings();
+	}
+	
+	@Override
+	public void resetSettings() {
+		
+		this.settings.clear();
+		this.addSettings(clickguiMode, padding);
+		
 	}
 	
 	@Override
@@ -51,16 +65,56 @@ public class ClickGui extends Module{
 	}
 	
 	public void onEnable() {
-		info.spicyclient.ClickGUI.ClickGUI clickGui = new info.spicyclient.ClickGUI.ClickGUI(null);
-		mc.displayGuiScreen(clickGui);
+		
+		if (clickguiMode.is("Spicy V2")) {
+			mc.displayGuiScreen(NewClickGui.getClickGui());
+		}
+		else if (clickguiMode.is("Spicy V1")) {
+			info.spicyclient.ClickGUI.ClickGUI clickGui = new info.spicyclient.ClickGUI.ClickGUI(null);
+			mc.displayGuiScreen(clickGui);
+		}
+		
+		toggle();
+		
 	}
 	
 	public void onDisable() {
-		mc.displayGuiScreen(clickGui.last);
+		
 	}
 	
 	@Override
 	public void onSettingChange(SettingChangeEvent e) {
+		
+		if (e.setting == clickguiMode) {
+			
+			if (this.settings.contains(padding)) {
+				this.settings.remove(padding);
+			}
+			
+			if (mc.currentScreen != null && (mc.currentScreen instanceof NewClickGui || mc.currentScreen instanceof ClickGUI)) {
+				
+				if (clickguiMode.is("Spicy V2")) {
+					mc.displayGuiScreen(NewClickGui.getClickGui());
+				}
+				else if (clickguiMode.is("Spicy V1")) {
+					info.spicyclient.ClickGUI.ClickGUI clickGui = new info.spicyclient.ClickGUI.ClickGUI(null);
+					mc.displayGuiScreen(clickGui);
+				}
+				
+			}
+			
+			if (clickguiMode.is("Spicy V2")) {
+				if (!this.settings.contains(padding)) {
+					this.settings.add(padding);
+				}
+			}
+			else if (clickguiMode.is("Spicy V1")) {
+				
+			}
+			
+			reorderSettings();
+			
+		}
 		
 	}
 	

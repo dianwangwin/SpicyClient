@@ -83,6 +83,8 @@ public class TargetStrafe extends Module {
 				return;
 			}else {
 				
+				mc.thePlayer.noClip = false;
+				
 				double currentSpeed = MovementUtils.getSpeed();
 				
 				MovementUtils.setMotion(0);
