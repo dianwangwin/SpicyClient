@@ -112,7 +112,7 @@ public class TargetStrafe extends Module {
 			
 		}
 		
-		if (e instanceof EventMove && e.isPre()) {
+		if (e instanceof EventMove && e.isPre() && !SpicyClient.config.fly.isEnabled()) {
 			
 			EventMove event = (EventMove)e;
 			
@@ -143,7 +143,10 @@ public class TargetStrafe extends Module {
 	            
 	            float currentSpeed1 = MovementUtils.getSpeed();
 	            
-	            event.setSpeed(currentSpeed + speed.getValue(), RotationUtils.getRotationFromPosition(x2, z2, mc.thePlayer.posY)[0]);
+				double backupMotX = mc.thePlayer.motionX, backupMotZ = mc.thePlayer.motionZ;
+	            event.setSpeed(((currentSpeed + speed.getValue()) / 100) * 90, RotationUtils.getRotationFromPosition(x2, z2, mc.thePlayer.posY)[0]);
+	            mc.thePlayer.motionX = backupMotX;
+	            mc.thePlayer.motionZ = backupMotZ;
 	            
 	            if (currentSpeed > MovementUtils.getSpeed()) {
 	            	direction = !direction;

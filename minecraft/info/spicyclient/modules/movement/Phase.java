@@ -10,6 +10,9 @@ import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.modules.Module.Category;
+import info.spicyclient.notifications.Color;
+import info.spicyclient.notifications.NotificationManager;
+import info.spicyclient.notifications.Type;
 import info.spicyclient.util.MovementUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
@@ -29,16 +32,22 @@ public class Phase extends Module {
 
 	
 	public void onEnable() {
-		
+		mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - 5, mc.thePlayer.posZ);
+		NotificationManager.getNotificationManager().createNotification("Phase", "Teleported you out of the box", true, 3000, Type.INFO, Color.GREEN);
+		toggle();
 	}
 	
 	public void onDisable() {
-		mc.thePlayer.motionY += 0.1;
+		
 	}
 	
 	private transient int hypixelStage = 0;
 	
 	public void onEvent(Event e) {
+		
+		if (true) {
+			return;
+		}
 		
 		if (e instanceof EventGetBlockHitbox) {
 			

@@ -39,15 +39,9 @@ public class Antibot extends Module {
 	
 	public void onEnable() {
 		
-		removeThese.clear();
-		dontRemove.clear();
-		
 	}
 	
 	public void onDisable() {
-		
-		removeThese.clear();
-		dontRemove.clear();
 		
 	}
 	
@@ -136,25 +130,6 @@ public class Antibot extends Module {
 			}
 			else if (!mc.isSingleplayer() && mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel")) {
 				
-				if (e.isPre()) {
-					hypixelAntibot();
-				}
-				else if (e.isPost()) {
-					
-					for (EntityPlayer ent : removeThese) {
-						
-						try {
-							mc.theWorld.removeEntity(ent);
-						} catch (ConcurrentModificationException e2) {
-							Command.sendPrivateChatMessage("Could not remove bot due to ConcurrentModificationException, please report this to a dev");
-						} catch (Exception e2) {
-							Command.sendPrivateChatMessage("Could not remove bot due to an unknown error, please report this to a dev");
-						}
-						
-					}
-					
-				}
-				
 				/*
 				S0CPacketSpawnPlayer p = (S0CPacketSpawnPlayer) packet.packet;
 				Entity entity = mc.theWorld.getEntityByID(p.getEntityID());
@@ -174,95 +149,6 @@ public class Antibot extends Module {
 			}
 			
 		}
-		
-	}
-	
-	// Prevents non bots from being removed
-	private static transient List<EntityPlayer> dontRemove = new ArrayList<>();
-	private static transient CopyOnWriteArrayList<EntityPlayer> removeThese = new CopyOnWriteArrayList<EntityPlayer>();
-	
-	private void hypixelAntibot() {
-		
-		for (Object o : mc.theWorld.getLoadedEntityList()) {
-			
-            if (o instanceof EntityPlayer) {
-            	
-                EntityPlayer ent = (EntityPlayer) o;
-                
-                
-                
-                if (ent != mc.thePlayer && !dontRemove.contains(ent)) {
-                	
-                	String customName = ent.getCustomNameTag();
-                	String formattedName = ent.getDisplayName().getFormattedText();
-                    String name = ent.getName();
-                    
-                    if(ent.isInvisible() && !formattedName.startsWith("§c") && formattedName.endsWith("§r") && customName.equals(name)){
-                    	
-    					double diffX = Math.abs(ent.posX - mc.thePlayer.posX);
-    					double diffY = Math.abs(ent.posY - mc.thePlayer.posY);
-    					double diffZ = Math.abs(ent.posZ - mc.thePlayer.posZ);
-    					double diffH = Math.sqrt(diffX * diffX + diffZ * diffZ);
-    					
-    					if(diffY < 13 && diffY > 10 && diffH < 3){
-    						
-    						List<EntityPlayer> list = PlayerUtils.getTabPlayerList();
-    						
-    						if(!list.contains(ent)){
-    							
-    							//Command.sendPrivateChatMessage("The bot " + name + " bot was removed from your game");
-                          		removeThese.add(ent);
-                          		
-    						}
-    						
-    					}
-    				
-    				}
-                    
-                    if(ent.isInvisible()){
-                    	
-                    	if(!customName.equalsIgnoreCase("") && customName.toLowerCase().contains("§c§c") && name.contains("§c")){
-                    		//Command.sendPrivateChatMessage("The bot " + name + " bot was removed from your game");
-                    		removeThese.add(ent);
-                    	}
-                    	
-                    }
-                    
-	                if (formattedName.startsWith("\u00a7") && !ent.isInvisible() && !formattedName.toLowerCase().contains("npc")) {
-	                	
-	                }else {
-	                	//Command.sendPrivateChatMessage("The " + ent.getDisplayName().getFormattedText() + " bot was removed from your game");
-	                	removeThese.add(ent);
-	                }
-                    
-                    // Watchdog bots
-                    if(!customName.equalsIgnoreCase("") && customName.toLowerCase().contains("§c") && customName.toLowerCase().contains("§r")){
-                    	Command.sendPrivateChatMessage("A watchdog bot named " + name + "was removed from your game");
-                    	removeThese.add(ent);
-                    }
-                    
-                    // npcs
-                    if(formattedName.contains("§8[NPC]")){
-                    	
-                    	dontRemove.add(ent);
-                    	
-                    }
-                    
-                    if(!formattedName.contains("§c") && !customName.equalsIgnoreCase("")){
-
-                    	dontRemove.add(ent);
-                    }
-                    
-                    // bedwars shop
-                    if(!formattedName.startsWith("§") && formattedName.endsWith("§r")){
-                    	dontRemove.add(ent);
-                    }
-                    
-                }
-                
-            }
-            
-        }
 		
 	}
 	

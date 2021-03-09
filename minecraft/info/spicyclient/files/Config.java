@@ -9,6 +9,7 @@ import info.spicyclient.modules.Module;
 import info.spicyclient.modules.Module.Category;
 import info.spicyclient.modules.beta.TestModuleOne;
 import info.spicyclient.modules.combat.*;
+import info.spicyclient.modules.community.Speed;
 import info.spicyclient.modules.memes.*;
 import info.spicyclient.modules.movement.*;
 import info.spicyclient.modules.player.*;
@@ -111,6 +112,7 @@ public class Config {
 	public SuperHeroFX superHeroFX = new SuperHeroFX();
 	public NameTags nameTags = new NameTags();
 	public JelloForSpicy jelloForSpicy = new JelloForSpicy();
+	public Speed speed = new Speed();
 	
 	public String clientName = "Spicy ", clientVersion = "B3 Beta";
 	
@@ -203,6 +205,7 @@ public class Config {
 		modules.add(con.superHeroFX);
 		modules.add(con.nameTags);
 		modules.add(con.jelloForSpicy);
+		modules.add(con.speed);
 		
 		return modules;
 		
@@ -284,6 +287,7 @@ public class Config {
 			this.superHeroFX = new SuperHeroFX();
 			this.nameTags = new NameTags();
 			this.jelloForSpicy = new JelloForSpicy();
+			this.speed = new Speed();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");

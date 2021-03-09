@@ -83,7 +83,7 @@ public class NewClickGui extends GuiScreen {
 		
 		for (Tab t : tabs) {
 			
-			double width = -1;
+			double width = fr.getStringWidth(t.category.name) + 4 + 20;
 			
 			ArrayList<Module> modulesInCat = new ArrayList<>();
 			
@@ -457,7 +457,7 @@ public class NewClickGui extends GuiScreen {
 			
 			for (Tab t : tabs) {
 				
-				double width = -1;
+				double width = fr.getStringWidth(t.category.name) + 4 + 20;
 				double FONT_HEIGHT = fr.FONT_HEIGHT;
 				
 				ArrayList<Module> modulesInCat = new ArrayList<>();
@@ -672,7 +672,11 @@ public class NewClickGui extends GuiScreen {
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		if (selectedSetting != null & selectedSetting instanceof KeybindSetting) {
 			KeybindSetting key = (KeybindSetting) selectedSetting;
-			key.setKeycode(keyCode);
+			if (keyCode != Keyboard.KEY_ESCAPE) {
+				key.setKeycode(keyCode);
+			}else {
+				key.setKeycode(Keyboard.KEY_NONE);
+			}
 			selectedSetting = null;
 		}else {
 			if (keyCode == Keyboard.KEY_ESCAPE || keyCode == SpicyClient.config.clickgui.getKey()) {

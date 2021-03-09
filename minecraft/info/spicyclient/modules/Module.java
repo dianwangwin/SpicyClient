@@ -161,6 +161,7 @@ public abstract class Module {
 		RENDER("Render"),
 		MEMES("Memes"),
 		WORLD("World"),
+		COMMUNITY("Community"),
 		BETA("Beta Modules");
 		
 		public String name;

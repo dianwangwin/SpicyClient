@@ -1,6 +1,7 @@
 package net.minecraft.client.entity;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventChatmessage;
 import info.spicyclient.events.listeners.EventMotion;
@@ -176,6 +177,11 @@ public class EntityPlayerSP extends AbstractClientPlayer
     	event.setY(y);
     	event.setZ(z);
     	SpicyClient.onEvent(event);
+    	
+    	if (SpicyClient.config.targetStrafe.isEnabled()) {
+    		SpicyClient.config.targetStrafe.onEvent(event);
+    	}
+    	
 		super.moveEntity(event.x, event.y, event.z);
 		event.setType(EventType.POST);
 		SpicyClient.onEvent(event);
@@ -208,11 +214,11 @@ public class EntityPlayerSP extends AbstractClientPlayer
     public void onUpdateWalkingPlayer()
     {
     	
-    	EventUpdate e = new EventUpdate();
+    	EventUpdate e = new EventUpdate(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.motionX, this.motionY, this.motionZ, this.rotationYaw, this.rotationPitch, this.onGround);
     	e.setType(EventType.PRE);
     	SpicyClient.onEvent(e);
     	
-    	EventMotion event = new EventMotion(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.motionX, this.motionY, this.motionZ, this.rotationYaw, this.rotationPitch, this.onGround);
+    	EventMotion event = new EventMotion(e.getX(), e.getY(), e.getZ(), this.motionX, this.motionY, this.motionZ, e.getYaw(), e.getPitch(), e.isOnGround());
     	event.setType(EventType.PRE);
     	SpicyClient.onEvent(event);
     	
@@ -306,7 +312,11 @@ public class EntityPlayerSP extends AbstractClientPlayer
         
         event.setType(EventType.POST);
     	SpicyClient.onEvent(event);
-        
+    	
+    	e = new EventUpdate(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.motionX, this.motionY, this.motionZ, this.rotationYaw, this.rotationPitch, this.onGround);
+    	e.setType(EventType.POST);
+    	SpicyClient.onEvent(e);
+    	
     }
 
     /**

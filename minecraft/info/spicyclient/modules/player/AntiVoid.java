@@ -9,6 +9,7 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventChatmessage;
+import info.spicyclient.events.listeners.EventGetBlockHitbox;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventPacket;
 import info.spicyclient.events.listeners.EventUpdate;
@@ -24,6 +25,7 @@ import info.spicyclient.util.Timer;
 import net.minecraft.block.BlockAir;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 
@@ -48,7 +50,7 @@ public class AntiVoid extends Module {
 	}
 	
 	public void onDisable() {
-		
+		mc.timer.ticksPerSecond = 20;
 	}
 	
 	public static boolean bounced = false;
@@ -79,9 +81,11 @@ public class AntiVoid extends Module {
 				}
 				
 				try {
-					if (mode.is("Hypixel") && ((EventPacket) e).packet instanceof S08PacketPlayerPosLook && !MovementUtils.isOnGround(0.001) && (mc.thePlayer.fallDistance >= 20.0f || mc.thePlayer.posY < 0) && isOverVoid) {
+					if (mode.is("Hypixel") && ((EventPacket) e).packet instanceof S08PacketPlayerPosLook && !MovementUtils.isOnGround(0.001) && (mc.thePlayer.fallDistance >= 20.0f || mc.thePlayer.posY < 0) && isOverVoid && mc.thePlayer.posY > mc.thePlayer.lastTickPosY) {
 						
+						mc.timer.ticksPerSecond = 20;
 						mc.thePlayer.fallDistance = 0;
+						NotificationManager.getNotificationManager().createNotification("Antivoid saved you", "", true, 2000, Type.INFO, Color.BLUE);
 						
 					}
 				} catch (NullPointerException e2) {
@@ -134,17 +138,10 @@ public class AntiVoid extends Module {
 			        	}else {
 			        		
 			        		Random r = new Random();
-				        	
-				        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
-				        	//mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY - 3, mc.thePlayer.posZ, false));
-				        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 12, mc.thePlayer.posZ, false));
-				        	//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 6, mc.thePlayer.posZ);
-				        	mc.thePlayer.fallDistance = -1;
-				        	NotificationManager.getNotificationManager().createNotification("Antivoid saved you", "", true, 2000, Type.INFO, Color.BLUE);
-				        	//mc.thePlayer.motionY = 1;
-				            //float f = mc.thePlayer.rotationYaw * 0.017453292F;
-				            //mc.thePlayer.motionX -= (double)(MathHelper.sin(f) * 0.035f);
-				            //c.thePlayer.motionZ += (double)(MathHelper.cos(f) * 0.035f);
+			        		
+			        		//mc.thePlayer.fallDistance = -1;
+			        		mc.thePlayer.motionY = 0;
+			        		MovementUtils.setMotion(0);
 			        		
 			        	}
 			        	

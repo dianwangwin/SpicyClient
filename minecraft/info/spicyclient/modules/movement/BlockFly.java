@@ -28,6 +28,7 @@ import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.RenderUtils;
 import info.spicyclient.util.RotationUtils;
 import info.spicyclient.util.Timer;
+import info.spicyclient.util.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.client.Minecraft;
@@ -74,7 +75,6 @@ public class BlockFly extends Module {
 	
 	public void onEvent(Event e) {
 		
-		// Test this when you are home because the school blocks hypixel
 		// Donated by kot client <<< pog
         if (e instanceof EventSendPacket) {
             EventSendPacket event = (EventSendPacket) e;
@@ -84,11 +84,6 @@ public class BlockFly extends Module {
             //mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SPRINTING));
         }
         // Donated by kot client <<< pog
-        
-        if (e instanceof EventUpdate && e.isPre()) {
-			mc.getNetHandler().getNetworkManager().sendPacketNoEvent(
-					new C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SPRINTING));
-        }
         
 		if (e instanceof EventSneaking) {
 			
@@ -218,7 +213,16 @@ public class BlockFly extends Module {
 			ItemStack i = mc.thePlayer.getCurrentEquippedItem();
 			BlockPos below = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1D, mc.thePlayer.posZ);
 			
-			if (mc.theWorld.getBlockState(below).getBlock() == Blocks.air) {
+			boolean shouldPlace = false;
+			
+			for (int h = 0; h < 4; h++) {
+				below = WorldUtils.getForwardBlock(h).add(0, -1, 0);
+				if (mc.theWorld.getBlockState(below).getBlock() == Blocks.air) {
+					shouldPlace = true;
+				}
+			}
+			
+			if (shouldPlace) {
 				
 				for (EnumFacing facing : EnumFacing.VALUES) {
 					
@@ -264,39 +268,41 @@ public class BlockFly extends Module {
 					case SOUTH:
 					case WEST:
 						
-						BlockInfo defaultPos = findFacingAndBlockPosForBlock(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1D, mc.thePlayer.posZ + mc.thePlayer.motionZ));
-						
-						if (defaultPos == null)
-							return;
-						
-						if (mc.theWorld.getBlockState(defaultPos.pos).getBlock() != Blocks.air) {
+						for (int k = 0; k < 4; k++) {
+							BlockInfo defaultPos = findFacingAndBlockPosForBlock(WorldUtils.getForwardBlock(k).add(0, -1, 0));
 							
-							ItemStack block = mc.thePlayer.getCurrentEquippedItem();
+							if (defaultPos == null)
+								return;
 							
-							for (int g = 0; g < 9; g++) {
+							if (mc.theWorld.getBlockState(defaultPos.pos).getBlock() != Blocks.air || true) {
 								
-								if (mc.thePlayer.inventoryContainer.getSlot(g + 36).getHasStack() && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem() instanceof ItemBlock && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize > 0 && !((ItemBlock)mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock().getLocalizedName().toLowerCase().contains("chest") && !((ItemBlock)mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock().getLocalizedName().toLowerCase().contains("table")) {
+								ItemStack block = mc.thePlayer.getCurrentEquippedItem();
+								
+								for (int g = 0; g < 9; g++) {
 									
-									InventoryPlayer inventoryplayer = mc.thePlayer.inventory;
-									inventoryplayer.setCurrentItem(mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem(), 0, false, true);
+									if (mc.thePlayer.inventoryContainer.getSlot(g + 36).getHasStack() && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem() instanceof ItemBlock && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize > 0 && !((ItemBlock)mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock().getLocalizedName().toLowerCase().contains("chest") && !((ItemBlock)mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock().getLocalizedName().toLowerCase().contains("table")) {
+										
+										InventoryPlayer inventoryplayer = mc.thePlayer.inventory;
+										inventoryplayer.setCurrentItem(mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem(), 0, false, true);
+										
+									}
 									
 								}
-								
-							}
-							if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, block, defaultPos.pos, defaultPos.facing, RotationUtils.getVectorForRotation(getRotationsHypixel(defaultPos.targetPos, defaultPos.facing)[0], getRotationsHypixel(defaultPos.targetPos, defaultPos.facing)[1])) || true) {
-								
-								mc.thePlayer.swingItem();
-								event.setYaw(getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[0]);
-								event.setPitch(getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[1]);
-								lastYaw = event.yaw;
-								lastPitch = event.pitch;
-								RenderUtils.setCustomYaw(lastYaw);
-								RenderUtils.setCustomPitch(lastPitch);
+								if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, block, defaultPos.pos, defaultPos.facing, RotationUtils.getVectorForRotation(getRotationsHypixel(defaultPos.targetPos, defaultPos.facing)[0], getRotationsHypixel(defaultPos.targetPos, defaultPos.facing)[1])) || true) {
+									
+									mc.thePlayer.swingItem();
+									event.setYaw(getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[0]);
+									event.setPitch(getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[1]);
+									lastYaw = event.yaw;
+									lastPitch = event.pitch;
+									RenderUtils.setCustomYaw(lastYaw);
+									RenderUtils.setCustomPitch(lastPitch);
+									return;
+									
+								}
 								return;
 								
 							}
-							return;
-							
 						}
 						
 						break;
@@ -327,7 +333,7 @@ public class BlockFly extends Module {
 
 				output.pos = output.pos.offset(face);
 				output.facing = face.getOpposite();
-				output.targetPos = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1D, mc.thePlayer.posZ);
+				output.targetPos = new BlockPos(input.getX(), input.getY(), input.getZ());
 				return output;
 
 			}
@@ -458,7 +464,7 @@ public class BlockFly extends Module {
 		
 		paramBlockPos = paramBlockPos.offset(paramEnumFacing.getOpposite());
 		
-		return RotationUtils.getRotationFromPosition(paramBlockPos.getX() + 0.5, paramBlockPos.getZ() + 0.5, paramBlockPos.getY());
+		return RotationUtils.getRotationFromPosition(paramBlockPos.getX() + 0.5, paramBlockPos.getZ() + 0.5, paramBlockPos.getY() + (new Random().nextDouble() / 2));
 		
     }
 	

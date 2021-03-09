@@ -69,36 +69,38 @@ public class EventMove extends Event {
 
     }
     
-    public void setSpeed(double moveSpeed, float yaw) {
-        float forward = Minecraft.getMinecraft().thePlayer.movementInput.moveForward;
-        float strafe = Minecraft.getMinecraft().thePlayer.movementInput.moveStrafe;
-        if ((double)forward == 0.0D && (double)strafe == 0.0D) {
-            Minecraft.getMinecraft().thePlayer.motionX = 0.0D;
-            Minecraft.getMinecraft().thePlayer.motionZ = 0.0D;
-        } else {
-            if ((double)forward != 0.0D) {
-                if (strafe > 0.0F) {
-                    yaw += (float)((double)forward > 0.0D ? -45 : 45);
-                } else if (strafe < 0.0F) {
-                    yaw += (float)((double)forward > 0.0D ? 45 : -45);
-                }
+	public void setSpeed(double moveSpeed, float yaw) {
+		float forward = Minecraft.getMinecraft().thePlayer.movementInput.moveForward;
+		float strafe = Minecraft.getMinecraft().thePlayer.movementInput.moveStrafe;
+		if ((double) forward == 0.0D && (double) strafe == 0.0D) {
+			Minecraft.getMinecraft().thePlayer.motionX = 0.0D;
+			Minecraft.getMinecraft().thePlayer.motionZ = 0.0D;
+		} else {
+			if ((double) forward != 0.0D) {
+				if (strafe > 0.0F) {
+					yaw += (float) ((double) forward > 0.0D ? -45 : 45);
+				} else if (strafe < 0.0F) {
+					yaw += (float) ((double) forward > 0.0D ? 45 : -45);
+				}
 
-                strafe = 0.0F;
-                if (forward > 0.0F) {
-                    forward = 1.0F;
-                } else if (forward < 0.0F) {
-                    forward = -1.0F;
-                }
-            }
+				strafe = 0.0F;
+				if (forward > 0.0F) {
+					forward = 1.0F;
+				} else if (forward < 0.0F) {
+					forward = -1.0F;
+				}
+			}
 
-            double xDist = (double)forward * moveSpeed * Math.cos(Math.toRadians((double)(yaw + 90.0F))) + (double)strafe * moveSpeed * Math.sin(Math.toRadians((double)(yaw + 90.0F)));
-            double zDist = (double)forward * moveSpeed * Math.sin(Math.toRadians((double)(yaw + 90.0F))) - (double)strafe * moveSpeed * Math.cos(Math.toRadians((double)(yaw + 90.0F)));
-            Minecraft.getMinecraft().thePlayer.motionX = xDist;
-            Minecraft.getMinecraft().thePlayer.motionZ = zDist;
-            this.setX(xDist);
-            this.setZ(zDist);
-        }
+			double xDist = (double) forward * moveSpeed * Math.cos(Math.toRadians((double) (yaw + 90.0F)))
+					+ (double) strafe * moveSpeed * Math.sin(Math.toRadians((double) (yaw + 90.0F)));
+			double zDist = (double) forward * moveSpeed * Math.sin(Math.toRadians((double) (yaw + 90.0F)))
+					- (double) strafe * moveSpeed * Math.cos(Math.toRadians((double) (yaw + 90.0F)));
+			Minecraft.getMinecraft().thePlayer.motionX = xDist;
+			Minecraft.getMinecraft().thePlayer.motionZ = zDist;
+			this.setX(xDist);
+			this.setZ(zDist);
+		}
 
-    }
+	}
     
 }

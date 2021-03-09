@@ -869,7 +869,21 @@ public abstract class World implements IBlockAccess
             return chunk.getBlockState(pos);
         }
     }
-
+    
+    public IBlockState getBlockState(double x, double y, double z)
+    {
+    	BlockPos pos = new BlockPos(x, y, z);
+        if (!this.isValid(pos))
+        {
+            return Blocks.air.getDefaultState();
+        }
+        else
+        {
+            Chunk chunk = this.getChunkFromBlockCoords(pos);
+            return chunk.getBlockState(pos);
+        }
+    }
+    
     /**
      * Checks whether its daytime by seeing if the light subtracted from the skylight is less than 4
      */

@@ -32,6 +32,9 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.login.server.S00PacketDisconnect;
 import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition;
+import net.minecraft.network.play.client.C03PacketPlayer.C05PacketPlayerLook;
+import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
@@ -208,7 +211,7 @@ public class Hypixel {
 			
 			packets.clear();
 			
-			mc.thePlayer.setPosition(tpX, tpY, tpZ);
+			//mc.thePlayer.setPosition(tpX, tpY, tpZ);
 			
 			if (threwEnderPearl || fireball) {
 				shouldToggleOnGround = true;
@@ -244,6 +247,8 @@ public class Hypixel {
                         if (threwEnderPearl) {
                         	disabledUntil = System.currentTimeMillis() + 3000;
                         }
+                        mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(((S08PacketPlayerPosLook)((EventPacket)e).packet).getX(), ((S08PacketPlayerPosLook)((EventPacket)e).packet).getY(), ((S08PacketPlayerPosLook)((EventPacket)e).packet).getZ(), false));
+                        e.setCanceled(true);
                     }
                     
                 }
@@ -321,6 +326,8 @@ public class Hypixel {
 				}
 				if (!threwEnderPearl && !fireball) {
 					
+					// Bans
+					/*
 					for (int i = 0; i < 45; i++) {
 						
 						if (Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
@@ -361,6 +368,7 @@ public class Hypixel {
 						}
 						
 					}
+					*/
 				}
 				
 			}

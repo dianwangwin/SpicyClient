@@ -149,7 +149,7 @@ public class Disabler extends Module {
                     packets.add(packetConfirmTransaction);
                     e.setCanceled(true);
                 }else {
-                	Command.sendPrivateChatMessage(packetConfirmTransaction.getUid());
+                	//Command.sendPrivateChatMessage(packetConfirmTransaction.getUid());
                 }
             }
 

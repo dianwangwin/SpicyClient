@@ -5,6 +5,7 @@ import java.util.Random;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventGetBlockReach;
@@ -22,6 +23,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -240,21 +242,31 @@ public class InfinitePlace extends Module {
 		//mc.getNetHandler().getNetworkManager().sendPacket(new C03PacketPlayer.C06PacketPlayerPosLook(
 				//mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch, new Random().nextBoolean()));
 		
-		for (double i = 0; i < 209; i++) {
-			Double currentPosX = lastPos1.xCoord - ((xRange / 209) * i),
-					currentPosY = lastPos1.yCoord - ((yRange / 209) * i),
-					currentPosZ = lastPos1.zCoord - ((zRange / 209) * i);
-			Command.sendPrivateChatMessage(i);
+		int packetNum = 70;
+		Command.sendPrivateChatMessage(packetNum);
+		for (double i = 0; i < packetNum; i++) {
+			double currentPosX = lastPos1.xCoord - ((xRange / packetNum) * i),
+					currentPosY = lastPos1.yCoord - ((yRange / packetNum) * i),
+					currentPosZ = lastPos1.zCoord - ((zRange / packetNum) * i);
 			
-			mc.getNetHandler().getNetworkManager().sendPacket(new C03PacketPlayer.C04PacketPlayerPosition(
-					currentPosX, currentPosY, currentPosZ, new Random().nextBoolean()));
-			temp = new Vec3(currentPosX + 0.5, currentPosY, currentPosZ + 0.5);
+			double t = (new Random().nextDouble() / 4);
+			currentPosY = Math.round(currentPosY) + t;
+			
+			//Command.sendPrivateChatMessage(currentPosX + " " + currentPosY + " " + currentPosZ);
+			
+			C04PacketPlayerPosition packet = new C03PacketPlayer.C04PacketPlayerPosition(currentPosX, currentPosY,
+					currentPosZ, new Random().nextBoolean());
+			packet.setMoving(true);
+			mc.getNetHandler().getNetworkManager().sendPacketNoEvent(packet);
+
+			temp = new Vec3(currentPosX, currentPosY, currentPosZ);
+			
 		}
 		
 		if (temp != null) {
 			
 			mc.thePlayer.setPosition(temp.xCoord, temp.yCoord, temp.zCoord);
-			mc.getNetHandler().getNetworkManager().sendPacket(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
+			//mc.getNetHandler().getNetworkManager().sendPacket(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
 			toggle();
 			
 		}

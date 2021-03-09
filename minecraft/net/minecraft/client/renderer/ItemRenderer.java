@@ -35,7 +35,6 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.events.EventDirection;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventSwordBlockAnimation;
-import info.spicyclient.events.listeners.EventUpdate;
 import shadersmod.client.Shaders;
 
 public class ItemRenderer {
