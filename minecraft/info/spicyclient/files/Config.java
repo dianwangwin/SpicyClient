@@ -288,6 +288,7 @@ public class Config {
 			this.nameTags = new NameTags();
 			this.jelloForSpicy = new JelloForSpicy();
 			this.speed = new Speed();
+			this.blockFly = new BlockFly();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");

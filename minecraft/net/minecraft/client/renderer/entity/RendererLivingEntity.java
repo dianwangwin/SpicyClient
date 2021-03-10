@@ -149,6 +149,9 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 
                 if (RenderUtils.SetCustomPitch && entity == Minecraft.getMinecraft().thePlayer) {
                 	f8 = RenderUtils.getCustomPitch();
+                }
+                
+                if (RenderUtils.SetCustomYaw && entity == Minecraft.getMinecraft().thePlayer) {
                 	Minecraft.getMinecraft().thePlayer.renderYawOffset = RenderUtils.getCustomYaw();
                 	Minecraft.getMinecraft().thePlayer.prevRenderYawOffset = RenderUtils.getCustomYaw();
                 }

@@ -9,6 +9,7 @@ import org.newdawn.slick.tests.xml.ItemContainer;
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
+import info.spicyclient.events.listeners.EventGetBlockReach;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventPacket;
 import info.spicyclient.events.listeners.EventRender3D;
@@ -57,6 +58,21 @@ public class BlockFly extends Module {
 	
 	public BlockFly() {
 		super("Block Fly", Keyboard.KEY_NONE, Category.MOVEMENT);
+		resetSettings();
+	}
+	
+	public static transient BlockPos lastPlace = null;
+	
+	public NumberSetting extend = new NumberSetting("Extend", 2.5, 0.1, 5, 0.1),
+			xOffset = new NumberSetting("X Offset", 0, 0, 1, 0.05),
+			zOffset = new NumberSetting("Z Offset", 0, 0, 1, 0.05);
+	
+	@Override
+	public void resetSettings() {
+		
+		this.settings.clear();
+		this.addSettings(extend);
+		
 	}
 	
 	public void onEnable() {
@@ -134,7 +150,11 @@ public class BlockFly extends Module {
 		
 		if (e instanceof EventRender3D && e.isPre()) {
 			
-			BlockPos below = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1D, mc.thePlayer.posZ);
+			BlockPos below = lastPlace;
+			
+			if (below == null) {
+				return;
+			}
 			
 			for (int i = 0; i < 5; i++) {
 				
@@ -255,6 +275,7 @@ public class BlockFly extends Module {
 								lastPitch = event.pitch;
 								RenderUtils.setCustomYaw(lastYaw);
 								RenderUtils.setCustomPitch(lastPitch);
+								lastPlace = underBelow.add(0, 1, 0);
 								return;
 								
 							}
@@ -268,13 +289,13 @@ public class BlockFly extends Module {
 					case SOUTH:
 					case WEST:
 						
-						for (int k = 0; k < 4; k++) {
+						for (double k = 0; k < extend.getValue(); k += 0.1) {
 							BlockInfo defaultPos = findFacingAndBlockPosForBlock(WorldUtils.getForwardBlock(k).add(0, -1, 0));
 							
 							if (defaultPos == null)
 								return;
 							
-							if (mc.theWorld.getBlockState(defaultPos.pos).getBlock() != Blocks.air || true) {
+							if (mc.theWorld.getBlockState(defaultPos.pos).getBlock() != Blocks.air) {
 								
 								ItemStack block = mc.thePlayer.getCurrentEquippedItem();
 								
@@ -288,7 +309,14 @@ public class BlockFly extends Module {
 									}
 									
 								}
-								if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, block, defaultPos.pos, defaultPos.facing, RotationUtils.getVectorForRotation(getRotationsHypixel(defaultPos.targetPos, defaultPos.facing)[0], getRotationsHypixel(defaultPos.targetPos, defaultPos.facing)[1])) || true) {
+								
+								boolean endAfter = false;
+								
+								if (mc.theWorld.getBlockState(WorldUtils.getForwardBlock(k).add(0, -1, 0)).getBlock() == Blocks.air) {
+									endAfter = true;
+								}
+								
+								if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, block, defaultPos.pos, defaultPos.facing, RotationUtils.getVectorForRotation(getRotationsHypixel(defaultPos.pos, defaultPos.facing)[0], getRotationsHypixel(defaultPos.pos, defaultPos.facing)[1]))) {
 									
 									mc.thePlayer.swingItem();
 									event.setYaw(getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[0]);
@@ -297,11 +325,21 @@ public class BlockFly extends Module {
 									lastPitch = event.pitch;
 									RenderUtils.setCustomYaw(lastYaw);
 									RenderUtils.setCustomPitch(lastPitch);
-									return;
+									lastPlace = defaultPos.targetPos;
+									if (endAfter) {
+										return;
+									}
+									//return;
 									
 								}
-								return;
 								
+								//return;
+								
+							}else {
+								RenderUtils.setCustomYaw(lastYaw);
+								RenderUtils.setCustomPitch(lastPitch);
+								event.setYaw(lastYaw);
+								event.setPitch(lastPitch);
 							}
 						}
 						
@@ -464,7 +502,8 @@ public class BlockFly extends Module {
 		
 		paramBlockPos = paramBlockPos.offset(paramEnumFacing.getOpposite());
 		
-		return RotationUtils.getRotationFromPosition(paramBlockPos.getX() + 0.5, paramBlockPos.getZ() + 0.5, paramBlockPos.getY() + (new Random().nextDouble() / 2));
+		return RotationUtils.getRotationFromPosition(paramBlockPos.getX() + (new Random().nextDouble()),
+				paramBlockPos.getZ() + (new Random().nextDouble()), paramBlockPos.getY() + 0.5);
 		
     }
 	

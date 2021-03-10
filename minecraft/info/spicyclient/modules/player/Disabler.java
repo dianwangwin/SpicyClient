@@ -2,6 +2,7 @@ package info.spicyclient.modules.player;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.lwjgl.input.Keyboard;
 
@@ -36,7 +37,7 @@ public class Disabler extends Module {
 	}
 	
 	public static transient boolean watchdog = false;
-	public static transient ArrayList<Packet> packets = new ArrayList<Packet>();
+	public static transient CopyOnWriteArrayList<Packet> packets = new CopyOnWriteArrayList<Packet>();
 	public static transient Timer ping = new Timer();
 	
 	@Override
