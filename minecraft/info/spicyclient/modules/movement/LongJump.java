@@ -22,14 +22,9 @@ public class LongJump extends Module {
 
 	
 	public void onEnable() {
-		
-        PlayerCapabilities playerCapabilities = new PlayerCapabilities();
-        playerCapabilities.isFlying = true;
-        playerCapabilities.allowFlying = true;
-        playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
-        playerCapabilities.isCreativeMode = true;
-        mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
-        
+		jumped = false;
+		timer.reset();
+		mc.thePlayer.jump();
 	}
 	
 	public void onDisable() {
@@ -43,30 +38,29 @@ public class LongJump extends Module {
 	public void onEvent(Event e) {
 		
 		if (e instanceof EventUpdate && e.isPre()) {
-			this.additionalInformation = "Hypixel";
+			this.additionalInformation = "Redesky";
 		}
 		
 		if (e instanceof EventMotion) {
 			
 			if (e.isPost()) {
 				
-				if (jumped && mc.thePlayer.onGround) {
+				if (jumped) {
 					this.toggle();
 					jumped = false;
 					return;
+				}else {
+                	MovementUtils.strafe(1.5f);
+                    mc.thePlayer.motionY = 0.4;
+                    e.setCanceled(true);
 				}
 				
 				mc.gameSettings.keyBindJump.pressed = false;
-
-                if (MovementUtils.isOnGround(0.000001)) {
-                	
-                	MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + 1.25f);
-                    mc.thePlayer.jump();
-                    e.setCanceled(true);
-                    jumped = true;
-
-                }
-
+				
+            	if (timer.hasTimeElapsed(300, true) || MovementUtils.isOnGround(0.00000001)) {
+            		jumped = true;
+            	}
+            	
                 mc.thePlayer.setSprinting(true);
 				
 			}

@@ -96,7 +96,7 @@ public class DiscordRP {
 		
 		for (Module m : SpicyClient.modules) {
 			
-			if (m.isEnabled() && !(m instanceof Hud) && !(m instanceof info.spicyclient.modules.player.DiscordRichPresence)) {
+			if (m.isEnabled() && !(m instanceof Hud) && !(m instanceof info.spicyclient.modules.player.DiscordRichPresence) && !(m instanceof info.spicyclient.modules.player.IrcChat)) {
 				toggled++;
 			}
 			
@@ -116,7 +116,7 @@ public class DiscordRP {
 			b.setSmallImage("floofyfox1", "This person is probably a furry...");
 		}
 		
-		b.setDetails(toggled + "/" + (SpicyClient.modules.size() - 2) + " Modules enabled");
+		b.setDetails(toggled + "/" + (SpicyClient.modules.size() - 3) + " Modules enabled");
 		b.setStartTimestamps(created);
 		
 		DiscordRPC.discordUpdatePresence(b.build());

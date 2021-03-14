@@ -113,6 +113,7 @@ public class Config {
 	public NameTags nameTags = new NameTags();
 	public JelloForSpicy jelloForSpicy = new JelloForSpicy();
 	public Speed speed = new Speed();
+	public IrcChat ircChat = new IrcChat();
 	
 	public String clientName = "Spicy ", clientVersion = "B3 Beta";
 	
@@ -206,6 +207,7 @@ public class Config {
 		modules.add(con.nameTags);
 		modules.add(con.jelloForSpicy);
 		modules.add(con.speed);
+		modules.add(con.ircChat);
 		
 		return modules;
 		
@@ -289,6 +291,7 @@ public class Config {
 			this.jelloForSpicy = new JelloForSpicy();
 			this.speed = new Speed();
 			this.blockFly = new BlockFly();
+			this.ircChat = new IrcChat();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");

@@ -13,7 +13,7 @@ import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.notifications.Type;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.C0CPacketInput;
+import net.minecraft.network.play.client.C0CPacketBoatInput;
 
 public class EntityDesync extends Module {
 
@@ -73,14 +73,14 @@ public class EntityDesync extends Module {
 	        
 	        riding.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
 	        
-	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
-	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
-	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
-	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
-	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
-	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
-	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
-	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
+	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketBoatInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
+	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketBoatInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
+	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketBoatInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
+	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketBoatInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
+	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketBoatInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
+	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketBoatInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
+	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketBoatInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
+	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketBoatInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
 			
 		}
 		
@@ -88,9 +88,9 @@ public class EntityDesync extends Module {
 			
 			Packet packet = ((EventSendPacket)e).packet;
 			
-			if (packet instanceof C0CPacketInput && e.isPre()) {
+			if (packet instanceof C0CPacketBoatInput && e.isPre()) {
 				
-				((C0CPacketInput)packet).setJumping(true);
+				((C0CPacketBoatInput)packet).setJumping(true);
 				
 			}
 			

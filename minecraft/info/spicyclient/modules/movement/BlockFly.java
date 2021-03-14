@@ -41,11 +41,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
+import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.network.play.client.C0DPacketCloseWindow;
 import net.minecraft.network.play.server.S2FPacketSetSlot;
@@ -79,15 +81,18 @@ public class BlockFly extends Module {
 		
 		lastYaw = mc.thePlayer.rotationYaw;
 		lastPitch = mc.thePlayer.rotationPitch;
+		lastSlot = -1;
 		
 	}
 	
 	public void onDisable() {
-		
+		mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
+		lastSlot = -1;
 	}
 	
 	public static transient float lastYaw = 0, lastPitch = 0;
 	public static transient Timer timer = new Timer();
+	public static transient int lastSlot = -1;
 	
 	public void onEvent(Event e) {
 		
@@ -144,6 +149,10 @@ public class BlockFly extends Module {
 			if (((EventSendPacket)e).packet instanceof C03PacketPlayer) {
 				((C03PacketPlayer)((EventSendPacket)e).packet).setYaw(lastYaw);
 				((C03PacketPlayer)((EventSendPacket)e).packet).setPitch(lastPitch);
+			}
+			
+			if (((EventSendPacket)e).packet instanceof C09PacketHeldItemChange) {
+				lastSlot = ((C09PacketHeldItemChange)((EventSendPacket)e).packet).getSlotId();
 			}
 			
 		}
@@ -235,7 +244,7 @@ public class BlockFly extends Module {
 			
 			boolean shouldPlace = false;
 			
-			for (int h = 0; h < 4; h++) {
+			for (double h = 0; h < extend.getValue(); h += 0.1) {
 				below = WorldUtils.getForwardBlock(h).add(0, -1, 0);
 				if (mc.theWorld.getBlockState(below).getBlock() == Blocks.air) {
 					shouldPlace = true;
@@ -253,22 +262,20 @@ public class BlockFly extends Module {
 						
 						if (mc.theWorld.getBlockState(underBelow).getBlock() != Blocks.air) {
 							
-							ItemStack block = mc.thePlayer.getCurrentEquippedItem();
-							
-							for (int g = 0; g < 9; g++) {
-								
-								if (mc.thePlayer.inventoryContainer.getSlot(g + 36).getHasStack() && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem() instanceof ItemBlock && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize > 0 && !((ItemBlock)mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock().getLocalizedName().toLowerCase().contains("chest") && !((ItemBlock)mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock().getLocalizedName().toLowerCase().contains("table")) {
-									
-									InventoryPlayer inventoryplayer = mc.thePlayer.inventory;
-									inventoryplayer.setCurrentItem(mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem(), 0, false, true);
-									
-								}
-								
+							ItemStack block = setStackToPlace();
+							if (block == null || block.getItem() == null || !(block.getItem() instanceof ItemBlock)) {
+								return;
 							}
 							
-							if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, block, underBelow, EnumFacing.UP, RotationUtils.getVectorForRotation(getRotationsHypixel(underBelow, EnumFacing.UP)[1], getRotationsHypixel(underBelow, EnumFacing.UP)[1])) || true) {
-								
-								mc.thePlayer.swingItem();
+							//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(underBelow, EnumFacing.UP.getIndex(), block, 0, 0, 0));
+							if (mc.playerController.onPlayerRightClickNoSync(mc.thePlayer, mc.theWorld, block,
+									underBelow, EnumFacing.UP,
+									RotationUtils.getVectorForRotation(
+											getRotationsHypixel(underBelow, EnumFacing.UP)[1],
+											getRotationsHypixel(underBelow, EnumFacing.UP)[1]))
+									&& block != null && block.getItem() != null
+									&& block.getItem() instanceof ItemBlock) {
+								mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0APacketAnimation());
 								event.setYaw(getRotationsHypixel(underBelow, facing)[0]);
 								event.setPitch(getRotationsHypixel(underBelow, facing)[1]);
 								lastYaw = event.yaw;
@@ -276,10 +283,9 @@ public class BlockFly extends Module {
 								RenderUtils.setCustomYaw(lastYaw);
 								RenderUtils.setCustomPitch(lastPitch);
 								lastPlace = underBelow.add(0, 1, 0);
+								//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
 								return;
-								
 							}
-							return;
 							
 						}
 						
@@ -297,17 +303,9 @@ public class BlockFly extends Module {
 							
 							if (mc.theWorld.getBlockState(defaultPos.pos).getBlock() != Blocks.air) {
 								
-								ItemStack block = mc.thePlayer.getCurrentEquippedItem();
-								
-								for (int g = 0; g < 9; g++) {
-									
-									if (mc.thePlayer.inventoryContainer.getSlot(g + 36).getHasStack() && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem() instanceof ItemBlock && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize > 0 && !((ItemBlock)mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock().getLocalizedName().toLowerCase().contains("chest") && !((ItemBlock)mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock().getLocalizedName().toLowerCase().contains("table")) {
-										
-										InventoryPlayer inventoryplayer = mc.thePlayer.inventory;
-										inventoryplayer.setCurrentItem(mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem(), 0, false, true);
-										
-									}
-									
+								ItemStack block = setStackToPlace();
+								if (block == null || block.getItem() == null || !(block.getItem() instanceof ItemBlock)) {
+									return;
 								}
 								
 								boolean endAfter = false;
@@ -316,9 +314,19 @@ public class BlockFly extends Module {
 									endAfter = true;
 								}
 								
-								if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, block, defaultPos.pos, defaultPos.facing, RotationUtils.getVectorForRotation(getRotationsHypixel(defaultPos.pos, defaultPos.facing)[0], getRotationsHypixel(defaultPos.pos, defaultPos.facing)[1]))) {
-									
-									mc.thePlayer.swingItem();
+								
+								//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(defaultPos.pos, defaultPos.facing.getIndex(), block, 0, 0, 0));
+								if ((mc.thePlayer.motionX != 0 || mc.thePlayer.motionZ != 0
+										|| (mc.thePlayer.motionY != 0 && mc.thePlayer.fallDistance > 2))
+										&& mc.playerController.onPlayerRightClickNoSync(mc.thePlayer, mc.theWorld,
+												block, defaultPos.pos, defaultPos.facing,
+												RotationUtils.getVectorForRotation(
+														getRotationsHypixel(defaultPos.pos, defaultPos.facing)[0],
+														getRotationsHypixel(defaultPos.pos, defaultPos.facing)[1]))
+										&& block != null && block.getItem() != null
+										&& block.getItem() instanceof ItemBlock) {
+									//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0APacketAnimation());
+									mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0APacketAnimation());
 									event.setYaw(getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[0]);
 									event.setPitch(getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[1]);
 									lastYaw = event.yaw;
@@ -326,14 +334,11 @@ public class BlockFly extends Module {
 									RenderUtils.setCustomYaw(lastYaw);
 									RenderUtils.setCustomPitch(lastPitch);
 									lastPlace = defaultPos.targetPos;
+									//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
 									if (endAfter) {
 										return;
 									}
-									//return;
-									
 								}
-								
-								//return;
 								
 							}else {
 								RenderUtils.setCustomYaw(lastYaw);
@@ -507,11 +512,40 @@ public class BlockFly extends Module {
 		
     }
 	
-	private class BlockInfo {
+	public static ItemStack setStackToPlace() {
 		
-		BlockPos pos, targetPos;
-		EnumFacing facing;
+		ItemStack block = mc.thePlayer.getCurrentEquippedItem();
 		
+		if (block != null && block.getItem() != null && !(block.getItem() instanceof ItemBlock)) {
+			block = null;
+		}
+		
+		int slot = mc.thePlayer.inventory.currentItem;
+		
+		for (int g = 0; g < 9; g++) {
+			
+			if (mc.thePlayer.inventoryContainer.getSlot(g + 36).getHasStack()
+					&& mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem() instanceof ItemBlock
+					&& mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize != 0
+					&& !((ItemBlock) mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock()
+							.getLocalizedName().toLowerCase().contains("chest")
+					&& !((ItemBlock) mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock()
+							.getLocalizedName().toLowerCase().contains("table")
+					&& (block == null
+					|| (block.getItem() instanceof ItemBlock && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize > block.stackSize))) {
+				
+				//mc.thePlayer.inventory.currentItem = g;
+				slot = g;
+				block = mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack();
+				
+			}
+			
+		}
+		if (lastSlot != slot) {
+			mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C09PacketHeldItemChange(slot));
+			lastSlot = slot;
+		}
+		return block;
 	}
 	
 	@Override
@@ -543,6 +577,13 @@ public class BlockFly extends Module {
 		if (SpicyClient.discord != null && SpicyClient.discord.running) {
 			SpicyClient.discord.refresh();
 		}
+		
+	}
+	
+	private class BlockInfo {
+		
+		BlockPos pos, targetPos;
+		EnumFacing facing;
 		
 	}
 	

@@ -5,7 +5,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.INetHandlerPlayServer;
 
-public class C0CPacketInput implements Packet<INetHandlerPlayServer>
+public class C0CPacketBoatInput implements Packet<INetHandlerPlayServer>
 {
     /** Positive for left strafe, negative for right */
     private float strafeSpeed;
@@ -15,11 +15,11 @@ public class C0CPacketInput implements Packet<INetHandlerPlayServer>
     private boolean jumping;
     private boolean sneaking;
 
-    public C0CPacketInput()
+    public C0CPacketBoatInput()
     {
     }
 
-    public C0CPacketInput(float strafeSpeed, float forwardSpeed, boolean jumping, boolean sneaking)
+    public C0CPacketBoatInput(float strafeSpeed, float forwardSpeed, boolean jumping, boolean sneaking)
     {
         this.strafeSpeed = strafeSpeed;
         this.forwardSpeed = forwardSpeed;

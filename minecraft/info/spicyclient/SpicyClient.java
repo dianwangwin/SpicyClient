@@ -112,7 +112,7 @@ public class SpicyClient {
 	
 	public static boolean discordFailedToStart = false;
 	
-	public static int currentVersionNum = 17;
+	public static int currentVersionNum = 18;
 	
 	public static boolean currentlyLoadingConfig = false;
 	

@@ -772,10 +772,6 @@ public class Fly extends Module {
     
     public void onBrokenLensDisable() {
     	
-		mc.thePlayer.motionX = 0;
-		mc.thePlayer.motionY = 0;
-		mc.thePlayer.motionZ = 0;
-    	
     }
     
     public void onBrokenLensEvent(Event e) {

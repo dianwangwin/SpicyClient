@@ -25,7 +25,7 @@ import net.minecraft.network.login.server.S00PacketDisconnect;
 import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
-import net.minecraft.network.play.client.C0CPacketInput;
+import net.minecraft.network.play.client.C0CPacketBoatInput;
 import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
@@ -149,8 +149,8 @@ public class Disabler extends Module {
                 if (packetConfirmTransaction.getUid() < 0) {
                     packets.add(packetConfirmTransaction);
                     e.setCanceled(true);
-                }else {
-                	//Command.sendPrivateChatMessage(packetConfirmTransaction.getUid());
+                }else if (packetConfirmTransaction.getUid() > 0) {
+                	e.setCanceled(true);
                 }
             }
 

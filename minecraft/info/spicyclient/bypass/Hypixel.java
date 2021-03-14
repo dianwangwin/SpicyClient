@@ -223,7 +223,7 @@ public class Hypixel {
 			
             if (e.isPre()) {
             	
-                if (((EventSendPacket)e).packet instanceof C03PacketPlayer) {
+                if (((EventSendPacket)e).packet instanceof C04PacketPlayerPosition || ((EventSendPacket)e).packet instanceof C06PacketPlayerPosLook) {
                     if (watchdog && shouldCancelPackets) {
                     	packets.add(((EventSendPacket)e).packet);
                         e.setCanceled(true);
@@ -249,6 +249,10 @@ public class Hypixel {
                         }
                         mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(((S08PacketPlayerPosLook)((EventPacket)e).packet).getX(), ((S08PacketPlayerPosLook)((EventPacket)e).packet).getY(), ((S08PacketPlayerPosLook)((EventPacket)e).packet).getZ(), false));
                         e.setCanceled(true);
+                    }else {
+                    	module.toggle();
+                    	NotificationManager.getNotificationManager().createNotification("Fly", "Fly was disabled to prevent flags", true, 5000, Type.WARNING, Color.RED);
+                    	return;
                     }
                     
                 }

@@ -40,6 +40,7 @@ import net.minecraft.block.BlockGlass;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.init.Blocks;
@@ -57,7 +58,7 @@ import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
-import net.minecraft.network.play.client.C0CPacketInput;
+import net.minecraft.network.play.client.C0CPacketBoatInput;
 import net.minecraft.network.play.client.C10PacketCreativeInventoryAction;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.network.play.client.C14PacketTabComplete;
@@ -93,8 +94,9 @@ public class TestModuleOne extends Module {
 	
 	@Override
 	public void onEnable() {
-		mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - 5, mc.thePlayer.posZ);
-		toggle();
+		for (int i = 0; i < 200; i ++) {
+			mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + (0.05 * i), mc.thePlayer.posZ, false));
+		}
 	}
 
 	@Override
@@ -104,6 +106,17 @@ public class TestModuleOne extends Module {
 
 	@Override
 	public void onEvent(Event e) {
+		
+		if (e instanceof EventUpdate && e.isPre()) {
+			for (Entity ent : mc.theWorld.getLoadedEntityList()) {
+				try {
+					ent.prevRotationYaw = ent.rotationYaw;
+					ent.prevRotationPitch = ent.rotationPitch;
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+			}
+		}
 		
 	}
 

@@ -41,7 +41,7 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
-import net.minecraft.network.play.client.C0CPacketInput;
+import net.minecraft.network.play.client.C0CPacketBoatInput;
 import net.minecraft.network.play.client.C0DPacketCloseWindow;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.network.play.client.C16PacketClientStatus;
@@ -199,7 +199,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
             if (this.isRiding())
             {
                 this.sendQueue.addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(this.rotationYaw, this.rotationPitch, this.onGround));
-                this.sendQueue.addToSendQueue(new C0CPacketInput(this.moveStrafing, this.moveForward, this.movementInput.jump, this.movementInput.sneak));
+                this.sendQueue.addToSendQueue(new C0CPacketBoatInput(this.moveStrafing, this.moveForward, this.movementInput.jump, this.movementInput.sneak));
             }
             else
             {
@@ -214,7 +214,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     public void onUpdateWalkingPlayer()
     {
     	
-    	EventUpdate e = new EventUpdate(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.motionX, this.motionY, this.motionZ, this.rotationYaw, this.rotationPitch, this.onGround);
+    	EventUpdate e = new EventUpdate(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.rotationYaw, this.rotationPitch, this.onGround);
     	e.setType(EventType.PRE);
     	SpicyClient.onEvent(e);
     	
@@ -313,7 +313,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
         event.setType(EventType.POST);
     	SpicyClient.onEvent(event);
     	
-    	e = new EventUpdate(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.motionX, this.motionY, this.motionZ, this.rotationYaw, this.rotationPitch, this.onGround);
+    	e = new EventUpdate(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.rotationYaw, this.rotationPitch, this.onGround);
     	e.setType(EventType.POST);
     	SpicyClient.onEvent(e);
     	

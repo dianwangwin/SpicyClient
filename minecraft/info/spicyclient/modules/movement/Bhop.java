@@ -220,8 +220,6 @@ public class Bhop extends Module {
 					
 					mc.gameSettings.keyBindJump.pressed = false;
 					
-					mc.thePlayer.noClip = true;
-					
 					if (mc.thePlayer.ticksExisted % 2 == 0) {
 						mc.timer.ticksPerSecond = 28;
 					}else {

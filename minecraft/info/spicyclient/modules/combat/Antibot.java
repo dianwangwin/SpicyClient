@@ -128,25 +128,6 @@ public class Antibot extends Module {
 				}
 				
 			}
-			else if (!mc.isSingleplayer() && mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel")) {
-				
-				/*
-				S0CPacketSpawnPlayer p = (S0CPacketSpawnPlayer) packet.packet;
-				Entity entity = mc.theWorld.getEntityByID(p.getEntityID());
-				
-				if (entity == null) {
-					return;
-				}
-				
-                if (entity.getDisplayName().getFormattedText().startsWith("\u00a7") && !entity.isInvisible() && !entity.getDisplayName().getFormattedText().toLowerCase().contains("npc")) {
-                	
-                }else {
-                	Command.sendPrivateChatMessage("The " + entity.getDisplayName().getFormattedText() + " bot was removed from your game");
-                	packets.add(p);
-                	packet.setCanceled(true);
-                }
-                */
-			}
 			
 		}
 		
