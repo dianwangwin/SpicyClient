@@ -13,7 +13,7 @@ import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventChatmessage;
 import info.spicyclient.events.listeners.EventMotion;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.settings.BooleanSetting;
@@ -133,13 +133,13 @@ public class KillSults extends Module {
 			
 		}
 		
-		if (e instanceof EventPacket) {
+		if (e instanceof EventReceivePacket) {
 			
 			if (e.isBeforePre()) {
 				
 				if (e.isIncoming()) {
 					
-					EventPacket event = (EventPacket) e;
+					EventReceivePacket event = (EventReceivePacket) e;
 					
 					if (event.packet instanceof S02PacketChat) {
 						

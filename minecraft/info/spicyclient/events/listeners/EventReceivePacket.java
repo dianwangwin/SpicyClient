@@ -8,11 +8,11 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.network.play.INetHandlerPlayServer;
 
-public class EventPacket extends Event{
+public class EventReceivePacket extends Event{
 	
 	public Packet packet;
 	
-	public EventPacket(EventType type, EventDirection dir, Packet packet) {
+	public EventReceivePacket(EventType type, EventDirection dir, Packet packet) {
 		
 		this.setType(type);
 		this.setDirection(dir);

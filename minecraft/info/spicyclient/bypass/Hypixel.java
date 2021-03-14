@@ -7,7 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventSneaking;
@@ -234,11 +234,11 @@ public class Hypixel {
             
 		}
 		
-		if (e instanceof EventPacket && e.isPre() && !disabled) {
+		if (e instanceof EventReceivePacket && e.isPre() && !disabled) {
 			
             if (e.isPre()) {
             	
-                if (((EventPacket)e).packet instanceof S08PacketPlayerPosLook) {
+                if (((EventReceivePacket)e).packet instanceof S08PacketPlayerPosLook) {
                 	
                     if (watchdog) {
                     	disabled = true;
@@ -247,7 +247,7 @@ public class Hypixel {
                         if (threwEnderPearl) {
                         	disabledUntil = System.currentTimeMillis() + 3000;
                         }
-                        mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(((S08PacketPlayerPosLook)((EventPacket)e).packet).getX(), ((S08PacketPlayerPosLook)((EventPacket)e).packet).getY(), ((S08PacketPlayerPosLook)((EventPacket)e).packet).getZ(), false));
+                        mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(((S08PacketPlayerPosLook)((EventReceivePacket)e).packet).getX(), ((S08PacketPlayerPosLook)((EventReceivePacket)e).packet).getY(), ((S08PacketPlayerPosLook)((EventReceivePacket)e).packet).getZ(), false));
                         e.setCanceled(true);
                     }else {
                     	module.toggle();
@@ -256,7 +256,7 @@ public class Hypixel {
                     }
                     
                 }
-                else if (((EventPacket)e).packet instanceof S27PacketExplosion && fireball) {
+                else if (((EventReceivePacket)e).packet instanceof S27PacketExplosion && fireball) {
                 	disabled = true;
                     NotificationManager.getNotificationManager().createNotification("Fly", "Teleporting you to your current position", true, 5000, Type.INFO, Color.PINK);
                     disabledUntil = System.currentTimeMillis() + 3000;

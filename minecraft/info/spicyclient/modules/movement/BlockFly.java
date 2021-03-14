@@ -11,7 +11,7 @@ import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventGetBlockReach;
 import info.spicyclient.events.listeners.EventMotion;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventRender3D;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventSneaking;
@@ -49,6 +49,7 @@ import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
+import net.minecraft.network.play.client.C0BPacketEntityAction.Action;
 import net.minecraft.network.play.client.C0DPacketCloseWindow;
 import net.minecraft.network.play.server.S2FPacketSetSlot;
 import net.minecraft.util.BlockPos;
@@ -91,21 +92,12 @@ public class BlockFly extends Module {
 	}
 	
 	public static transient float lastYaw = 0, lastPitch = 0;
+	public Vec3 lastPos = null;
 	public static transient Timer timer = new Timer();
 	public static transient int lastSlot = -1;
 	
 	public void onEvent(Event e) {
 		
-		// Donated by kot client <<< pog
-        if (e instanceof EventSendPacket) {
-            EventSendPacket event = (EventSendPacket) e;
-            if (event.packet instanceof C0BPacketEntityAction) {
-                event.setCanceled(true);
-            }
-            //mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SPRINTING));
-        }
-        // Donated by kot client <<< pog
-        
 		if (e instanceof EventSneaking) {
 			
 			if (e.isPre()) {
@@ -128,13 +120,13 @@ public class BlockFly extends Module {
 			
 		}
 		
-		if (e instanceof EventPacket && e.isPre()) {
+		if (e instanceof EventReceivePacket && e.isPre()) {
 			
 			if (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) {
 				return;
 			}
 			
-			if (((EventPacket)e).packet instanceof S2FPacketSetSlot) {
+			if (((EventReceivePacket)e).packet instanceof S2FPacketSetSlot) {
 				e.setCanceled(true);
 			}
 			
@@ -202,28 +194,6 @@ public class BlockFly extends Module {
 			
 			EventUpdate update = (EventUpdate)e;
 			
-			double motionX = mc.thePlayer.motionX, motionZ = mc.thePlayer.motionZ;
-			
-			if (motionX < 0)
-				motionX *= -1;
-			
-			if (motionZ < 0)
-				motionZ *= -1;
-			
-			if (motionX < 0.05 && motionZ < 0.05 && MovementUtils.isOnGround(0.3) && mc.gameSettings.keyBindJump.isKeyDown()) {
-				if (mc.gameSettings.keyBindJump.isKeyDown() && MovementUtils.isOnGround(0.25)) {
-					
-		            //mc.thePlayer.motionX = 0.0D;
-		            //mc.thePlayer.motionZ = 0.0D;
-		            //mc.thePlayer.motionY = 0.372;
-		            if (timer.hasTimeElapsed(500, true)) {
-		               //mc.thePlayer.motionY = -0.4D;
-		            }
-					
-				}
-			}
-			
-			
 		}
 		
 		if (e instanceof EventMotion && e.isPost()) {
@@ -239,6 +209,22 @@ public class BlockFly extends Module {
 			event.setYaw(lastYaw);
 			event.setYaw(lastPitch);
 			
+			if (lastPos != null) {
+				
+				event.setYaw(RotationUtils.getRotationFromPosition(lastPos.xCoord,
+						lastPos.zCoord, lastPos.yCoord)[0]);
+				
+				event.setPitch(RotationUtils.getRotationFromPosition(lastPos.xCoord,
+						lastPos.zCoord, lastPos.yCoord)[1]);
+				
+				lastYaw = event.yaw;
+				lastPitch = event.pitch;
+				
+				RenderUtils.setCustomYaw(lastYaw);
+				RenderUtils.setCustomPitch(lastPitch);
+				
+			}
+			
 			ItemStack i = mc.thePlayer.getCurrentEquippedItem();
 			BlockPos below = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1D, mc.thePlayer.posZ);
 			
@@ -246,12 +232,16 @@ public class BlockFly extends Module {
 			
 			for (double h = 0; h < extend.getValue(); h += 0.1) {
 				below = WorldUtils.getForwardBlock(h).add(0, -1, 0);
-				if (mc.theWorld.getBlockState(below).getBlock() == Blocks.air) {
+				if (below == null || mc.theWorld.getBlockState(below).getBlock() == Blocks.air) {
 					shouldPlace = true;
 				}
 			}
 			
 			if (shouldPlace) {
+				
+				if (!timer.hasTimeElapsed(80, true)) {
+					return;
+				}
 				
 				for (EnumFacing facing : EnumFacing.VALUES) {
 					
@@ -507,8 +497,10 @@ public class BlockFly extends Module {
 		
 		paramBlockPos = paramBlockPos.offset(paramEnumFacing.getOpposite());
 		
+		lastPos = new Vec3(paramBlockPos.getX(), paramBlockPos.getY(), paramBlockPos.getZ());
+		
 		return RotationUtils.getRotationFromPosition(paramBlockPos.getX() + (new Random().nextDouble()),
-				paramBlockPos.getZ() + (new Random().nextDouble()), paramBlockPos.getY() + 0.5);
+				paramBlockPos.getZ() + (new Random().nextDouble()), paramBlockPos.getY());
 		
     }
 	
@@ -532,7 +524,7 @@ public class BlockFly extends Module {
 					&& !((ItemBlock) mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock()
 							.getLocalizedName().toLowerCase().contains("table")
 					&& (block == null
-					|| (block.getItem() instanceof ItemBlock && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize > block.stackSize))) {
+					|| (block.getItem() instanceof ItemBlock && mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize >= block.stackSize))) {
 				
 				//mc.thePlayer.inventory.currentItem = g;
 				slot = g;
@@ -546,38 +538,6 @@ public class BlockFly extends Module {
 			lastSlot = slot;
 		}
 		return block;
-	}
-	
-	@Override
-	public void toggle() {
-		
-		toggled = !toggled;
-		if (toggled) {
-			
-			NotificationManager.getNotificationManager().createNotification("Enabled: " + name, "Thank you to kot from kot client for donating code", true, 1500, Type.INFO, Color.GREEN);
-			
-			onEnable();
-			
-			if (SpicyClient.config.hud.sound.isEnabled()) {
-				Minecraft.getMinecraft().thePlayer.playSound("random.click", (float) SpicyClient.config.hud.volume.getValue(), 0.6f);
-			}
-			
-		}else {
-			
-			NotificationManager.getNotificationManager().createNotification("Disabled: " + name, "Thank you to kot from kot client for donating code", true, 1500, Type.INFO, Color.RED);
-			
-			onDisable();
-			
-			if (SpicyClient.config.hud.sound.isEnabled()) {
-				Minecraft.getMinecraft().thePlayer.playSound("random.click", (float) SpicyClient.config.hud.volume.getValue(), 0.4f);
-			}
-			
-		}
-		
-		if (SpicyClient.discord != null && SpicyClient.discord.running) {
-			SpicyClient.discord.refresh();
-		}
-		
 	}
 	
 	private class BlockInfo {

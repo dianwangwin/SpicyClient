@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventSwordBlockAnimation;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;

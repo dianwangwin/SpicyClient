@@ -14,7 +14,7 @@ import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventMove;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
@@ -776,9 +776,9 @@ public class Fly extends Module {
     
     public void onBrokenLensEvent(Event e) {
     	
-		if (e instanceof EventPacket) {
+		if (e instanceof EventReceivePacket) {
 			
-			Packet p = ((EventPacket)e).packet;
+			Packet p = ((EventReceivePacket)e).packet;
 			
 			if (p instanceof S08PacketPlayerPosLook) {
 				e.setCanceled(true);

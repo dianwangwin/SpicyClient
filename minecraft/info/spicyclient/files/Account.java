@@ -11,7 +11,7 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.EventType;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventRender3D;
 import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.events.listeners.EventUpdate;
@@ -43,8 +43,8 @@ public class Account {
 			return;
 		}
 		
-		if (e instanceof EventPacket)
-			onPacket((EventPacket) e);
+		if (e instanceof EventReceivePacket)
+			onPacket((EventReceivePacket) e);
 		
 		if (e instanceof EventUpdate)
 			onUpdate((EventUpdate) e);
@@ -119,9 +119,9 @@ public class Account {
 		
 	}
 	
-	public void onPacket(EventPacket e) {
+	public void onPacket(EventReceivePacket e) {
 		
-		if (e instanceof EventPacket && e.isPre()) {
+		if (e instanceof EventReceivePacket && e.isPre()) {
 			
 			if (SpicyClient.config.killSults.isEnabled()) {
 				EventType temp = e.getType();
@@ -132,7 +132,7 @@ public class Account {
 			
 			String color = "§b";
 			
-			EventPacket packetEvent = (EventPacket) e;
+			EventReceivePacket packetEvent = (EventReceivePacket) e;
 			if (packetEvent.packet instanceof S02PacketChat) {
 				
 				S02PacketChat packet = (S02PacketChat) packetEvent.packet;

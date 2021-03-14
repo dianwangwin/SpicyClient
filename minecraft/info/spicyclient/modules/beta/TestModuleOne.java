@@ -11,10 +11,11 @@ import com.sun.javafx.geom.Vec3d;
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
+import info.spicyclient.events.listeners.EventGetBlockReach;
 import info.spicyclient.events.listeners.EventKey;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventMove;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventPlayerRender;
 import info.spicyclient.events.listeners.EventRender3D;
 import info.spicyclient.events.listeners.EventSendPacket;
@@ -36,6 +37,7 @@ import info.spicyclient.util.RenderUtils;
 import info.spicyclient.util.RotationUtils;
 import info.spicyclient.util.Timer;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -91,31 +93,92 @@ public class TestModuleOne extends Module {
 	public double dub = 0;
 	public float flo = 0;
 	public boolean bool1 = false, bool2 = true;
+	public BlockPos pos = BlockPos.ORIGIN;
 	
 	@Override
 	public void onEnable() {
-		for (int i = 0; i < 200; i ++) {
-			mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + (0.05 * i), mc.thePlayer.posZ, false));
-		}
+		bool1 = false;
+		bool1 = false;
 	}
 
 	@Override
 	public void onDisable() {
-
+		
 	}
 
 	@Override
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventUpdate && e.isPre()) {
-			for (Entity ent : mc.theWorld.getLoadedEntityList()) {
-				try {
-					ent.prevRotationYaw = ent.rotationYaw;
-					ent.prevRotationPitch = ent.rotationPitch;
-				} catch (Exception e2) {
-					// TODO: handle exception
-				}
+		if (e instanceof EventUpdate && e.isPre() && bool1) {
+			if (isOverVoid() && mc.thePlayer.fallDistance >= 3.5) {
+				bool2 = true;
+				mc.thePlayer.motionY = 0;
+				MovementUtils.setMotion(0);
 			}
+		}
+		
+		if (e instanceof EventGetBlockReach && e.isPre() && !bool1) {
+			((EventGetBlockReach)e).reach = 100;
+		}
+		
+		if (e instanceof EventRender3D && e.isPre() && pos != BlockPos.ORIGIN && bool1) {
+			for (int i = 0; i < 5; i++) {
+
+				RenderUtils.drawLine(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY(), pos.getZ());
+				RenderUtils.drawLine(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 1,
+						pos.getZ());
+				RenderUtils.drawLine(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY(), pos.getZ() + 1);
+				RenderUtils.drawLine(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX(), pos.getY() + 1,
+						pos.getZ() + 1);
+				RenderUtils.drawLine(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY() + 1, pos.getZ());
+				RenderUtils.drawLine(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX(), pos.getY() + 1, pos.getZ());
+				RenderUtils.drawLine(pos.getX() + 1, pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1,
+						pos.getZ());
+				RenderUtils.drawLine(pos.getX() + 1, pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 1,
+						pos.getZ());
+				RenderUtils.drawLine(pos.getX(), pos.getY(), pos.getZ() + 1, pos.getX(), pos.getY() + 1,
+						pos.getZ() + 1);
+				RenderUtils.drawLine(pos.getX(), pos.getY() + 1, pos.getZ() + 1, pos.getX(), pos.getY() + 1,
+						pos.getZ() + 1);
+				RenderUtils.drawLine(pos.getX() + 1, pos.getY(), pos.getZ() + 1, pos.getX(), pos.getY(),
+						pos.getZ() + 1);
+				RenderUtils.drawLine(pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1, pos.getX(), pos.getY() + 1,
+						pos.getZ() + 1);
+				RenderUtils.drawLine(pos.getX() + 1, pos.getY(), pos.getZ() + 1, pos.getX() + 1, pos.getY() + 1,
+						pos.getZ() + 1);
+				RenderUtils.drawLine(pos.getX() + 1, pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 1,
+						pos.getZ() + 1);
+				RenderUtils.drawLine(pos.getX() + 1, pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY(),
+						pos.getZ() + 1);
+			}
+		}
+		
+		if (e instanceof EventSendPacket && e.isPre()) {
+
+			EventSendPacket event = (EventSendPacket) e;
+
+			if (event.packet instanceof C08PacketPlayerBlockPlacement && mc.objectMouseOver != null && mc.objectMouseOver.blockPos != null && !bool1) {
+				bool1 = true;
+				pos = mc.objectMouseOver.getBlockPos();
+				mc.thePlayer.setPosition(pos.getZ(), pos.getY(), pos.getZ());
+				toggle();
+				e.setCanceled(true);
+			}
+			
+		}
+		
+		if (e instanceof EventReceivePacket && e.isPre()) {
+			
+			EventReceivePacket event = (EventReceivePacket)e;
+			
+			if (event.packet instanceof S08PacketPlayerPosLook && bool1 && bool2) {
+				e.setCanceled(true);
+				S08PacketPlayerPosLook s08 = (S08PacketPlayerPosLook) event.packet;
+				mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(s08.getX(), s08.getY(), s08.getZ(), false));
+				mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 30, mc.thePlayer.posX);
+				toggle();
+			}
+			
 		}
 		
 	}
@@ -123,6 +186,28 @@ public class TestModuleOne extends Module {
 	@Override
 	public void onEventWhenDisabled(Event e) {
 		
+	}
+	
+	private boolean isOverVoid() {
+		boolean isOverVoid = true;
+		BlockPos block = mc.thePlayer.getPosition();
+		
+		for (int i = (int) mc.thePlayer.posY; i > 0; i--) {
+			
+			if (isOverVoid) {
+				
+				if (!(mc.theWorld.getBlockState(block).getBlock() instanceof BlockAir)) {
+					
+					isOverVoid = false;
+					
+				}
+				
+			}
+			
+			block = block.add(0, -1, 0);
+			
+		}
+		return isOverVoid;
 	}
 	
 }

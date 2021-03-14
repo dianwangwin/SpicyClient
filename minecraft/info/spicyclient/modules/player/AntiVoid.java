@@ -12,7 +12,7 @@ import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventChatmessage;
 import info.spicyclient.events.listeners.EventGetBlockHitbox;
 import info.spicyclient.events.listeners.EventMotion;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
@@ -67,7 +67,7 @@ public class AntiVoid extends Module {
 		
 		setLastGroundPos(e);
 		
-		if (e instanceof EventPacket) {
+		if (e instanceof EventReceivePacket) {
 			
 			if (e.isPre()) {
 				
@@ -91,7 +91,7 @@ public class AntiVoid extends Module {
 				}
 				
 				try {
-					if (mode.is("Hypixel") && ((EventPacket) e).packet instanceof S08PacketPlayerPosLook && !MovementUtils.isOnGround(0.001) && (mc.thePlayer.fallDistance >= 20.0f || mc.thePlayer.posY < 0) && isOverVoid && mc.thePlayer.posY > mc.thePlayer.lastTickPosY) {
+					if (mode.is("Hypixel") && ((EventReceivePacket) e).packet instanceof S08PacketPlayerPosLook && !MovementUtils.isOnGround(0.001) && (mc.thePlayer.fallDistance >= 20.0f || mc.thePlayer.posY < 0) && isOverVoid && mc.thePlayer.posY > mc.thePlayer.lastTickPosY) {
 						
 						mc.timer.ticksPerSecond = 20;
 						mc.thePlayer.fallDistance = 0;
@@ -166,8 +166,8 @@ public class AntiVoid extends Module {
 				e.setCanceled(true);
 			}
 		}
-		else if (e instanceof EventPacket && e.isPre()) {
-			EventPacket event = (EventPacket)e;
+		else if (e instanceof EventReceivePacket && e.isPre()) {
+			EventReceivePacket event = (EventReceivePacket)e;
 			Packet packet = event.packet;
 			if (packet instanceof S08PacketPlayerPosLook && isWaiting && System.currentTimeMillis() > lastTeleport) {
 				e.setCanceled(true);

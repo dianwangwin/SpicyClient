@@ -9,7 +9,7 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventGetBlockReach;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventRender3D;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
@@ -52,11 +52,11 @@ public class InfinitePlace extends Module {
 	@Override
 	public void onEvent(Event e) {
 
-		if (e instanceof EventPacket && e.isPre()) {
+		if (e instanceof EventReceivePacket && e.isPre()) {
 
 			if (e.isPre()) {
 				
-				if (((EventPacket) e).packet instanceof S08PacketPlayerPosLook) {
+				if (((EventReceivePacket) e).packet instanceof S08PacketPlayerPosLook) {
 
 					if (watchdog) {
 						NotificationManager.getNotificationManager().createNotification("Disabler",

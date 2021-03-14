@@ -5,7 +5,7 @@ import org.lwjgl.input.Keyboard;
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
@@ -73,11 +73,11 @@ public class Hypixel5SecDisabler extends Module {
             
 		}
 		
-		if (e instanceof EventPacket && e.isPre()) {
+		if (e instanceof EventReceivePacket && e.isPre()) {
 			
             if (e.isPre()) {
             	
-                if (((EventPacket)e).packet instanceof S08PacketPlayerPosLook) {
+                if (((EventReceivePacket)e).packet instanceof S08PacketPlayerPosLook) {
                 	
                     if (watchdog) {
                         toggle();

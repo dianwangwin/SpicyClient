@@ -4,7 +4,7 @@ import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.events.Event;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.settings.ModeSetting;
@@ -37,9 +37,9 @@ public class HideName extends Module {
 			this.additionalInformation = mode.getMode();
 		}
 		
-		if (e instanceof EventPacket && e.isPre()) {
+		if (e instanceof EventReceivePacket && e.isPre()) {
 			
-			EventPacket packetEvent = (EventPacket) e;
+			EventReceivePacket packetEvent = (EventReceivePacket) e;
 			if (packetEvent.packet instanceof S02PacketChat) {
 				
 				S02PacketChat packet = (S02PacketChat) packetEvent.packet;

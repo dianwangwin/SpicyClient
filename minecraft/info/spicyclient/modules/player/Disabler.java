@@ -9,7 +9,7 @@ import org.lwjgl.input.Keyboard;
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
@@ -116,9 +116,9 @@ public class Disabler extends Module {
             
 		}
 		
-		if (e instanceof EventPacket && e.isPre()) {
+		if (e instanceof EventReceivePacket && e.isPre()) {
 			
-			if (((EventPacket)e).packet instanceof S00PacketDisconnect) {
+			if (((EventReceivePacket)e).packet instanceof S00PacketDisconnect) {
 				packets.clear();
 			}
 			

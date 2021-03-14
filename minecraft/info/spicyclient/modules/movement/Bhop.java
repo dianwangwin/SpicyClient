@@ -16,7 +16,7 @@ import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventMove;
 import info.spicyclient.events.listeners.EventOnLadder;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
@@ -129,11 +129,11 @@ public class Bhop extends Module {
     
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventPacket) {
+		if (e instanceof EventReceivePacket) {
 			
 			if (e.isPre()) {
 				
-				EventPacket packetEvent = (EventPacket) e;
+				EventReceivePacket packetEvent = (EventReceivePacket) e;
 				
 				if (packetEvent.packet instanceof S08PacketPlayerPosLook) {
 					

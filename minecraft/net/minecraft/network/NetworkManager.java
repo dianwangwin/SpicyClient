@@ -7,7 +7,7 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.EventDirection;
 import info.spicyclient.events.EventType;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventSendPacket;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -161,7 +161,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
             try
             {
             	
-            	EventPacket event = new EventPacket(EventType.PRE, EventDirection.INCOMING, p_channelRead0_2_);
+            	EventReceivePacket event = new EventReceivePacket(EventType.PRE, EventDirection.INCOMING, p_channelRead0_2_);
             	SpicyClient.onEvent(event);
             	
             	if (event.isCanceled()) {

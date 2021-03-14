@@ -5,7 +5,7 @@ import org.lwjgl.input.Keyboard;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.settings.NumberSetting;
@@ -43,9 +43,9 @@ public class AntiKnockback extends Module {
 			this.additionalInformation = "H: " + horizontalKnockback.getValue() + " V: " + verticalKnockback.getValue();
 		}
 		
-		if (e instanceof EventPacket && e.isPre()) {
+		if (e instanceof EventReceivePacket && e.isPre()) {
 			
-			EventPacket event = (EventPacket) e;
+			EventReceivePacket event = (EventReceivePacket) e;
 			
 			if (event.packet instanceof S12PacketEntityVelocity) {
 				
