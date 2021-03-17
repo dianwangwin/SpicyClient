@@ -47,6 +47,8 @@ public class InfinitePlace extends Module {
 		watchdog = false;
 		plot = true;
 		watchdogDisabled = false;
+		face = null;
+		lockPos = null;
 	}
 
 	@Override
@@ -156,39 +158,7 @@ public class InfinitePlace extends Module {
 
 			this.additionalInformation = "Hypixel";
 			if (mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK) {
-
-				if (!clicked) {
-					lockPos = mc.objectMouseOver.getBlockPos();
-				} else {
-
-					if (!watchdog && plot && !watchdogDisabled) {
-						if (MovementUtils.isOnGround(0.001) && mc.thePlayer.isCollidedVertically) {
-							double x = mc.thePlayer.posX;
-							double y = mc.thePlayer.posY;
-							double z = mc.thePlayer.posZ;
-							mc.thePlayer.motionY = 0.21;
-							watchdog = true;
-							NotificationManager.getNotificationManager().createNotification("Disabler: Wait 5s.", "",
-									true, 5000, Type.INFO, Color.PINK);
-							// mc.thePlayer.jump();
-							//mc.thePlayer.setPosition(lockPos.getX(), lockPos.getY() + 1, lockPos.getZ());
-						}
-					}
-					else if (watchdog && plot && watchdogDisabled){
-						
-						sendPacketsForPathAndPlaceBlock();
-						
-					}else if (!watchdogDisabled && mc.thePlayer.motionY <= 0) {
-						mc.thePlayer.motionX = 0;
-						mc.thePlayer.motionY = 0;
-						mc.thePlayer.motionZ = 0;
-						mc.thePlayer.jumpMovementFactor = 0;
-						mc.thePlayer.noClip = true;
-						mc.thePlayer.onGround = false;
-					}
-
-				}
-
+				lockPos = mc.objectMouseOver.getBlockPos();
 			}
 
 			if (mc.thePlayer.capabilities.isCreativeMode)
@@ -203,13 +173,24 @@ public class InfinitePlace extends Module {
 			EventSendPacket event = (EventSendPacket) e;
 
 			if (event.packet instanceof C08PacketPlayerBlockPlacement) {
-				clicked = true;
 				e.setCanceled(true);
-			}
-			if (event.packet instanceof C03PacketPlayer) {
-				if (watchdog && mc.thePlayer.motionY <= 0) {
-                    e.setCanceled(true);
-                }
+				try {
+					C08PacketPlayerBlockPlacement packet = (C08PacketPlayerBlockPlacement)event.packet;
+					
+					if (packet.getPosition().getY() + 1 <= mc.thePlayer.posY - 3) {
+						if (mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK && mc.objectMouseOver.getBlockPos() != null) {
+							packet.position = mc.objectMouseOver.getBlockPos();
+						}
+						//Command.sendPrivateChatMessage("bruh");
+						mc.thePlayer.setPosition(packet.getPosition().getX() + (new Random().nextDouble() - 0.5),
+								packet.getPosition().getY() + 1,
+								packet.getPosition().getZ() + (new Random().nextDouble() - 0.5));
+					}
+					
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+				
 			}
 		}
 
@@ -221,7 +202,7 @@ public class InfinitePlace extends Module {
 			EventGetBlockReach event = (EventGetBlockReach) e;
 
 			event.setCanceled(true);
-			event.reach = 100f;
+			event.reach = 200f;
 
 		}
 
@@ -229,47 +210,8 @@ public class InfinitePlace extends Module {
 	
 	public void sendPacketsForPathAndPlaceBlock() {
 		
-		plot = false;
-		Vec3 lastPos1 = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ),
-				targetPos = new Vec3(lockPos.getX(), lockPos.getY() + 1, lockPos.getZ());
-		
-		Double xRange = lastPos1.xCoord - targetPos.xCoord,
-				yRange = lastPos1.yCoord - targetPos.yCoord,
-				zRange = lastPos1.zCoord - targetPos.zCoord;
-		
-		Vec3 temp = null;
-		
-		//mc.getNetHandler().getNetworkManager().sendPacket(new C03PacketPlayer.C06PacketPlayerPosLook(
-				//mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch, new Random().nextBoolean()));
-		
-		int packetNum = 70;
-		Command.sendPrivateChatMessage(packetNum);
-		for (double i = 0; i < packetNum; i++) {
-			double currentPosX = lastPos1.xCoord - ((xRange / packetNum) * i),
-					currentPosY = lastPos1.yCoord - ((yRange / packetNum) * i),
-					currentPosZ = lastPos1.zCoord - ((zRange / packetNum) * i);
-			
-			double t = (new Random().nextDouble() / 4);
-			currentPosY = Math.round(currentPosY) + t;
-			
-			//Command.sendPrivateChatMessage(currentPosX + " " + currentPosY + " " + currentPosZ);
-			
-			C04PacketPlayerPosition packet = new C03PacketPlayer.C04PacketPlayerPosition(currentPosX, currentPosY,
-					currentPosZ, new Random().nextBoolean());
-			packet.setMoving(true);
-			mc.getNetHandler().getNetworkManager().sendPacketNoEvent(packet);
-
-			temp = new Vec3(currentPosX, currentPosY, currentPosZ);
-			
-		}
-		
-		if (temp != null) {
-			
-			mc.thePlayer.setPosition(temp.xCoord, temp.yCoord, temp.zCoord);
-			//mc.getNetHandler().getNetworkManager().sendPacket(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
-			toggle();
-			
-		}
+		//mc.thePlayer.setPosition(lockPos.getX(), lockPos.getY() + 1, lockPos.getZ());
+		//toggle();
 		
 	}
 	

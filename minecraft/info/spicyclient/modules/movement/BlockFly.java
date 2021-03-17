@@ -1,5 +1,6 @@
 package info.spicyclient.modules.movement;
 
+import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.Random;
 
@@ -13,6 +14,7 @@ import info.spicyclient.events.listeners.EventGetBlockReach;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventRender3D;
+import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventSneaking;
 import info.spicyclient.events.listeners.EventUpdate;
@@ -34,6 +36,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -97,6 +100,46 @@ public class BlockFly extends Module {
 	public static transient int lastSlot = -1;
 	
 	public void onEvent(Event e) {
+		
+		if (e instanceof EventRenderGUI && e.isPre()) {
+			
+			int blocksLeft = 0;
+			
+			for (int g = 0; g < 9; g++) {
+				
+				if (mc.thePlayer.inventoryContainer.getSlot(g + 36).getHasStack()
+						&& mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem() instanceof ItemBlock
+						&& mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize != 0
+						&& !((ItemBlock) mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock()
+								.getLocalizedName().toLowerCase().contains("chest")
+						&& !((ItemBlock) mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock()
+								.getLocalizedName().toLowerCase().contains("table")) {
+					blocksLeft += mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize;
+				}
+				
+			}
+			
+			String left = blocksLeft + " block" + (blocksLeft != 1 ? "s" : "") + " left";
+			
+			if (blocksLeft > 0) {
+				
+				mc.fontRendererObj.drawString(left,
+						((float) (new ScaledResolution(mc).getScaledWidth_double() / 2)
+								- (mc.fontRendererObj.getStringWidth(left) / 2)),
+						((float) (new ScaledResolution(mc).getScaledHeight_double() / 2)
+								- (mc.fontRendererObj.FONT_HEIGHT - 18)),
+						-1, false);
+
+			} else {
+				mc.fontRendererObj.drawString(left,
+						((float) (new ScaledResolution(mc).getScaledWidth_double() / 2)
+								- (mc.fontRendererObj.getStringWidth(left) / 2)),
+						((float) (new ScaledResolution(mc).getScaledHeight_double() / 2)
+								- (mc.fontRendererObj.FONT_HEIGHT - 18)),
+						0xff2121, false);
+			}
+			
+		}
 		
 		if (e instanceof EventSneaking) {
 			

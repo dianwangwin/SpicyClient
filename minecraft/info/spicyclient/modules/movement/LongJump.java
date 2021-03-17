@@ -10,6 +10,7 @@ import info.spicyclient.modules.Module;
 import info.spicyclient.modules.Module.Category;
 import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.Timer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.util.MathHelper;
