@@ -1,6 +1,7 @@
 package net.minecraft.client.multiplayer;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventAddBlockDamage;
 import info.spicyclient.events.listeners.EventGetBlockReach;

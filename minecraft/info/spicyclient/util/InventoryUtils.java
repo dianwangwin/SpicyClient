@@ -14,13 +14,15 @@ import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
+import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
 public class InventoryUtils {
 	
     public static void switchToSlot(int slot){
-    	Minecraft.getMinecraft().gameSettings.keyBindsHotbar[slot - 1].pressed = true;
+    	Minecraft.getMinecraft().thePlayer.inventory.currentItem = slot - 1;
+    	Minecraft.getMinecraft().getNetHandler().getNetworkManager().sendPacketNoEvent(new C09PacketHeldItemChange(slot - 1));
     }
 	
     public static void shiftClick(int slot){
@@ -28,8 +30,11 @@ public class InventoryUtils {
     }
 
     public static void drop(int slot){
-    	Minecraft.getMinecraft().thePlayer.swingItem();
     	Minecraft.getMinecraft().playerController.windowClick(Minecraft.getMinecraft().thePlayer.inventoryContainer.windowId, slot, 1, 4, Minecraft.getMinecraft().thePlayer);
+    }
+    
+    public static void click(int slot){
+    	Minecraft.getMinecraft().playerController.windowClick(Minecraft.getMinecraft().thePlayer.inventoryContainer.windowId, slot, 0, 0, Minecraft.getMinecraft().thePlayer);
     }
     
     // I found these on github

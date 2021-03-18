@@ -114,6 +114,8 @@ public class Config {
 	public JelloForSpicy jelloForSpicy = new JelloForSpicy();
 	public Speed speed = new Speed();
 	public IrcChat ircChat = new IrcChat();
+	public AutoPaperChallenge autoPaperChallenge = new AutoPaperChallenge();
+	public HypixelClickTeleport hypixelClickTeleport = new HypixelClickTeleport();
 	
 	public String clientName = "Spicy ", clientVersion = "B3 Beta";
 	
@@ -208,6 +210,8 @@ public class Config {
 		modules.add(con.jelloForSpicy);
 		modules.add(con.speed);
 		modules.add(con.ircChat);
+		modules.add(con.autoPaperChallenge);
+		modules.add(con.hypixelClickTeleport);
 		
 		return modules;
 		
@@ -292,6 +296,8 @@ public class Config {
 			this.speed = new Speed();
 			this.blockFly = new BlockFly();
 			this.ircChat = new IrcChat();
+			this.autoPaperChallenge = new AutoPaperChallenge();
+			this.hypixelClickTeleport = new HypixelClickTeleport();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");

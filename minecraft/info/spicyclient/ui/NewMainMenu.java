@@ -116,8 +116,6 @@ public class NewMainMenu extends GuiScreen {
         
         // Put the added things here
         // changeLogs.add("+ ");
-        changeLogs.add("+ Hypixel fly");
-        changeLogs.add("+ Hypixel fast fly");
         changeLogs.add("+ Hypixel bhop");
         changeLogs.add("+ Hypixel antivoid");
         changeLogs.add("+ Hypixel chat bypass");
@@ -126,8 +124,9 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ Hypixel interact autoblock");
         changeLogs.add("+ Hypixel disabler");
         changeLogs.add("+ Hypixel inventory manager");
-        changeLogs.add("+ Hypixel 5 second disabler");
         changeLogs.add("+ Hypixel bed breaker");
+        changeLogs.add("+ Hypixel phase");
+        changeLogs.add("+ Hypixel teleport");
         changeLogs.add("+ BrokenLens fly");
         changeLogs.add("+ SuperheroFX");
         changeLogs.add("+ Autotool");
@@ -135,7 +134,6 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ Vanilla nofall");
         changeLogs.add("+ Vanilla and packet autolog");
         changeLogs.add("+ Jesus");
-        changeLogs.add("+ Phase");
         changeLogs.add("+ PlayerESP");
         changeLogs.add("+ WTap");
         changeLogs.add("+ Criticals");
