@@ -7,6 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
+import info.spicyclient.events.listeners.EventMove;
 import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.events.listeners.EventSendPacket;
@@ -126,25 +127,26 @@ public class Hypixel {
 	public static void onFlyEvent(Event e, Module module, Minecraft mc) {
 		
 		if (e instanceof EventUpdate && e.isPre()) {
-			module.additionalInformation = "Hypixel Freecam";
+			module.additionalInformation = "TF2 rocket jump";
 		}
 		
 		if (e instanceof EventUpdate && e.isPre() && shouldCancelPackets) {
 			
 			if (mc.gameSettings.keyBindJump.isKeyDown()) {
-				mc.thePlayer.motionY += SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue();
+				//mc.thePlayer.motionY += SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue();
 			}			
 			else if (mc.gameSettings.keyBindSneak.isKeyDown()) {
-				mc.thePlayer.motionY -= SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue();
+				//mc.thePlayer.motionY -= SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue();
 			}
 			else {
-				mc.thePlayer.motionY = 0;
+				//mc.thePlayer.motionY = 0;
 			}
 			
-			mc.getNetHandler().addToSendQueue(new C03PacketPlayer(true));
-			mc.thePlayer.onGround = false;
+			//mc.getNetHandler().addToSendQueue(new C03PacketPlayer(true));
+			//mc.thePlayer.onGround = false;
 			
-			MovementUtils.setMotion(SpicyClient.config.fly.hypixelFreecamHorizontalFlySpeed.getValue());
+			//MovementUtils.setMotion(SpicyClient.config.fly.hypixelFreecamHorizontalFlySpeed.getValue());
+			//MovementUtils.strafe();
 			
 			if (shouldToggleOnGround && MovementUtils.isOnGround(0.0001)) {
 				module.toggle();
@@ -154,11 +156,11 @@ public class Hypixel {
 				switch (status) {
 				case 0:
 				case 1:
-					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 10E-12D, mc.thePlayer.posZ);
+					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 10E-12D, mc.thePlayer.posZ);
 					status++;
 					break;
 				case 2:
-					mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - 10E-12D, mc.thePlayer.posZ);
+					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - 10E-12D, mc.thePlayer.posZ);
 					status = 0;
 					break;
 
@@ -242,11 +244,10 @@ public class Hypixel {
                 	
                     if (watchdog) {
                     	disabled = true;
-                        NotificationManager.getNotificationManager().createNotification("Fly", "Teleporting you to your current position", true, 5000, Type.INFO, Color.PINK);
-                        disabledUntil = System.currentTimeMillis() + 5000;
-                        if (threwEnderPearl) {
-                        	disabledUntil = System.currentTimeMillis() + 3000;
-                        }
+            			Minecraft.getMinecraft().thePlayer.setPosition(originalX, originalY, originalZ);
+            			MovementUtils.setMotion(SpicyClient.config.fly.hypixelFreecamHorizontalFlySpeed.getValue());
+            			mc.thePlayer.motionY = SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue() * 6;
+                        disabledUntil = System.currentTimeMillis() + 100;
                         mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(((S08PacketPlayerPosLook)((EventReceivePacket)e).packet).getX(), ((S08PacketPlayerPosLook)((EventReceivePacket)e).packet).getY(), ((S08PacketPlayerPosLook)((EventReceivePacket)e).packet).getZ(), false));
                         e.setCanceled(true);
                     }else {
@@ -258,12 +259,23 @@ public class Hypixel {
                 }
                 else if (((EventReceivePacket)e).packet instanceof S27PacketExplosion && fireball) {
                 	disabled = true;
-                    NotificationManager.getNotificationManager().createNotification("Fly", "Teleporting you to your current position", true, 5000, Type.INFO, Color.PINK);
-                    disabledUntil = System.currentTimeMillis() + 3000;
+                    //NotificationManager.getNotificationManager().createNotification("Fly", "Teleporting you to your current position", true, 5000, Type.INFO, Color.PINK);
+                    //disabledUntil = System.currentTimeMillis() + 3000;
+                	
+        			Minecraft.getMinecraft().thePlayer.setPosition(originalX, originalY, originalZ);
+        			MovementUtils.setMotion(SpicyClient.config.fly.hypixelFreecamHorizontalFlySpeed.getValue());
+        			mc.thePlayer.motionY = SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue() * 6;
+                    disabledUntil = System.currentTimeMillis() + 100;
+                    //module.toggle();
                 }
 			
             }
             
+		}
+		
+		if (e instanceof EventMove && disabled) {
+			EventMove move = (EventMove)e;
+			move.setSpeed(MovementUtils.getSpeed(), mc.thePlayer.rotationYaw);
 		}
 		
 		if (e instanceof EventUpdate && e.isPre() && !disabled) {
@@ -331,7 +343,7 @@ public class Hypixel {
 				if (!threwEnderPearl && !fireball) {
 					
 					// Bans
-					/*
+					
 					for (int i = 0; i < 45; i++) {
 						
 						if (Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
@@ -372,7 +384,11 @@ public class Hypixel {
 						}
 						
 					}
-					*/
+					
+				}
+				if (!threwEnderPearl && !fireball) {
+					NotificationManager.getNotificationManager().createNotification("Fly", "Please get a fireball or ender pearl to use this", true, 3000, Type.WARNING, Color.RED);
+					module.toggle();
 				}
 				
 			}

@@ -157,13 +157,10 @@ public class AntiVoid extends Module {
 			}
 		}
 		else if (e instanceof EventSendPacket && e.isPre()) {
-			if (!MovementUtils.isOnGround(0.0001) && (((EventSendPacket)e).packet instanceof C04PacketPlayerPosition || ((EventSendPacket)e).packet instanceof C06PacketPlayerPosLook)) {
-				if (!isWaiting) {
-					packets.add(((EventSendPacket)e).packet);
+			if (((EventSendPacket)e).packet instanceof C03PacketPlayer) {
+				if (isWaiting) {
+					e.setCanceled(true);
 				}
-			}
-			if (isWaiting) {
-				e.setCanceled(true);
 			}
 		}
 		else if (e instanceof EventReceivePacket && e.isPre()) {

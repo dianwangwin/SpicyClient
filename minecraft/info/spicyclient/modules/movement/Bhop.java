@@ -86,7 +86,7 @@ public class Bhop extends Module {
 			if (mode.is("Hypixel") || mode.getMode() == "Hypixel") {
 				
 				if (!this.settings.contains(hypixelSpeed)) {
-					//this.settings.add(hypixelSpeed);
+					this.settings.add(hypixelSpeed);
 				}
 				reorderSettings();
 				
@@ -110,6 +110,8 @@ public class Bhop extends Module {
 		}
 		
 		lastY = mc.thePlayer.posY;
+		speed = hypixelSpeed.getValue() * 11;
+		
 	}
 	
 	public void onDisable() {
@@ -220,17 +222,15 @@ public class Bhop extends Module {
 					
 					mc.gameSettings.keyBindJump.pressed = false;
 					
-					if (mc.thePlayer.ticksExisted % 2 == 0) {
-						mc.timer.ticksPerSecond = 28;
-					}else {
-						mc.timer.ticksPerSecond = 20;
-					}
-					
-					MovementUtils.strafe((float) hypixelSpeed.getValue() * 20);
-					
-					if (MovementUtils.isOnGround(0.000001)) {
+					if (MovementUtils.isOnGround(0.00001)) {
+						boosted = true;
+						speed = hypixelSpeed.getValue() * 13.5;
 						mc.thePlayer.jump();
 					}
+					
+					MovementUtils.strafe(((float)speed));
+					
+					speed -= speed/19.5;
 					
 				}
 				else if (mode.is("Test") && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {

@@ -322,8 +322,8 @@ public class Config {
 			this.clickgui.padding = new NumberSetting("Padding", 8, 5.5, 10, 0.1);
 			
 			this.fly.mode = new ModeSetting("Mode", this.fly.mode.getMode(), "Vanilla", "Hypixel", "HypixelFast1");
-			this.fly.hypixelFreecamHorizontalFlySpeed = new NumberSetting("Speed", 2, 1, 10, 0.2);
-			this.fly.hypixelFreecamVerticalFlySpeed = new NumberSetting("Vertical Speed", 0.4, 0.1, 1, 0.1);
+			this.fly.hypixelFreecamHorizontalFlySpeed = new NumberSetting("Horizontal Speed", 2, 1, 18, 0.2);
+			this.fly.hypixelFreecamVerticalFlySpeed = new NumberSetting("Vertical Speed", 0.4, 0.1, 1, 0.01);
 			this.fly.viewBobbingSetting = new BooleanSetting("View Bobbing", false);
 			this.fly.stopOnDisable = new BooleanSetting("Stop on disable", true);
 			

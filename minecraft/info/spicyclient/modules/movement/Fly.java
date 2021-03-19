@@ -62,8 +62,8 @@ public class Fly extends Module {
 	public BooleanSetting viewBobbingSetting = new BooleanSetting("View Bobbing", false);
 	public BooleanSetting stopOnDisable = new BooleanSetting("Stop on disable", true);
 	
-	public NumberSetting hypixelFreecamHorizontalFlySpeed = new NumberSetting("Horizontal Speed", 2, 1, 10, 0.2);
-	public NumberSetting hypixelFreecamVerticalFlySpeed = new NumberSetting("Vertical Speed", 0.4, 0.1, 1, 0.1);
+	public NumberSetting hypixelFreecamHorizontalFlySpeed = new NumberSetting("Horizontal Speed", 2, 1, 18, 0.2);
+	public NumberSetting hypixelFreecamVerticalFlySpeed = new NumberSetting("Vertical Speed", 0.4, 0.1, 1, 0.01);
 	
 	/*
 	public BooleanSetting hypixelBlink = new BooleanSetting("Blink", true);
