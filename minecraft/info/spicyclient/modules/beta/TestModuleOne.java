@@ -1,6 +1,9 @@
 package info.spicyclient.modules.beta;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.Base64;
 import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
@@ -109,76 +112,8 @@ public class TestModuleOne extends Module {
 	@Override
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventUpdate && e.isPre() && bool1) {
-			if (isOverVoid() && mc.thePlayer.fallDistance >= 3.5) {
-				bool2 = true;
-				mc.thePlayer.motionY = 0;
-				MovementUtils.setMotion(0);
-			}
-		}
-		
-		if (e instanceof EventGetBlockReach && e.isPre() && !bool1) {
-			((EventGetBlockReach)e).reach = 100;
-		}
-		
-		if (e instanceof EventRender3D && e.isPre() && pos != BlockPos.ORIGIN && bool1) {
-			for (int i = 0; i < 5; i++) {
-
-				RenderUtils.drawLine(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY(), pos.getZ());
-				RenderUtils.drawLine(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 1,
-						pos.getZ());
-				RenderUtils.drawLine(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY(), pos.getZ() + 1);
-				RenderUtils.drawLine(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX(), pos.getY() + 1,
-						pos.getZ() + 1);
-				RenderUtils.drawLine(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY() + 1, pos.getZ());
-				RenderUtils.drawLine(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX(), pos.getY() + 1, pos.getZ());
-				RenderUtils.drawLine(pos.getX() + 1, pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1,
-						pos.getZ());
-				RenderUtils.drawLine(pos.getX() + 1, pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 1,
-						pos.getZ());
-				RenderUtils.drawLine(pos.getX(), pos.getY(), pos.getZ() + 1, pos.getX(), pos.getY() + 1,
-						pos.getZ() + 1);
-				RenderUtils.drawLine(pos.getX(), pos.getY() + 1, pos.getZ() + 1, pos.getX(), pos.getY() + 1,
-						pos.getZ() + 1);
-				RenderUtils.drawLine(pos.getX() + 1, pos.getY(), pos.getZ() + 1, pos.getX(), pos.getY(),
-						pos.getZ() + 1);
-				RenderUtils.drawLine(pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1, pos.getX(), pos.getY() + 1,
-						pos.getZ() + 1);
-				RenderUtils.drawLine(pos.getX() + 1, pos.getY(), pos.getZ() + 1, pos.getX() + 1, pos.getY() + 1,
-						pos.getZ() + 1);
-				RenderUtils.drawLine(pos.getX() + 1, pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 1,
-						pos.getZ() + 1);
-				RenderUtils.drawLine(pos.getX() + 1, pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY(),
-						pos.getZ() + 1);
-			}
-		}
-		
 		if (e instanceof EventSendPacket && e.isPre()) {
-
-			EventSendPacket event = (EventSendPacket) e;
-
-			if (event.packet instanceof C08PacketPlayerBlockPlacement && mc.objectMouseOver != null && mc.objectMouseOver.blockPos != null && !bool1) {
-				bool1 = true;
-				pos = mc.objectMouseOver.getBlockPos();
-				mc.thePlayer.setPosition(pos.getZ(), pos.getY(), pos.getZ());
-				toggle();
-				e.setCanceled(true);
-			}
-			
-		}
-		
-		if (e instanceof EventReceivePacket && e.isPre()) {
-			
-			EventReceivePacket event = (EventReceivePacket)e;
-			
-			if (event.packet instanceof S08PacketPlayerPosLook && bool1 && bool2) {
-				e.setCanceled(true);
-				S08PacketPlayerPosLook s08 = (S08PacketPlayerPosLook) event.packet;
-				mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(s08.getX(), s08.getY(), s08.getZ(), false));
-				mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 30, mc.thePlayer.posX);
-				toggle();
-			}
-			
+			System.out.println(((EventSendPacket)e).packet);
 		}
 		
 	}
@@ -192,7 +127,7 @@ public class TestModuleOne extends Module {
 		boolean isOverVoid = true;
 		BlockPos block = mc.thePlayer.getPosition();
 		
-		for (int i = (int) mc.thePlayer.posY; i > 0; i--) {
+		for (short i = (short) mc.thePlayer.posY; i > 0; i--) {
 			
 			if (isOverVoid) {
 				

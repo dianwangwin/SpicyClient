@@ -70,7 +70,7 @@ public class HypixelClickTeleport extends Module {
 
 				BlockPos below = lockPos;
 
-				for (int i = 0; i < 5; i++) {
+				for (short i = 0; i < 5; i++) {
 
 					RenderUtils.drawLine(below.getX(), below.getY(), below.getZ(), below.getX() + 1, below.getY(),
 							below.getZ());

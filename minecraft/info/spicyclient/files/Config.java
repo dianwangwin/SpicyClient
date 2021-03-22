@@ -326,6 +326,9 @@ public class Config {
 			this.fly.hypixelFreecamVerticalFlySpeed = new NumberSetting("Vertical Speed", 0.4, 0.1, 1, 0.01);
 			this.fly.viewBobbingSetting = new BooleanSetting("View Bobbing", false);
 			this.fly.stopOnDisable = new BooleanSetting("Stop on disable", true);
+			this.fly.hypixelUseFireball = new BooleanSetting("Fireball disabler", true);
+			this.fly.hypixelUsePearl= new BooleanSetting("Pearl disabler", true);
+			this.fly.hypixelPaperChallenge= new BooleanSetting("Paper Challenge disabler", false);
 			
 			this.bhop.hypixelSpeed = new NumberSetting("Speed", 0.01, 0.0001, 0.03, 0.0001);
 			

@@ -62,8 +62,11 @@ public class Fly extends Module {
 	public BooleanSetting viewBobbingSetting = new BooleanSetting("View Bobbing", false);
 	public BooleanSetting stopOnDisable = new BooleanSetting("Stop on disable", true);
 	
-	public NumberSetting hypixelFreecamHorizontalFlySpeed = new NumberSetting("Horizontal Speed", 2, 1, 18, 0.2);
-	public NumberSetting hypixelFreecamVerticalFlySpeed = new NumberSetting("Vertical Speed", 0.4, 0.1, 1, 0.01);
+	public NumberSetting hypixelFreecamHorizontalFlySpeed = new NumberSetting("Horizontal Speed", 2, 10, 18, 0.2);
+	public NumberSetting hypixelFreecamVerticalFlySpeed = new NumberSetting("Vertical Speed", 0.4, 0.2, 1, 0.01);
+	public BooleanSetting hypixelUseFireball = new BooleanSetting("Fireball disabler", true);
+	public BooleanSetting hypixelUsePearl= new BooleanSetting("Pearl disabler", true);
+	public BooleanSetting hypixelPaperChallenge= new BooleanSetting("Paper Challenge disabler", false);
 	
 	/*
 	public BooleanSetting hypixelBlink = new BooleanSetting("Blink", true);
@@ -108,6 +111,18 @@ public class Fly extends Module {
 				this.settings.remove(hypixelFreecamVerticalFlySpeed);
 			}
 			
+			if (this.settings.contains(hypixelUseFireball)) {
+				this.settings.remove(hypixelUseFireball);
+			}
+			
+			if (this.settings.contains(hypixelUsePearl)) {
+				this.settings.remove(hypixelUsePearl);
+			}
+			
+			if (this.settings.contains(hypixelPaperChallenge)) {
+				this.settings.remove(hypixelPaperChallenge);
+			}
+			
 			/*
 			if (this.settings.contains(hypixelBlink)) {
 				this.settings.remove(hypixelBlink);
@@ -141,6 +156,18 @@ public class Fly extends Module {
 				
 				if (!this.settings.contains(hypixelFreecamVerticalFlySpeed)) {
 					this.settings.add(hypixelFreecamVerticalFlySpeed);
+				}
+				
+				if (!this.settings.contains(hypixelUseFireball)) {
+					this.settings.add(hypixelUseFireball);
+				}
+				
+				if (!this.settings.contains(hypixelUsePearl)) {
+					this.settings.add(hypixelUsePearl);
+				}
+				
+				if (!this.settings.contains(hypixelPaperChallenge)) {
+					//this.settings.add(hypixelPaperChallenge);
 				}
 				
 			}
@@ -330,7 +357,7 @@ public class Fly extends Module {
 
 		double offset = 0.0625;
 		if (mc.thePlayer != null && mc.getNetHandler() != null && mc.thePlayer.onGround) {
-			for (int i = 0; i <= ((3 + damage) / offset); i++) {
+			for (short i = 0; i <= ((3 + damage) / offset); i++) {
 				mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
 						mc.thePlayer.posY + offset, mc.thePlayer.posZ, false));
 				mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,

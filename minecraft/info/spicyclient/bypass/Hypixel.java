@@ -25,8 +25,10 @@ import info.spicyclient.util.RotationUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemEnderPearl;
 import net.minecraft.item.ItemFireball;
+import net.minecraft.item.ItemFishingRod;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
@@ -36,12 +38,16 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition;
 import net.minecraft.network.play.client.C03PacketPlayer.C05PacketPlayerLook;
 import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook;
+import net.minecraft.network.play.client.C07PacketPlayerDigging;
+import net.minecraft.network.play.client.C07PacketPlayerDigging.Action;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
+import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.network.play.server.S27PacketExplosion;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 
@@ -58,7 +64,7 @@ public class Hypixel {
 		double offset = 0.0625;
 		//offset = 0.015625;
 		if (mc.thePlayer != null && mc.getNetHandler() != null && mc.thePlayer.onGround) {
-			for (int i = 0; i <= ((3 + damage) / offset); i++) {
+			for (short i = 0; i <= ((3 + damage) / offset); i++) {
 				mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
 						mc.thePlayer.posY + ((offset / 2) * 1), mc.thePlayer.posZ, false));
 				mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
@@ -74,7 +80,7 @@ public class Hypixel {
 	// This does not work anymore
 	
 	private static transient boolean disabled = false, watchdog = false, shouldCancelPackets = false,
-			threwEnderPearl = false, fireball = false, shouldToggleOnGround = false;
+			threwEnderPearl = false, fireball = false, paper = false, shouldToggleOnGround = false;
 	private static transient double originalX, originalY, originalZ, originalMotionX, originalMotionY, originalMotionZ;
 	private static transient int status = 0;
 	private static transient CopyOnWriteArrayList<Packet> packets = new CopyOnWriteArrayList<Packet>();
@@ -87,6 +93,7 @@ public class Hypixel {
 		shouldCancelPackets = false;
 		threwEnderPearl = false;
 		fireball = false;
+		paper = false;
 		shouldToggleOnGround = false;
 		packets.clear();
 		status = 0;
@@ -125,7 +132,7 @@ public class Hypixel {
 	}
 	
 	public static void onFlyEvent(Event e, Module module, Minecraft mc) {
-		
+
 		if (e instanceof EventUpdate && e.isPre()) {
 			module.additionalInformation = "TF2 rocket jump";
 		}
@@ -150,23 +157,6 @@ public class Hypixel {
 			
 			if (shouldToggleOnGround && MovementUtils.isOnGround(0.0001)) {
 				module.toggle();
-			}
-			
-			if (disabled) {
-				switch (status) {
-				case 0:
-				case 1:
-					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 10E-12D, mc.thePlayer.posZ);
-					status++;
-					break;
-				case 2:
-					//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - 10E-12D, mc.thePlayer.posZ);
-					status = 0;
-					break;
-
-				default:
-					break;
-				}
 			}
 			
 		}
@@ -200,6 +190,10 @@ public class Hypixel {
 		
 		if (e instanceof EventUpdate && e.isPre() && disabled && packets.size() > 0) {
 			
+			if (paper) {
+				MovementUtils.setMotion(0);
+			}
+			
 			double tpX = originalX, tpY = originalY, tpZ = originalZ;
 			
 			for (Packet p : packets) {
@@ -225,6 +219,10 @@ public class Hypixel {
 			
             if (e.isPre()) {
             	
+            	if ((((EventSendPacket)e).packet instanceof C09PacketHeldItemChange || ((EventSendPacket)e).packet instanceof C07PacketPlayerDigging || ((EventSendPacket)e).packet instanceof C08PacketPlayerBlockPlacement) && paper && !disabled) {
+            		e.setCanceled(true);
+            	}
+            	
                 if (((EventSendPacket)e).packet instanceof C04PacketPlayerPosition || ((EventSendPacket)e).packet instanceof C06PacketPlayerPosLook) {
                     if (watchdog && shouldCancelPackets) {
                     	packets.add(((EventSendPacket)e).packet);
@@ -240,11 +238,25 @@ public class Hypixel {
 			
             if (e.isPre()) {
             	
-                if (((EventReceivePacket)e).packet instanceof S08PacketPlayerPosLook) {
+            	//You are paper-thin! WOOSH!
+            	
+            	if (((EventReceivePacket)e).packet instanceof S02PacketChat && paper) {
+            		
+            		if (((S02PacketChat)((EventReceivePacket)e).packet).getChatComponent().getUnformattedText().equalsIgnoreCase("You are paper-thin! WOOSH!"))
+            		
+            		mc.playerController.syncCurrentPlayItem();
+                	Minecraft.getMinecraft().thePlayer.setPosition(originalX, originalY, originalZ);
+                	disabled = true;
+        			MovementUtils.setMotion(SpicyClient.config.fly.hypixelFreecamHorizontalFlySpeed.getValue());
+        			mc.thePlayer.motionY = SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue() * 6;
+                    disabledUntil = System.currentTimeMillis() + 100;
+            	}
+            	else if (((EventReceivePacket)e).packet instanceof S08PacketPlayerPosLook && threwEnderPearl) {
                 	
                     if (watchdog) {
+                    	Minecraft.getMinecraft().thePlayer.setPosition(originalX, originalY, originalZ);
                     	disabled = true;
-            			Minecraft.getMinecraft().thePlayer.setPosition(originalX, originalY, originalZ);
+            			Minecraft.getMinecraft().thePlayer.setPosition(((S08PacketPlayerPosLook)((EventReceivePacket)e).packet).getX(), ((S08PacketPlayerPosLook)((EventReceivePacket)e).packet).getY(), ((S08PacketPlayerPosLook)((EventReceivePacket)e).packet).getZ());
             			MovementUtils.setMotion(SpicyClient.config.fly.hypixelFreecamHorizontalFlySpeed.getValue());
             			mc.thePlayer.motionY = SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue() * 6;
                         disabledUntil = System.currentTimeMillis() + 100;
@@ -258,15 +270,11 @@ public class Hypixel {
                     
                 }
                 else if (((EventReceivePacket)e).packet instanceof S27PacketExplosion && fireball) {
+                	Minecraft.getMinecraft().thePlayer.setPosition(originalX, originalY, originalZ);
                 	disabled = true;
-                    //NotificationManager.getNotificationManager().createNotification("Fly", "Teleporting you to your current position", true, 5000, Type.INFO, Color.PINK);
-                    //disabledUntil = System.currentTimeMillis() + 3000;
-                	
-        			Minecraft.getMinecraft().thePlayer.setPosition(originalX, originalY, originalZ);
         			MovementUtils.setMotion(SpicyClient.config.fly.hypixelFreecamHorizontalFlySpeed.getValue());
         			mc.thePlayer.motionY = SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue() * 6;
                     disabledUntil = System.currentTimeMillis() + 100;
-                    //module.toggle();
                 }
 			
             }
@@ -288,9 +296,8 @@ public class Hypixel {
                     //mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y, z, true));
                     //mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.21D, z, true));
                     //mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.11D, z, true));
-                    mc.thePlayer.motionY = 0.21;
+                    //mc.thePlayer.motionY = 0.21;
                     watchdog = true;
-                    NotificationManager.getNotificationManager().createNotification("Fly", "Please wait 5s.", true, 5000, Type.INFO, Color.PINK);
                     //mc.thePlayer.jump();
                     
                 }
@@ -298,9 +305,9 @@ public class Hypixel {
 			else if (mc.thePlayer.motionY <= 0 && watchdog) {
 				shouldCancelPackets = true;
 				
-				if (!threwEnderPearl && !fireball) {
+				if (SpicyClient.config.fly.hypixelUsePearl.isEnabled() && !threwEnderPearl && !fireball && !paper) {
 					
-					for (int i = 0; i < 45; i++) {
+					for (short i = 0; i < 45; i++) {
 						
 						if (Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
 							ItemStack is = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getStack();
@@ -308,7 +315,7 @@ public class Hypixel {
 							if (is.getItem() instanceof ItemEnderPearl && !threwEnderPearl) {
 								threwEnderPearl = true;
 								NotificationManager.getNotificationManager().createNotification("Fly",
-										"Found ender pearl, throwing it", true, 3000, Type.INFO, Color.BLUE);
+										"Found pearl, throwing it", true, 3000, Type.INFO, Color.BLUE);
 								
 								int heldItemBeforeThrow = mc.thePlayer.inventory.currentItem;
 								if (i - 36 < 0) {
@@ -340,11 +347,9 @@ public class Hypixel {
 						
 					}
 				}
-				if (!threwEnderPearl && !fireball) {
+				if (SpicyClient.config.fly.hypixelUseFireball.isEnabled() && !threwEnderPearl && !fireball && !paper) {
 					
-					// Bans
-					
-					for (int i = 0; i < 45; i++) {
+					for (short i = 0; i < 45; i++) {
 						
 						if (Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
 							ItemStack is = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getStack();
@@ -385,9 +390,9 @@ public class Hypixel {
 						
 					}
 					
-				}
-				if (!threwEnderPearl && !fireball) {
-					NotificationManager.getNotificationManager().createNotification("Fly", "Please get a fireball or ender pearl to use this", true, 3000, Type.WARNING, Color.RED);
+				}				
+				if (!threwEnderPearl && !fireball && !paper) {
+					NotificationManager.getNotificationManager().createNotification("Fly", "Please get a fireball, pearl, bow, or rod to use this", true, 3000, Type.WARNING, Color.RED);
 					module.toggle();
 				}
 				

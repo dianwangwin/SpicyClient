@@ -71,47 +71,6 @@ public class TargetStrafe extends Module {
 	@Override
 	public void onEvent(Event e) {
 		
-		if ((e instanceof EventMotion && e.isPost()) || (e instanceof EventUpdate && e.isPre())) {
-			//Command.sendPrivateChatMessage("\nMotion X: " + mc.thePlayer.motionX + "\nMotion Y: " + mc.thePlayer.motionY + "\nMotion Z: " + mc.thePlayer.motionZ);
-			if (mc.thePlayer.isCollidedHorizontally) {
-				direction = !direction;
-			}
-			
-			Killaura k = SpicyClient.config.killaura;
-			
-			if (k.target == null || !k.isEnabled()) {
-				return;
-			}else {
-				
-				mc.thePlayer.noClip = false;
-				
-				double currentSpeed = MovementUtils.getSpeed();
-				
-				MovementUtils.setMotion(0);
-				
-				double yawChange = 90;
-				
-				if (mc.thePlayer.getDistanceToEntity(k.target) < distance.getValue() && mc.thePlayer.getDistanceToEntity(k.target) > distance.getValue() - 0.05) {
-					//yawChange = 10;
-				}
-				
-				float f = (float) ((RotationUtils.getRotations(k.target)[0] + (direction ? -yawChange : yawChange)) * 0.017453292F);
-				double x2 = k.target.posX, z2 = k.target.posZ;
-	            x2 -= (double)(MathHelper.sin(f) * (distance.getValue() + 2.25) * -1);
-	            z2 += (double)(MathHelper.cos(f) * (distance.getValue() + 2.25) * -1);
-	            
-	            float currentSpeed1 = MovementUtils.getSpeed();
-	            
-	            MovementUtils.setMotion(currentSpeed + speed.getValue(), RotationUtils.getRotationFromPosition(x2, z2, mc.thePlayer.posY)[0]);
-	            
-	            if (currentSpeed > MovementUtils.getSpeed()) {
-	            	direction = !direction;
-	            }
-	            
-			}
-			
-		}
-		
 		if (e instanceof EventMove && e.isPre() && !SpicyClient.config.fly.isEnabled()) {
 			
 			EventMove event = (EventMove)e;
@@ -128,13 +87,9 @@ public class TargetStrafe extends Module {
 				
 				double currentSpeed = MovementUtils.getSpeed();
 				
-				event.setSpeed(0);
+				//event.setSpeed(0);
 				
 				double yawChange = 45;
-				
-				if (mc.thePlayer.getDistanceToEntity(k.target) < distance.getValue() && mc.thePlayer.getDistanceToEntity(k.target) > distance.getValue() - 0.05) {
-					//yawChange = 10;
-				}
 				
 				float f = (float) ((RotationUtils.getRotations(k.target)[0] + (direction ? -yawChange : yawChange)) * 0.017453292F);
 				double x2 = k.target.posX, z2 = k.target.posZ;
@@ -170,7 +125,7 @@ public class TargetStrafe extends Module {
 				
 				Vec3 lastLine = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
 				
-				for (int i = 0; i <= 360; i++) {
+				for (short i = 0; i <= 360; i++) {
 					
 					float f = (RotationUtils.getRotations(k.target)[0] + (direction ? -i : i)) * 0.017453292F;
 					double x2 = k.target.posX, z2 = k.target.posZ;

@@ -105,7 +105,7 @@ public class BlockFly extends Module {
 			
 			int blocksLeft = 0;
 			
-			for (int g = 0; g < 9; g++) {
+			for (short g = 0; g < 9; g++) {
 				
 				if (mc.thePlayer.inventoryContainer.getSlot(g + 36).getHasStack()
 						&& mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem() instanceof ItemBlock
@@ -200,7 +200,7 @@ public class BlockFly extends Module {
 				return;
 			}
 			
-			for (int i = 0; i < 5; i++) {
+			for (short i = 0; i < 5; i++) {
 				
 				RenderUtils.drawLine(below.getX(), below.getY(), below.getZ(), below.getX() + 1, below.getY(), below.getZ());
 				RenderUtils.drawLine(below.getX(), below.getY() + 1, below.getZ(), below.getX() + 1, below.getY() + 1, below.getZ());
@@ -557,7 +557,7 @@ public class BlockFly extends Module {
 		
 		int slot = mc.thePlayer.inventory.currentItem;
 		
-		for (int g = 0; g < 9; g++) {
+		for (short g = 0; g < 9; g++) {
 			
 			if (mc.thePlayer.inventoryContainer.getSlot(g + 36).getHasStack()
 					&& mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem() instanceof ItemBlock

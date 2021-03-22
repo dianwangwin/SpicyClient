@@ -133,7 +133,7 @@ public class SuperHeroFX extends Module {
 			try {
 				if (mc.objectMouseOver.typeOfHit == MovingObjectType.ENTITY) {
 					
-					for (int i = 0; i < amount.getValue(); i++) {
+					for (short i = 0; i < amount.getValue(); i++) {
 						effects.add(new FX((long) ttl.getValue(),
 								mc.objectMouseOver.entityHit.posX + new Random().nextInt(3) + new Random().nextDouble()
 										- 2,

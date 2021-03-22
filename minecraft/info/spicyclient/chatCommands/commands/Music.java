@@ -30,7 +30,7 @@ public class Music extends Command {
 		
 		String[] splitMessage = message.split(" ");
 		String musicName = "";;
-		for (int i = 0; i < splitMessage.length; i++) {
+		for (short i = 0; i < splitMessage.length; i++) {
 			if (i >= 2) {
 				musicName += splitMessage[i] + " ";
 			}

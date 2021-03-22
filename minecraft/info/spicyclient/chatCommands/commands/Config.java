@@ -17,7 +17,7 @@ public class Config extends Command {
 		
 		String[] splitMessage = message.split(" ");
 		String configName = "";;
-		for (int i = 0; i < splitMessage.length; i++) {
+		for (short i = 0; i < splitMessage.length; i++) {
 			if (i >= 2) {
 				configName += splitMessage[i] + " ";
 			}
