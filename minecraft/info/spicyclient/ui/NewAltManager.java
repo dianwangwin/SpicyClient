@@ -320,7 +320,12 @@ public class NewAltManager extends GuiScreen {
     			textBox2.selected = true;
     		}
     		else if (keyCode == Keyboard.KEY_V && isCtrlKeyDown() && addAlt) {
-    			textBox1.addChar(getClipboardString());
+    			if (getClipboardString().contains(":") && getClipboardString().split(":").length == 2) {
+    				textBox1.addChar(getClipboardString().split(":")[0]);
+    				textBox2.addChar(getClipboardString().split(":")[1]);
+    			}else {
+    				textBox1.addChar(getClipboardString());
+    			}
     		}else {
     			textBox1.typeKey(typedChar, keyCode);
     		}
@@ -331,7 +336,12 @@ public class NewAltManager extends GuiScreen {
     	}
     	else if (textBox2.selected) {
     		if (keyCode == Keyboard.KEY_V && isCtrlKeyDown() && addAlt) {
-    			textBox2.addChar(getClipboardString());
+    			if (getClipboardString().contains(":") && getClipboardString().split(":").length == 2) {
+    				textBox1.addChar(getClipboardString().split(":")[0]);
+    				textBox2.addChar(getClipboardString().split(":")[1]);
+    			}else {
+    				textBox2.addChar(getClipboardString());
+    			}
     		}else {
     			textBox2.typeKey(typedChar, keyCode);
     		}

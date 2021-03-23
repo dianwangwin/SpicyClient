@@ -21,6 +21,7 @@ import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.settings.SettingChangeEvent;
 import info.spicyclient.settings.SettingChangeEvent.type;
 import info.spicyclient.util.InventoryUtils;
+import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemAxe;
@@ -198,7 +199,8 @@ public class InventoryManager extends Module {
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
-			if (mc.currentScreen != null && !(mc.currentScreen instanceof ClickGUI)) {
+			if (mc.currentScreen != null && (!(mc.currentScreen instanceof ClickGUI) || !(mc.currentScreen instanceof GuiChest))) {
+				closeInv();
 				return;
 			}
 			

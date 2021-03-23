@@ -353,6 +353,8 @@ public class Config {
 			
 			this.inventoryManager.category = Category.PLAYER;
 			
+			this.blockFly.keepY = new BooleanSetting("Keep Y", false);
+			
 		}
 		
 		this.version = temp.version;

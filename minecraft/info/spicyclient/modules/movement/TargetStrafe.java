@@ -71,7 +71,7 @@ public class TargetStrafe extends Module {
 	@Override
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventMove && e.isPre() && !SpicyClient.config.fly.isEnabled()) {
+		if (e instanceof EventMove && e.isPre()) {
 			
 			EventMove event = (EventMove)e;
 			
