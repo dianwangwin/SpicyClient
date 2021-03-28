@@ -182,13 +182,13 @@ public class Config {
 		modules.add(con.antiLava);
 		modules.add(con.invWalk);
 		modules.add(con.mike);
-		modules.add(con.disabler);
+		//modules.add(con.disabler);
 		modules.add(con.smallItems);
 		modules.add(con.lsd);
 		modules.add(con.tracers);
 		modules.add(con.blockCoding);
 		modules.add(con.testModuleOne);
-		modules.add(con.hypixel5SecDisabler);
+		//modules.add(con.hypixel5SecDisabler);
 		modules.add(con.hud);
 		modules.add(con.snow);
 		modules.add(con.targetStrafe);
@@ -210,7 +210,6 @@ public class Config {
 		modules.add(con.jelloForSpicy);
 		modules.add(con.speed);
 		modules.add(con.ircChat);
-		modules.add(con.autoPaperChallenge);
 		modules.add(con.hypixelClickTeleport);
 		
 		return modules;
@@ -309,6 +308,7 @@ public class Config {
 			this.killaura.targetsSetting = this.killaura.targetModeSetting;
 			this.killaura.rotationSetting = new ModeSetting("Rotation setting", "lock", "lock", "smooth", "Hypixel");
 			this.killaura.hitOnHurtTime = new BooleanSetting("Hit on hurt time", false);
+			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel1", "Hypixel2");
 			
 			this.tabgui.mode = new ModeSetting("Mode", "original", "compressed", "original");
 			
@@ -322,7 +322,7 @@ public class Config {
 			this.clickgui.padding = new NumberSetting("Padding", 8, 5.5, 10, 0.1);
 			
 			this.fly.mode = new ModeSetting("Mode", this.fly.mode.getMode(), "Vanilla", "Hypixel", "HypixelFast1");
-			this.fly.hypixelFreecamHorizontalFlySpeed = new NumberSetting("Horizontal Speed", 2, 1, 18, 0.2);
+			this.fly.hypixelFreecamHorizontalFlySpeed = new NumberSetting("Horizontal Speed", 10, 2, 18, 0.2);
 			this.fly.hypixelFreecamVerticalFlySpeed = new NumberSetting("Vertical Speed", 0.4, 0.1, 1, 0.01);
 			this.fly.viewBobbingSetting = new BooleanSetting("View Bobbing", false);
 			this.fly.stopOnDisable = new BooleanSetting("Stop on disable", true);
@@ -354,6 +354,7 @@ public class Config {
 			this.inventoryManager.category = Category.PLAYER;
 			
 			this.blockFly.keepY = new BooleanSetting("Keep Y", false);
+			this.blockFly.hypixel = new BooleanSetting("Hypixel", true);
 			
 		}
 		

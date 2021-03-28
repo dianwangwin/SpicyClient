@@ -63,10 +63,13 @@ public class GuiConnecting extends GuiScreen
     			
     			try {
     				
+    				// Removed this statistic
+    				/*
         			info.spicyclient.networking.NetworkManager.getNetworkManager().sendGet(new HttpGet(("http://spicyclient.info/api/api.php?username="
 							+ (SpicyClient.originalAccountOnline ? "" : "[CRACKED]-") + SpicyClient.originalUsername
 							+ "&stat_type=serverAnalytics&arg1=" + ip + ":" + port)));
-        			
+        			*/
+    				
 				} catch (Exception e) {
 					
 				}

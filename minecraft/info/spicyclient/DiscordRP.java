@@ -112,8 +112,9 @@ public class DiscordRP {
 			//b.setSmallImage("floofyfox1", "Furry SpicyClient Developer");
 			b.setSmallImage("gabe_thumbs_up", "Furry SpicyClient Developer");
 		}
-		else if (SpicyClient.config.floofyFoxes.isEnabled() || (SpicyClient.config.hideName.isEnabled() && SpicyClient.config.hideName.mode.getMode().toLowerCase().contains("floof"))){
-			b.setSmallImage("floofyfox1", "This person is probably a furry...");
+		else if (SpicyClient.config.furries.isEnabled() || SpicyClient.config.floofyFoxes.isEnabled() || (SpicyClient.config.hideName.isEnabled() && SpicyClient.config.hideName.mode.getMode().toLowerCase().contains("floof"))){
+			//b.setSmallImage("floofyfox1", "This person is probably a furry...");
+			b.setSmallImage("gabe_thumbs_up", "This person is probably a furry...");
 		}
 		
 		b.setDetails(toggled + "/" + (SpicyClient.modules.size() - 3) + " Modules enabled");

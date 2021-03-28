@@ -102,6 +102,7 @@ public class TestModuleOne extends Module {
 	public void onEnable() {
 		bool1 = false;
 		bool1 = false;
+		status = 0;
 	}
 
 	@Override
@@ -112,8 +113,33 @@ public class TestModuleOne extends Module {
 	@Override
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventSendPacket && e.isPre()) {
-			System.out.println(((EventSendPacket)e).packet);
+		if (e instanceof EventUpdate && e.isPre() && MovementUtils.isMoving()) {
+			
+			if (mc.thePlayer.ticksExisted < 5) {
+				status = 0;
+			}
+			
+			if (MovementUtils.isOnGround(0.00001)) {
+				
+				if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
+					MovementUtils.setMotion(0.45);
+				}else {
+					MovementUtils.setMotion(0.15);
+				}
+				
+				if (status < mc.thePlayer.ticksExisted) {
+					status = mc.thePlayer.ticksExisted + 1;
+				}else {
+					if (status == mc.thePlayer.ticksExisted) {
+						mc.thePlayer.jump();
+					}
+				}
+			}else {
+				
+			}
+			
+			MovementUtils.strafe();
+			
 		}
 		
 	}

@@ -66,7 +66,7 @@ public class Killaura extends Module {
 	public BooleanSetting dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", true);
 	public ModeSetting targetsSetting = new ModeSetting("Targets", "Players", "Players", "Animals", "Mobs", "Everything");
 	public ModeSetting rotationSetting = new ModeSetting("Rotation setting", "lock", "lock", "smooth", "Hypixel");
-	public ModeSetting newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
+	public ModeSetting newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel1", "Hypixel2");
 	public ModeSetting targetingMode = new ModeSetting("Targeting mode", "Single", "Single", "Switch");
 	public NumberSetting switchTime = new NumberSetting("Switch Time", 2, 0.1, 10, 0.1);
 	public BooleanSetting hitOnHurtTime = new BooleanSetting("Hit on hurt time", false);
@@ -121,9 +121,9 @@ public class Killaura extends Module {
 		RenderUtils.resetPlayerYaw();
 		RenderUtils.resetPlayerPitch();
 		
-        if (mc.thePlayer != null && newAutoblock.is("Hypixel")) {
+        if (mc.thePlayer != null && (newAutoblock.is("Hypixel1") || newAutoblock.is("Hypixel2"))) {
         	try {
-                if (blocking && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
+                if (blocking && (newAutoblock.is("Hypixel1") || newAutoblock.is("Hypixel2")) && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
                     mc.gameSettings.keyBindUseItem.pressed = false;
                     mc.playerController.onStoppedUsingItem(mc.thePlayer);
                 }
@@ -330,10 +330,11 @@ public class Killaura extends Module {
 						return;
 					}
 					
-					if (newAutoblock.getMode() != "None") {
-						
+					if (newAutoblock.is("Vanilla") || newAutoblock.is("Hypixel1")) {
 						startBlocking();
-						
+					}
+					else if (newAutoblock.getMode() == "Hypixel2") {
+						mc.thePlayer.setItemInUse(mc.thePlayer.getCurrentEquippedItem(), 7);
 					}
 					
 					target = targets.get(0);
@@ -542,13 +543,16 @@ public class Killaura extends Module {
 						if (s.toggled) {
 							mc.thePlayer.setSprinting(true);
 						}
-						if (newAutoblock.is("Hypixel") && !blocking) {
+						if (newAutoblock.is("Hypixel1") && !blocking) {
 							
 							blockHypixel(target);
 							
 							//startBlocking(true);
 							//Random r = new Random();
 							//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-0.410153517, -0.4083644, -0.4186343), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
+						}
+						if (newAutoblock.is("Hypixel2") && !blocking) {
+							mc.thePlayer.setItemInUse(mc.thePlayer.getCurrentEquippedItem(), 7);
 						}
 						
 						//if (dynamicAPSTimer.hasTimeElapsed(10000 + (new Random().nextInt(10) * 1000), true) && mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel")) {
@@ -584,8 +588,8 @@ public class Killaura extends Module {
 		sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());
 		
 		float[] rotations = RotationUtils.getRotations(target);
-		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(ent, RotationUtils.getVectorForRotation(rotations[0], rotations[1])));
-		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(ent, Action.INTERACT));
+		//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(ent, RotationUtils.getVectorForRotation(rotations[0], rotations[1])));
+		//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(ent, Action.INTERACT));
 		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
 		
 	}
@@ -633,10 +637,10 @@ public class Killaura extends Module {
 	private void stopBlocking() {
 		
 		try {
-			if (blocking && newAutoblock.is("Hypixel") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
+			if (blocking && newAutoblock.is("Hypixel1") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
 	        	
-	        	mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-				//mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, new BlockPos(-0.8, -0.8, -0.8), EnumFacing.DOWN));
+	        	//mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+				mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, new BlockPos(-0.8, -0.8, -0.8), EnumFacing.DOWN));
 	            mc.gameSettings.keyBindUseItem.pressed = false;
 	            
 	        }
@@ -668,7 +672,7 @@ public class Killaura extends Module {
 		
 		blocking = true;
 		
-        if (newAutoblock.is("Hypixel") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
+        if (newAutoblock.is("Hypixel1") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
         	
         	blockHypixel(target);
         	

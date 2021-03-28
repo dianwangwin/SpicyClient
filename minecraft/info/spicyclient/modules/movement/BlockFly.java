@@ -72,7 +72,8 @@ public class BlockFly extends Module {
 	public NumberSetting extend = new NumberSetting("Extend", 2.5, 0.1, 5, 0.1),
 			xOffset = new NumberSetting("X Offset", 0, 0, 1, 0.05),
 			zOffset = new NumberSetting("Z Offset", 0, 0, 1, 0.05);
-	public BooleanSetting keepY = new BooleanSetting("Keep Y", false);
+	public BooleanSetting keepY = new BooleanSetting("Keep Y", false),
+			hypixel = new BooleanSetting("Hypixel", true);
 	
 	private static transient double keepPosY = 0;
 	
@@ -80,7 +81,8 @@ public class BlockFly extends Module {
 	public void resetSettings() {
 		
 		this.settings.clear();
-		this.addSettings(extend, keepY);
+		//extend.setValue(0.1);
+		this.addSettings(extend, keepY, hypixel);
 		
 	}
 	
@@ -96,6 +98,31 @@ public class BlockFly extends Module {
 	public void onDisable() {
 		mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
 		lastSlot = -1;
+	}
+	
+	@Override
+	public void onSettingChange(SettingChangeEvent e) {
+		
+		if (e.setting == hypixel) {
+			
+			if (hypixel.isEnabled()) {
+				if (settings.contains(extend)) {
+					settings.remove(extend);
+				}
+				extend.setValue(0.1);
+			}else {
+				if (!settings.contains(extend)) {
+					settings.add(extend);
+				}
+				if (!settings.contains(keepY)) {
+					settings.add(keepY);
+				}
+			}
+			
+			reorderSettings();
+			
+		}
+		
 	}
 	
 	public static transient float lastYaw = 0, lastPitch = 0;
@@ -377,25 +404,26 @@ public class BlockFly extends Module {
 								//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(defaultPos.pos, defaultPos.facing.getIndex(), block, 0, 0, 0));
 								if (defaultPos.pos.y != keepPosY - 1 && (mc.thePlayer.motionX != 0 || mc.thePlayer.motionZ != 0
 										|| (mc.thePlayer.motionY != 0 && mc.thePlayer.fallDistance > 2))
-										&& mc.playerController.onPlayerRightClickNoSync(mc.thePlayer, mc.theWorld,
-												block, defaultPos.pos, defaultPos.facing,
-												RotationUtils.getVectorForRotation(
-														getRotationsHypixel(defaultPos.pos, defaultPos.facing)[0],
-														getRotationsHypixel(defaultPos.pos, defaultPos.facing)[1]))
 										&& block != null && block.getItem() != null
 										&& block.getItem() instanceof ItemBlock) {
-									//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0APacketAnimation());
-									mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0APacketAnimation());
-									event.setYaw(getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[0]);
-									event.setPitch(getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[1]);
-									lastYaw = event.yaw;
-									lastPitch = event.pitch;
-									RenderUtils.setCustomYaw(lastYaw);
-									RenderUtils.setCustomPitch(lastPitch);
-									lastPlace = defaultPos.targetPos;
-									//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
-									if (endAfter) {
-										return;
+									if (mc.playerController.onPlayerRightClickNoSync(mc.thePlayer, mc.theWorld, block,
+											defaultPos.pos, defaultPos.facing,
+											RotationUtils.getVectorForRotation(
+													getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[0],
+													getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[1]))) {
+										//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0APacketAnimation());
+										mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0APacketAnimation());
+										event.setYaw(getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[0]);
+										event.setPitch(getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[1]);
+										lastYaw = event.yaw;
+										lastPitch = event.pitch;
+										RenderUtils.setCustomYaw(lastYaw);
+										RenderUtils.setCustomPitch(lastPitch);
+										lastPlace = defaultPos.targetPos;
+										//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
+										if (endAfter) {
+											return;
+										}
 									}
 								}
 								
@@ -582,10 +610,10 @@ public class BlockFly extends Module {
 		
 		paramBlockPos = paramBlockPos.offset(paramEnumFacing.getOpposite());
 		
-		lastPos = new Vec3(paramBlockPos.getX(), paramBlockPos.getY(), paramBlockPos.getZ());
+		lastPos = new Vec3(paramBlockPos.getX() + new Random().nextDouble(), paramBlockPos.getY(), paramBlockPos.getZ() + new Random().nextDouble());
 		
-		return RotationUtils.getRotationFromPosition(paramBlockPos.getX() + (new Random().nextDouble()),
-				paramBlockPos.getZ() + (new Random().nextDouble()), paramBlockPos.getY());
+		return RotationUtils.getRotationFromPosition(lastPos.xCoord,
+				lastPos.zCoord, lastPos.yCoord);
 		
     }
 	

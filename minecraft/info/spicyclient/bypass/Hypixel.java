@@ -4,6 +4,8 @@ import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.lwjgl.input.Keyboard;
+
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
@@ -94,7 +96,7 @@ public class Hypixel {
 	private static transient double originalX, originalY, originalZ, originalMotionX, originalMotionY, originalMotionZ;
 	private static transient int status = 0;
 	private static transient CopyOnWriteArrayList<Packet> packets = new CopyOnWriteArrayList<Packet>();
-	private static transient long disabledUntil = System.currentTimeMillis();
+	public static transient long disabledUntil = System.currentTimeMillis();
 	
 	public static void onFlyEnable() {
 		
@@ -107,7 +109,6 @@ public class Hypixel {
 		shouldToggleOnGround = false;
 		packets.clear();
 		status = 0;
-		disabledUntil = System.currentTimeMillis();
 		
 		originalX = Minecraft.getMinecraft().thePlayer.posX;
 		originalY = Minecraft.getMinecraft().thePlayer.posY;
@@ -116,6 +117,18 @@ public class Hypixel {
 		originalMotionY = Minecraft.getMinecraft().thePlayer.motionY;
 		originalMotionZ = Minecraft.getMinecraft().thePlayer.motionZ;
 		MovementUtils.setMotion(0);
+		
+		if (System.currentTimeMillis() < disabledUntil) {
+			disabled = true;
+			watchdog = true;
+			shouldCancelPackets = true;
+			fireball = true;
+			paper = true;
+			threwEnderPearl = true;
+			MovementUtils.strafe(3f);
+		}else {
+			disabledUntil = System.currentTimeMillis();
+		}
 		
 		// Removed
 		/*
@@ -144,25 +157,25 @@ public class Hypixel {
 	public static void onFlyEvent(Event e, Module module, Minecraft mc) {
 
 		if (e instanceof EventUpdate && e.isPre()) {
-			module.additionalInformation = "TF2 rocket jump";
+			module.additionalInformation = "Fast";
 		}
 		
 		if (e instanceof EventUpdate && e.isPre() && shouldCancelPackets) {
 			
 			if (mc.gameSettings.keyBindJump.isKeyDown()) {
-				mc.thePlayer.motionY += SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue();
+				//mc.thePlayer.motionY += SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue();
 			}			
 			else if (mc.gameSettings.keyBindSneak.isKeyDown()) {
-				mc.thePlayer.motionY -= SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue();
+				//mc.thePlayer.motionY -= SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue();
 			}
 			else {
-				mc.thePlayer.motionY = 0;
+				//mc.thePlayer.motionY = 0;
 			}
 			
 			//mc.getNetHandler().addToSendQueue(new C03PacketPlayer(true));
 			//mc.thePlayer.onGround = false;
 			
-			MovementUtils.strafe(MovementUtils.getSpeed() + 0.75f);
+			MovementUtils.strafe(MovementUtils.getSpeed());
 			//MovementUtils.strafe();
 			
 			if (shouldToggleOnGround && MovementUtils.isOnGround(0.0001)) {
@@ -170,12 +183,16 @@ public class Hypixel {
 			}
 			
 			if (SpicyClient.config.targetStrafe.isEnabled() && SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) {
-				MovementUtils.strafe(2f);
+				MovementUtils.strafe(3f);
 				EventMove temp = new EventMove(mc.thePlayer.motionX, mc.thePlayer.motionY, mc.thePlayer.motionZ);
 				SpicyClient.config.targetStrafe.onEvent(temp);
 				mc.thePlayer.motionX = temp.x;
 				mc.thePlayer.motionY = temp.y;
 				mc.thePlayer.motionZ = temp.z;
+			}
+			
+			if (!MovementUtils.isMoving()) {
+				MovementUtils.setMotion(0);
 			}
 			
 		}
@@ -208,6 +225,36 @@ public class Hypixel {
 								- (mc.fontRendererObj.FONT_HEIGHT - 18)),
 						0xff2121, false);
 			}
+			
+		}
+		
+		if (e instanceof EventRenderGUI && e.isPre()) {
+			
+			short itemAmount = 0;
+			
+			for (short i = 0; i < 45; i++) {
+				
+				if (Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+					ItemStack is = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getStack();
+					
+					if ((is.getItem() instanceof ItemEnderPearl && SpicyClient.config.fly.hypixelUsePearl.isEnabled())
+							|| (is.getItem() instanceof ItemFireball
+									&& SpicyClient.config.fly.hypixelUseFireball.isEnabled())) {
+						itemAmount += is.stackSize;
+					}
+					
+				}
+				
+			}
+			
+			mc.fontRendererObj.drawString(
+					"§fYou can fly §" + (itemAmount == 0 ? "c" : "f") + itemAmount + "§f more times",
+					((float) (new ScaledResolution(mc).getScaledWidth_double() / 2)
+							- (mc.fontRendererObj.getStringWidth(
+									"§fYou can fly §" + (itemAmount == 0 ? "4" : "f") + itemAmount + "§f more times")
+									/ 2)),
+					40, -1, false);
+			
 		}
 		
 		if (e instanceof EventUpdate && e.isPre() && disabled && packets.size() > 0) {
@@ -271,7 +318,7 @@ public class Hypixel {
                 	disabled = true;
         			MovementUtils.setMotion(SpicyClient.config.fly.hypixelFreecamHorizontalFlySpeed.getValue());
         			mc.thePlayer.motionY = SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue() * 6;
-                    disabledUntil = System.currentTimeMillis() + 2000;
+                    disabledUntil = System.currentTimeMillis() + 1000;
             	}
             	else if (((EventReceivePacket)e).packet instanceof S08PacketPlayerPosLook && threwEnderPearl) {
                 	
@@ -279,9 +326,9 @@ public class Hypixel {
                     	Minecraft.getMinecraft().thePlayer.setPosition(originalX, originalY, originalZ);
                     	disabled = true;
             			Minecraft.getMinecraft().thePlayer.setPosition(((S08PacketPlayerPosLook)((EventReceivePacket)e).packet).getX(), ((S08PacketPlayerPosLook)((EventReceivePacket)e).packet).getY(), ((S08PacketPlayerPosLook)((EventReceivePacket)e).packet).getZ());
-            			//MovementUtils.setMotion(SpicyClient.config.fly.hypixelFreecamHorizontalFlySpeed.getValue());
-            			//mc.thePlayer.motionY = SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue() * 6;
-            			mc.thePlayer.jump();
+            			MovementUtils.setMotion(SpicyClient.config.fly.hypixelFreecamHorizontalFlySpeed.getValue());
+            			mc.thePlayer.motionY = SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue() * 6;
+            			//mc.thePlayer.jump();
             			MovementUtils.strafe((float) SpicyClient.config.fly.hypixelFreecamHorizontalFlySpeed.getValue());
                         disabledUntil = System.currentTimeMillis() + 2000;
                         mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(((S08PacketPlayerPosLook)((EventReceivePacket)e).packet).getX(), ((S08PacketPlayerPosLook)((EventReceivePacket)e).packet).getY(), ((S08PacketPlayerPosLook)((EventReceivePacket)e).packet).getZ(), false));
@@ -296,11 +343,11 @@ public class Hypixel {
                 else if (((EventReceivePacket)e).packet instanceof S27PacketExplosion && fireball) {
                 	Minecraft.getMinecraft().thePlayer.setPosition(originalX, originalY, originalZ);
                 	disabled = true;
-        			//MovementUtils.setMotion(SpicyClient.config.fly.hypixelFreecamHorizontalFlySpeed.getValue());
-        			//mc.thePlayer.motionY = SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue() * 6;
-                	mc.thePlayer.jump();
+        			MovementUtils.setMotion(SpicyClient.config.fly.hypixelFreecamHorizontalFlySpeed.getValue());
+        			mc.thePlayer.motionY = SpicyClient.config.fly.hypixelFreecamVerticalFlySpeed.getValue() * 6;
+                	//mc.thePlayer.jump();
                 	MovementUtils.strafe((float) SpicyClient.config.fly.hypixelFreecamHorizontalFlySpeed.getValue());
-                    disabledUntil = System.currentTimeMillis() + 3000;
+                    disabledUntil = System.currentTimeMillis() + 2000;
                 }
 			
             }
@@ -418,19 +465,62 @@ public class Hypixel {
 					
 				}				
 				if (!threwEnderPearl && !fireball && !paper) {
-					NotificationManager.getNotificationManager().createNotification("Fly", "Please get a fireball, pearl, bow, or rod to use this", true, 3000, Type.WARNING, Color.RED);
+					NotificationManager.getNotificationManager().createNotification("Fly", "Please get a fireball or pearl to fly", true, 3000, Type.WARNING, Color.RED);
 					module.toggle();
 				}
 				
 			}
-			else if (shouldCancelPackets) {
-                //mc.thePlayer.motionX = 0;
-                //mc.thePlayer.motionY = 0;
-                //mc.thePlayer.motionZ = 0;
-                //mc.thePlayer.jumpMovementFactor = 0;
-                //mc.thePlayer.noClip = true;
-                //mc.thePlayer.onGround = false;
-            }
+			
+		}
+		
+	}
+	
+	public static void onFlyEventWhileDisabled(Event e, Module module, Minecraft mc) {
+		
+		if (module.getKey() == Keyboard.KEY_NONE) {
+			return;
+		}
+		
+		if (e instanceof EventRenderGUI && e.isPre()) {
+			
+			if (System.currentTimeMillis() < disabledUntil) {
+				
+				String timeLeft = new DecimalFormat("#.#")
+						.format(((double) disabledUntil - System.currentTimeMillis()) / 1000);
+				
+				mc.fontRendererObj.drawString(timeLeft + " secs left",
+						((float) (new ScaledResolution(mc).getScaledWidth_double() / 2)
+								- (mc.fontRendererObj.getStringWidth(timeLeft + " secs left") / 2)),
+						((float) (new ScaledResolution(mc).getScaledHeight_double() / 2)
+								- (mc.fontRendererObj.FONT_HEIGHT - 18)),
+						-1, false);
+				
+			}
+			
+			short itemAmount = 0;
+			
+			for (short i = 0; i < 45; i++) {
+				
+				if (Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+					ItemStack is = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getStack();
+					
+					if ((is.getItem() instanceof ItemEnderPearl && SpicyClient.config.fly.hypixelUsePearl.isEnabled())
+							|| (is.getItem() instanceof ItemFireball
+									&& SpicyClient.config.fly.hypixelUseFireball.isEnabled())) {
+						itemAmount += is.stackSize;
+					}
+					
+				}
+				
+			}
+			
+			mc.fontRendererObj.drawString(
+					"§fYou can fly §" + (itemAmount == 0 ? "c" : "f") + itemAmount + "§f more times",
+					((float) (new ScaledResolution(mc).getScaledWidth_double() / 2)
+							- (mc.fontRendererObj.getStringWidth(
+									"§fYou can fly §" + (itemAmount == 0 ? "4" : "f") + itemAmount + "§f more times")
+									/ 2)),
+					40, -1, false);
 			
 		}
 		

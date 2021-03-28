@@ -152,15 +152,15 @@ public class AntiVoid extends Module {
 				if (isOverVoid() && mc.thePlayer.fallDistance >= 15) {
 					mc.thePlayer.motionY = 0;
 					MovementUtils.setMotion(0);
-					mc.thePlayer.fallDistance = -1;
-					//isWaiting = true;
-					mc.thePlayer.setPosition(mc.thePlayer.posX + 5, mc.thePlayer.posY - 5, mc.thePlayer.posZ + 5);
+					//mc.thePlayer.fallDistance = -1;
+					isWaiting = true;
 				}
 			}
 		}
 		else if (e instanceof EventSendPacket && e.isPre()) {
 			if (((EventSendPacket)e).packet instanceof C03PacketPlayer) {
 				if (isWaiting) {
+					mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(lastOnground.getX(), lastOnground.getY(), lastOnground.getZ(), true));
 					e.setCanceled(true);
 				}
 			}
@@ -171,7 +171,7 @@ public class AntiVoid extends Module {
 			if (packet instanceof S08PacketPlayerPosLook && isWaiting && System.currentTimeMillis() > lastTeleport) {
 				e.setCanceled(true);
 				S08PacketPlayerPosLook s08 = (S08PacketPlayerPosLook) packet;
-				mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(s08.getX(), s08.getY(), s08.getZ(), false));
+				//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(s08.getX(), s08.getY(), s08.getZ(), false));
 				
 				for (int i = packets.size(); i != 0; i--) {
 					
@@ -179,7 +179,7 @@ public class AntiVoid extends Module {
 					
 				}
 				
-				mc.thePlayer.setPosition(lastOnground.getX(), lastOnground.getY(), lastOnground.getZ());
+				//mc.thePlayer.setPosition(lastOnground.getX(), lastOnground.getY(), lastOnground.getZ());
 				lastTeleport = System.currentTimeMillis() + 1000;
 				
 			}

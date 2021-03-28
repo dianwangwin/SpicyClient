@@ -62,7 +62,7 @@ public class Fly extends Module {
 	public BooleanSetting viewBobbingSetting = new BooleanSetting("View Bobbing", false);
 	public BooleanSetting stopOnDisable = new BooleanSetting("Stop on disable", true);
 	
-	public NumberSetting hypixelFreecamHorizontalFlySpeed = new NumberSetting("Horizontal Speed", 2, 10, 18, 0.2);
+	public NumberSetting hypixelFreecamHorizontalFlySpeed = new NumberSetting("Horizontal Speed", 10, 2, 18, 0.2);
 	public NumberSetting hypixelFreecamVerticalFlySpeed = new NumberSetting("Vertical Speed", 0.4, 0.2, 1, 0.01);
 	public BooleanSetting hypixelUseFireball = new BooleanSetting("Fireball disabler", true);
 	public BooleanSetting hypixelUsePearl= new BooleanSetting("Pearl disabler", true);
@@ -345,6 +345,12 @@ public class Fly extends Module {
 	
 	@Override
 	public void onEventWhenDisabled(Event e) {
+		
+		if (mode.is("Hypixel") || mode.getMode() == "Hypixel") {
+			
+			Hypixel.onFlyEventWhileDisabled(e, this, mc);
+			
+		}
 		
 	}
 	
@@ -883,18 +889,23 @@ public class Fly extends Module {
 		}
 
 		if (e instanceof EventUpdate && e.isPre()) {
-			mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(Double.NaN,
-					Double.NaN, Double.NaN, true));
-			mc.timer.timerSpeed = 0.250000952F;
-			if (mc.thePlayer.posY <= testDub1) {
-				
-				mc.thePlayer.motionY = 0.4;
-				//Hypixel.damageHypixel(1);
-				
+			
+			if (mc.gameSettings.keyBindJump.isKeyDown()) {
+				mc.thePlayer.motionY = 1;
+			}			
+			else if (mc.gameSettings.keyBindSneak.isKeyDown()) {
+				mc.thePlayer.motionY = -1;
+			}
+			else {
+				mc.thePlayer.motionY = 0;
 			}
 			
+			mc.getNetHandler().addToSendQueue(new C03PacketPlayer(true));
+			mc.thePlayer.onGround = false;
+			
+			MovementUtils.strafe((float) speed.getValue() * 3);
+			
 		}
-
     }
     
 }

@@ -147,8 +147,9 @@ public class Speed extends info.spicyclient.modules.Module {
 			if (mode.is("Hypixel")) {
 				if (this.stage == 2) {
 					if (MovementUtils.isOnGround(0.01) && MovementUtils.isMoving()) {
-						this.mc.thePlayer.motionY = 0.419999999812688697815;
+						//this.mc.thePlayer.motionY = 0.419999999812688697815;
 						//this.mc.thePlayer.motionY = MovementUtils.getJumpBoostModifier(0.419999999812688697815);
+						mc.thePlayer.jump();
 					}
 				}
 			}

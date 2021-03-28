@@ -41,6 +41,10 @@ public class Trail extends Module {
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
+			if (mc.thePlayer.ticksExisted < 5) {
+				trailList.clear();
+			}
+			
 			this.additionalInformation = trailList.size() + " Lines drawn";
 			
 		}

@@ -162,8 +162,10 @@ public class MusicManager {
 	public void stopPlaying() {
 		
 		if (mediaPlayer != null || musicNotification != null) {
+			playingMusic = false;
 			mediaPlayer.stop();
 			musicNotification.timeOnScreen = 0;
+			SpicyClient.discord.refresh();
 		}
 		
 	}
