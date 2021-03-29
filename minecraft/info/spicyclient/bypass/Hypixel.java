@@ -157,7 +157,7 @@ public class Hypixel {
 	public static void onFlyEvent(Event e, Module module, Minecraft mc) {
 
 		if (e instanceof EventUpdate && e.isPre()) {
-			module.additionalInformation = "Fast";
+			module.additionalInformation = "Rocket Jump";
 		}
 		
 		if (e instanceof EventUpdate && e.isPre() && shouldCancelPackets) {
@@ -173,10 +173,10 @@ public class Hypixel {
 			}
 			
 			//mc.getNetHandler().addToSendQueue(new C03PacketPlayer(true));
-			//mc.thePlayer.onGround = false;
+			mc.thePlayer.onGround = false;
 			
-			MovementUtils.strafe(MovementUtils.getSpeed());
-			//MovementUtils.strafe();
+			//MovementUtils.setMotion(MovementUtils.getSpeed());
+			MovementUtils.strafe();
 			
 			if (shouldToggleOnGround && MovementUtils.isOnGround(0.0001)) {
 				module.toggle();

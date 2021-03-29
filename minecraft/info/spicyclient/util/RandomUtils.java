@@ -1,5 +1,6 @@
 package info.spicyclient.util;
 
+import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCarpet;
@@ -8,6 +9,7 @@ import net.minecraft.block.BlockLadder;
 import net.minecraft.block.BlockSkull;
 import net.minecraft.block.BlockSnow;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
@@ -42,5 +44,30 @@ public class RandomUtils {
         }
         return false;
     }
-	
+    
+    public static boolean shouldRenderCapeOnPlayer(AbstractClientPlayer player) {
+    	
+    	if (player.getName() == Minecraft.getMinecraft().thePlayer.getName()) {
+    		
+    		if (SpicyClient.config.dragonWings.isEnabled()) {
+    			return false;
+    		}else {
+    			return true;
+    		}
+    		
+    	}
+    	else if (SpicyClient.account.loggedIn) {
+    		
+    		if (SpicyClient.account.usernames.containsKey(player.getName())) {
+    			return true;
+    		}else {
+    			return false;
+    		}
+    		
+    	}else {
+    		return true;
+    	}
+    	
+    }
+    
 }

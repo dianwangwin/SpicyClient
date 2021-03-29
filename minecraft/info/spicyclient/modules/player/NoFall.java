@@ -11,7 +11,9 @@ import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.settings.ModeSetting;
+import info.spicyclient.util.MovementUtils;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C0CPacketBoatInput;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 
 public class NoFall extends Module {
@@ -52,7 +54,7 @@ public class NoFall extends Module {
 				
 				this.additionalInformation = noFallMode.getMode();
 				
-				if (mc.thePlayer.fallDistance > 3 && noFallMode.is("Packet") && !SpicyClient.config.fly.isEnabled()) {
+				if (mc.thePlayer.fallDistance >= 3 && noFallMode.is("Packet") && !SpicyClient.config.fly.isEnabled()) {
 					
 					mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
 					

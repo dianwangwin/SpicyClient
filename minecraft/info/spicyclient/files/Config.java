@@ -182,7 +182,7 @@ public class Config {
 		modules.add(con.antiLava);
 		modules.add(con.invWalk);
 		modules.add(con.mike);
-		//modules.add(con.disabler);
+		modules.add(con.disabler);
 		modules.add(con.smallItems);
 		modules.add(con.lsd);
 		modules.add(con.tracers);

@@ -64,6 +64,7 @@ import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.network.play.client.C0CPacketBoatInput;
+import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
 import net.minecraft.network.play.client.C10PacketCreativeInventoryAction;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.network.play.client.C14PacketTabComplete;
@@ -113,33 +114,25 @@ public class TestModuleOne extends Module {
 	@Override
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventUpdate && e.isPre() && MovementUtils.isMoving()) {
+		if (e instanceof EventReceivePacket && e.isPre()) {
+			Packet packet = ((EventReceivePacket)e).packet;
 			
-			if (mc.thePlayer.ticksExisted < 5) {
-				status = 0;
+			if (packet instanceof S14PacketEntity) {
+				return;
 			}
 			
-			if (MovementUtils.isOnGround(0.00001)) {
-				
-				if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
-					MovementUtils.setMotion(0.45);
-				}else {
-					MovementUtils.setMotion(0.15);
-				}
-				
-				if (status < mc.thePlayer.ticksExisted) {
-					status = mc.thePlayer.ticksExisted + 1;
-				}else {
-					if (status == mc.thePlayer.ticksExisted) {
-						mc.thePlayer.jump();
-					}
-				}
-			}else {
-				
+			//System.err.println("R: " + ((EventReceivePacket)e).packet);
+		}
+		else if (e instanceof EventSendPacket && e.isPre()) {
+			
+			Packet packet = ((EventSendPacket)e).packet;
+			
+			if (packet instanceof C0FPacketConfirmTransaction) {
+				C0FPacketConfirmTransaction p = (C0FPacketConfirmTransaction)packet;
+				System.out.println(p.getUid());
 			}
 			
-			MovementUtils.strafe();
-			
+			System.err.println("S: " + ((EventSendPacket)e).packet.getClass().getSimpleName());
 		}
 		
 	}

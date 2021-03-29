@@ -115,9 +115,10 @@ public abstract class AbstractClientPlayer extends EntityPlayer
     {
         if (!Config.isShowCapes())
         {
-            return null;
+            //return null;
         }
-        else if (this.locationOfCape != null)
+        
+        if (this.locationOfCape != null)
         {
             return this.locationOfCape;
         }
