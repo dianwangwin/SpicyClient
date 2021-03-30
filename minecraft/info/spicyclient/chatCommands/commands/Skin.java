@@ -33,6 +33,7 @@ public class Skin extends Command {
 			SpicyClient.config.skin.mode.modes.add(newSkin);
 		
 		SpicyClient.config.skin.mode.index = SpicyClient.config.skin.mode.modes.indexOf(newSkin);
+		SpicyClient.config.skin.currentSkin = null;
 		
 		if (!SpicyClient.config.skin.isEnabled())
 			SpicyClient.config.skin.toggle();

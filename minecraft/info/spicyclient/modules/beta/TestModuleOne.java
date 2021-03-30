@@ -33,6 +33,7 @@ import info.spicyclient.notifications.Type;
 import info.spicyclient.portedMods.antiantixray.AntiAntiXray;
 import info.spicyclient.portedMods.antiantixray.Mixins.TickMixin;
 import info.spicyclient.portedMods.dragonWings.RenderWings;
+import info.spicyclient.util.InventoryUtils;
 import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.PlayerUtils;
 import info.spicyclient.util.RandomUtils;
@@ -42,6 +43,7 @@ import info.spicyclient.util.Timer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockGlass;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -49,8 +51,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBow;
+import net.minecraft.item.ItemEnderPearl;
+import net.minecraft.item.ItemSkull;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
@@ -114,25 +120,47 @@ public class TestModuleOne extends Module {
 	@Override
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventReceivePacket && e.isPre()) {
-			Packet packet = ((EventReceivePacket)e).packet;
+		if (e instanceof EventUpdate && e.isPre()) {
 			
-			if (packet instanceof S14PacketEntity) {
-				return;
+			if ((mc.thePlayer.getHealth() / mc.thePlayer.getMaxHealth()) * 100 <= 70 && timer.hasTimeElapsed(400, true)) {
+				
+				for (short i = 0; i < 45; i++) {
+					
+					if (Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+						ItemStack is = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getStack();
+						
+						if (is.getItem() instanceof ItemSkull) {
+							NotificationManager.getNotificationManager().createNotification("Auto Head",
+									"Eating head", true, 3000, Type.INFO, Color.BLUE);
+							Command.sendPrivateChatMessage(is.getDisplayName());
+							int heldItemBeforeThrow = mc.thePlayer.inventory.currentItem;
+							if (i - 36 < 0) {
+								
+								InventoryUtils.swap(i, 8);
+								
+								Minecraft.getMinecraft().getNetHandler().getNetworkManager()
+										.sendPacketNoEvent(new C09PacketHeldItemChange(8));
+								
+							}else {
+								
+								Minecraft.getMinecraft().getNetHandler().getNetworkManager()
+										.sendPacketNoEvent(new C09PacketHeldItemChange(i - 36));
+								
+							}
+							
+							Minecraft.getMinecraft().getNetHandler().getNetworkManager()
+									.sendPacketNoEvent(new C08PacketPlayerBlockPlacement(is));
+							mc.thePlayer.inventory.currentItem = heldItemBeforeThrow;
+							Minecraft.getMinecraft().getNetHandler().getNetworkManager()
+								.sendPacketNoEvent( new C09PacketHeldItemChange(heldItemBeforeThrow));
+						}
+						
+					}
+					
+				}
+				
 			}
 			
-			//System.err.println("R: " + ((EventReceivePacket)e).packet);
-		}
-		else if (e instanceof EventSendPacket && e.isPre()) {
-			
-			Packet packet = ((EventSendPacket)e).packet;
-			
-			if (packet instanceof C0FPacketConfirmTransaction) {
-				C0FPacketConfirmTransaction p = (C0FPacketConfirmTransaction)packet;
-				System.out.println(p.getUid());
-			}
-			
-			System.err.println("S: " + ((EventSendPacket)e).packet.getClass().getSimpleName());
 		}
 		
 	}

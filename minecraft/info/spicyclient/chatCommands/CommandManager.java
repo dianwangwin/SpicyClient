@@ -22,6 +22,7 @@ public class CommandManager {
 		addCommand(new Nickname());
 		addCommand(new SetSpamMessage());
 		addCommand(new Skin());
+		addCommand(new Friend());
 		
 	}
 	

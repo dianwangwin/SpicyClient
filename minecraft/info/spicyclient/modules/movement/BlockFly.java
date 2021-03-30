@@ -255,8 +255,13 @@ public class BlockFly extends Module {
 		
 		if (e instanceof EventUpdate && e.isPre() && MovementUtils.isOnGround(0.4)) {
 			
-			if (MovementUtils.isOnGround(0.00001) || mc.thePlayer.posY - 1 < keepPosY) {
-				keepPosY = mc.thePlayer.posY - 1;
+			if (((int)mc.thePlayer.posY) - 1 < keepPosY) {
+				keepPosY = ((int)mc.thePlayer.posY) - 3;
+			}
+			
+			if (MovementUtils.isOnGround(0.00001)) {
+				keepPosY = ((int)mc.thePlayer.posY) - 1;
+				//Command.sendPrivateChatMessage(keepPosY);
 			}
 			
 			if (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) {
@@ -318,7 +323,9 @@ public class BlockFly extends Module {
 			if (shouldPlace) {
 				
 				if (!timer.hasTimeElapsed(80, true)) {
-					return;
+					if (extend.getValue() > 0.5) {
+						return;
+					}
 				}
 				
 				for (EnumFacing facing : EnumFacing.VALUES) {

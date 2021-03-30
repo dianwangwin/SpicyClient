@@ -11,6 +11,7 @@ import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
+import info.spicyclient.chatCommands.commands.Friend;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventRenderGUI;
@@ -279,6 +280,14 @@ public class Killaura extends Module {
 						}
 					}
 					
+					for (EntityLivingBase a : targets) {
+						
+						if (Friend.friends.contains(a.getName().toLowerCase())) {
+							targetsToRemove.add(a);
+						}
+						
+					}
+					
 					if (SpicyClient.config.teams.isEnabled()) {
 						
 						for (EntityLivingBase a : targets) {
@@ -515,7 +524,7 @@ public class Killaura extends Module {
 					startBlocking();
 					
 					if (hitOnHurtTime.isEnabled()) {
-						if (target.hurtTime > 2) {
+						if (target.hurtTime > 1) {
 							return;
 						}
 					}

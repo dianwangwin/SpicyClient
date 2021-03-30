@@ -53,12 +53,14 @@ import com.thealtening.AltService.EnumAltService;
 import info.spicyclient.ClickGUI.NewClickGui;
 import info.spicyclient.ClickGUI.Tab;
 import info.spicyclient.autoUpdater.Updater;
+import info.spicyclient.bypass.Hypixel;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.chatCommands.CommandManager;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventChatmessage;
 import info.spicyclient.events.listeners.EventKey;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.events.listeners.EventTick;
 import info.spicyclient.events.listeners.EventUpdate;
@@ -89,6 +91,7 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.play.server.S45PacketTitle;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
@@ -116,13 +119,13 @@ public class SpicyClient {
 	
 	public static boolean discordFailedToStart = false;
 	
-	public static int currentVersionNum = 20;
+	public static int currentVersionNum = 21;
 	
 	public static boolean currentlyLoadingConfig = false;
 	
 	public static HashMap<String, ResourceLocation> cachedImages = new HashMap<>();
 	
-	public static boolean bedwarsWarning = false;
+	public static boolean bedwarsWarning = false, flyNotice = false;
 	
 	public static void StartUp() {
 		
@@ -392,6 +395,30 @@ public class SpicyClient {
 			
 		}
 		
+		if (e instanceof EventReceivePacket && e.isPre()) {
+			
+			if (((EventReceivePacket)e).packet instanceof S45PacketTitle) {
+				
+				try {
+					S45PacketTitle packet = ((S45PacketTitle)((EventReceivePacket)e).packet);
+					
+					ScoreObjective scoreobjective = Minecraft.getMinecraft().theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+					String scoreTitle = scoreobjective.getDisplayName();
+					//Command.sendPrivateChatMessage(scoreTitle);
+					if (scoreTitle.toLowerCase().contains("bed wars")) {
+						if (packet.getMessage().getFormattedText().toLowerCase().contains("respawned")) {
+							Hypixel.disabledUntil = System.currentTimeMillis() + 2500;
+							NotificationManager.getNotificationManager().createNotification("Bedwars", "You have 2.5 seconds to fly", true, 3000, info.spicyclient.notifications.Type.INFO, Color.PINK);
+						}
+					}
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+				
+			}
+			
+		}
+		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
 			RenderUtils.resetPlayerYaw();
@@ -405,6 +432,24 @@ public class SpicyClient {
 					
 					if (Minecraft.getMinecraft().thePlayer.ticksExisted == 5) {
 						bedwarsWarning = false;
+						flyNotice = false;
+					}
+					
+					if (!flyNotice && SpicyClient.config.fly.getKey() != Keyboard.KEY_NONE && SpicyClient.config.fly.mode.is("Hypixel")) {
+						ScoreObjective scoreobjective = Minecraft.getMinecraft().theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+						String scoreTitle = scoreobjective.getDisplayName();
+						//Command.sendPrivateChatMessage(scoreTitle);
+						if (scoreTitle.toLowerCase().contains("skywars")) {
+							
+							//Command.sendPrivateChatMessage(RandomUtils.getTeamName(11, Minecraft.getMinecraft().theWorld.getScoreboard()));
+							
+							if (RandomUtils.getTeamName(10, Minecraft.getMinecraft().theWorld.getScoreboard()).toLowerCase().contains("next event")) {
+								Hypixel.disabledUntil = System.currentTimeMillis() + 2500;
+								NotificationManager.getNotificationManager().createNotification("Skywars", "You have 2.5 seconds to fly", true, 3000, info.spicyclient.notifications.Type.INFO, Color.PINK);
+								flyNotice = true;
+							}
+							
+						}
 					}
 					
 					if (!bedwarsWarning) {
@@ -422,6 +467,7 @@ public class SpicyClient {
 							
 						}
 					}
+					
 				} catch (Exception e2) {
 					//e2.printStackTrace();
 				}

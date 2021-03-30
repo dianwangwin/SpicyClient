@@ -119,6 +119,7 @@ public class Config {
 	public Skin skin = new Skin();
 	public Cape cape = new Cape();
 	public Teams teams = new Teams();
+	public AutoHead autoHead = new AutoHead();
 	
 	public String clientName = "Spicy ", clientVersion = "B3 Beta";
 	
@@ -217,6 +218,7 @@ public class Config {
 		modules.add(con.skin);
 		modules.add(con.cape);
 		modules.add(con.teams);
+		modules.add(con.autoHead);
 		
 		return modules;
 		
@@ -306,6 +308,7 @@ public class Config {
 			this.skin = new Skin();
 			this.cape = new Cape();
 			this.teams = new Teams();
+			this.autoHead = new AutoHead();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
