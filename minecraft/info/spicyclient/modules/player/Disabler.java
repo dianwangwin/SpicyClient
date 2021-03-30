@@ -85,7 +85,6 @@ public class Disabler extends Module {
 					mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
 					if (p instanceof C0FPacketConfirmTransaction) {
 						C0FPacketConfirmTransaction f = (C0FPacketConfirmTransaction)p;
-						//Command.sendPrivateChatMessage(f.getUid());
 					}
 					
 				}
@@ -104,6 +103,11 @@ public class Disabler extends Module {
 					
 				}
 				packets.clear();
+			}
+			
+			if (mc.thePlayer.ticksExisted % 20 == 0) {
+				mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(mc.thePlayer.capabilities));
+				//Command.sendPrivateChatMessage("Disabler: Sent a thing");
 			}
 			
 		}

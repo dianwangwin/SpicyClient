@@ -64,9 +64,10 @@ public class Fly extends Module {
 	
 	public NumberSetting hypixelFreecamHorizontalFlySpeed = new NumberSetting("Horizontal Speed", 10, 2, 18, 0.2);
 	public NumberSetting hypixelFreecamVerticalFlySpeed = new NumberSetting("Vertical Speed", 0.4, 0.2, 1, 0.01);
+	public BooleanSetting hypixelDamage = new BooleanSetting("Damage disabler", false);
 	public BooleanSetting hypixelUseFireball = new BooleanSetting("Fireball disabler", true);
-	public BooleanSetting hypixelUsePearl= new BooleanSetting("Pearl disabler", true);
-	public BooleanSetting hypixelPaperChallenge= new BooleanSetting("Paper Challenge disabler", false);
+	public BooleanSetting hypixelUsePearl = new BooleanSetting("Pearl disabler", true);
+	public BooleanSetting hypixelPaperChallenge = new BooleanSetting("Paper Challenge disabler", false);
 	
 	/*
 	public BooleanSetting hypixelBlink = new BooleanSetting("Blink", true);
@@ -119,6 +120,10 @@ public class Fly extends Module {
 				this.settings.remove(hypixelUsePearl);
 			}
 			
+			if (this.settings.contains(hypixelDamage)) {
+				this.settings.remove(hypixelDamage);
+			}
+			
 			if (this.settings.contains(hypixelPaperChallenge)) {
 				this.settings.remove(hypixelPaperChallenge);
 			}
@@ -164,6 +169,10 @@ public class Fly extends Module {
 				
 				if (!this.settings.contains(hypixelUsePearl)) {
 					this.settings.add(hypixelUsePearl);
+				}
+				
+				if (!this.settings.contains(hypixelDamage)) {
+					this.settings.add(hypixelDamage);
 				}
 				
 				if (!this.settings.contains(hypixelPaperChallenge)) {

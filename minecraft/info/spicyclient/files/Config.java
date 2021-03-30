@@ -116,6 +116,9 @@ public class Config {
 	public IrcChat ircChat = new IrcChat();
 	public AutoPaperChallenge autoPaperChallenge = new AutoPaperChallenge();
 	public HypixelClickTeleport hypixelClickTeleport = new HypixelClickTeleport();
+	public Skin skin = new Skin();
+	public Cape cape = new Cape();
+	public Teams teams = new Teams();
 	
 	public String clientName = "Spicy ", clientVersion = "B3 Beta";
 	
@@ -188,7 +191,7 @@ public class Config {
 		modules.add(con.tracers);
 		modules.add(con.blockCoding);
 		modules.add(con.testModuleOne);
-		//modules.add(con.hypixel5SecDisabler);
+		modules.add(con.hypixel5SecDisabler);
 		modules.add(con.hud);
 		modules.add(con.snow);
 		modules.add(con.targetStrafe);
@@ -211,6 +214,9 @@ public class Config {
 		modules.add(con.speed);
 		modules.add(con.ircChat);
 		modules.add(con.hypixelClickTeleport);
+		modules.add(con.skin);
+		modules.add(con.cape);
+		modules.add(con.teams);
 		
 		return modules;
 		
@@ -297,6 +303,9 @@ public class Config {
 			this.ircChat = new IrcChat();
 			this.autoPaperChallenge = new AutoPaperChallenge();
 			this.hypixelClickTeleport = new HypixelClickTeleport();
+			this.skin = new Skin();
+			this.cape = new Cape();
+			this.teams = new Teams();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
@@ -329,6 +338,7 @@ public class Config {
 			this.fly.hypixelUseFireball = new BooleanSetting("Fireball disabler", true);
 			this.fly.hypixelUsePearl= new BooleanSetting("Pearl disabler", true);
 			this.fly.hypixelPaperChallenge= new BooleanSetting("Paper Challenge disabler", false);
+			this.fly.hypixelDamage = new BooleanSetting("Damage disabler", false);
 			
 			this.bhop.hypixelSpeed = new NumberSetting("Speed", 0.01, 0.0001, 0.03, 0.0001);
 			
@@ -354,7 +364,7 @@ public class Config {
 			this.inventoryManager.category = Category.PLAYER;
 			
 			this.blockFly.keepY = new BooleanSetting("Keep Y", false);
-			this.blockFly.hypixel = new BooleanSetting("Hypixel", true);
+			this.blockFly.hypixel = new BooleanSetting("Hypixel", false);
 			
 		}
 		

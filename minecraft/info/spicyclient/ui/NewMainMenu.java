@@ -116,17 +116,15 @@ public class NewMainMenu extends GuiScreen {
         
         // Put the added things here
         // changeLogs.add("+ ");
+        changeLogs.add("+ SpicyClient Cape");
         changeLogs.add("+ Hypixel bhop");
-        changeLogs.add("+ Hypixel antivoid");
         changeLogs.add("+ Hypixel chat bypass");
         changeLogs.add("+ Hypixel autoblock");
         changeLogs.add("+ Hypixel killsults");
-        changeLogs.add("+ Hypixel interact autoblock");
         changeLogs.add("+ Hypixel disabler");
         changeLogs.add("+ Hypixel inventory manager");
         changeLogs.add("+ Hypixel bed breaker");
         changeLogs.add("+ Hypixel phase");
-        changeLogs.add("+ Hypixel teleport");
         changeLogs.add("+ BrokenLens fly");
         changeLogs.add("+ SuperheroFX");
         changeLogs.add("+ Autotool");
@@ -143,6 +141,8 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ Basic anti lava");
         changeLogs.add("+ Inventory Move");
         changeLogs.add("+ Hide name");
+        changeLogs.add("+ Teams");
+        changeLogs.add("+ Skin spoofer");
         
         // Put the changed things here
         // changeLogs.add("* ");

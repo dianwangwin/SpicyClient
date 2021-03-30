@@ -73,12 +73,15 @@ import info.spicyclient.modules.render.*;
 import info.spicyclient.music.MusicManager;
 import info.spicyclient.networking.NetworkManager;
 import info.spicyclient.networking.NetworkUtils;
+import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.ui.HUD;
 import info.spicyclient.ui.fonts.FontUtil;
 import info.spicyclient.util.MovementUtils;
+import info.spicyclient.util.RandomUtils;
 import info.spicyclient.util.RenderUtils;
 import info.spicyclient.util.RotationUtils;
+import info.spicyclient.util.ServerUtils;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import net.minecraft.client.Minecraft;
@@ -86,6 +89,7 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
 
@@ -108,15 +112,17 @@ public class SpicyClient {
 	public static Account account = new Account();
 	
 	public static String originalUsername = "Not Set";
-	public static Boolean originalAccountOnline = false;
+	public static Boolean originalAccountOnline;
 	
 	public static boolean discordFailedToStart = false;
 	
-	public static int currentVersionNum = 19;
+	public static int currentVersionNum = 20;
 	
 	public static boolean currentlyLoadingConfig = false;
 	
 	public static HashMap<String, ResourceLocation> cachedImages = new HashMap<>();
+	
+	public static boolean bedwarsWarning = false;
 	
 	public static void StartUp() {
 		
@@ -392,6 +398,35 @@ public class SpicyClient {
 			RenderUtils.resetPlayerPitch();
 			
 			MusicManager.getMusicManager().changeNotificationColor((EventUpdate) e);
+			
+			if (ServerUtils.isOnHypixel()) {
+				
+				try {
+					
+					if (Minecraft.getMinecraft().thePlayer.ticksExisted == 5) {
+						bedwarsWarning = false;
+					}
+					
+					if (!bedwarsWarning) {
+						ScoreObjective scoreobjective = Minecraft.getMinecraft().theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+						String scoreTitle = scoreobjective.getDisplayName();
+						//Command.sendPrivateChatMessage(scoreTitle);
+						if (scoreTitle.toLowerCase().contains("bed wars")) {
+							
+							//Command.sendPrivateChatMessage(RandomUtils.getTeamName(11, Minecraft.getMinecraft().theWorld.getScoreboard()));
+							
+							if (RandomUtils.getTeamName(11, Minecraft.getMinecraft().theWorld.getScoreboard()).toLowerCase().contains("diamond ii in")) {
+								NotificationManager.getNotificationManager().createNotification("Warning", "Flying now may result in a ban", true, 15000, info.spicyclient.notifications.Type.WARNING, Color.RED);
+								bedwarsWarning = true;
+							}
+							
+						}
+					}
+				} catch (Exception e2) {
+					//e2.printStackTrace();
+				}
+				
+			}
 			
 		}
 		

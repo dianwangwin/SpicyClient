@@ -279,6 +279,18 @@ public class Killaura extends Module {
 						}
 					}
 					
+					if (SpicyClient.config.teams.isEnabled()) {
+						
+						for (EntityLivingBase a : targets) {
+							
+							if (Teams.isOnSameTeam(a)) {
+								targetsToRemove.add(a);
+							}
+							
+						}
+						
+					}
+					
 					int target_filter = targetsSetting.index;
 					
 					if (target_filter == 0) {

@@ -89,6 +89,12 @@ public abstract class AbstractClientPlayer extends EntityPlayer
     public ResourceLocation getLocationSkin()
     {
     	
+    	if (SpicyClient.config.skin.isEnabled() && getName() == Minecraft.getMinecraft().thePlayer.getName()) {
+    		
+    		return SpicyClient.config.skin.getSkin();
+    		
+    	}
+    	
     	if (SpicyClient.config.dougDimmadome.isEnabled()) {
     		
     		return new ResourceLocation("spicy/doug_dimmadome.png");

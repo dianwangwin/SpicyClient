@@ -105,14 +105,7 @@ public class DiscordRP {
 		DiscordRichPresence.Builder b = new DiscordRichPresence.Builder(secondline);
 		b.setBigImage("spicyclientlogo512x512", "Hacking in minecraft with " + SpicyClient.config.clientName + SpicyClient.config.clientVersion);
 		
-		if (SpicyClient.originalAccountOnline && SpicyClient.originalUsername.toLowerCase().equals("lavaflowglow")){
-			b.setSmallImage("gabe_thumbs_up", "Normal SpicyClient Developer");
-		}
-		else if (SpicyClient.originalAccountOnline && SpicyClient.originalUsername.toLowerCase().equals("_floofy_fox_")){
-			//b.setSmallImage("floofyfox1", "Furry SpicyClient Developer");
-			b.setSmallImage("gabe_thumbs_up", "Furry SpicyClient Developer");
-		}
-		else if (SpicyClient.config.furries.isEnabled() || SpicyClient.config.floofyFoxes.isEnabled() || (SpicyClient.config.hideName.isEnabled() && SpicyClient.config.hideName.mode.getMode().toLowerCase().contains("floof"))){
+		if ((SpicyClient.config.skin.isEnabled() && SpicyClient.config.skin.mode.is("puro")) || SpicyClient.config.furries.isEnabled() || SpicyClient.config.floofyFoxes.isEnabled() || (SpicyClient.config.hideName.isEnabled() && SpicyClient.config.hideName.mode.getMode().toLowerCase().contains("floof"))){
 			//b.setSmallImage("floofyfox1", "This person is probably a furry...");
 			b.setSmallImage("gabe_thumbs_up", "This person is probably a furry...");
 		}

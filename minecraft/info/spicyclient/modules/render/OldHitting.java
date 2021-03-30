@@ -18,7 +18,7 @@ import net.minecraft.util.MathHelper;
 
 public class OldHitting extends Module {
 	
-	public ModeSetting animationSetting = new ModeSetting("Animation", "1.7", "1.7", "Spaz", "Spaz 2", "Jitter", "Tap", "Multi Tap", "Spin", "Scale", "Spicy", "Astolfo");
+	public ModeSetting animationSetting = new ModeSetting("Animation", "1.7", "1.7", "Spaz", "Spaz 2", "Jitter", "Tap", "Multi Tap", "Spin", "Scale", "Spicy", "Astolfo", "Test");
 	
 	public OldHitting() {
 		super("OldHitting", Keyboard.KEY_NONE, Category.RENDER);
@@ -60,14 +60,19 @@ public class OldHitting extends Module {
 				
 				float f = 1.0F - (mc.getItemRenderer().prevEquippedProgress + (ir.equippedProgress - ir.prevEquippedProgress) * partialTicks);
 				float swingProgress = mc.thePlayer.getSwingProgress(partialTicks);
+				float swingProgressReversed = 1.0f - swingProgress;
 				
 				if (this.animationSetting.getMode() == "1.7" || this.animationSetting.is("1.7")) {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
 					ir.transformFirstPersonItem(f, swingProgress);
 				}
 				else if (this.animationSetting.getMode() == "Spaz" || this.animationSetting.is("Spaz")) {
-					GlStateManager.translate(0.0f, 0.25f, 0.05f);
-					ir.transformFirstPersonItem(0.0f, (0.3f * partialTicks) * swingProgress);
+					if (swingProgress != 0.0f) {
+						GlStateManager.translate(0.0f, 0.25f, 0.05f);
+						ir.transformFirstPersonItem(swingProgress >= 0.45f ? swingProgressReversed : swingProgress, partialTicks / 20);
+					}else {
+						ir.transformFirstPersonItem(swingProgress / 20, 0);
+					}
 				}
 				else if (this.animationSetting.getMode() == "Spaz 2" || this.animationSetting.is("Spaz 2")) {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
@@ -121,6 +126,9 @@ public class OldHitting extends Module {
 					
 					astolfoCircle(mc.thePlayer.getSwingProgress(partialTicks));
 					
+				}
+				else if (animationSetting.is("Test")) {
+					ir.transformFirstPersonItem(swingProgress / 20, partialTicks);
 				}
 				
 				ir.func_178103_d();

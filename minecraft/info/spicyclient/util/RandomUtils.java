@@ -1,5 +1,13 @@
 package info.spicyclient.util;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import net.minecraft.block.Block;
@@ -11,7 +19,12 @@ import net.minecraft.block.BlockSnow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.scoreboard.Score;
+import net.minecraft.scoreboard.ScoreObjective;
+import net.minecraft.scoreboard.ScorePlayerTeam;
+import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 
 public class RandomUtils {
@@ -49,7 +62,7 @@ public class RandomUtils {
     	
     	if (player.getName() == Minecraft.getMinecraft().thePlayer.getName()) {
     		
-    		if (SpicyClient.config.dragonWings.isEnabled()) {
+    		if (SpicyClient.config.dragonWings.isEnabled() || !SpicyClient.config.cape.isEnabled()) {
     			return false;
     		}else {
     			return true;
@@ -70,4 +83,34 @@ public class RandomUtils {
     	
     }
     
+	public static String getTeamName(int num, Scoreboard board) {
+		ScoreObjective objective = board.getObjectiveInDisplaySlot(1);
+        Collection collection = board.getSortedScores(objective);
+        ArrayList arraylist = Lists.newArrayList(Iterables.filter(collection, new Predicate()
+        {
+            public static final String __OBFID = "CL_00001958";
+            public boolean apply(Score p_apply_1_)
+            {
+                return p_apply_1_.getPlayerName() != null && !p_apply_1_.getPlayerName().startsWith("#");
+            }
+            public boolean apply(Object p_apply_1_)
+            {
+                return this.apply((Score)p_apply_1_);
+            }
+        }));
+        
+        try {
+			Score score = (Score) arraylist.get(num);
+			ScorePlayerTeam scoreplayerteam = board.getPlayersTeam((score).getPlayerName());
+			//String s = ScorePlayerTeam.formatPlayerName(scoreplayerteam, ((Score) score).getPlayerName()) + ": " + EnumChatFormatting.RED + ((Score) score).getScorePoints();
+			String s = ScorePlayerTeam.formatPlayerName(scoreplayerteam, ((Score) score).getPlayerName());
+			return s;
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+        
+        return "ERROR";
+        
+	}
+	
 }

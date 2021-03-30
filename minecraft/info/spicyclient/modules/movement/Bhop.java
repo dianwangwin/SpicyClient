@@ -29,8 +29,10 @@ import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.settings.SettingChangeEvent;
 import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.Timer;
+import info.spicyclient.util.WorldUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerCapabilities;
+import net.minecraft.init.Blocks;
 import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C00PacketKeepAlive;
@@ -50,6 +52,7 @@ import net.minecraft.network.play.client.C19PacketResourcePackStatus;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.network.status.client.C00PacketServerQuery;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import optifine.MathUtils;
@@ -224,8 +227,19 @@ public class Bhop extends Module {
 					
 					if (MovementUtils.isOnGround(0.00001)) {
 						boosted = true;
-						speed = hypixelSpeed.getValue() * 13.5;
-						mc.thePlayer.jump();
+						speed = hypixelSpeed.getValue() * 23.5;
+						mc.thePlayer.motionY = 0.3;
+						
+						for (double i = 0; i < 4; i++) {
+							
+							BlockPos pos = WorldUtils.getForwardBlock(i);
+							
+							if (mc.theWorld.getBlockState(pos).getBlock() != Blocks.air) {
+								mc.thePlayer.jump();
+							}
+							
+						}
+						
 					}
 					
 					MovementUtils.strafe(((float)speed));

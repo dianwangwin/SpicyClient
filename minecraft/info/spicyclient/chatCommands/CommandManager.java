@@ -21,6 +21,7 @@ public class CommandManager {
 		addCommand(new Panic());
 		addCommand(new Nickname());
 		addCommand(new SetSpamMessage());
+		addCommand(new Skin());
 		
 	}
 	

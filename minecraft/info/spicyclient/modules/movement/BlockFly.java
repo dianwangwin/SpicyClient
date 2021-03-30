@@ -73,7 +73,7 @@ public class BlockFly extends Module {
 			xOffset = new NumberSetting("X Offset", 0, 0, 1, 0.05),
 			zOffset = new NumberSetting("Z Offset", 0, 0, 1, 0.05);
 	public BooleanSetting keepY = new BooleanSetting("Keep Y", false),
-			hypixel = new BooleanSetting("Hypixel", true);
+			hypixel = new BooleanSetting("Hypixel", false);
 	
 	private static transient double keepPosY = 0;
 	
@@ -82,7 +82,7 @@ public class BlockFly extends Module {
 		
 		this.settings.clear();
 		//extend.setValue(0.1);
-		this.addSettings(extend, keepY, hypixel);
+		this.addSettings(extend, keepY);
 		
 	}
 	
@@ -255,7 +255,7 @@ public class BlockFly extends Module {
 		
 		if (e instanceof EventUpdate && e.isPre() && MovementUtils.isOnGround(0.4)) {
 			
-			if (MovementUtils.isOnGround(0.00001)) {
+			if (MovementUtils.isOnGround(0.00001) || mc.thePlayer.posY - 1 < keepPosY) {
 				keepPosY = mc.thePlayer.posY - 1;
 			}
 			
