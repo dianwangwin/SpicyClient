@@ -50,6 +50,16 @@ public class HUD {
 	
 	public void draw() {
 		
+		ScaledResolution sr = new ScaledResolution(mc);
+		
+		// Cached images
+		for (ResourceLocation r : SpicyClient.cachedImages.values()) {
+			mc.getTextureManager().bindTexture(r);
+			int imageWidth = 1, imageHeight = 1;
+			Gui.drawModalRectWithCustomSizedTexture(sr.getScaledWidth_double() + 10, sr.getScaledHeight_double() + 10, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+		}
+		// Cached images
+		
 		NotificationManager.getNotificationManager().onRender();
 		
 		if (SpicyClient.config.jelloForSpicy.isEnabled()) {

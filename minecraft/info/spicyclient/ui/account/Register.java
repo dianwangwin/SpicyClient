@@ -28,7 +28,12 @@ public class Register extends GuiScreen {
 	public final GuiScreen parent;
 	
 	public Button register = new Button((this.width / 2) - 180, (this.height / 3) + 48, (this.width / 2) + 180, (this.height / 3) + 8, 0xff40444b, 0xff40444b, -1, 4, this);
-	public TextBox username = new TextBox((this.width / 2) - 180, this.height / 3, (this.width / 2) + 180, this.height / 3 - 40, 0xff40444b, 0xff40444b, -1, 0xff687275, 4, false, this), password = new TextBox((this.width / 2) - 180, (this.height / 3) + 48, (this.width / 2) + 180, (this.height / 3) + 8, 0xff40444b, 0xff40444b, -1, 0xff687275, 4, false, this), minecraftUsername = new TextBox((this.width / 2) - 80, (this.height / 3) - 80, (this.width / 2) + 120, this.height / 3 - 80, 0xff40444b, 0xff40444b, -1, 0xff687275, 4, false, this);
+	public TextBox username = new TextBox((this.width / 2) - 180, this.height / 3, (this.width / 2) + 180,
+			this.height / 3 - 40, 0xff40444b, 0xff40444b, -1, 0xff687275, 4, false, this),
+			password = new TextBox((this.width / 2) - 180, (this.height / 3) + 48, (this.width / 2) + 180,
+					(this.height / 3) + 8, 0xff40444b, 0xff40444b, -1, 0xff687275, 4, false, this),
+			email = new TextBox((this.width / 2) - 80, (this.height / 3) - 80, (this.width / 2) + 120,
+					this.height / 3 - 80, 0xff40444b, 0xff40444b, -1, 0xff687275, 4, false, this);
 	
 	public boolean error = false, displayErrorText = false;
 	public String errorText;
@@ -43,26 +48,33 @@ public class Register extends GuiScreen {
 		
 		drawRect(0, 0, this.width, this.height, 0xff36393f);
 		
+		email.left = (this.width / 2) - 180;
+		email.bottom = this.height / 3;
+		email.right = (this.width / 2) + 180;
+		email.up = this.height / 3 - 40;
+		email.setGhostText("Email");
+		email.setTextScale(1.8f);
+		
 		username.left = (this.width / 2) - 180;
-		username.bottom = this.height / 3;
+		username.bottom = (this.height / 3) + 48;
 		username.right = (this.width / 2) + 180;
-		username.up = this.height / 3 - 40;
+		username.up = (this.height / 3) + 8;
 		username.setGhostText("Username");
 		username.setTextScale(1.8f);
 		
 		password.left = (this.width / 2) - 180;
-		password.bottom = (this.height / 3) + 48;
+		password.bottom = (this.height / 3) + 96;
 		password.right = (this.width / 2) + 180;
-		password.up = (this.height / 3) + 8;
+		password.up = (this.height / 3) + 56;
 		password.setGhostText("Password");
 		password.setTextScale(1.8f);
 		
-		register = new Button((this.width / 2) - 180, (this.height / 3) + 92, (this.width / 2) + 180, (this.height / 3) + 54, 0xff202225, 0xff7289da, -1, 2, this);
+		register = new Button((this.width / 2) - 180, (this.height / 3) + 144, (this.width / 2) + 180, (this.height / 3) + 104, 0xff202225, 0xff7289da, -1, 2, this);
 		register.setText("Register");
 		register.setTextScale(1.65f);
 		
 		// For the register button
-		if (mouseX > (this.width / 2) - 180 && mouseX < (this.width / 2) + 180 && mouseY < (this.height / 3) + 92 && mouseY > (this.height / 3) + 54) {
+		if (mouseX >= register.left && mouseX <= register.right && mouseY > register.up && mouseY < register.bottom) {
 			register.insideColor = 0xff4d5c91;
 		}
 		
@@ -77,6 +89,7 @@ public class Register extends GuiScreen {
 			
 		}
 		
+		email.draw();
 		username.draw();
 		password.draw();
 		register.draw();
@@ -96,26 +109,30 @@ public class Register extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		
-		if (mouseX > (this.width / 2) - 180 && mouseX < (this.width / 2) + 180 && mouseY > (this.height / 3) - 40 && mouseY < this.height / 3) {
-			
+		if (mouseX >= email.left && mouseX <= email.right && mouseY > email.up && mouseY < email.bottom) {
+			email.selected = true;
+			username.selected = false;
 			password.selected = false;
-			username.selected = true;
-			
 		}
 		
-		if (mouseX > (this.width / 2) - 180 && mouseX < (this.width / 2) + 180 && mouseY > (this.height / 3) + 8 && mouseY < (this.height / 3) + 48) {
-			
+		if (mouseX >= username.left && mouseX <= username.right && mouseY > username.up && mouseY < username.bottom) {
+			email.selected = false;
+			username.selected = true;
+			password.selected = false;
+		}
+		
+		if (mouseX >= password.left && mouseX <= password.right && mouseY > password.up && mouseY < password.bottom) {
+			email.selected = false;
 			username.selected = false;
 			password.selected = true;
-			
 		}
 		
 		// For the register button
-		if (mouseX > (this.width / 2) - 180 && mouseX < (this.width / 2) + 180 && mouseY < (this.height / 3) + 92 && mouseY > (this.height / 3) + 54) {
+		if (mouseX >= register.left && mouseX <= register.right && mouseY > register.up && mouseY < register.bottom) {
 			
 			try {
 				
-				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "register"), new BasicNameValuePair("username", username.getText()), new BasicNameValuePair("password", NetworkUtils.encryptStringWithSHA512(password.getText())), new BasicNameValuePair("minecraftUsername", (SpicyClient.originalAccountOnline ? "" : "[CRACKED] - ") + SpicyClient.originalUsername)));
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/V2/Register.php"), new BasicNameValuePair("username", username.getText()), new BasicNameValuePair("password", password.getText()), new BasicNameValuePair("email", email.getText())));
 				
 				if (response.getBoolean("error")) {
 					
@@ -157,7 +174,16 @@ public class Register extends GuiScreen {
 			mc.displayGuiScreen(parent);
 		}
 		
-		if (username.isSelected()) {
+		if (email.isSelected()) {
+			
+			if (keyCode == Keyboard.KEY_V && isCtrlKeyDown()) {
+				email.addChar(getClipboardString());
+			}else {
+				email.typeKey(typedChar, keyCode);
+			}
+			
+		}
+		else if (username.isSelected()) {
 			
 			if (keyCode == Keyboard.KEY_V && isCtrlKeyDown()) {
 				username.addChar(getClipboardString());
@@ -166,8 +192,7 @@ public class Register extends GuiScreen {
 			}
 			
 		}
-		
-		if (password.isSelected()) {
+		else if (password.isSelected()) {
 			
 			if (keyCode == Keyboard.KEY_V && isCtrlKeyDown()) {
 				password.addChar(getClipboardString());

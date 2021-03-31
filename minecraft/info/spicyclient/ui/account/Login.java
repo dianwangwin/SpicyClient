@@ -27,7 +27,7 @@ public class Login extends GuiScreen {
 	public final GuiScreen parent;
 	
 	public Button login = new Button((this.width / 2) - 180, (this.height / 3) + 48, (this.width / 2) + 180, (this.height / 3) + 8, 0xff40444b, 0xff40444b, -1, 4, this);
-	public TextBox username = new TextBox((this.width / 2) - 180, this.height / 3, (this.width / 2) + 180, this.height / 3 - 40, 0xff40444b, 0xff40444b, -1, 0xff687275, 4, false, this), password = new TextBox((this.width / 2) - 180, (this.height / 3) + 48, (this.width / 2) + 180, (this.height / 3) + 8, 0xff40444b, 0xff40444b, -1, 0xff687275, 4, false, this), minecraftUsername = new TextBox((this.width / 2) - 80, (this.height / 3) - 80, (this.width / 2) + 120, this.height / 3 - 80, 0xff40444b, 0xff40444b, -1, 0xff687275, 4, false, this);
+	public TextBox email = new TextBox((this.width / 2) - 180, this.height / 3, (this.width / 2) + 180, this.height / 3 - 40, 0xff40444b, 0xff40444b, -1, 0xff687275, 4, false, this), password = new TextBox((this.width / 2) - 180, (this.height / 3) + 48, (this.width / 2) + 180, (this.height / 3) + 8, 0xff40444b, 0xff40444b, -1, 0xff687275, 4, false, this), minecraftUsername = new TextBox((this.width / 2) - 80, (this.height / 3) - 80, (this.width / 2) + 120, this.height / 3 - 80, 0xff40444b, 0xff40444b, -1, 0xff687275, 4, false, this);
 	
 	public boolean error = false, displayErrorText = false;
 	public String errorText;
@@ -42,12 +42,12 @@ public class Login extends GuiScreen {
 		
 		drawRect(0, 0, this.width, this.height, 0xff36393f);
 		
-		username.left = (this.width / 2) - 180;
-		username.bottom = this.height / 3;
-		username.right = (this.width / 2) + 180;
-		username.up = this.height / 3 - 40;
-		username.setGhostText("Username");
-		username.setTextScale(1.8f);
+		email.left = (this.width / 2) - 180;
+		email.bottom = this.height / 3;
+		email.right = (this.width / 2) + 180;
+		email.up = this.height / 3 - 40;
+		email.setGhostText("Email");
+		email.setTextScale(1.8f);
 		
 		password.left = (this.width / 2) - 180;
 		password.bottom = (this.height / 3) + 48;
@@ -76,7 +76,7 @@ public class Login extends GuiScreen {
 			
 		}
 		
-		username.draw();
+		email.draw();
 		password.draw();
 		login.draw();
 		
@@ -98,13 +98,13 @@ public class Login extends GuiScreen {
 		if (mouseX > (this.width / 2) - 180 && mouseX < (this.width / 2) + 180 && mouseY > (this.height / 3) - 40 && mouseY < this.height / 3) {
 			
 			password.selected = false;
-			username.selected = true;
+			email.selected = true;
 			
 		}
 		
 		if (mouseX > (this.width / 2) - 180 && mouseX < (this.width / 2) + 180 && mouseY > (this.height / 3) + 8 && mouseY < (this.height / 3) + 48) {
 			
-			username.selected = false;
+			email.selected = false;
 			password.selected = true;
 			
 		}
@@ -114,7 +114,7 @@ public class Login extends GuiScreen {
 			
 			try {
 				
-				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "loginWithUsernameAndPassword"), new BasicNameValuePair("username", username.getText()), new BasicNameValuePair("password", NetworkUtils.encryptStringWithSHA512(password.getText()))));
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/V2/UserLogin.php"), new BasicNameValuePair("email", email.getText()), new BasicNameValuePair("password", password.getText())));
 				
 				if (response.getBoolean("error")) {
 					
@@ -126,7 +126,7 @@ public class Login extends GuiScreen {
 					error = false;
 					errorText = response.getString("errorText");
 					
-					SpicyClient.account.username = username.getText();
+					SpicyClient.account.username = response.getString("username");
 					SpicyClient.account.session = response.getString("session");
 					SpicyClient.account.loggedIn = true;
 					FileManager.saveAccount(SpicyClient.account);
@@ -152,12 +152,12 @@ public class Login extends GuiScreen {
 			mc.displayGuiScreen(parent);
 		}
 		
-		if (username.isSelected()) {
+		if (email.isSelected()) {
 			
 			if (keyCode == Keyboard.KEY_V && isCtrlKeyDown()) {
-				username.addChar(getClipboardString());
+				email.addChar(getClipboardString());
 			}else {
-				username.typeKey(typedChar, keyCode);
+				email.typeKey(typedChar, keyCode);
 			}
 			
 		}

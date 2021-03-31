@@ -132,26 +132,11 @@ public class SpicyClient {
 		try {
 			
 			if (Minecraft.getMinecraft().getSession().getSessionType().equals(Session.Type.LEGACY)) {
-				System.out.println("Not pinging server, this is an offline account");
-				System.out.println("Please keep in mind that all this would send is your username and nothing else");
 				originalAccountOnline = false;
 				originalUsername = Minecraft.getMinecraft().getSession().getUsername();
 			}else {
-				System.out.println("Pinging the server, this is an online account");
-				System.out.println("Please keep in mind that all this sends is your username and nothing else");
 				originalAccountOnline = true;
 				originalUsername = Minecraft.getMinecraft().getSession().getUsername();
-				
-				String url = "https://spicyclient.info/api/api.php?username=" + originalUsername + "&stat_type=ping";
-				
-				// This is a faster way of pinging my server
-				try {
-					NetworkManager.getNetworkManager().sendGet(new HttpGet(url));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
 			}
 			
 		} catch (NullPointerException e) {
@@ -176,6 +161,11 @@ public class SpicyClient {
 		MusicManager.getMusicManager();
 		MusicManager.getMusicManager().mediaPlayer = new MediaPlayer(tempMedia);
 		
+		// Caches images
+		
+		cachedImages.put("watermarkWhite", new ResourceLocation("spicy/SpicyClientWhite.png"));
+		cachedImages.put("watermarkBlack", new ResourceLocation("spicy/SpicyClientBlack.png"));
+		
 		for (info.spicyclient.notifications.Type notType : info.spicyclient.notifications.Type.values()) {
 			for (info.spicyclient.notifications.Color notColor : info.spicyclient.notifications.Color.values()) {
 				
@@ -186,6 +176,8 @@ public class SpicyClient {
 				
 			}
 		}
+		
+		// Caches images
 		
 		// Creates a new config with the default values
 		config = new Config("Default");
@@ -260,7 +252,7 @@ public class SpicyClient {
 			
 			if (SpicyClient.account.loggedIn) {
 				
-				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "loginWithSession"), new BasicNameValuePair("session", account.session)));
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/V2/SessionLogin.php"), new BasicNameValuePair("session", account.session)));
 				
 				if (response.getBoolean("error")) {
 					
@@ -288,7 +280,7 @@ public class SpicyClient {
 		
 		try {
 			if (SpicyClient.account.loggedIn) {
-				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "updateCurrentAlt"), new BasicNameValuePair("session", account.session), new BasicNameValuePair("alt", originalUsername)));
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/V2/UpdateAlt.php"), new BasicNameValuePair("session", account.session), new BasicNameValuePair("alt", originalUsername)));
 			}
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -340,7 +332,7 @@ public class SpicyClient {
 		
 		try {
 			if (SpicyClient.account.loggedIn) {
-				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "updateCurrentAlt"), new BasicNameValuePair("session", account.session), new BasicNameValuePair("alt", originalUsername)));
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/V2/UpdateAlt.php"), new BasicNameValuePair("session", account.session), new BasicNameValuePair("alt", originalUsername)));
 			}
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block

@@ -32,7 +32,7 @@ public class Account {
 	public static transient Timer timer1 = new Timer(), timer2 = new Timer(), timer3 = new Timer();
 	
 	public String username = "", session = "";
-	
+	public int uid = 0;
 	public boolean loggedIn = false;
 	
 	public static Minecraft mc = Minecraft.getMinecraft();
@@ -92,7 +92,7 @@ public class Account {
 									return;
 								}
 								
-								json = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/accountApi.php"), new BasicNameValuePair("type", "checkIfUserIsUsingSpicyClient"), new BasicNameValuePair("username", player.getName())));
+								json = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/V2/CheckSpicyClientUser.php"), new BasicNameValuePair("username", player.getName())));
 								
 								if (json.getBoolean("alt")) {
 									String realUsername = json.getString("username");
