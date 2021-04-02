@@ -11,23 +11,34 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.lwjgl.opengl.GL11;
 
+import com.sun.javafx.geom.Vec4d;
+import com.sun.javafx.geom.Vec4f;
+
 import info.spicyclient.SpicyClient;
 import info.spicyclient.ClickGUI.NewClickGui;
+import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.modules.Module;
 import info.spicyclient.modules.render.SkyColor;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.ui.Jello.JelloHud;
+import info.spicyclient.ui.fonts.FontUtil;
+import info.spicyclient.ui.fonts.JelloFontRenderer;
+import info.spicyclient.util.Data5d;
 import info.spicyclient.util.MovementUtils;
+import info.spicyclient.util.RandomUtils;
+import info.spicyclient.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec4b;
 
 public class HUD {
 	public boolean rainbowEnabled = false;
@@ -62,10 +73,205 @@ public class HUD {
 		
 		NotificationManager.getNotificationManager().onRender();
 		
+		if (!SpicyClient.config.hud.isEnabled()) {
+			return;
+		}
+		
 		if (SpicyClient.config.jelloForSpicy.isEnabled()) {
 			drawJelloHud();
 		}else {
-			drawSpicyHud();
+			//drawSpicyHud();
+			drawNewSpicyHud();
+		}
+		
+	}
+	
+	public static CopyOnWriteArrayList<Data5d> bpsLines = new CopyOnWriteArrayList<Data5d>();
+	
+	public void drawNewSpicyHud() {
+		
+		JelloFontRenderer fr = FontUtil.jelloFontScale;
+		JelloFontRenderer arrayFr = FontUtil.jelloFontBoldSmall;
+		ScaledResolution sr = new ScaledResolution(mc);
+		
+		float hue = System.currentTimeMillis() % (int)(rainbowTimer * 1000) / (float)(rainbowTimer * 1000);
+		int primColor = Color.HSBtoRGB(hue, 0.45f, 1);
+		int secColor = Color.HSBtoRGB(hue, 0.45f, 0.65f);
+		
+		if (rainbowEnabled) {
+			primaryColor = primColor;
+			secondaryColor = secColor;
+			NewClickGui.accentColor = primColor;
+		}
+		
+		// HUD
+		
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(4, 4, 0);
+		GlStateManager.scale(2, 2, 1);
+		GlStateManager.translate(-4, -4, 0);
+		
+		if (SpicyClient.config.clientVersion != SpicyClient.config.version || SpicyClient.config.fpsBooster.isEnabled()) {
+			
+			//fr.drawStringWithShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor);
+			//fr.drawStringWithQuadShadow(SpicyClient.config.clientName + SpicyClient.config.clientVersion, 4, 4, primaryColor, 0.3f);
+			fr.drawString(SpicyClient.config.clientName, 4, 4, primaryColor);
+			
+		}else {
+			// We enable blending so there is a transparent background on the logo
+			GlStateManager.enableBlend();
+			GlStateManager.color(1, 1, 1);
+			SkyColor skyColor = SpicyClient.config.skyColor;
+			
+			int maxBrightness = 200;
+			if (rainbowEnabled) {
+				RenderUtils.setColorForIcon(Color.getHSBColor(hue, 0.5f, 1));
+			}
+			mc.getTextureManager().bindTexture(new ResourceLocation("spicy/SpicyClientWhite.png"));
+			int imageWidth = 500, imageHeight = 122;
+			imageWidth /= 6;
+			imageHeight /= 6;
+			Gui.drawModalRectWithCustomSizedTexture(4, 2, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(4, 4, 0);
+			GlStateManager.scale(0.7, 0.7, 1);
+			GlStateManager.translate(-4, -4, 0);
+			if (SpicyClient.account.loggedIn) {
+				fr.drawString(" - [ " + SpicyClient.account.username + " ]", 103, 2.5f, primaryColor);
+			}
+			GlStateManager.popMatrix();
+		}
+		GlStateManager.popMatrix();
+		GlStateManager.pushMatrix();
+		
+		if (!SpicyClient.config.hud.isEnabled()) {
+			GlStateManager.popMatrix();
+		}else {
+			
+			if (mc.currentScreen instanceof GuiChat) {
+				
+			}else {
+				
+				if (SpicyClient.config.speedDebug.isEnabled()) {
+					GlStateManager.translate(4, 4, 0);
+					GlStateManager.translate(-4, -4, 0);
+					
+					Data5d lastLine = null;
+					
+					double maxBps = 0.01, minY = sr.getScaledHeight_double() - 45, maxY = sr.getScaledHeight() - 4, yOffset = maxY - minY;
+					
+					for (Data5d line : bpsLines) {
+						if (line.data > maxBps) {
+							maxBps = line.data;
+						}
+					}
+					
+					for (Data5d line : bpsLines) {
+						line.x1 -= 0.75;
+						line.x2 -= 0.75;
+						line.y1 = maxY - (yOffset / 100) * ((line.data / maxBps) * 100);
+						line.y2 = line.y1;
+						if (lastLine != null) {
+							line.y2 = lastLine.y1;
+						}
+						
+						if (line.x1 < 0) {
+							bpsLines.remove(line);
+						}
+						
+						lastLine = line;
+					}
+					
+					if (MovementUtils.getBlocksPerSecond() > maxBps) {
+						maxBps = MovementUtils.getBlocksPerSecond();
+					}
+					
+					Data5d newLine = new Data5d();
+					newLine.data = MovementUtils.getBlocksPerSecond();
+					newLine.x1 = 200;
+					newLine.x2 = 200.001;
+					newLine.y1 = maxY - (yOffset / 100) * ((newLine.data / maxBps) * 100);
+					//Command.sendPrivateChatMessage(maxBps);
+					if (lastLine == null) {
+						newLine.y2 = newLine.y1;
+					}else {
+						newLine.y2 = lastLine.y1;
+					}
+					bpsLines.add(newLine);
+					
+					Gui.drawRect(0, sr.getScaledHeight(), 275, minY - 2, 0x90000000);
+					for (Data5d line : bpsLines) {
+						
+						if (line.x1 == line.x2) {
+							line.x2 += 0.25;
+						}
+						
+						if (line.y1 == line.y2) {
+							line.y2 += 0.25;
+						}
+						
+						GlStateManager.pushMatrix();
+						RenderUtils.resetColor();
+						if (rainbowEnabled) {
+							RenderUtils.setColorForIcon(Color.getHSBColor(hue, 0.5f, 1));
+						}
+						GL11.glBegin(GL11.GL_LINES);
+						GL11.glVertex2f(((float)line.x1), ((float)line.y1));
+						GL11.glVertex2f(((float)line.x1), ((float)line.y2));
+						GL11.glEnd();
+				        //GlStateManager.enableBlend();
+				        GlStateManager.disableTexture2D();
+				        GlStateManager.popMatrix();
+						//Gui.drawVLine(((float)line.y1), ((float)line.y2), ((float)line.x1), -1);
+					}
+					
+					GlStateManager.pushMatrix();
+					RenderUtils.resetColor();
+					arrayFr.drawString(RandomUtils.getFormattedDate(), 202, (float) (sr.getScaledHeight_double() - arrayFr.FONT_HEIGHT), primaryColor);
+					RenderUtils.resetColor();
+					arrayFr.drawString(RandomUtils.getFormattedTime(), 202, (float) (sr.getScaledHeight_double() - arrayFr.FONT_HEIGHT - arrayFr.FONT_HEIGHT - 1), primaryColor);
+					RenderUtils.resetColor();
+					arrayFr.drawString("CVM: " + SpicyClient.currentVersionNum, 202, (float) (sr.getScaledHeight_double() - arrayFr.FONT_HEIGHT - arrayFr.FONT_HEIGHT - 1 - arrayFr.FONT_HEIGHT - 1), primaryColor);
+					RenderUtils.resetColor();
+					arrayFr.drawString(new DecimalFormat("#.###").format(MovementUtils.getBlocksPerSecond()) + " BPS", 202, (float) (sr.getScaledHeight_double() - arrayFr.FONT_HEIGHT - arrayFr.FONT_HEIGHT - 1 - arrayFr.FONT_HEIGHT - 1 - arrayFr.FONT_HEIGHT - 1), primaryColor);
+					GlStateManager.popMatrix();
+					
+				}
+				
+			}
+			
+			GlStateManager.popMatrix();
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(4, 4, 0);
+			GlStateManager.translate(-4, -4, 0);
+			
+			// This is here so the modules don't move when you toggle them
+			CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<Module>(SpicyClient.modules);
+			
+			ArrayList<Module> enabledModules = new ArrayList<Module>();
+			for (Module e : modules) {
+				if (e.isEnabled()) {
+					enabledModules.add(e);
+				}
+			}
+			enabledModules.sort(Comparator.comparingDouble(m -> arrayFr.getStringWidth(((Module) m).name + (((Module)m).additionalInformation != "" ? ((Module)m).additionalInformation + separator : ""))).reversed());
+			
+			RenderUtils.resetColor();
+			int count = 0;
+			for (Module m : enabledModules) {
+				
+				count++;
+				float offset = ((arrayFr.FONT_HEIGHT + 1.5f) * count) - 6;
+				String name = m.name + (m.additionalInformation != "" ? separator + m.additionalInformation : "");
+				double length = arrayFr.getStringWidth(name);
+				name = m.name + (m.additionalInformation != "" ? separator : "");
+				arrayFr.drawString(name, sr.getScaledWidth_double() - length - 4, offset, primaryColor);
+				RenderUtils.resetColor();
+				arrayFr.drawString(m.additionalInformation, sr.getScaledWidth_double() - arrayFr.getStringWidth(m.additionalInformation) - 4, offset, secondaryColor);
+				RenderUtils.resetColor();
+				
+			}
+			GlStateManager.popMatrix();
 		}
 		
 	}

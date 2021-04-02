@@ -25,7 +25,7 @@ import net.minecraft.util.ResourceLocation;
 
 public abstract class Module {
 	
-	public String name;
+	public transient String name;
 	public transient String additionalInformation = "";
 	public boolean toggled = false;
 	public transient boolean expanded = false;

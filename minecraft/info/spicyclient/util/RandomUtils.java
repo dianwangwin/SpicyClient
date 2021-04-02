@@ -1,5 +1,8 @@
 package info.spicyclient.util;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -111,6 +114,40 @@ public class RandomUtils {
         
         return "ERROR";
         
+	}
+	
+	public static String getFormattedTime() {
+		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+		LocalDateTime now = LocalDateTime.now();
+		
+		String message = dtf.format(now);
+		
+		String[] times = message.split(":");
+		
+		if (Integer.valueOf(times[0]) >= 12 && Integer.valueOf(times[0]) < 24) {
+			message = message.replaceAll("13:", "01:").replaceAll("14:", "02:").replaceAll("15:", "03:").replaceAll("16:", "04:").replaceAll("17:", "05:").replaceAll("18:", "06:").replaceAll("19:", "07:").replaceAll("20:", "08:").replaceAll("21:", "09:").replaceAll("22:", "10:").replaceAll("23:", "11:").replaceAll("24:", "12:");
+			message += " PM";
+		}
+		else if (Integer.valueOf(times[0]) <= 0) {
+			message = message.replaceAll("00:", "12:");
+			message += " AM";
+		}
+		else if (Integer.valueOf(times[0]) <= 12) {
+			message += " AM";
+		}
+		
+		return message;
+		
+	}
+	
+	public static String getFormattedDate() {
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
+
+		String formattedDate = formatter.format(LocalDate.now());
+		return formattedDate;
+		
 	}
 	
 }

@@ -909,8 +909,7 @@ public class Fly extends Module {
 				mc.thePlayer.motionY = 0;
 			}
 			
-			mc.getNetHandler().addToSendQueue(new C03PacketPlayer(true));
-			mc.thePlayer.onGround = false;
+			mc.thePlayer.onGround = true;
 			
 			MovementUtils.strafe((float) speed.getValue() * 3);
 			

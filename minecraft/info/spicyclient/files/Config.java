@@ -120,6 +120,8 @@ public class Config {
 	public Cape cape = new Cape();
 	public Teams teams = new Teams();
 	public AutoHead autoHead = new AutoHead();
+	public Parkinsons parkinsons = new Parkinsons();
+	public SpeedDebug speedDebug = new SpeedDebug();
 	
 	public String clientName = "Spicy ", clientVersion = "B3 Beta";
 	
@@ -219,6 +221,8 @@ public class Config {
 		modules.add(con.cape);
 		modules.add(con.teams);
 		modules.add(con.autoHead);
+		modules.add(con.parkinsons);
+		modules.add(con.speedDebug);
 		
 		return modules;
 		
@@ -309,6 +313,8 @@ public class Config {
 			this.cape = new Cape();
 			this.teams = new Teams();
 			this.autoHead = new AutoHead();
+			this.parkinsons = new Parkinsons();
+			this.speedDebug = new SpeedDebug();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");

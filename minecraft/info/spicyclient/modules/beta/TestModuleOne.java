@@ -40,11 +40,13 @@ import info.spicyclient.util.RandomUtils;
 import info.spicyclient.util.RenderUtils;
 import info.spicyclient.util.RotationUtils;
 import info.spicyclient.util.Timer;
+import info.spicyclient.util.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
@@ -62,6 +64,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.handshake.client.C00Handshake;
 import net.minecraft.network.login.client.C00PacketLoginStart;
+import net.minecraft.network.play.client.C01PacketChatMessage;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
@@ -84,6 +87,7 @@ import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.network.play.server.S14PacketEntity;
 import net.minecraft.network.play.server.S18PacketEntityTeleport;
 import net.minecraft.network.play.server.S19PacketEntityHeadLook;
+import net.minecraft.network.play.server.S21PacketChunkData;
 import net.minecraft.network.play.server.S29PacketSoundEffect;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
@@ -120,45 +124,21 @@ public class TestModuleOne extends Module {
 	@Override
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventUpdate && e.isPre()) {
+		if (e instanceof EventReceivePacket && e.isPre() && false) {
 			
-			if ((mc.thePlayer.getHealth() / mc.thePlayer.getMaxHealth()) * 100 <= 70 && timer.hasTimeElapsed(400, true)) {
+			if (((EventReceivePacket)e).packet instanceof S21PacketChunkData) {
 				
-				for (short i = 0; i < 45; i++) {
-					
-					if (Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
-						ItemStack is = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getStack();
-						
-						if (is.getItem() instanceof ItemSkull) {
-							NotificationManager.getNotificationManager().createNotification("Auto Head",
-									"Eating head", true, 3000, Type.INFO, Color.BLUE);
-							Command.sendPrivateChatMessage(is.getDisplayName());
-							int heldItemBeforeThrow = mc.thePlayer.inventory.currentItem;
-							if (i - 36 < 0) {
-								
-								InventoryUtils.swap(i, 8);
-								
-								Minecraft.getMinecraft().getNetHandler().getNetworkManager()
-										.sendPacketNoEvent(new C09PacketHeldItemChange(8));
-								
-							}else {
-								
-								Minecraft.getMinecraft().getNetHandler().getNetworkManager()
-										.sendPacketNoEvent(new C09PacketHeldItemChange(i - 36));
-								
-							}
-							
-							Minecraft.getMinecraft().getNetHandler().getNetworkManager()
-									.sendPacketNoEvent(new C08PacketPlayerBlockPlacement(is));
-							mc.thePlayer.inventory.currentItem = heldItemBeforeThrow;
-							Minecraft.getMinecraft().getNetHandler().getNetworkManager()
-								.sendPacketNoEvent( new C09PacketHeldItemChange(heldItemBeforeThrow));
-						}
-						
-					}
-					
-				}
+				S21PacketChunkData packet = (S21PacketChunkData)((EventReceivePacket)e).packet;
 				
+				System.err.println(" ");
+				System.err.println(packet.func_149274_i());
+				System.err.println(packet.getChunkX());
+				System.err.println(packet.getChunkZ());
+				System.err.println(packet.getExtractedSize());
+				System.err.println(" ");
+				
+			}else {
+				System.err.println(((EventReceivePacket)e).packet);
 			}
 			
 		}
@@ -168,28 +148,6 @@ public class TestModuleOne extends Module {
 	@Override
 	public void onEventWhenDisabled(Event e) {
 		
-	}
-	
-	private boolean isOverVoid() {
-		boolean isOverVoid = true;
-		BlockPos block = mc.thePlayer.getPosition();
-		
-		for (short i = (short) mc.thePlayer.posY; i > 0; i--) {
-			
-			if (isOverVoid) {
-				
-				if (!(mc.theWorld.getBlockState(block).getBlock() instanceof BlockAir)) {
-					
-					isOverVoid = false;
-					
-				}
-				
-			}
-			
-			block = block.add(0, -1, 0);
-			
-		}
-		return isOverVoid;
 	}
 	
 }

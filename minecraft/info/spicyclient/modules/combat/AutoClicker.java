@@ -57,7 +57,7 @@ public class AutoClicker extends Module {
 		
 		if (e instanceof EventUpdate) {
 			
-			if (timer.hasTimeElapsed((long) (1000/aps.getValue()), true) && mc.gameSettings.keyBindAttack.pressed) {
+			if (timer.hasTimeElapsed((long) (1000/aps.getValue()), true) && mc.gameSettings.keyBindAttack.pressed && !mc.thePlayer.isUsingItem()) {
 				
 				//if (mode.is("Swing + Autoblock")) {
 					//mc.gameSettings.keyBindUseItem.pressed = true;
@@ -74,19 +74,7 @@ public class AutoClicker extends Module {
 					
 					mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(mc.objectMouseOver.entityHit, Action.ATTACK));
 					
-					if (mc.gameSettings.keyBindUseItem.pressed && mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword) {
-						blockHypixel((EntityLivingBase) mc.objectMouseOver.entityHit);
-					}
-					
 				}else {
-					
-					if (mc.gameSettings.keyBindUseItem.pressed && mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword) {
-						blockHypixel((EntityLivingBase) mc.objectMouseOver.entityHit);
-					}
-					else if (!blocking && mc.thePlayer.inventory.getCurrentItem() != null) {
-						mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
-						blocking = true;
-					}
 					
 				}
 				
@@ -99,57 +87,5 @@ public class AutoClicker extends Module {
 		}
 		
 	}
-	
-	private void blockHypixel(EntityLivingBase ent) {
-		
-		blocking = true;
-		
-		if (ent == null) {
-			return;
-		}
-		
-		sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());
-		
-		float[] rotations = RotationUtils.getRotations(ent);
-		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(ent, RotationUtils.getVectorForRotation(rotations[0], rotations[1])));
-		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(ent, Action.INTERACT));
-		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
-		
-	}
-	
-	public boolean sendUseItem(EntityPlayer playerIn, World worldIn, ItemStack itemStackIn)
-    {
-        if (mc.playerController.currentGameType == WorldSettings.GameType.SPECTATOR)
-        {
-            return false;
-        }
-        else
-        {
-        	
-        	if (itemStackIn == null) {
-        		return false;
-        	}
-        	
-            mc.playerController.syncCurrentPlayItem();
-            int i = itemStackIn.stackSize;
-            ItemStack itemstack = itemStackIn.useItemRightClick(worldIn, playerIn);
-
-            if (itemstack != itemStackIn || itemstack != null && itemstack.stackSize != i)
-            {
-                playerIn.inventory.mainInventory[playerIn.inventory.currentItem] = itemstack;
-
-                if (itemstack.stackSize == 0)
-                {
-                    playerIn.inventory.mainInventory[playerIn.inventory.currentItem] = null;
-                }
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
 	
 }

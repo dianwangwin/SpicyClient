@@ -18,6 +18,9 @@ import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.player.ChatBypass;
 import info.spicyclient.modules.player.HideName;
 import info.spicyclient.networking.NetworkManager;
+import info.spicyclient.notifications.Color;
+import info.spicyclient.notifications.NotificationManager;
+import info.spicyclient.notifications.Type;
 import info.spicyclient.util.Timer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -97,6 +100,7 @@ public class Account {
 								if (json.getBoolean("alt")) {
 									String realUsername = json.getString("username");
 									usernames.put(player.getName(), realUsername);
+									NotificationManager.getNotificationManager().createNotification("SpicyClient User", player.getName() + " is using spicy client", true, 10000, Type.INFO, Color.YELLOW);
 								}else {
 									//usernames.put(player.getName(), " - - - - ");
 								}
@@ -130,7 +134,7 @@ public class Account {
 				e.setType(temp);
 			}
 			
-			String color = "§b";
+			String color = "§s";
 			
 			EventReceivePacket packetEvent = (EventReceivePacket) e;
 			if (packetEvent.packet instanceof S02PacketChat) {

@@ -3,6 +3,8 @@ package net.minecraft.client.gui;
 import com.ibm.icu.text.ArabicShaping;
 import com.ibm.icu.text.ArabicShapingException;
 import com.ibm.icu.text.Bidi;
+
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -457,15 +459,15 @@ public class FontRenderer implements IResourceManagerReloadListener
     /**
      * Render a single line string at the current (posX,posY) and update posX
      */
-    private void renderStringAtPos(String p_78255_1_, boolean p_78255_2_)
+    private void renderStringAtPos(String renderedText, boolean dropshadow)
     {
-        for (int i = 0; i < p_78255_1_.length(); ++i)
+        for (int i = 0; i < renderedText.length(); ++i)
         {
-            char c0 = p_78255_1_.charAt(i);
+            char c0 = renderedText.charAt(i);
 
-            if (c0 == 167 && i + 1 < p_78255_1_.length())
+            if (c0 == 167 && i + 1 < renderedText.length())
             {
-                int i1 = "0123456789abcdefklmnor".indexOf(p_78255_1_.toLowerCase().charAt(i + 1));
+                int i1 = "0123456789abcdefklmnors".indexOf(renderedText.toLowerCase().charAt(i + 1));
 
                 if (i1 < 16)
                 {
@@ -480,7 +482,7 @@ public class FontRenderer implements IResourceManagerReloadListener
                         i1 = 15;
                     }
 
-                    if (p_78255_2_)
+                    if (dropshadow)
                     {
                         i1 += 16;
                     }
@@ -524,6 +526,16 @@ public class FontRenderer implements IResourceManagerReloadListener
                     this.italicStyle = false;
                     this.setColor(this.red, this.blue, this.green, this.alpha);
                 }
+                else if (i1 == 22) {
+                	
+                	float hue = System.currentTimeMillis() % (int)(4 * 1000) / (float)(4 * 1000);
+                	Color color = Color.getHSBColor(hue, 0.5f, (dropshadow ? 0.5f : 1));
+                	float red = color.getRed();
+                	float green = color.getGreen();
+                	float blue = color.getBlue();
+                	this.setColor(red/255, green/255, blue/255, this.alpha);
+                	
+                }
 
                 ++i;
             }
@@ -551,7 +563,7 @@ public class FontRenderer implements IResourceManagerReloadListener
                 }
 
                 float f1 = j != -1 && !this.unicodeFlag ? this.offsetBold : 0.5F;
-                boolean flag = (c0 == 0 || j == -1 || this.unicodeFlag) && p_78255_2_;
+                boolean flag = (c0 == 0 || j == -1 || this.unicodeFlag) && dropshadow;
 
                 if (flag)
                 {

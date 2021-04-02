@@ -413,6 +413,10 @@ public class SpicyClient {
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
+			if (!Minecraft.getMinecraft().gameSettings.ofShowCapes) {
+				Minecraft.getMinecraft().gameSettings.ofShowCapes = true;
+			}
+			
 			RenderUtils.resetPlayerYaw();
 			RenderUtils.resetPlayerPitch();
 			

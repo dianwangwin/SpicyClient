@@ -242,7 +242,11 @@ public class Gui
 	public static void drawVLine(float startX, float endX, float y, int color) {
 		drawVerticalLine(startX, endX, y, color);
 	}
-
+	
+	public static void drawLine(float startX, float endX, float startY, float endY, int color) {
+		
+	}
+	
 	protected static void drawHorizontalLine(float startX, float endX, float y, int color) {
 		if (endX < startX) {
 			float var5 = startX;
