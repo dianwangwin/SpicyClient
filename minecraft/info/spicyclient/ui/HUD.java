@@ -172,11 +172,11 @@ public class HUD {
 						}
 					}
 					
-					if (bpsLinesTimer.hasTimeElapsed(1000 / 100, true)) {
+					if (bpsLinesTimer.hasTimeElapsed(1000 / 20, true)) {
 						
 						for (Data5d line : bpsLines) {
-							line.x1 -= 1;
-							line.x2 -= 1;
+							line.x1 -= 3;
+							line.x2 -= 3;
 							line.y1 = maxY - (yOffset / 100) * ((line.data / maxBps) * 100);
 							line.y2 = line.y1;
 							if (lastLine != null) {
@@ -197,7 +197,7 @@ public class HUD {
 						Data5d newLine = new Data5d();
 						newLine.data = MovementUtils.getBlocksPerSecond();
 						newLine.x1 = 199;
-						newLine.x2 = 198;
+						newLine.x2 = 196;
 						newLine.y1 = maxY - (yOffset / 100) * ((newLine.data / maxBps) * 100);
 						//Command.sendPrivateChatMessage(maxBps);
 						if (lastLine == null) {
