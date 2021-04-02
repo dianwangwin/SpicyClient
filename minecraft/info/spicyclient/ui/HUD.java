@@ -29,6 +29,7 @@ import info.spicyclient.util.Data5d;
 import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.RandomUtils;
 import info.spicyclient.util.RenderUtils;
+import info.spicyclient.util.Timer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -74,6 +75,10 @@ public class HUD {
 		NotificationManager.getNotificationManager().onRender();
 		
 		if (!SpicyClient.config.hud.isEnabled()) {
+			EventRenderGUI event = new EventRenderGUI();
+			event.setType(EventType.PRE);
+			
+			info.spicyclient.SpicyClient.onEvent(event);
 			return;
 		}
 		
@@ -87,6 +92,7 @@ public class HUD {
 	}
 	
 	public static CopyOnWriteArrayList<Data5d> bpsLines = new CopyOnWriteArrayList<Data5d>();
+	public static Timer bpsLinesTimer = new Timer();
 	
 	public void drawNewSpicyHud() {
 		
@@ -166,38 +172,42 @@ public class HUD {
 						}
 					}
 					
-					for (Data5d line : bpsLines) {
-						line.x1 -= 0.75;
-						line.x2 -= 0.75;
-						line.y1 = maxY - (yOffset / 100) * ((line.data / maxBps) * 100);
-						line.y2 = line.y1;
-						if (lastLine != null) {
-							line.y2 = lastLine.y1;
+					if (bpsLinesTimer.hasTimeElapsed(1000 / 100, true)) {
+						
+						for (Data5d line : bpsLines) {
+							line.x1 -= 1;
+							line.x2 -= 1;
+							line.y1 = maxY - (yOffset / 100) * ((line.data / maxBps) * 100);
+							line.y2 = line.y1;
+							if (lastLine != null) {
+								line.y2 = lastLine.y1;
+							}
+							
+							if (line.x1 < 0) {
+								bpsLines.remove(line);
+							}
+							
+							lastLine = line;
 						}
 						
-						if (line.x1 < 0) {
-							bpsLines.remove(line);
+						if (MovementUtils.getBlocksPerSecond() > maxBps) {
+							maxBps = MovementUtils.getBlocksPerSecond();
 						}
 						
-						lastLine = line;
+						Data5d newLine = new Data5d();
+						newLine.data = MovementUtils.getBlocksPerSecond();
+						newLine.x1 = 199;
+						newLine.x2 = 198;
+						newLine.y1 = maxY - (yOffset / 100) * ((newLine.data / maxBps) * 100);
+						//Command.sendPrivateChatMessage(maxBps);
+						if (lastLine == null) {
+							newLine.y2 = newLine.y1;
+						}else {
+							newLine.y2 = lastLine.y1;
+						}
+						bpsLines.add(newLine);
+						
 					}
-					
-					if (MovementUtils.getBlocksPerSecond() > maxBps) {
-						maxBps = MovementUtils.getBlocksPerSecond();
-					}
-					
-					Data5d newLine = new Data5d();
-					newLine.data = MovementUtils.getBlocksPerSecond();
-					newLine.x1 = 200;
-					newLine.x2 = 200.001;
-					newLine.y1 = maxY - (yOffset / 100) * ((newLine.data / maxBps) * 100);
-					//Command.sendPrivateChatMessage(maxBps);
-					if (lastLine == null) {
-						newLine.y2 = newLine.y1;
-					}else {
-						newLine.y2 = lastLine.y1;
-					}
-					bpsLines.add(newLine);
 					
 					Gui.drawRect(0, sr.getScaledHeight(), 275, minY - 2, 0x90000000);
 					for (Data5d line : bpsLines) {
@@ -231,7 +241,7 @@ public class HUD {
 					RenderUtils.resetColor();
 					arrayFr.drawString(RandomUtils.getFormattedTime(), 202, (float) (sr.getScaledHeight_double() - arrayFr.FONT_HEIGHT - arrayFr.FONT_HEIGHT - 1), primaryColor);
 					RenderUtils.resetColor();
-					arrayFr.drawString("CVM: " + SpicyClient.currentVersionNum, 202, (float) (sr.getScaledHeight_double() - arrayFr.FONT_HEIGHT - arrayFr.FONT_HEIGHT - 1 - arrayFr.FONT_HEIGHT - 1), primaryColor);
+					arrayFr.drawString("CVN: " + SpicyClient.currentVersionNum, 202, (float) (sr.getScaledHeight_double() - arrayFr.FONT_HEIGHT - arrayFr.FONT_HEIGHT - 1 - arrayFr.FONT_HEIGHT - 1), primaryColor);
 					RenderUtils.resetColor();
 					arrayFr.drawString(new DecimalFormat("#.###").format(MovementUtils.getBlocksPerSecond()) + " BPS", 202, (float) (sr.getScaledHeight_double() - arrayFr.FONT_HEIGHT - arrayFr.FONT_HEIGHT - 1 - arrayFr.FONT_HEIGHT - 1 - arrayFr.FONT_HEIGHT - 1), primaryColor);
 					GlStateManager.popMatrix();
@@ -273,6 +283,11 @@ public class HUD {
 			}
 			GlStateManager.popMatrix();
 		}
+		
+		EventRenderGUI event = new EventRenderGUI();
+		event.setType(EventType.PRE);
+		
+		info.spicyclient.SpicyClient.onEvent(event);
 		
 	}
 	

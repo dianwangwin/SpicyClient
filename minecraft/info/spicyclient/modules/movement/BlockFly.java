@@ -45,6 +45,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
+import net.minecraft.network.EnumConnectionState;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
@@ -465,8 +466,8 @@ public class BlockFly extends Module {
 		
 		// One block
 		for (EnumFacing face : EnumFacing.VALUES) {
-
-			if (mc.theWorld.getBlockState(output.pos.offset(face)).getBlock() != Blocks.air) {
+			
+			if (mc.theWorld.getBlockState(output.pos.offset(face)).getBlock() != Blocks.air && shouldCancelCheck(face)) {
 
 				output.pos = output.pos.offset(face);
 				output.facing = face.getOpposite();
@@ -488,7 +489,7 @@ public class BlockFly extends Module {
 
 				for (EnumFacing face1 : EnumFacing.VALUES) {
 
-					if (mc.theWorld.getBlockState(output.pos.offset(face).offset(face1)).getBlock() != Blocks.air) {
+					if (mc.theWorld.getBlockState(output.pos.offset(face).offset(face1)).getBlock() != Blocks.air && shouldCancelCheck(face1)) {
 
 						output.pos = output.pos.offset(face).offset(face1);
 						output.facing = face.getOpposite();
@@ -517,7 +518,7 @@ public class BlockFly extends Module {
 					for (EnumFacing face1 : EnumFacing.VALUES) {
 
 						if (mc.theWorld.getBlockState(output.pos.offset(face).offset(face1).offset(face2))
-								.getBlock() != Blocks.air) {
+								.getBlock() != Blocks.air && shouldCancelCheck(face1)) {
 
 							output.pos = output.pos.offset(face).offset(face1).offset(face2);
 							output.facing = face2.getOpposite();
@@ -552,7 +553,7 @@ public class BlockFly extends Module {
 
 							if (mc.theWorld
 									.getBlockState(output.pos.offset(face).offset(face1).offset(face2).offset(face3))
-									.getBlock() != Blocks.air) {
+									.getBlock() != Blocks.air && shouldCancelCheck(face1)) {
 
 								output.pos = output.pos.offset(face).offset(face1).offset(face2).offset(face3);
 								output.facing = face3.getOpposite();
@@ -658,6 +659,14 @@ public class BlockFly extends Module {
 			lastSlot = slot;
 		}
 		return block;
+	}
+	
+	public boolean shouldCancelCheck(EnumFacing face) {
+		if (keepY.isEnabled()) {
+			return !(face == EnumFacing.UP);
+		}else {
+			return true;
+		}
 	}
 	
 	private class BlockInfo {

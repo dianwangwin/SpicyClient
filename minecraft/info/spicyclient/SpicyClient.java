@@ -165,16 +165,23 @@ public class SpicyClient {
 		
 		cachedImages.put("watermarkWhite", new ResourceLocation("spicy/SpicyClientWhite.png"));
 		cachedImages.put("watermarkBlack", new ResourceLocation("spicy/SpicyClientBlack.png"));
+		cachedImages.put("gearIcon", new ResourceLocation("spicy/clickgui/gear.png"));
+		cachedImages.put("dropdownIcon", new ResourceLocation("spicy/clickgui/dropdown.png"));
+		cachedImages.put("circleIcon", new ResourceLocation("spicy/clickgui/circle.png"));
 		
 		for (info.spicyclient.notifications.Type notType : info.spicyclient.notifications.Type.values()) {
 			for (info.spicyclient.notifications.Color notColor : info.spicyclient.notifications.Color.values()) {
 				
-				System.out.println("Caching " + "spicy/notifications/" + notType.filePrefix + notColor.fileSuffix + ".png");
 				cachedImages.put("spicy/notifications/" + notType.filePrefix + notColor.fileSuffix + ".png",
 						new ResourceLocation(
 								"spicy/notifications/" + notType.filePrefix + notColor.fileSuffix + ".png"));
 				
 			}
+		}
+		
+		for (ResourceLocation resource : cachedImages.values()) {
+			String name = resource.getResourcePath();
+			System.out.println("Cached " + name);
 		}
 		
 		// Caches images
