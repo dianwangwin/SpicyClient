@@ -217,7 +217,7 @@ public class HUD {
 						}
 						GL11.glBegin(GL11.GL_LINES);
 						GL11.glVertex2f(((float)line.x1), ((float)line.y1));
-						GL11.glVertex2f(((float)line.x1), ((float)line.y2));
+						GL11.glVertex2f(((float)line.x2), ((float)line.y2));
 						GL11.glEnd();
 				        //GlStateManager.enableBlend();
 				        GlStateManager.disableTexture2D();
