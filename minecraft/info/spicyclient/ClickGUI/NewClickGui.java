@@ -46,7 +46,7 @@ public class NewClickGui extends GuiScreen {
 	private static ResourceLocation dropdownIcon = new ResourceLocation("spicy/clickgui/dropdown.png");
 	private static ResourceLocation circleIcon = new ResourceLocation("spicy/clickgui/circle.png");
 	
-	public static ArrayList<Tab> tabs = new ArrayList<>();
+	//public static ArrayList<Tab> tabs = new ArrayList<>();
 	public static int accentColor = 0xffff0000;
 	
 	private boolean clicked = false, closingSettings = false;
@@ -59,6 +59,7 @@ public class NewClickGui extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		
+		ArrayList<Tab> tabs = SpicyClient.savedTabs.tabs;
 		JelloFontRenderer fr = FontUtil.spicyClickGuiFont;
 		
 		int notToggled = 0xfff5f5f5, toggled = 0xffc4c4c4, borderLines = 0xff000000, textColor = 0xff000000,
@@ -453,6 +454,8 @@ public class NewClickGui extends GuiScreen {
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		
 		if (selectedModule == null) {
+			
+			ArrayList<Tab> tabs = SpicyClient.savedTabs.tabs;
 			JelloFontRenderer fr = FontUtil.spicyClickGuiFont;
 			
 			for (Tab t : tabs) {

@@ -274,4 +274,53 @@ public class FileManager {
 		
 	}
 	
+	public static boolean saveTabs(Tabs obj) throws IOException {
+		
+		File file = new File(getROOT_DIR(), "");
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		try {
+			writeJsonToFile(new File(file, "Tabs.info"), obj);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return true;
+		
+	}
+	
+	public static Object loadTabs(Tabs obj) throws IOException {
+		
+		File file = new File(getROOT_DIR(), "");
+		if (!file.exists()) {
+			return null;
+		}
+		
+		try {
+			
+			Gson g = new Gson();
+			Tabs p = g.fromJson((String) readFromJson(new File(file, "Tabs.Info"), obj), Tabs.class);
+			
+			return p;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	public static boolean canLoadTabs() {
+		
+		File file = new File(getROOT_DIR(), "");
+		return file.exists() && new File(file, "Tabs.Info").exists();
+		
+	}
+	
 }

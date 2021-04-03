@@ -39,7 +39,7 @@ public class ClickGUI extends GuiScreen {
 	
 	public static FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 	
-	public static ArrayList<Tab> tabs = new ArrayList<Tab>();
+	//public static ArrayList<Tab> tabs = new ArrayList<Tab>();
 	public GuiScreen last;
 	
 	public Tab selectedTab = null;
@@ -62,12 +62,14 @@ public class ClickGUI extends GuiScreen {
 	
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		
+		ArrayList<Tab> tabs = SpicyClient.savedTabs.tabs;
+		
 		Gui.drawRect(0, 0, this.width, this.height, 0x9f000000);
 		
 		fr = Minecraft.getMinecraft().fontRendererObj;
 		
 		float maxWidth;
-		for (Tab t : this.tabs) {
+		for (Tab t : tabs) {
 			
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(4, 4, 0);
@@ -259,7 +261,9 @@ public class ClickGUI extends GuiScreen {
 	
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		
-		for (Tab t : this.tabs) {
+		ArrayList<Tab> tabs = SpicyClient.savedTabs.tabs;
+		
+		for (Tab t : tabs) {
 			
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(4, 4, 0);
@@ -419,6 +423,8 @@ public class ClickGUI extends GuiScreen {
 	
 	protected void mouseReleased(int mouseX, int mouseY, int mouseButton) {
 		
+		ArrayList<Tab> tabs = SpicyClient.savedTabs.tabs;
+		
 		for (Module m : SpicyClient.modules) {
 			for (Setting s : m.settings) {
 				if (s instanceof NumberSetting) {
@@ -432,8 +438,8 @@ public class ClickGUI extends GuiScreen {
 			if (selectedTab == null) {
 				
 			}else {
-				this.tabs.get(this.tabs.indexOf(selectedTab)).setX(changedX);
-				this.tabs.get(this.tabs.indexOf(selectedTab)).setY(changedY);
+				tabs.get(tabs.indexOf(selectedTab)).setX(changedX);
+				tabs.get(tabs.indexOf(selectedTab)).setY(changedY);
 				selectedTab = null;
 			}
 		}

@@ -68,6 +68,7 @@ import info.spicyclient.files.Account;
 import info.spicyclient.files.AltInfo;
 import info.spicyclient.files.Config;
 import info.spicyclient.files.FileManager;
+import info.spicyclient.files.Tabs;
 import info.spicyclient.modules.Module;
 import info.spicyclient.modules.Module.Category;
 import info.spicyclient.modules.player.Timer;
@@ -113,6 +114,7 @@ public class SpicyClient {
 	public static CommandManager commandManager = new CommandManager();
 	
 	public static Account account = new Account();
+	public static Tabs savedTabs = new Tabs();
 	
 	public static String originalUsername = "Not Set";
 	public static Boolean originalAccountOnline;
@@ -321,11 +323,29 @@ public class SpicyClient {
 			temp.setY(10 + catOffset);
 			temp.setOffsetX(0);
 			temp.setOffsetY(0);
-			info.spicyclient.ClickGUI.ClickGUI.tabs.add(temp);
-			NewClickGui.tabs.add(temp);
+			savedTabs.tabs.add(temp);
 			catOffset += Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 20;
 			System.out.println("The " + c.name + " category has been set up");
 
+		}
+		
+		if (FileManager.canLoadTabs()) {
+			try {
+				savedTabs = (Tabs) FileManager.loadTabs(savedTabs);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}else {
+			try {
+				FileManager.saveTabs(savedTabs);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		for (Tab t : savedTabs.tabs) {
+			//info.spicyclient.ClickGUI.ClickGUI.tabs.add(t);
+			//NewClickGui.tabs.add(t);
 		}
 		
 		FontUtil.superherofx1.toString();
@@ -346,6 +366,13 @@ public class SpicyClient {
 			e1.printStackTrace();
 		}
 		
+		try {
+			FileManager.saveTabs(savedTabs);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public static void keypress(int key) {
@@ -359,6 +386,8 @@ public class SpicyClient {
 		}
 		
 	}
+	
+	public static transient info.spicyclient.util.Timer tabsSaveTimer = new info.spicyclient.util.Timer();
 	
 	public static void onEvent(Event e) {
 		
@@ -419,6 +448,18 @@ public class SpicyClient {
 		}
 		
 		if (e instanceof EventUpdate && e.isPre()) {
+			
+			if (tabsSaveTimer.hasTimeElapsed(10000, true)) {
+				new Thread("Saving tabs") {
+					public void run() {
+						try {
+							FileManager.saveTabs(savedTabs);
+						} catch (IOException e) {
+							//e.printStackTrace();
+						}
+					}
+				}.start();
+			}
 			
 			if (!Minecraft.getMinecraft().gameSettings.ofShowCapes) {
 				Minecraft.getMinecraft().gameSettings.ofShowCapes = true;
