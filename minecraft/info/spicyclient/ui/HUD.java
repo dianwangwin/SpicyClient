@@ -92,7 +92,8 @@ public class HUD {
 	}
 	
 	public static CopyOnWriteArrayList<Data5d> bpsLines = new CopyOnWriteArrayList<Data5d>();
-	public static Timer bpsLinesTimer = new Timer();
+	public static Timer bpsLinesTimer = new Timer(),
+			animationTimer = new Timer();
 	
 	public void drawNewSpicyHud() {
 		
@@ -132,6 +133,8 @@ public class HUD {
 			int maxBrightness = 200;
 			if (rainbowEnabled) {
 				RenderUtils.setColorForIcon(Color.getHSBColor(hue, 0.5f, 1));
+			}else {
+				GlStateManager.color(((float)SpicyClient.config.hud.colorSettingRed.getValue() / 255), ((float)SpicyClient.config.hud.colorSettingGreen.getValue() / 255), ((float)SpicyClient.config.hud.colorSettingBlue.getValue() / 255));
 			}
 			mc.getTextureManager().bindTexture(new ResourceLocation("spicy/SpicyClientWhite.png"));
 			int imageWidth = 500, imageHeight = 122;
@@ -224,6 +227,8 @@ public class HUD {
 						RenderUtils.resetColor();
 						if (rainbowEnabled) {
 							RenderUtils.setColorForIcon(Color.getHSBColor(hue, 0.5f, 1));
+						}else {
+							GlStateManager.color(((float)SpicyClient.config.hud.colorSettingRed.getValue() / 255), ((float)SpicyClient.config.hud.colorSettingGreen.getValue() / 255), ((float)SpicyClient.config.hud.colorSettingBlue.getValue() / 255));
 						}
 						GL11.glBegin(GL11.GL_LINES);
 						GL11.glVertex2f(((float)line.x1), ((float)line.y1));
@@ -258,27 +263,37 @@ public class HUD {
 			// This is here so the modules don't move when you toggle them
 			CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<Module>(SpicyClient.modules);
 			
-			ArrayList<Module> enabledModules = new ArrayList<Module>();
-			for (Module e : modules) {
-				if (e.isEnabled()) {
-					enabledModules.add(e);
-				}
-			}
-			enabledModules.sort(Comparator.comparingDouble(m -> arrayFr.getStringWidth(((Module) m).name + (((Module)m).additionalInformation != "" ? ((Module)m).additionalInformation + separator : ""))).reversed());
+			modules.sort(Comparator.comparingDouble(m -> arrayFr.getStringWidth(((Module) m).name + (((Module)m).additionalInformation != "" ? ((Module)m).additionalInformation + separator : ""))).reversed());
+			
+			boolean shouldmove = animationTimer.hasTimeElapsed(1000 / 150, true);
 			
 			RenderUtils.resetColor();
 			int count = 0;
-			for (Module m : enabledModules) {
+			for (Module m : modules) {
 				
-				count++;
-				float offset = ((arrayFr.FONT_HEIGHT + 1.5f) * count) - 6;
-				String name = m.name + (m.additionalInformation != "" ? separator + m.additionalInformation : "");
-				double length = arrayFr.getStringWidth(name);
-				name = m.name + (m.additionalInformation != "" ? separator : "");
-				arrayFr.drawString(name, sr.getScaledWidth_double() - length - 4, offset, primaryColor);
-				RenderUtils.resetColor();
-				arrayFr.drawString(m.additionalInformation, sr.getScaledWidth_double() - arrayFr.getStringWidth(m.additionalInformation) - 4, offset, secondaryColor);
-				RenderUtils.resetColor();
+				if (m.animation > 0) {
+					count++;
+					float offset = ((arrayFr.FONT_HEIGHT + 1.5f) * count) - 6;
+					String name = m.name + (m.additionalInformation != "" ? separator + m.additionalInformation : "");
+					double length = arrayFr.getStringWidth(name);
+					name = m.name + (m.additionalInformation != "" ? separator : "");
+					arrayFr.drawString(name, sr.getScaledWidth_double() - (((length) / 100) * m.animation) - 4, offset, primaryColor);
+					RenderUtils.resetColor();
+					arrayFr.drawString(m.additionalInformation, sr.getScaledWidth_double() - (((arrayFr.getStringWidth(m.additionalInformation)) / 100) * m.animation) - 4, offset, secondaryColor);
+					RenderUtils.resetColor();
+				}
+				
+				if (shouldmove) {
+					if (m.isEnabled()) {
+						if (m.animation < 100) {
+							m.animation += 5;
+						}
+					}else {
+						if (m.animation > 0) {
+							m.animation -= 5;
+						}
+					}
+				}
 				
 			}
 			GlStateManager.popMatrix();

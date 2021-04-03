@@ -19,7 +19,7 @@ public class Eagle extends Module {
 	
 	@Override
 	public void onDisable() {
-		
+		mc.gameSettings.keyBindSneak.pressed = false;
 	}
 	
 	@Override
@@ -32,7 +32,7 @@ public class Eagle extends Module {
 				mc.gameSettings.keyBindSneak.pressed = true;
 				
 			}else {
-				//mc.gameSettings.keyBindSneak.pressed = mc.gameSettings.keyBindSneak.isKeyDown();
+				mc.gameSettings.keyBindSneak.pressed = false;
 			}
 			
 		}

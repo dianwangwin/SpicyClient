@@ -228,7 +228,7 @@ public class Bhop extends Module {
 					if (MovementUtils.isOnGround(0.00001)) {
 						boosted = true;
 						speed = hypixelSpeed.getValue() * 23.5;
-						mc.thePlayer.motionY = 0.3;
+						mc.thePlayer.motionY = 0.42;
 						
 						for (double i = 0; i < 4; i++) {
 							
@@ -242,9 +242,13 @@ public class Bhop extends Module {
 						
 					}
 					
-					MovementUtils.strafe(((float)speed));
+					if (MovementUtils.isOnGround(0.0001)) {
+						MovementUtils.setMotion(0.1);
+					}else {
+						MovementUtils.strafe(((float)speed));
+						speed -= speed/19.5;
+					}
 					
-					speed -= speed/19.5;
 					
 				}
 				else if (mode.is("Test") && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {

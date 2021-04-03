@@ -340,6 +340,10 @@ public class BlockFly extends Module {
 								underBelow = WorldUtils.getForwardBlock(k).add(0, -2, 0);
 							}
 							
+							if (keepY.isEnabled()) {
+								underBelow.y = ((int)keepPosY - 1);
+							}
+							
 							if (mc.theWorld.getBlockState(underBelow).getBlock() != Blocks.air) {
 								
 								ItemStack block = setStackToPlace();

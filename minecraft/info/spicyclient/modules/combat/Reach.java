@@ -11,7 +11,7 @@ import info.spicyclient.util.Timer;
 
 public class Reach extends Module {
 	
-	public NumberSetting reach = new NumberSetting("Reach", 4, 4, 6, 0.1);
+	public NumberSetting reach = new NumberSetting("Reach", 4, 3, 6, 0.1);
 	
 	public Reach() {
 		super("Reach", Keyboard.KEY_NONE, Category.COMBAT);
