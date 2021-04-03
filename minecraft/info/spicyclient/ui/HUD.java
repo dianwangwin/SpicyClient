@@ -265,7 +265,7 @@ public class HUD {
 			
 			modules.sort(Comparator.comparingDouble(m -> arrayFr.getStringWidth(((Module) m).name + (((Module)m).additionalInformation != "" ? ((Module)m).additionalInformation + separator : ""))).reversed());
 			
-			boolean shouldmove = animationTimer.hasTimeElapsed(1000 / 150, true);
+			boolean shouldmove = animationTimer.hasTimeElapsed(1000 / 75, true);
 			
 			RenderUtils.resetColor();
 			int count = 0;
@@ -286,11 +286,11 @@ public class HUD {
 				if (shouldmove) {
 					if (m.isEnabled()) {
 						if (m.animation < 100) {
-							m.animation += 5;
+							m.animation += 10;
 						}
 					}else {
 						if (m.animation > 0) {
-							m.animation -= 5;
+							m.animation -= 10;
 						}
 					}
 				}
