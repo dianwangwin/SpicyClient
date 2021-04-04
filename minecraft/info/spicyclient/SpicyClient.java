@@ -343,11 +343,6 @@ public class SpicyClient {
 			}
 		}
 		
-		for (Tab t : savedTabs.tabs) {
-			//info.spicyclient.ClickGUI.ClickGUI.tabs.add(t);
-			//NewClickGui.tabs.add(t);
-		}
-		
 		FontUtil.superherofx1.toString();
 		FontUtil.superherofx2.toString();
 		
@@ -433,7 +428,7 @@ public class SpicyClient {
 					ScoreObjective scoreobjective = Minecraft.getMinecraft().theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
 					String scoreTitle = scoreobjective.getDisplayName();
 					//Command.sendPrivateChatMessage(scoreTitle);
-					if (scoreTitle.toLowerCase().contains("bed wars")) {
+					if (scoreTitle.toLowerCase().contains("bewd wars")) {
 						if (packet.getMessage().getFormattedText().toLowerCase().contains("respawned")) {
 							Hypixel.disabledUntil = System.currentTimeMillis() + 2500;
 							NotificationManager.getNotificationManager().createNotification("Bedwars", "You have 2.5 seconds to fly", true, 3000, info.spicyclient.notifications.Type.INFO, Color.PINK);
@@ -448,8 +443,7 @@ public class SpicyClient {
 		}
 		
 		if (e instanceof EventUpdate && e.isPre()) {
-			
-			if (tabsSaveTimer.hasTimeElapsed(10000, true)) {
+			if (tabsSaveTimer.hasTimeElapsed(3000, true)) {
 				new Thread("Saving tabs") {
 					public void run() {
 						try {

@@ -42,7 +42,7 @@ public class Command {
 			prefix = SpicyClient.config.clientName;
 		}
 		
-		Minecraft.getMinecraft().thePlayer.addChatComponentMessage(new ChatComponentText("§6[ §f" + prefix + " §6] §f" + text.toString()));
+		Minecraft.getMinecraft().thePlayer.addChatComponentMessage(new ChatComponentText("§s[ §s" + prefix + " §s] §f" + text.toString()));
 	}
 	
 	// This shows a chat message to the player

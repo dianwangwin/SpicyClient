@@ -186,22 +186,6 @@ public class Speed extends info.spicyclient.modules.Module {
 				if (MovementUtils.isMoving()) {
 					++this.stage;
 				}
-				if (!MovementUtils.isOnGround(1)) {
-					boolean shouldVclip = true;
-					for (double i = 0; i < 4; i += 0.1) {
-						
-						BlockPos pos = WorldUtils.getForwardBlock(i);
-						
-						if (mc.theWorld.getBlockState(pos).getBlock() != Blocks.air) {
-							shouldVclip = false;
-						}
-						
-					}
-					if (shouldVclip) {
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - 1, mc.thePlayer.posZ);
-						mc.thePlayer.motionY = 0;
-					}
-				}
 			}
 		}
 		

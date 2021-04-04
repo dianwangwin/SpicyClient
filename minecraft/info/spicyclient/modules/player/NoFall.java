@@ -5,6 +5,7 @@ import java.util.Random;
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.bypass.Hypixel;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;

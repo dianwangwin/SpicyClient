@@ -44,8 +44,35 @@ public class Disabler extends Module {
 	
 	public static transient boolean watchdog = false;
 	public static transient CopyOnWriteArrayList<Packet> packets = new CopyOnWriteArrayList<Packet>();
-	public static transient CopyOnWriteArrayList<Packet> packetsQueue = new CopyOnWriteArrayList<Packet>();
 	public static transient Timer ping = new Timer();
+	public static Thread pingThread = new Thread() {
+		public void run() {
+			int pingInt = 250 + new Random().nextInt(250);
+			while (true) {
+				if (ping.hasTimeElapsed(pingInt, true)) {
+					for (Packet p : packets) {
+						
+						mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
+						if (p instanceof C0FPacketConfirmTransaction) {
+							C0FPacketConfirmTransaction f = (C0FPacketConfirmTransaction)p;
+							//Command.sendPrivateChatMessage(f.getUid());
+							//Command.sendPrivateChatMessage(f.isAccepted());
+						}
+						
+					}
+					if (packets.size() != 0) {
+						Command.sendPrivateChatMessage(pingInt);
+						pingInt = 250 + new Random().nextInt(250);
+					}
+					packets.clear();
+				}
+			}
+		}
+	};
+	
+	static {
+		pingThread.start();
+	}
 	
 	@Override
 	public void onEnable() {
@@ -72,26 +99,29 @@ public class Disabler extends Module {
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
-			this.additionalInformation = "Hypixel";
+			this.additionalInformation = "Hypixel furry edition";
+			
+			//mc.timer.ticksPerSecond = 16;
 			
 			if (SpicyClient.config.pingSpoof.isEnabled()) {
 				SpicyClient.config.pingSpoof.toggle();
 				NotificationManager.getNotificationManager().createNotification("Disabler", "Pingspoof was disabled to prevent flags", true, 2000, Type.INFO, Color.RED);
 			}
 			
+			/*
 			if (mc.thePlayer.ticksExisted < 5) {
 				for (Packet p : packets) {
 					
-					mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
+					//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
 					if (p instanceof C0FPacketConfirmTransaction) {
 						C0FPacketConfirmTransaction f = (C0FPacketConfirmTransaction)p;
 					}
 					
 				}
-				packets.clear();
+				//packets.clear();
 			}
 			
-			if (ping.hasTimeElapsed(1000, true)) {
+			if (ping.hasTimeElapsed(500, true)) {
 				for (Packet p : packets) {
 					
 					mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
@@ -102,11 +132,16 @@ public class Disabler extends Module {
 					}
 					
 				}
+				if (packets.size() != 0) {
+					Command.sendPrivateChatMessage("I like secks");
+				}
 				packets.clear();
 			}
+			*/
 			
 			if (mc.thePlayer.ticksExisted % 20 == 0) {
-				mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(mc.thePlayer.capabilities));
+				//packets.add(new C13PacketPlayerAbilities(mc.thePlayer.capabilities));
+				//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(mc.thePlayer.capabilities));
 				//Command.sendPrivateChatMessage("Disabler: Sent a thing");
 			}
 			

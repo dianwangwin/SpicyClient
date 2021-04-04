@@ -66,7 +66,6 @@ public class Hypixel {
 				new C0EPacketClickWindow(windowId, slotId, 0, 1, itemstack, short1));
 	}
 	
-	// This does not work anymore
 	public static void damageHypixel(double damage) {
 		
 		Minecraft mc = Minecraft.getMinecraft();
@@ -76,7 +75,7 @@ public class Hypixel {
 
 		double offset = 0.0625;
 		//offset = 0.015625;
-		if (mc.thePlayer != null && mc.getNetHandler() != null && mc.thePlayer.onGround) {
+		if (mc.thePlayer != null && mc.getNetHandler() != null) {
 			for (short i = 0; i <= ((3 + damage) / offset); i++) {
 				mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
 						mc.thePlayer.posY + ((offset / 2) * 1), mc.thePlayer.posZ, false));
@@ -90,7 +89,6 @@ public class Hypixel {
 		}
 		
 	}
-	// This does not work anymore
 	
 	private static transient boolean disabled = false, watchdog = false, shouldCancelPackets = false,
 			threwEnderPearl = false, fireball = false, paper = false, shouldToggleOnGround = false, damage = false;
@@ -128,7 +126,7 @@ public class Hypixel {
 			fireball = true;
 			paper = true;
 			threwEnderPearl = true;
-			MovementUtils.strafe(3f);
+			MovementUtils.strafe(4);
 		}else {
 			disabledUntil = System.currentTimeMillis();
 		}
@@ -256,7 +254,7 @@ public class Hypixel {
 				//mc.getNetHandler().addToSendQueue(new C03PacketPlayer(true));
 				mc.thePlayer.onGround = false;
 				
-				MovementUtils.setMotion(MovementUtils.getSpeed() + (damage ? 0 : 0.75));
+				MovementUtils.setMotion(MovementUtils.getSpeed() + 0.75);
 				//MovementUtils.strafe();
 				
 				if (shouldToggleOnGround && MovementUtils.isOnGround(0.0001)) {
@@ -351,7 +349,7 @@ public class Hypixel {
 			double tpX = originalX, tpY = originalY, tpZ = originalZ;
 			
 			for (Packet p : packets) {
-				mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
+				//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
 				if (p instanceof C03PacketPlayer) {
 					tpX = ((C03PacketPlayer)p).getPositionX();
 					tpY = ((C03PacketPlayer)p).getPositionY();

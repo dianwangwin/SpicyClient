@@ -7,7 +7,7 @@ import org.apache.commons.io.FileUtils;
 
 import info.spicyclient.SpicyClient;
 
-public class Thread extends java.lang.Thread {
+public class UpdaterThread extends java.lang.Thread {
 	
 	@Override
 	public void run() {
@@ -41,7 +41,6 @@ public class Thread extends java.lang.Thread {
 		System.out.println("Client updated");
 		
 		SpicyClient.shutdown();
-		
 		System.exit(0);
 		
 	}

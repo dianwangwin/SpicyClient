@@ -622,7 +622,7 @@ public class BlockFly extends Module {
 		
 		paramBlockPos = paramBlockPos.offset(paramEnumFacing.getOpposite());
 		
-		lastPos = new Vec3(paramBlockPos.getX() + new Random().nextDouble(), paramBlockPos.getY(), paramBlockPos.getZ() + new Random().nextDouble());
+		lastPos = new Vec3(paramBlockPos.getX(), paramBlockPos.getY(), paramBlockPos.getZ());
 		
 		return RotationUtils.getRotationFromPosition(lastPos.xCoord,
 				lastPos.zCoord, lastPos.yCoord);

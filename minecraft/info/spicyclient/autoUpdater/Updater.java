@@ -65,7 +65,7 @@ public class Updater {
 	public void update() {
 		
 		System.out.println("Updating the client...");
-		new Thread().start();
+		new UpdaterThread().start();
 		
 	}
 	

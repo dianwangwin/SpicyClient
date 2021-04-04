@@ -227,7 +227,6 @@ public class Bhop extends Module {
 					
 					if (MovementUtils.isOnGround(0.00000001)) {
 						boosted = true;
-						speed = hypixelSpeed.getValue() * 23.5;
 						mc.thePlayer.jump();
 						boosted = false;
 					}
@@ -235,24 +234,12 @@ public class Bhop extends Module {
 					if (MovementUtils.isOnGround(0.0001)) {
 						//MovementUtils.setMotion(0);
 					}else {
-						MovementUtils.strafe(((float)speed));
-						speed -= speed/19.5;
-						if (!MovementUtils.isOnGround(1)) {
-							boolean shouldVclip = true;
-							for (double i = 0; i < 4; i += 0.1) {
-								
-								BlockPos pos = WorldUtils.getForwardBlock(i);
-								
-								if (mc.theWorld.getBlockState(pos).getBlock() != Blocks.air) {
-									shouldVclip = false;
-								}
-								
-							}
-							if (shouldVclip && !boosted) {
-								mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - 1, mc.thePlayer.posZ);
-								boosted = true;
-								mc.thePlayer.motionY = 0;
-							}
+						if (!boosted) {
+							speed = hypixelSpeed.getValue() * 23.5;
+							boosted = true;
+						}else {
+							MovementUtils.strafe(((float)speed));
+							//speed -= speed/220;
 						}
 					}
 					
