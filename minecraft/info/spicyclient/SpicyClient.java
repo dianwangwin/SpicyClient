@@ -428,7 +428,7 @@ public class SpicyClient {
 					ScoreObjective scoreobjective = Minecraft.getMinecraft().theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
 					String scoreTitle = scoreobjective.getDisplayName();
 					//Command.sendPrivateChatMessage(scoreTitle);
-					if (scoreTitle.toLowerCase().contains("bewd wars")) {
+					if (scoreTitle.toLowerCase().contains("bed wars")) {
 						if (packet.getMessage().getFormattedText().toLowerCase().contains("respawned")) {
 							Hypixel.disabledUntil = System.currentTimeMillis() + 2500;
 							NotificationManager.getNotificationManager().createNotification("Bedwars", "You have 2.5 seconds to fly", true, 3000, info.spicyclient.notifications.Type.INFO, Color.PINK);
