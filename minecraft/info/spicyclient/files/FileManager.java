@@ -9,9 +9,12 @@ import java.io.InputStreamReader;
 import com.google.gson.Gson;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.hudModules.HudModule;
+import info.spicyclient.hudModules.HudModule.HudModuleConfig;
 
 /*
  * THIS IS NOT MY CODE, I FOUND IT ON A TUTORIAL VIDEO ON YOUTUBE
+ * This class is extremely messy, if someone wants to clean it up then feel free too because I do not have the time to do so
  */
 
 public class FileManager {
@@ -320,6 +323,56 @@ public class FileManager {
 		
 		File file = new File(getROOT_DIR(), "");
 		return file.exists() && new File(file, "Tabs.Info").exists();
+		
+	}
+	
+	public static boolean saveHudMods(HudModuleConfig obj) throws IOException {
+		
+		File file = new File(getROOT_DIR(), "");
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		try {
+			writeJsonToFile(new File(file, "HudMods.info"), obj);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return true;
+		
+	}
+	
+	// Gson fucking sucks
+	public static Object loadHudMods(HudModuleConfig obj) throws IOException {
+		
+		File file = new File(getROOT_DIR(), "");
+		if (!file.exists()) {
+			return null;
+		}
+		
+		try {
+			
+			Gson g = new Gson();
+			HudModuleConfig p = g.fromJson((String) readFromJson(new File(file, "HudMods.Info"), obj), HudModuleConfig.class);
+			
+			return p;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	public static boolean canLoadHudMods() {
+		
+		File file = new File(getROOT_DIR(), "");
+		return file.exists() && new File(file, "HudMods.Info").exists();
 		
 	}
 	

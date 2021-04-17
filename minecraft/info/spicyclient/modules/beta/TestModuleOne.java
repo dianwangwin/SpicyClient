@@ -1,6 +1,8 @@
 package info.spicyclient.modules.beta;
 
 import java.net.MalformedURLException;
+import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Base64;
@@ -9,6 +11,7 @@ import java.util.Random;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.authlib.exceptions.AuthenticationException;
 import com.sun.javafx.geom.Vec3d;
 
 import info.spicyclient.SpicyClient;
@@ -46,6 +49,8 @@ import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.multiplayer.GuiConnecting;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -124,21 +129,25 @@ public class TestModuleOne extends Module {
 	@Override
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventReceivePacket && e.isPre() && false) {
+		if (e instanceof EventSendPacket && e.isPre()) {
+			EventSendPacket send = (EventSendPacket)e;
+			if (send.packet instanceof C0FPacketConfirmTransaction) {
+				e.setCanceled(true);
+			}
+		}
+		
+		if (e instanceof EventUpdate && e.isPre()) {
 			
-			if (((EventReceivePacket)e).packet instanceof S21PacketChunkData) {
-				
-				S21PacketChunkData packet = (S21PacketChunkData)((EventReceivePacket)e).packet;
-				
-				System.err.println(" ");
-				System.err.println(packet.func_149274_i());
-				System.err.println(packet.getChunkX());
-				System.err.println(packet.getChunkZ());
-				System.err.println(packet.getExtractedSize());
-				System.err.println(" ");
-				
-			}else {
-				System.err.println(((EventReceivePacket)e).packet);
+			if (SpicyClient.config.fly.isEnabled()) {
+				//PlayerCapabilities caps = mc.thePlayer.capabilities;
+				//caps.isFlying = true;
+				//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(caps));
+				//mc.thePlayer.posY -= 0.1;
+			}
+			
+			if (MovementUtils.isOnGround(0.0001) && timer.hasTimeElapsed(2500, true)) {
+				mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, Double.MIN_VALUE, mc.thePlayer.posZ, true));
+				mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
 			}
 			
 		}

@@ -30,7 +30,8 @@ public class Hud extends Module{
 	public static Minecraft mc = Minecraft.getMinecraft();
 	public static info.spicyclient.ClickGUI.ClickGUI clickGui = new info.spicyclient.ClickGUI.ClickGUI(null);
 	
-	public BooleanSetting sound = new BooleanSetting("Sound", true);
+	public BooleanSetting sound = new BooleanSetting("Sound", true),
+			hour24Time = new BooleanSetting("24 Hour Time", false);
 	public NumberSetting volume = new NumberSetting("Volume", 0.5, 0.1, 1.0, 0.1);
 	public ModeSetting mode = new ModeSetting("Separator Mode", " | ", " | ", " OwO ", " UwU ", " |OwO| ", " |UwU| ", "Switch between OwO and UwU", "Switch between :OwO: and :UwU:", " - ");
 	public NumberSetting colorSettingRed = new NumberSetting("Red", 255, 0, 255, 1);
@@ -46,7 +47,7 @@ public class Hud extends Module{
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
-		this.addSettings(sound, volume, mode, colorSettingRed, colorSettingGreen, colorSettingBlue);
+		this.addSettings(sound, hour24Time, volume, mode, colorSettingRed, colorSettingGreen, colorSettingBlue);
 	}
 	
 	@Override

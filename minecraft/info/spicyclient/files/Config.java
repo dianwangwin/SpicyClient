@@ -5,6 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
+import info.spicyclient.hudModules.HudModule.HudModuleConfig;
 import info.spicyclient.modules.Module;
 import info.spicyclient.modules.Module.Category;
 import info.spicyclient.modules.beta.TestModuleOne;
@@ -122,8 +123,12 @@ public class Config {
 	public AutoHead autoHead = new AutoHead();
 	public Parkinsons parkinsons = new Parkinsons();
 	public SpeedDebug speedDebug = new SpeedDebug();
+	public RotateItem rotateItem = new RotateItem();
+	public ResetHudModules resetHudModules = new ResetHudModules();
 	
 	public String clientName = "Spicy ", clientVersion = "B3 Beta";
+	
+	public static HudModuleConfig hudModConfig = new HudModuleConfig();
 	
 	public static CopyOnWriteArrayList<Module> getModulesForConfig(Config con){
 		
@@ -194,7 +199,7 @@ public class Config {
 		modules.add(con.tracers);
 		modules.add(con.blockCoding);
 		modules.add(con.testModuleOne);
-		modules.add(con.hypixel5SecDisabler);
+		//modules.add(con.hypixel5SecDisabler);
 		modules.add(con.hud);
 		modules.add(con.snow);
 		modules.add(con.targetStrafe);
@@ -216,13 +221,15 @@ public class Config {
 		modules.add(con.jelloForSpicy);
 		modules.add(con.speed);
 		modules.add(con.ircChat);
-		modules.add(con.hypixelClickTeleport);
+		//modules.add(con.hypixelClickTeleport);
 		modules.add(con.skin);
 		modules.add(con.cape);
 		modules.add(con.teams);
 		modules.add(con.autoHead);
 		modules.add(con.parkinsons);
 		modules.add(con.speedDebug);
+		modules.add(con.rotateItem);
+		modules.add(con.resetHudModules);
 		
 		return modules;
 		
@@ -256,6 +263,8 @@ public class Config {
 			
 		}
 		else if (this.version.equalsIgnoreCase("B2")) {
+			
+			this.hudModConfig = new HudModuleConfig();
 			
 			this.noClip = new NoClip();
 			this.autoLog = new AutoLog();
@@ -315,6 +324,8 @@ public class Config {
 			this.autoHead = new AutoHead();
 			this.parkinsons = new Parkinsons();
 			this.speedDebug = new SpeedDebug();
+			this.rotateItem = new RotateItem();
+			this.resetHudModules = new ResetHudModules();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
@@ -416,7 +427,7 @@ public class Config {
 		
 		for (Module m : SpicyClient.modules) {
 			
-			if (m instanceof BlueScreenOfDeathWithChrome) {
+			if (m instanceof BlueScreenOfDeathWithChrome || m instanceof ResetHudModules) {
 				if (m.isEnabled()) {
 					m.toggle();
 				}

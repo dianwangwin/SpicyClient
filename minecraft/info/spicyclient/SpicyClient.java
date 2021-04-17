@@ -69,6 +69,8 @@ import info.spicyclient.files.AltInfo;
 import info.spicyclient.files.Config;
 import info.spicyclient.files.FileManager;
 import info.spicyclient.files.Tabs;
+import info.spicyclient.hudModules.HudModule;
+import info.spicyclient.hudModules.HudModule.HudModuleConfig;
 import info.spicyclient.modules.Module;
 import info.spicyclient.modules.Module.Category;
 import info.spicyclient.modules.player.Timer;
@@ -121,9 +123,9 @@ public class SpicyClient {
 	
 	public static boolean discordFailedToStart = false;
 	
-	public static int currentVersionNum = 22;
+	public static int currentVersionNum = 24, currentBuildNum = 3;
 	
-	public static boolean currentlyLoadingConfig = false;
+	public static boolean currentlyLoadingConfig = false, hasInitViaversion = false;
 	
 	public static HashMap<String, ResourceLocation> cachedImages = new HashMap<>();
 	
@@ -140,23 +142,9 @@ public class SpicyClient {
 				originalAccountOnline = true;
 				originalUsername = Minecraft.getMinecraft().getSession().getUsername();
 			}
-			
-		} catch (NullPointerException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		/*
-		else {
-			
-			System.out.println("Not pinging server, this is an offline account");
-			System.out.println("Please keep in mind that all this would send is your username and nothing else");
-			originalAccountOnline = false;
-			originalUsername = String.valueOf(new Random().nextInt(999999999));
-			
-		}
-		*/
 		
 		// Does music player stuff
 		Media tempMedia = new Media("http://google.com/SpicyClient.mp3");
@@ -342,6 +330,37 @@ public class SpicyClient {
 				e.printStackTrace();
 			}
 		}
+		
+		if (FileManager.canLoadHudMods()) {
+			try {
+		    	HudModule.mods.clear();
+				config.hudModConfig = (HudModuleConfig) FileManager.loadHudMods(config.hudModConfig);
+				config.hudModConfig.resetFuckingModsListBecauseGoogleFuckingSucksAndTheirLibIsShitAndCannotLoadAFUCKINGClassCorrectlyWithoutFuckingItUpBeondBelief();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}else {
+			try {
+				FileManager.saveHudMods(config.hudModConfig);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		new Thread("Hud Mods Save Thread") {
+			public void run() {
+				
+				while (true) {
+					try {
+						FileManager.saveHudMods(config.hudModConfig);
+						Thread.sleep(5000);
+					} catch (Exception e) {
+						
+					}
+				}
+				
+			}
+		}.start();
 		
 		FontUtil.superherofx1.toString();
 		FontUtil.superherofx2.toString();

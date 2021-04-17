@@ -13,7 +13,9 @@ import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.notifications.Type;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C0CPacketBoatInput;
+import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 
 public class EntityDesync extends Module {
 
@@ -56,10 +58,20 @@ public class EntityDesync extends Module {
 			
 		}
 		
+		 mc.thePlayer.capabilities.isFlying = false;
+		
 	}
 	
 	@Override
 	public void onEvent(Event e) {
+		
+		if (e instanceof EventReceivePacket && e.isPre()) {
+			if (((EventReceivePacket)e).packet instanceof S08PacketPlayerPosLook) {
+				S08PacketPlayerPosLook packet = (S08PacketPlayerPosLook)((EventReceivePacket)e).packet;
+				mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(packet.getX(), packet.getY(), packet.getZ(), true));
+				e.setCanceled(true);
+			}
+		}
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
@@ -73,6 +85,7 @@ public class EntityDesync extends Module {
 	        
 	        riding.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
 	        
+	        
 	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketBoatInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
 	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketBoatInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
 	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketBoatInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
@@ -82,6 +95,9 @@ public class EntityDesync extends Module {
 	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketBoatInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
 	        mc.getNetHandler().getNetworkManager().sendPacket(new C0CPacketBoatInput(mc.thePlayer.moveStrafing, mc.thePlayer.moveForward, false, false));
 			
+	        //mc.thePlayer.capabilities.isFlying = true;
+	        //mc.thePlayer.capabilities.setFlySpeed(1);
+	        
 		}
 		
 		if (e instanceof EventSendPacket && e.isPre()) {
@@ -90,7 +106,7 @@ public class EntityDesync extends Module {
 			
 			if (packet instanceof C0CPacketBoatInput && e.isPre()) {
 				
-				((C0CPacketBoatInput)packet).setJumping(true);
+				//((C0CPacketBoatInput)packet).setJumping(true);
 				
 			}
 			

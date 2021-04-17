@@ -83,8 +83,6 @@ public class Killaura extends Module {
 	private int[] randoms = {0,1,0};
 	public static float sYaw, sPitch, upAndDownPitch = 0;
 	
-	public static transient double healthBarTarget = 0, healthBar = 0;
-	
 	// These settings are not used anymore but are still here so you can update old configs
 	private BooleanSetting autoblock = new BooleanSetting("Autoblock", false);
 	public ModeSetting targetModeSetting = new ModeSetting("Targets", "Players", "Players", "Animals", "Mobs", "Everything");
@@ -111,7 +109,7 @@ public class Killaura extends Module {
 		lastHypixelYaw = mc.thePlayer.rotationYaw;
 		lastHypixelPitch = mc.thePlayer.rotationPitch;
 		
-		healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
+		SpicyClient.config.hudModConfig.targetHud1.healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
 		dynamicAPS = (randomNumber((int) aps.getValue(), ((int)aps.getValue() - 2)));
 		upAndDownPitch = 0;
 		
@@ -119,7 +117,7 @@ public class Killaura extends Module {
 	
 	public void onDisable() {
 		
-		healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
+		SpicyClient.config.hudModConfig.targetHud1.healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
 		RenderUtils.resetPlayerYaw();
 		RenderUtils.resetPlayerPitch();
 		
@@ -162,65 +160,7 @@ public class Killaura extends Module {
 		// For the target hud
 		if (e instanceof EventRenderGUI && target != null) {
 			
-			if (target == null) {
-				healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
-				return;
-			}
-			
-			ScaledResolution sr = new ScaledResolution(mc);
-			FontRenderer fr = mc.fontRendererObj;
-			DecimalFormat dec = new DecimalFormat("#");
-			
-			healthBarTarget = sr.getScaledWidth() / 2 - 41 + (((140) / (target.getMaxHealth())) * (target.getHealth()));
-			
-			// Lower is faster, higher is slower
-			double HealthBarSpeed = 5;
-			
-			if (healthBar > healthBarTarget) {
-				healthBar = ((healthBar) - ((healthBar - healthBarTarget) / HealthBarSpeed));
-			}
-			else if (healthBar < healthBarTarget) {
-				//healthBar = healthBarTarget;
-				healthBar = ((healthBar) + ((healthBarTarget - healthBar) / HealthBarSpeed));
-			}
-			//Command.sendPrivateChatMessage(healthBarTarget + " : " + healthBar);
-			
-			int color = (target.getHealth() / target.getMaxHealth() > 0.66f) ? 0xff00ff00 : (target.getHealth() / target.getMaxHealth() > 0.33f) ? 0xffff9900 : 0xffff0000;
-			
-			color = 0xff00ff00;
-			
-			float[] hsb = Color.RGBtoHSB(((int)SpicyClient.config.hud.colorSettingRed.getValue()), ((int)SpicyClient.config.hud.colorSettingGreen.getValue()), ((int)SpicyClient.config.hud.colorSettingBlue.getValue()), null);
-			float hue = hsb[0];
-			float saturation = hsb[1];
-			color = Color.HSBtoRGB(hue, saturation, 1);;
-			
-			if (SpicyClient.config.rainbowgui.isEnabled()) {
-				float hue1 = System.currentTimeMillis() % (int)((100.5f - SpicyClient.config.rainbowgui.speed.getValue()) * 1000) / (float)((100.5f - SpicyClient.config.rainbowgui.speed.getValue()) * 1000);
-				color = Color.HSBtoRGB(hue1, 0.65f, 1);
-			}
-			
-			Gui.drawRect(sr.getScaledWidth() / 2 - 110, sr.getScaledHeight() / 2 + 100, sr.getScaledWidth() / 2 + 110, sr.getScaledHeight() / 2 + 170, 0xff36393f);
-			Gui.drawRect(sr.getScaledWidth() / 2 - 41, sr.getScaledHeight() / 2 + 100 + 54, sr.getScaledWidth() / 2 + 100, sr.getScaledHeight() / 2 + 96 + 45, 0xff202225);
-			Gui.drawRect(sr.getScaledWidth() / 2 - 41, sr.getScaledHeight() / 2 + 100 + 54, healthBar, sr.getScaledHeight() / 2 + 96 + 45, color);
-			//Gui.drawRect(sr.getScaledWidth() / 2 - 41, sr.getScaledHeight() / 2 + 100 + 54, healthBarTarget, sr.getScaledHeight() / 2 + 96 + 45, color);
-			
-			GlStateManager.color(1, 1, 1);
-			GuiInventory.drawEntityOnScreen(sr.getScaledWidth() / 2 - 75, sr.getScaledHeight() / 2 + 165, 25, 1f, 1f, target);
-			fr.drawString(target.getName(), sr.getScaledWidth() / 2 - 40, sr.getScaledHeight() / 2 + 110, -1);
-			fr.drawString("HP: ", sr.getScaledWidth() / 2 - 40, sr.getScaledHeight() / 2 + 125, -1);
-			fr.drawString("§c❤: §f" + dec.format(target.getHealth()), sr.getScaledWidth() / 2 - 40 + fr.getStringWidth("HP: "), sr.getScaledHeight() / 2 + 125, color);
-			//fr.drawString(dec.format(target.getMaxHealth()) + "", sr.getScaledWidth() / 2 - 40 + fr.getStringWidth("HP: ") + fr.getStringWidth(dec.format(target.getHealth()) + " / "), sr.getScaledHeight() / 2 + 125, color);
-			
-			/*
-			RenderHelper.enableGUIStandardItemLighting();
-			mc.getRenderItem().renderItemAndEffectIntoGUI(target.getHeldItem(), sr.getScaledWidth() / 2 - 40, sr.getScaledHeight() / 2 + 143);
-			mc.getRenderItem().renderItemAndEffectIntoGUI(target.getCurrentArmor(3), sr.getScaledWidth() / 2 - 10, sr.getScaledHeight() / 2 + 143);
-			mc.getRenderItem().renderItemAndEffectIntoGUI(target.getCurrentArmor(2), sr.getScaledWidth() / 2 + 20, sr.getScaledHeight() / 2 + 143);
-			mc.getRenderItem().renderItemAndEffectIntoGUI(target.getCurrentArmor(1), sr.getScaledWidth() / 2 + 50, sr.getScaledHeight() / 2 + 143);
-			mc.getRenderItem().renderItemAndEffectIntoGUI(target.getCurrentArmor(0), sr.getScaledWidth() / 2 + 80, sr.getScaledHeight() / 2 + 143);
-			*/
-			
-			//Gui.drawRect(sr.getScaledWidth() / 2, sr.getScaledHeight() / 2 + 100, sr.getScaledWidth() / 2 + 10, sr.getScaledHeight() / 2 + 150, 0x50000000);
+			SpicyClient.config.hudModConfig.targetHud1.draw(false);
 			
 		}
 		
@@ -266,7 +206,7 @@ public class Killaura extends Module {
 				
 				if (targets.isEmpty()) {
 					
-					healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
+					SpicyClient.config.hudModConfig.targetHud1.healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
 					stopBlocking();
 					RenderUtils.resetPlayerYaw();
 					RenderUtils.resetPlayerPitch();
@@ -556,15 +496,10 @@ public class Killaura extends Module {
                             mc.thePlayer.onEnchantmentCritical(target);
                         }
                         
-                        if (SpicyClient.config.criticals.isEnabled() && mc.thePlayer.onGround) {
-                        	
-                        	mc.thePlayer.onCriticalHit(target);
-                        	
-                        }
-                        
 						if (s.toggled) {
 							mc.thePlayer.setSprinting(true);
 						}
+						
 						if (newAutoblock.is("Hypixel1") && !blocking) {
 							
 							blockHypixel(target);
@@ -586,7 +521,7 @@ public class Killaura extends Module {
 					
 				}else {
 					
-					healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
+					SpicyClient.config.hudModConfig.targetHud1.healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
 					stopBlocking();
 					RenderUtils.resetPlayerYaw();
 					RenderUtils.resetPlayerPitch();

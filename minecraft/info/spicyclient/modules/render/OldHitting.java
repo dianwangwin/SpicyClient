@@ -1,5 +1,7 @@
 package info.spicyclient.modules.render;
 
+import java.util.Random;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -65,6 +67,7 @@ public class OldHitting extends Module {
 				if (this.animationSetting.getMode() == "1.7" || this.animationSetting.is("1.7")) {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
 					ir.transformFirstPersonItem(f, swingProgress);
+					ir.func_178103_d();
 				}
 				else if (this.animationSetting.getMode() == "Spaz" || this.animationSetting.is("Spaz")) {
 					if (swingProgress != 0.0f) {
@@ -73,22 +76,27 @@ public class OldHitting extends Module {
 					}else {
 						ir.transformFirstPersonItem(swingProgress / 20, 0);
 					}
+					ir.func_178103_d();
 				}
 				else if (this.animationSetting.getMode() == "Spaz 2" || this.animationSetting.is("Spaz 2")) {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
 					ir.transformFirstPersonItem(0, (swingProgress == 0) ? 0 : partialTicks);
+					ir.func_178103_d();
 				}
 				else if (this.animationSetting.getMode() == "Jitter" || this.animationSetting.is("Jitter")) {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
 					ir.transformFirstPersonItem(0, (swingProgress == 0) ? 0 : partialTicks / 100);
+					ir.func_178103_d();
 				}
 				else if (this.animationSetting.getMode() == "Multi Tap" || this.animationSetting.is("Multi Tap")) {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
 					ir.transformFirstPersonItem(0, swingProgress - 2.5f);
+					ir.func_178103_d();
 				}
 				else if (this.animationSetting.getMode() == "Tap" || this.animationSetting.is("Tap")) {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
 					ir.transformFirstPersonItem(0, swingProgress - 1);
+					ir.func_178103_d();
 				}
 				else if (this.animationSetting.getMode() == "Spin" || this.animationSetting.is("Spin")) {
 					
@@ -98,6 +106,7 @@ public class OldHitting extends Module {
 					GL11.glTranslatef(-1.0f, 0.4f, 0);
 					GlStateManager.rotate(swingProgress * 360, 1, 0, -1);
 					GL11.glTranslatef(1.0f, -0.4f, 0);
+					ir.func_178103_d();
 					
 				}
 				else if (this.animationSetting.getMode() == "Scale" || this.animationSetting.is("Scale")) {
@@ -106,6 +115,7 @@ public class OldHitting extends Module {
 					ir.transformFirstPersonItem(0, 0);
 					GlStateManager.scale(1.2, 1.2, 1.2);
 					GlStateManager.scale(1 / (swingProgress + 1.4), 1 / (swingProgress + 1.4) , 1 / (swingProgress + 1.4));
+					ir.func_178103_d();
 					
 				}
 				else if (animationSetting.getMode() == "Spicy" || this.animationSetting.is("Spicy")) {
@@ -120,18 +130,28 @@ public class OldHitting extends Module {
 					}
 					
 					ir.transformFirstPersonItem(f, swingProgress);
+					ir.func_178103_d();
 					
 				}
 				else if (animationSetting.getMode() == "Astolfo" || this.animationSetting.is("Astolfo")) {
 					
 					astolfoCircle(mc.thePlayer.getSwingProgress(partialTicks));
+					ir.func_178103_d();
 					
 				}
 				else if (animationSetting.is("Test")) {
-					ir.transformFirstPersonItem(swingProgress / 20, partialTicks);
+					
+					GlStateManager.translate(0.56F, -0.32F, -0.71999997F);
+					//GlStateManager.translate(0.0F, f * -0.6F, 0.0F);
+					//GlStateManager.rotate(360 * swingProgress, 0.0F, -1.0F, 1.0F);
+					GlStateManager.scale(0.4F, 0.4F, 0.4F);
+					GlStateManager.rotate(90, 1, 1, -4);
+					GlStateManager.rotate(90, -1, 0, 0);
+					GlStateManager.rotate((swingProgress < 0.5 ? swingProgress : swingProgressReversed) * -20, 2, 0, 0);
+					
 				}
 				
-				ir.func_178103_d();
+				//ir.func_178103_d();
 				
 			}
 			

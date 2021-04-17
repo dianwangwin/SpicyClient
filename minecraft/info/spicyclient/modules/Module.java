@@ -114,7 +114,11 @@ public abstract class Module {
 			onEnable();
 			
 			if (SpicyClient.config.hud.sound.isEnabled()) {
-				Minecraft.getMinecraft().thePlayer.playSound("random.click", (float) SpicyClient.config.hud.volume.getValue(), 0.6f);
+				try {
+					Minecraft.getMinecraft().thePlayer.playSound("random.click", (float) SpicyClient.config.hud.volume.getValue(), 0.6f);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
 			}
 			
 		}else {
@@ -124,7 +128,11 @@ public abstract class Module {
 			onDisable();
 			
 			if (SpicyClient.config.hud.sound.isEnabled()) {
-				Minecraft.getMinecraft().thePlayer.playSound("random.click", (float) SpicyClient.config.hud.volume.getValue(), 0.4f);
+				try {
+					Minecraft.getMinecraft().thePlayer.playSound("random.click", (float) SpicyClient.config.hud.volume.getValue(), 0.4f);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
 			}
 			
 		}

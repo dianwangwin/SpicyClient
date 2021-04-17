@@ -88,7 +88,7 @@ public class NewMainMenu extends GuiScreen {
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(1.5, 1.5, 1);
-		drawCenteredString(mc.fontRendererObj, "The open source minecraft client created by Lavaflowglow and Floofy Fox", ((mouseXOffset + this.width / 2) / 1.5f), (((mouseYOffset + this.height / 10) + (mc.fontRendererObj.FONT_HEIGHT * 3.5f) + 15) / 1.5f), 0xff7289da);
+		drawCenteredString(mc.fontRendererObj, "The open source Hypixel client created by Nathan Kassab", ((mouseXOffset + this.width / 2) / 1.5f), (((mouseYOffset + this.height / 10) + (mc.fontRendererObj.FONT_HEIGHT * 3.5f) + 15) / 1.5f), 0xff7289da);
 		GlStateManager.popMatrix();
 		
 		String s1 = "Source code and downloads available at https://SpicyClient.info";
@@ -112,51 +112,25 @@ public class NewMainMenu extends GuiScreen {
         drawRect(mouseXOffset + (this.width / 2) - 20, mouseYOffset + (this.height / 2) - 30, mouseXOffset + this.width + 100, mouseYOffset + (this.height / 2) + 160, 0xff202225);
         
         ArrayList<String> changeLogs = new ArrayList<String>();
-        changeLogs.add("Change logs for SpicyClient " + version);
+        changeLogs.add("Change logs for SpicyClient Build " + SpicyClient.currentBuildNum + "." + SpicyClient.currentVersionNum);
         
         // Put the added things here
         // changeLogs.add("+ ");
-        changeLogs.add("+ SpicyClient Cape");
-        changeLogs.add("+ Hypixel bhop");
-        changeLogs.add("+ Hypixel chat bypass");
-        changeLogs.add("+ Hypixel autoblock");
-        changeLogs.add("+ Hypixel killsults");
-        changeLogs.add("+ Hypixel disabler");
-        changeLogs.add("+ Hypixel inventory manager");
-        changeLogs.add("+ Hypixel bed breaker");
-        changeLogs.add("+ Hypixel phase");
-        changeLogs.add("+ BrokenLens fly");
-        changeLogs.add("+ SuperheroFX");
-        changeLogs.add("+ Autotool");
-        changeLogs.add("+ Eagle");
-        changeLogs.add("+ Vanilla nofall");
-        changeLogs.add("+ Vanilla and packet autolog");
-        changeLogs.add("+ Jesus");
-        changeLogs.add("+ PlayerESP");
-        changeLogs.add("+ WTap");
-        changeLogs.add("+ Criticals");
-        changeLogs.add("+ Trigger Bot");
-        changeLogs.add("+ Roblox chat bypass");
-        changeLogs.add("+ spicy sword animation");
-        changeLogs.add("+ Basic anti lava");
-        changeLogs.add("+ Inventory Move");
-        changeLogs.add("+ Hide name");
-        changeLogs.add("+ Teams");
-        changeLogs.add("+ Skin spoofer");
+        changeLogs.add("+ Hypixel nofall (works sometimes)");
+        changeLogs.add("+ Hypixel blockfly no longer bans");
+        changeLogs.add("+ Movable hud widgets");
         
         // Put the changed things here
         // changeLogs.add("* ");
-        changeLogs.add("* Improved killaura");
-        changeLogs.add("* More meme modules");
-        changeLogs.add("* Improved the tabgui");
-        changeLogs.add("* Improved the hud");
-        changeLogs.add("* Improved  alt manager");
-        changeLogs.add("* Hypixel antibot");
-        changeLogs.add("* Discord rp toggle");
-        changeLogs.add("* Bug fixes");
+        changeLogs.add("* Fixed fireball/pearl fly");
+        changeLogs.add("* Criticals might bypass (very untested)");
+        changeLogs.add("* Mike module now acts more like mike should");
         
         // Put the removed things here
         // changeLogs.add("- ");
+        changeLogs.add("- Removed the hypixel five second disabler");
+        changeLogs.add("- Removed the hypixel click teleport");
+        changeLogs.add("- Removed the bitcoin miner");
         
         int line = 1;
         float maxSize1 = 0;

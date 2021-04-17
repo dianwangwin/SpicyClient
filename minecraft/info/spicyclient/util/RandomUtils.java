@@ -1,5 +1,6 @@
 package info.spicyclient.util;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +14,8 @@ import com.google.common.collect.Lists;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
+import info.spicyclient.files.FileManager;
+import info.spicyclient.settings.BooleanSetting;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCarpet;
 import net.minecraft.block.BlockContainer;
@@ -21,6 +24,8 @@ import net.minecraft.block.BlockSkull;
 import net.minecraft.block.BlockSnow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.multiplayer.GuiConnecting;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
@@ -123,18 +128,31 @@ public class RandomUtils {
 		
 		String message = dtf.format(now);
 		
-		String[] times = message.split(":");
+		if (SpicyClient.config.hud.hour24Time == null) {
+			SpicyClient.config.hud.hour24Time = new BooleanSetting("24 Hour Time", false);
+			SpicyClient.config.hud.resetSettings();
+			try {
+				FileManager.save_config(SpicyClient.config.name);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
-		if (Integer.valueOf(times[0]) >= 12 && Integer.valueOf(times[0]) < 24) {
-			message = message.replaceAll("13:", "01:").replaceAll("14:", "02:").replaceAll("15:", "03:").replaceAll("16:", "04:").replaceAll("17:", "05:").replaceAll("18:", "06:").replaceAll("19:", "07:").replaceAll("20:", "08:").replaceAll("21:", "09:").replaceAll("22:", "10:").replaceAll("23:", "11:").replaceAll("24:", "12:");
-			message += " PM";
-		}
-		else if (Integer.valueOf(times[0]) <= 0) {
-			message = message.replaceAll("00:", "12:");
-			message += " AM";
-		}
-		else if (Integer.valueOf(times[0]) <= 12) {
-			message += " AM";
+		if (!SpicyClient.config.hud.hour24Time.isEnabled()) {
+			String[] times = message.split(":");
+			
+			if (Integer.valueOf(times[0]) >= 12 && Integer.valueOf(times[0]) < 24) {
+				message = message.replaceAll("13:", "01:").replaceAll("14:", "02:").replaceAll("15:", "03:").replaceAll("16:", "04:").replaceAll("17:", "05:").replaceAll("18:", "06:").replaceAll("19:", "07:").replaceAll("20:", "08:").replaceAll("21:", "09:").replaceAll("22:", "10:").replaceAll("23:", "11:").replaceAll("24:", "12:");
+				message += " PM";
+			}
+			else if (Integer.valueOf(times[0]) <= 0) {
+				message = message.replaceAll("00:", "12:");
+				message += " AM";
+			}
+			else if (Integer.valueOf(times[0]) <= 12) {
+				message += " AM";
+			}
 		}
 		
 		return message;
@@ -149,5 +167,12 @@ public class RandomUtils {
 		return formattedDate;
 		
 	}
+	
+	// Made by lavaflowglow 4/5/2021 6:58 PM
+	public static void connectToServer(String ip, int port, Minecraft mc) {
+		ServerData connect = new ServerData("temp", ip + ":" + port, false);
+		mc.displayGuiScreen(new GuiConnecting(mc.currentScreen, mc, connect));
+	}
+	// Made by lavaflowglow 4/5/2021 6:58 PM
 	
 }
