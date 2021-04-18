@@ -43,7 +43,7 @@ public class OwOifier extends Module {
 				
 				EventChatmessage chat = (EventChatmessage) e;
 				if (!chat.getMessage().startsWith("/")) {
-					chat.setMessage(chat.getMessage().replace("l", "w").replace("L", "W").replace("r", "w").replace("R", "W").replace("o", "u").replace("O", "U"));
+					chat.setMessage((chat.getMessage().toLowerCase().replace("l", "w").replace("r", "w").replace("o", "u").replace("p", "pw").replace("'", "").replace(",", "").replace("su", "so").replace("tuu", "2").replace("hewwu", "hewwo").replace("yuu", "u") + " uwu"));
 				}
 				
 			}
