@@ -131,6 +131,7 @@ public class BlockFly extends Module {
 	public static transient Timer timer = new Timer();
 	public static transient int lastSlot = -1;
 	
+	@SuppressWarnings("incomplete-switch")
 	public void onEvent(Event e) {
 		
 		if (e instanceof EventRenderGUI && e.isPre()) {
@@ -254,11 +255,17 @@ public class BlockFly extends Module {
 			
 		}
 		
-		if (e instanceof EventUpdate && e.isPre() && MovementUtils.isOnGround(0.4)) {
+		if (e instanceof EventUpdate && e.isPre()) {
+			
+			mc.thePlayer.setSprinting(false);
 			
 			if (((int)mc.thePlayer.posY) - 1 < keepPosY) {
-				keepPosY = ((int)mc.thePlayer.posY) - 3;
+				keepPosY = ((int)mc.thePlayer.posY) - 1;
 			}
+			
+		}
+		
+		if (e instanceof EventUpdate && e.isPre() && MovementUtils.isOnGround(0.4)) {
 			
 			if (MovementUtils.isOnGround(0.00001)) {
 				keepPosY = ((int)mc.thePlayer.posY) - 1;

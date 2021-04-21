@@ -2,6 +2,7 @@ package info.spicyclient.modules.movement;
 
 import org.lwjgl.input.Keyboard;
 
+import info.spicyclient.SpicyClient;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;

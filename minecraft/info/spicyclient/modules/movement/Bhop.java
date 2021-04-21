@@ -223,26 +223,24 @@ public class Bhop extends Module {
 				}
 				else if (mode.is("Hypixel") && MovementUtils.isMoving() && (!SpicyClient.config.blockFly.isEnabled() || (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) || true)) {
 					
+					mc.timer.timerSpeed = 1.0f;
 					mc.gameSettings.keyBindJump.pressed = false;
-					
+					//Command.sendPrivateChatMessage(Speed);
 					if (MovementUtils.isOnGround(0.00000001)) {
-						boosted = true;
 						mc.thePlayer.jump();
-						boosted = false;
-					}
-					
-					if (MovementUtils.isOnGround(0.0001)) {
-						//MovementUtils.setMotion(0);
+						Speed = 100;
 					}else {
-						if (!boosted) {
-							speed = hypixelSpeed.getValue() * 23.5;
-							boosted = true;
-						}else {
-							MovementUtils.strafe(((float)speed));
-							//speed -= speed/220;
+						
+						Speed -= 0.1;
+						
+						if (Speed <= 1) {
+							Speed = 1;
 						}
+						
+						MovementUtils.setMotion((MovementUtils.getBaseMoveSpeed() / 100) * Speed);
+						mc.timer.timerSpeed = 1.2f;
+						
 					}
-					
 					
 				}
 				else if (mode.is("Test") && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
@@ -253,14 +251,16 @@ public class Bhop extends Module {
 						
 						mc.thePlayer.noClip = true;
 						
-						if (!MovementUtils.isOnGround(1)) {
+						if (!MovementUtils.isOnGround(1) && boosted) {
 							
-							mc.thePlayer.motionY = -0.01 + (new Random().nextDouble() / 100);
+							//mc.thePlayer.motionY -= 0.01;
+							boosted = false;
 							//e.setCanceled(true);
 							
 						}
 						else if (MovementUtils.isOnGround(0.000000000004)) {
 							mc.thePlayer.jump();
+							boosted = true;
 						}
 						
 						mc.thePlayer.setSprinting(true);

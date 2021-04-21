@@ -46,6 +46,21 @@ public class Command {
 	}
 	
 	// This shows a chat message to the player
+	public static void sendPrivateChatMessage(Object text, ChatStyle style) {
+		
+		String prefix = SpicyClient.config.clientName + SpicyClient.config.clientVersion;
+		
+		if (SpicyClient.config.clientVersion != SpicyClient.config.version) {
+			prefix = SpicyClient.config.clientName;
+		}
+		
+		ChatComponentText message = new ChatComponentText("§s[ §s" + prefix + " §s] §f" + text.toString());
+		message.setChatStyle(style);
+		
+		Minecraft.getMinecraft().thePlayer.addChatComponentMessage(message);
+	}
+	
+	// This shows a chat message to the player
 	public static void sendPrivateChatMessage(String prefix, boolean useExactPrefix, Object text) {
 		
 		if (!useExactPrefix) {

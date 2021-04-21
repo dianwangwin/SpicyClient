@@ -1,3 +1,4 @@
+
 package info.spicyclient.bypass;
 
 import java.text.DecimalFormat;
@@ -254,8 +255,8 @@ public class Hypixel {
 				//mc.getNetHandler().addToSendQueue(new C03PacketPlayer(true));
 				mc.thePlayer.onGround = false;
 				
-				MovementUtils.setMotion(MovementUtils.getSpeed() + 0.75);
-				//MovementUtils.strafe();
+				// Fixed fly motion
+				MovementUtils.setMotion(SpicyClient.config.fly.hypixelFreecamHorizontalFlySpeed.getValue() + (new Random().nextDouble() / 4));
 				
 				if (shouldToggleOnGround && MovementUtils.isOnGround(0.0001)) {
 					module.toggle();

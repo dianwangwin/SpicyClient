@@ -246,7 +246,7 @@ public class HUD {
 					RenderUtils.resetColor();
 					arrayFr.drawString(RandomUtils.getFormattedTime(), 202, (float) (sr.getScaledHeight_double() - arrayFr.FONT_HEIGHT - arrayFr.FONT_HEIGHT - 1), primaryColor);
 					RenderUtils.resetColor();
-					arrayFr.drawString("CVN: " + SpicyClient.currentVersionNum, 202, (float) (sr.getScaledHeight_double() - arrayFr.FONT_HEIGHT - arrayFr.FONT_HEIGHT - 1 - arrayFr.FONT_HEIGHT - 1), primaryColor);
+					arrayFr.drawString("Build: " + SpicyClient.currentBuildNum + "." + SpicyClient.currentVersionNum, 202, (float) (sr.getScaledHeight_double() - arrayFr.FONT_HEIGHT - arrayFr.FONT_HEIGHT - 1 - arrayFr.FONT_HEIGHT - 1), primaryColor);
 					RenderUtils.resetColor();
 					arrayFr.drawString(new DecimalFormat("#.###").format(MovementUtils.getBlocksPerSecond()) + " BPS", 202, (float) (sr.getScaledHeight_double() - arrayFr.FONT_HEIGHT - arrayFr.FONT_HEIGHT - 1 - arrayFr.FONT_HEIGHT - 1 - arrayFr.FONT_HEIGHT - 1), primaryColor);
 					GlStateManager.popMatrix();
