@@ -23,6 +23,7 @@ public class CommandManager {
 		addCommand(new SetSpamMessage());
 		addCommand(new Skin());
 		addCommand(new Friend());
+		addCommand(new Irc());
 		
 	}
 	

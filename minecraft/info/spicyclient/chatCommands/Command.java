@@ -49,7 +49,7 @@ public class Command {
 	public static void sendPrivateChatMessage(String prefix, boolean useExactPrefix, Object text) {
 		
 		if (!useExactPrefix) {
-			prefix = "§6[ §f" + prefix + " §6] §f";
+			prefix = "§s[ §s" + prefix + " §s] §f";
 		}
 		
 		Minecraft.getMinecraft().thePlayer.addChatComponentMessage(new ChatComponentText(prefix + text.toString()));
@@ -59,7 +59,7 @@ public class Command {
 	public static void sendPrivateChatMessage(String prefix, boolean useExactPrefix, Object text, ChatStyle style) {
 
 		if (!useExactPrefix) {
-			prefix = "§6[ §f" + prefix + " §6] §f";
+			prefix = "§s[ §s" + prefix + " §s] §f";
 		}
 
 		ChatComponentText message = new ChatComponentText(prefix + text.toString());
