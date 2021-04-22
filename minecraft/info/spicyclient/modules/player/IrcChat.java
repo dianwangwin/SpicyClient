@@ -13,7 +13,7 @@ import info.spicyclient.spicyMessageClient.Messenger;
 public class IrcChat extends Module {
 
 	public IrcChat() {
-		super("IRC", Keyboard.KEY_NONE, Category.BETA);
+		super("IRC", Keyboard.KEY_NONE, Category.PLAYER);
 	}
 	
 	public static transient boolean autoEnable = false;
