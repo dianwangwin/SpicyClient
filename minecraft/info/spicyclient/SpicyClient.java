@@ -123,7 +123,7 @@ public class SpicyClient {
 	
 	public static boolean discordFailedToStart = false;
 	
-	public static int currentVersionNum = 24, currentBuildNum = 3;
+	public static int currentVersionNum = 26, currentBuildNum = 3;
 	
 	public static boolean currentlyLoadingConfig = false, hasInitViaversion = false;
 	
@@ -347,21 +347,6 @@ public class SpicyClient {
 			}
 		}
 		
-		new Thread("Hud Mods Save Thread") {
-			public void run() {
-				
-				while (true) {
-					try {
-						FileManager.saveHudMods(config.hudModConfig);
-						Thread.sleep(5000);
-					} catch (Exception e) {
-						
-					}
-				}
-				
-			}
-		}.start();
-		
 		FontUtil.superherofx1.toString();
 		FontUtil.superherofx2.toString();
 		
@@ -449,7 +434,7 @@ public class SpicyClient {
 					//Command.sendPrivateChatMessage(scoreTitle);
 					if (scoreTitle.toLowerCase().contains("bed wars")) {
 						if (packet.getMessage().getFormattedText().toLowerCase().contains("respawned")) {
-							Hypixel.disabledUntil = System.currentTimeMillis() + 2500;
+							info.spicyclient.bypass.hypixel.Fly.disabledUntil = System.currentTimeMillis() + 2500;
 							NotificationManager.getNotificationManager().createNotification("Bedwars", "You have 2.5 seconds to fly", true, 3000, info.spicyclient.notifications.Type.INFO, Color.PINK);
 						}
 					}
@@ -462,13 +447,14 @@ public class SpicyClient {
 		}
 		
 		if (e instanceof EventUpdate && e.isPre()) {
-			if (tabsSaveTimer.hasTimeElapsed(3000, true)) {
-				new Thread("Saving tabs") {
+			if (tabsSaveTimer.hasTimeElapsed(5000, true)) {
+				new Thread("Saving info files") {
 					public void run() {
 						try {
 							FileManager.saveTabs(savedTabs);
+							FileManager.saveHudMods(config.hudModConfig);
 						} catch (IOException e) {
-							//e.printStackTrace();
+							
 						}
 					}
 				}.start();
@@ -501,7 +487,7 @@ public class SpicyClient {
 							//Command.sendPrivateChatMessage(RandomUtils.getTeamName(11, Minecraft.getMinecraft().theWorld.getScoreboard()));
 							
 							if (RandomUtils.getTeamName(10, Minecraft.getMinecraft().theWorld.getScoreboard()).toLowerCase().contains("next event")) {
-								Hypixel.disabledUntil = System.currentTimeMillis() + 2500;
+								info.spicyclient.bypass.hypixel.Fly.disabledUntil = System.currentTimeMillis() + 2500;
 								NotificationManager.getNotificationManager().createNotification("Skywars", "You have 2.5 seconds to fly", true, 3000, info.spicyclient.notifications.Type.INFO, Color.PINK);
 								flyNotice = true;
 							}

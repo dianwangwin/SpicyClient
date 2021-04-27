@@ -63,6 +63,8 @@ public class AutoClicker extends Module {
 					//mc.gameSettings.keyBindUseItem.pressed = true;
 				//}
 				
+				mc.gameSettings.keyBindUseItem.pressed = false;
+				
 				mc.thePlayer.swingItem();
 				
 				if (mc.objectMouseOver.typeOfHit.equals(MovingObjectType.ENTITY)) {

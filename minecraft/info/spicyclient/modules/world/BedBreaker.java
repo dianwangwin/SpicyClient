@@ -82,6 +82,7 @@ public class BedBreaker extends Module {
 			}
 			
 			mc.thePlayer.swingItem();
+			mc.playerController.curBlockDamageMP = 1.0f;
 			mc.playerController.onPlayerDamageBlock(bed, bedFace);
 			
 		}

@@ -51,10 +51,12 @@ public class Disabler extends Module {
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
+		double oldValue = addPing.getValue();
+		addPing = new NumberSetting("Ping", oldValue, 20, 200, 1);
 		this.addSettings(addPing);
 	}
 	
-	public NumberSetting addPing = new NumberSetting("Ping", 75, 55, 200, 1);
+	public NumberSetting addPing = new NumberSetting("Ping", 55, 20, 200, 1);
 	
 	public static transient boolean watchdog = false;
 	public static transient CopyOnWriteArrayList<Packet> packets = new CopyOnWriteArrayList<Packet>();
@@ -72,7 +74,12 @@ public class Disabler extends Module {
 							Packet p = packets.get(i);
 							packetsToRemove.add(p);
 							
-							mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
+							try {
+								mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
+							} catch (Exception e) {
+								
+							}
+							
 							if (p instanceof C0FPacketConfirmTransaction) {
 								C0FPacketConfirmTransaction f = (C0FPacketConfirmTransaction)p;
 								//Command.sendPrivateChatMessage(f.getUid());

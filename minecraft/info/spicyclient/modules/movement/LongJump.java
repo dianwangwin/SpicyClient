@@ -3,6 +3,7 @@ package info.spicyclient.modules.movement;
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.bypass.Hypixel;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventUpdate;
@@ -25,7 +26,6 @@ public class LongJump extends Module {
 	public void onEnable() {
 		jumped = false;
 		timer.reset();
-		mc.thePlayer.jump();
 	}
 	
 	public void onDisable() {
@@ -39,31 +39,26 @@ public class LongJump extends Module {
 	public void onEvent(Event e) {
 		
 		if (e instanceof EventUpdate && e.isPre()) {
-			this.additionalInformation = "Redesky";
+			this.additionalInformation = "Hypixel";
 		}
 		
 		if (e instanceof EventMotion) {
 			
-			if (e.isPost()) {
-				
-				if (jumped) {
-					this.toggle();
-					jumped = false;
-					return;
-				}else {
-                	MovementUtils.strafe(1.5f);
-                    mc.thePlayer.motionY = 0.4;
-                    e.setCanceled(true);
-				}
-				
-				mc.gameSettings.keyBindJump.pressed = false;
-				
-            	if (timer.hasTimeElapsed(300, true) || MovementUtils.isOnGround(0.00000001)) {
-            		jumped = true;
-            	}
-            	
-                mc.thePlayer.setSprinting(true);
-				
+			if (!jumped && MovementUtils.isOnGround(0.00001)) {
+				Hypixel.damageHypixel(2);
+				jumped = true;
+			}
+			
+			if (jumped && mc.thePlayer.hurtResistantTime == 19) {
+				mc.thePlayer.motionY += 0.4;
+				MovementUtils.setMotion(0.45);
+			}
+			else if (jumped) {
+				MovementUtils.strafe();
+			}
+			
+			if (jumped && mc.thePlayer.hurtResistantTime == 0 && MovementUtils.isOnGround(0.0001) && timer.hasTimeElapsed(1000, true)) {
+				toggle();
 			}
 			
 		}

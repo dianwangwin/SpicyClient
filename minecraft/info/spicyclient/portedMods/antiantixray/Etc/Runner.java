@@ -47,7 +47,7 @@ public class Runner implements Runnable {
                         continue;
                     }
                     
-                    C07PacketPlayerDigging packet = new C07PacketPlayerDigging(Action.ABORT_DESTROY_BLOCK, current, EnumFacing.UP);
+                    C07PacketPlayerDigging packet = new C07PacketPlayerDigging(Action.START_DESTROY_BLOCK, current, EnumFacing.UP);
                     
                     Minecraft.getMinecraft().getNetHandler().getNetworkManager().sendPacketNoEvent(packet);
                     

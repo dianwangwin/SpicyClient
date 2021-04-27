@@ -14,6 +14,7 @@ import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.settings.ModeSetting;
 import info.spicyclient.util.PlayerUtils;
+import info.spicyclient.util.ServerUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,8 +22,6 @@ import net.minecraft.network.play.server.S0CPacketSpawnPlayer;
 import net.minecraft.util.MathHelper;
 
 public class Antibot extends Module {
-	
-	public static EntityLivingBase target = null;
 	
 	private ModeSetting AntibotMode = new ModeSetting("Antibot Mode", "Advanced", "Advanced");
 	
@@ -87,8 +86,66 @@ public class Antibot extends Module {
 	                }
 					
 				}
-				else if (packet.packet instanceof S0CPacketSpawnPlayer && !mc.isSingleplayer() && mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel")) {
+				else if (packet.packet instanceof S0CPacketSpawnPlayer && !mc.isSingleplayer() && ServerUtils.isOnHypixel()) {
+					
+					S0CPacketSpawnPlayer p = (S0CPacketSpawnPlayer) packet.packet;
+					Entity entity = mc.theWorld.getEntityByID(p.getEntityID());
+					
+					new Thread("Bot checker thread") {
+                		public void run() {
+                			
+                			try {
+								Thread.sleep(3500);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+                			
+                			Entity entity = null;
+                			
+                			try {
+                				entity = mc.theWorld.getEntityByID(p.getEntityID());
+							} catch (Exception e2) {
+								
+							}
+                			
+                			try {
+    	                        if (mc.getNetHandler().getPlayerInfo(((EntityPlayer)entity).getUniqueID()).responseTime > 1) {
+    	                        	//Command.sendPrivateChatMessage("A watchdog bot was removed from your game (ping check)");
+    	                        	mc.theWorld.removeEntity(entity);
+    	                        	return;
+    	                        }
+							} catch (Exception e2) {
+								
+							}
+            				
+            				try {
+    	                        if (mc.getNetHandler()
+										.getPlayerInfo(((EntityPlayer) entity).getUniqueID()) == null) {
+									//Command.sendPrivateChatMessage(
+											//"A watchdog bot was removed from your game (null npi check)");
+									mc.theWorld.removeEntity(entity);
+									return;
+								}
+							} catch (Exception e2) {
+								
+							}
+            				
+            				try {
+    	                        if (mc.getNetHandler()
+										.getPlayerInfo(((EntityPlayer) entity).getUniqueID())
+										.getGameProfile() == null) {
+									//Command.sendPrivateChatMessage(
+											//"A watchdog bot was removed from your game (null game profile check)");
+									mc.theWorld.removeEntity(entity);
+									return;
+								}
+							} catch (Exception e2) {
+								
+							}
 
+                		};
+                	}.start();
+					
 					//hypixelAntibot();
 					/*
 					S0CPacketSpawnPlayer p = (S0CPacketSpawnPlayer) packet.packet;

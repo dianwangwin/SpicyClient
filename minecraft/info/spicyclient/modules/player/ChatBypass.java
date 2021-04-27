@@ -71,7 +71,7 @@ public class ChatBypass extends Module {
 					}
 					if (mode.getMode() == "Hypixel" || mode.is("Hypixel")) {
 						//  ⛍⛗⛌⛗⛘⛉⛡⛍⛗⛉⛍⛘⛜⛍⛠⛘⛟⛏⛡⛏⛗⛏⛍⛉⛋׼⛑⛒⛓⛔⛕⛖
-						chat.setMessage(insertPeriodically(chat.getMessage(), "⛍⛗⛌⛗⛘⛉⛡⛍⛗⛉⛍⛘⛜⛍⛠⛘⛟⛏⛡⛏⛗⛏⛍⛉⛋׼⛑⛒⛓⛔⛕⛖", 1));
+						chat.setMessage(insertPeriodically(chat.getMessage(), "⛍⛗⛌⛗⛘⛉⛡⛍⛗⛉⛍⛘⛜⛍⛠⛘⛟⛏⛡⛏⛗⛏⛍⛉⛋׼⛑⛒⛓⛔⛕⛖❎", 1));
 					}
 					if (mode.getMode() == "Test3" || mode.is("Test3")) {
 						

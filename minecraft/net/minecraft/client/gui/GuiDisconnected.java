@@ -2,6 +2,7 @@ package net.minecraft.client.gui;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
 
@@ -11,8 +12,9 @@ import info.spicyclient.SessionChanger;
 import info.spicyclient.SpicyClient;
 import info.spicyclient.TheAlteningAPI;
 import info.spicyclient.files.FileManager;
-import info.spicyclient.files.AltInfo.alt;
+import info.spicyclient.files.AltInfo.Alt;
 import info.spicyclient.ui.NewAltManager;
+import info.spicyclient.util.ServerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.resources.I18n;
@@ -31,6 +33,63 @@ public class GuiDisconnected extends GuiScreen
         this.parentScreen = screen;
         this.reason = I18n.format(reasonLocalizationKey, new Object[0]);
         this.message = chatComp;
+        try {
+        	if (true) {
+        		long dateUnbanned = System.currentTimeMillis();
+            	String time = message.getSiblings().get(1).getFormattedText().substring(2, message.getSiblings().get(1).getFormattedText().length() - 2);
+            	if (time.equalsIgnoreCase("reason: ")) {
+            		for (int e = SpicyClient.altInfo.alts.size(); e > 0; e--) {
+                		try {
+                			Alt a = SpicyClient.altInfo.alts.get(e);
+                			if (a.username.equals(Minecraft.getMinecraft().getSession().getUsername())) {
+                    			a.unbannedAt = Long.MAX_VALUE;
+                    			FileManager.saveAltInfo(SpicyClient.altInfo);
+                    			return;
+                    		}
+    					} catch (Exception e2) {
+    						
+    					}
+                	}
+            		return;
+            	}
+            	String[] times = time.split(" ");
+            	for (String date : times) {
+            		try {
+            			String numbers = date.substring(0, date.length() - 1);
+                		if (date.endsWith("d")) {
+                			dateUnbanned += TimeUnit.DAYS.toMillis(Integer.valueOf(numbers));
+                		}
+                		else if (date.endsWith("h")) {
+                			dateUnbanned += TimeUnit.HOURS.toMillis(Integer.valueOf(numbers));
+                		}
+                		else if (date.endsWith("m")) {
+                			dateUnbanned += TimeUnit.MINUTES.toMillis(Integer.valueOf(numbers));
+                		}
+                		else if (date.endsWith("s")) {
+                			dateUnbanned += TimeUnit.SECONDS.toMillis(Integer.valueOf(numbers));
+                		}
+    				} catch (Exception e) {
+    					
+    				}
+            	}
+            	
+            	for (int e = SpicyClient.altInfo.alts.size(); e > 0; e--) {
+            		try {
+            			Alt a = SpicyClient.altInfo.alts.get(e);
+            			if (a.username.equals(Minecraft.getMinecraft().getSession().getUsername())) {
+                			a.unbannedAt = dateUnbanned;
+                			FileManager.saveAltInfo(SpicyClient.altInfo);
+                			break;
+                		}
+					} catch (Exception e2) {
+						
+					}
+            	}
+            	
+        	}
+		} catch (Exception e) {
+			
+		}
     }
 
     /**
@@ -82,15 +141,15 @@ public class GuiDisconnected extends GuiScreen
         else if (button.id == 2) {
         	
 			boolean loginSuccess = false;
-    		alt Alt = null;
+    		Alt Alt = null;
         	int altAmount = 0;
         	String oldname = mc.session.getUsername();
-        	alt a = null;
+        	Alt a = null;
         	
     		try {
 				JSONObject account = TheAlteningAPI.call_me();
 				//a = new alt(account.getString("token"), account.getString("password"), true);
-				a = new alt(account.getString("token"), "fur", true);
+				a = new Alt(account.getString("token"), "fur", true);
 				a.username = account.getString("username");
 				SpicyClient.altInfo.addCreatedAlt(a);
 			} catch (Exception e) {

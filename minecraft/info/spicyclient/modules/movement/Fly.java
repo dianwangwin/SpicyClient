@@ -23,6 +23,7 @@ import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.notifications.Type;
 import info.spicyclient.settings.BooleanSetting;
+import info.spicyclient.settings.KeybindSetting;
 import info.spicyclient.settings.ModeSetting;
 import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.settings.SettingChangeEvent;
@@ -62,12 +63,13 @@ public class Fly extends Module {
 	public BooleanSetting viewBobbingSetting = new BooleanSetting("View Bobbing", false);
 	public BooleanSetting stopOnDisable = new BooleanSetting("Stop on disable", true);
 	
-	public NumberSetting hypixelFreecamHorizontalFlySpeed = new NumberSetting("Horizontal Speed", 10, 2, 18, 0.2);
+	public NumberSetting hypixelFreecamHorizontalFlySpeed = new NumberSetting("Horizontal Speed", 5.6, 2, 18, 0.2);
 	public NumberSetting hypixelFreecamVerticalFlySpeed = new NumberSetting("Vertical Speed", 0.4, 0.2, 1, 0.01);
 	public BooleanSetting hypixelDamage = new BooleanSetting("Damage disabler", false);
-	public BooleanSetting hypixelUseFireball = new BooleanSetting("Fireball disabler", true);
+	public BooleanSetting hypixelUseFireball = new BooleanSetting("Fireball disabler", false);
 	public BooleanSetting hypixelUsePearl = new BooleanSetting("Pearl disabler", true);
 	public BooleanSetting hypixelPaperChallenge = new BooleanSetting("Paper Challenge disabler", false);
+	public KeybindSetting hypixelTeleportBind = new KeybindSetting("Teleport Bind", Keyboard.KEY_NONE);
 	
 	/*
 	public BooleanSetting hypixelBlink = new BooleanSetting("Blink", true);
@@ -128,6 +130,10 @@ public class Fly extends Module {
 				this.settings.remove(hypixelPaperChallenge);
 			}
 			
+			if (this.settings.contains(hypixelTeleportBind)) {
+				this.settings.remove(hypixelTeleportBind);
+			}
+			
 			/*
 			if (this.settings.contains(hypixelBlink)) {
 				this.settings.remove(hypixelBlink);
@@ -171,8 +177,12 @@ public class Fly extends Module {
 					this.settings.add(hypixelUsePearl);
 				}
 				
+				if (!this.settings.contains(hypixelTeleportBind)) {
+					this.settings.add(hypixelTeleportBind);
+				}
+				
 				if (!this.settings.contains(hypixelDamage)) {
-					this.settings.add(hypixelDamage);
+					//this.settings.add(hypixelDamage);
 				}
 				
 				if (!this.settings.contains(hypixelPaperChallenge)) {
@@ -221,7 +231,7 @@ public class Fly extends Module {
 		}
 		else if (mode.is("Hypixel") || mode.getMode() == "Hypixel") {
 			
-			Hypixel.onFlyEnable();
+			info.spicyclient.bypass.hypixel.Fly.onEnable();
 			
 		}
 		
@@ -256,7 +266,7 @@ public class Fly extends Module {
 		}
 		else if (mode.is("Hypixel") || mode.getMode() == "Hypixel") {
 			
-			Hypixel.onFlyDisable();
+			info.spicyclient.bypass.hypixel.Fly.onDisable();
 			
 		}
 		
@@ -283,7 +293,7 @@ public class Fly extends Module {
 		}
 		else if (mode.is("Hypixel") || mode.getMode() == "Hypixel") {
 			
-			Hypixel.onFlyEvent(e, this, mc);
+			info.spicyclient.bypass.hypixel.Fly.onEvent(e, this, mc);
 			
 		}
 		
@@ -357,7 +367,7 @@ public class Fly extends Module {
 		
 		if (mode.is("Hypixel") || mode.getMode() == "Hypixel") {
 			
-			Hypixel.onFlyEventWhileDisabled(e, this, mc);
+			info.spicyclient.bypass.hypixel.Fly.onEventWhileDisabled(e, this, mc);
 			
 		}
 		

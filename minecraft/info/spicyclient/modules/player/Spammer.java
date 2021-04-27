@@ -65,7 +65,7 @@ public class Spammer extends Module {
 	
 	public String getBypassString() {
 		
-		String bypass = "⛍⛗⛌⛗⛘⛉⛡⛍⛗⛉⛍⛘⛜⛍⛠⛘⛟⛏⛡⛏⛗⛏⛍⛉⛋׼⛑⛒⛓⛔⛕⛖";
+		String bypass = "⛍⛗⛌⛗⛘⛉⛡⛍⛗⛉⛍⛘⛜⛍⛠⛘⛟⛏⛡⛏⛗⛏⛍⛉⛋׼⛑⛒⛓⛔⛕⛖❎";
 		return String.valueOf(bypass.toCharArray()[new Random().nextInt(bypass.length())]);
 		
 	}

@@ -1,6 +1,7 @@
 package info.spicyclient.util;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -168,11 +169,35 @@ public class RandomUtils {
 		
 	}
 	
+	public static String getFormattedDateAndTime(long millis) {
+		
+		String dateAndTime = "";
+		Timestamp time = new Timestamp(millis);
+		dateAndTime += time.getMonth() + 1;
+		dateAndTime += "/" + time.getDate();
+		dateAndTime += "/" + (time.getYear() + 1900);
+		dateAndTime += " " + (time.getHours());
+		dateAndTime += ":" + (time.getMinutes() + 1 <= 9 ? "0" + (time.getMinutes() + 1) : (time.getMinutes() + 1));
+		return dateAndTime;
+		
+	}
+	
 	// Made by lavaflowglow 4/5/2021 6:58 PM
 	public static void connectToServer(String ip, int port, Minecraft mc) {
 		ServerData connect = new ServerData("temp", ip + ":" + port, false);
 		mc.displayGuiScreen(new GuiConnecting(mc.currentScreen, mc, connect));
 	}
 	// Made by lavaflowglow 4/5/2021 6:58 PM
+	
+	// Made by lavaflowglow 4/5/2021 1:30 PM
+	public static void setPosAndMotionWithData6d(Data6d posAndMotion) {
+		
+		Minecraft.getMinecraft().thePlayer.setPosition(posAndMotion.x, posAndMotion.y, posAndMotion.z);
+		Minecraft.getMinecraft().thePlayer.motionX = posAndMotion.motionX;
+		Minecraft.getMinecraft().thePlayer.motionY = posAndMotion.motionY;
+		Minecraft.getMinecraft().thePlayer.motionZ = posAndMotion.motionZ;
+		
+	}
+	// Made by lavaflowglow 4/5/2021 1:30 PM
 	
 }

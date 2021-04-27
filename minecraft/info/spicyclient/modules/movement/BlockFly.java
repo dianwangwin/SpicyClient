@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.Random;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.tests.xml.ItemContainer;
 
@@ -28,6 +29,7 @@ import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.settings.SettingChangeEvent;
 import info.spicyclient.settings.SettingChangeEvent.type;
 import info.spicyclient.util.MovementUtils;
+import info.spicyclient.util.RayTraceUtils;
 import info.spicyclient.util.RenderUtils;
 import info.spicyclient.util.RotationUtils;
 import info.spicyclient.util.Timer;
@@ -56,9 +58,12 @@ import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.network.play.client.C0BPacketEntityAction.Action;
 import net.minecraft.network.play.client.C0DPacketCloseWindow;
 import net.minecraft.network.play.server.S2FPacketSetSlot;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.Vec3;
 
 public class BlockFly extends Module {
@@ -70,11 +75,10 @@ public class BlockFly extends Module {
 	
 	public static transient BlockPos lastPlace = null;
 	
-	public NumberSetting extend = new NumberSetting("Extend", 2.5, 0.1, 5, 0.1),
-			xOffset = new NumberSetting("X Offset", 0, 0, 1, 0.05),
-			zOffset = new NumberSetting("Z Offset", 0, 0, 1, 0.05);
-	public BooleanSetting keepY = new BooleanSetting("Keep Y", false),
-			hypixel = new BooleanSetting("Hypixel", false);
+	public NumberSetting extend = new NumberSetting("Extend", 0.1, 0.1, 5, 0.1),
+			timerBoost = new NumberSetting("Timer Boost", 1, 1, 2, 0.01);
+	public BooleanSetting keepY = new BooleanSetting("Keep Y", true),
+			sprint = new BooleanSetting("Sprint", true);
 	
 	private static transient double keepPosY = 0;
 	
@@ -83,7 +87,15 @@ public class BlockFly extends Module {
 		
 		this.settings.clear();
 		//extend.setValue(0.1);
-		this.addSettings(extend, keepY);
+		if (timerBoost == null) {
+			timerBoost = new NumberSetting("Timer Boost", 1, 1, 2, 0.01);
+		}
+		
+		if (sprint == null) {
+			sprint = new BooleanSetting("Sprint", false);
+		}
+		
+		this.addSettings(extend, keepY, timerBoost, sprint);
 		
 	}
 	
@@ -99,39 +111,15 @@ public class BlockFly extends Module {
 	public void onDisable() {
 		mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
 		lastSlot = -1;
-	}
-	
-	@Override
-	public void onSettingChange(SettingChangeEvent e) {
-		
-		if (e.setting == hypixel) {
-			
-			if (hypixel.isEnabled()) {
-				if (settings.contains(extend)) {
-					settings.remove(extend);
-				}
-				extend.setValue(0.1);
-			}else {
-				if (!settings.contains(extend)) {
-					settings.add(extend);
-				}
-				if (!settings.contains(keepY)) {
-					settings.add(keepY);
-				}
-			}
-			
-			reorderSettings();
-			
-		}
-		
+		mc.timer.timerSpeed = 1;
 	}
 	
 	public static transient float lastYaw = 0, lastPitch = 0;
-	public Vec3 lastPos = null;
+	public static transient BlockPos lastBlockPos = null;
+	public static transient EnumFacing lastFacing = null;
 	public static transient Timer timer = new Timer();
 	public static transient int lastSlot = -1;
 	
-	@SuppressWarnings("incomplete-switch")
 	public void onEvent(Event e) {
 		
 		if (e instanceof EventRenderGUI && e.isPre()) {
@@ -203,7 +191,8 @@ public class BlockFly extends Module {
 			}
 			
 			if (((EventReceivePacket)e).packet instanceof S2FPacketSetSlot) {
-				e.setCanceled(true);
+				lastSlot = ((S2FPacketSetSlot)((EventReceivePacket)e).packet).slot;
+				//e.setCanceled(true);
 			}
 			
 		}
@@ -212,11 +201,6 @@ public class BlockFly extends Module {
 			
 			if (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) {
 				return;
-			}
-			
-			if (((EventSendPacket)e).packet instanceof C03PacketPlayer) {
-				((C03PacketPlayer)((EventSendPacket)e).packet).setYaw(lastYaw);
-				((C03PacketPlayer)((EventSendPacket)e).packet).setPitch(lastPitch);
 			}
 			
 			if (((EventSendPacket)e).packet instanceof C09PacketHeldItemChange) {
@@ -257,210 +241,143 @@ public class BlockFly extends Module {
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
-			mc.thePlayer.setSprinting(false);
+			// Event
+			EventUpdate event = (EventUpdate)e;
 			
-			if (((int)mc.thePlayer.posY) - 1 < keepPosY) {
-				keepPosY = ((int)mc.thePlayer.posY) - 1;
+			// prevents flags on hypixel
+			if (!sprint.isEnabled()) {
+				mc.thePlayer.setSprinting(false);
 			}
 			
-		}
-		
-		if (e instanceof EventUpdate && e.isPre() && MovementUtils.isOnGround(0.4)) {
+			// Faster
+			mc.timer.timerSpeed = ((float)timerBoost.getValue());
 			
+			// KeepY
 			if (MovementUtils.isOnGround(0.00001)) {
 				keepPosY = ((int)mc.thePlayer.posY) - 1;
-				//Command.sendPrivateChatMessage(keepPosY);
 			}
 			
-			if (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) {
-				return;
+			// prevents flags on hypixel
+			/*
+			lastYaw += new Random().nextInt(30) - 15;
+			lastPitch += new Random().nextInt(30) - 15;
+			lastYaw = MathHelper.wrapAngleTo180_float(lastYaw);
+			if (lastPitch >= 90) {
+				lastPitch = 90;
+			}
+			else if (lastPitch <= -90) {
+				lastPitch = -90;
+			}
+			*/
+			
+			// Keep rotations
+			if (lastBlockPos != null && lastFacing != null && MovementUtils.isOnGround(0.5)) {
+				float[] keepRots = getRotationsHypixel(lastBlockPos, lastFacing);
+				lastYaw = keepRots[0];
+				lastPitch = keepRots[1];
 			}
 			
-			//mc.thePlayer.setSprinting(false);
-			
-			//mc.thePlayer.onGround = false;
+			event.setYaw(lastYaw);
+			event.setPitch(lastPitch);
 			
 			RenderUtils.setCustomYaw(lastYaw);
 			RenderUtils.setCustomPitch(lastPitch);
 			
-			EventUpdate update = (EventUpdate)e;
+			// Finds the block that the player will break
+			BlockPos targetPos = null;
 			
-		}
-		
-		if (e instanceof EventMotion && e.isPost()) {
+			// No extend
+			if (extend.getValue() == 0.1) {
+				
+				targetPos = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1, mc.thePlayer.posZ);
+				
+				if (keepY.isEnabled() && !(mc.thePlayer.posY - 1 < keepPosY)) {
+					targetPos.y = (int) keepPosY;
+				}
+				
+				if (mc.theWorld.getBlockState(targetPos).getBlock() != Blocks.air) {
+					targetPos = null;
+				}
+				
+			}
+			// Extend
+			else {
+				
+				for (double extend = 0; extend <= this.extend.getValue(); extend += 0.1) {
+					BlockPos temp = WorldUtils.getForwardBlock(extend).add(0, -1, 0);
+					
+					if (keepY.isEnabled() && !(mc.thePlayer.posY - 1 < keepPosY)) {
+						temp.y = (int) keepPosY;
+					}
+					
+					if (mc.theWorld.getBlockState(temp).getBlock() == Blocks.air) {
+						targetPos = temp;
+						break;
+					}
+					if (!MovementUtils.isMoving()) {
+						break;
+					}
+				}
+				
+			}
 			
-			if (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) {
+			// Checks how many blocks you have
+			int blocksLeft = 0;
+			
+			for (short g = 0; g < 9; g++) {
+				
+				if (mc.thePlayer.inventoryContainer.getSlot(g + 36).getHasStack()
+						&& mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem() instanceof ItemBlock
+						&& mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize != 0
+						&& !((ItemBlock) mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock()
+								.getLocalizedName().toLowerCase().contains("chest")
+						&& !((ItemBlock) mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().getItem()).getBlock()
+								.getLocalizedName().toLowerCase().contains("table")) {
+					blocksLeft += mc.thePlayer.inventoryContainer.getSlot(g + 36).getStack().stackSize;
+				}
+				
+			}
+			
+			// If it shouldn't place a block then don't try to
+			if (targetPos == null || blocksLeft == 0) {
 				return;
 			}
 			
-			EventMotion event = (EventMotion) e;
+			// For rendering
+			lastPlace = targetPos;
 			
-			//mc.thePlayer.setSprinting(false);
+			// Sets the item to hold
+			ItemStack block = setStackToPlace();
 			
-			event.setYaw(lastYaw);
-			event.setYaw(lastPitch);
+			// Finds a block to place on
+			BlockInfo info = findFacingAndBlockPosForBlock(targetPos);
 			
-			if (lastPos != null) {
-				
-				event.setYaw(RotationUtils.getRotationFromPosition(lastPos.xCoord,
-						lastPos.zCoord, lastPos.yCoord)[0]);
-				
-				event.setPitch(RotationUtils.getRotationFromPosition(lastPos.xCoord,
-						lastPos.zCoord, lastPos.yCoord)[1]);
-				
-				lastYaw = event.yaw;
-				lastPitch = event.pitch;
-				
-				RenderUtils.setCustomYaw(lastYaw);
-				RenderUtils.setCustomPitch(lastPitch);
-				
+			// Returns if it cannot find a block to place on
+			if (info == null) {
+				return;
 			}
 			
-			ItemStack i = mc.thePlayer.getCurrentEquippedItem();
-			BlockPos below = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1D, mc.thePlayer.posZ);
+			// Places the block and sets the rots
+			float[] rots = getRotationsHypixel(info.pos, info.facing);
+			event.setYaw(rots[0] + RandomUtils.nextFloat(4, 10));
+			event.setPitch(rots[1]);
 			
-			boolean shouldPlace = false;
+//			This flags
+//			if (extend.getValue() == 0.1) {
+//                event.setYaw(mc.thePlayer.rotationYaw + RandomUtils.nextFloat(174, 179));
+//                if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
+//                	event.setPitch(70f);
+//                }else {
+//                	event.setPitch(90f);
+//                }
+//			}
 			
-			for (double h = 0; h < extend.getValue(); h += 0.1) {
-				below = WorldUtils.getForwardBlock(h).add(0, -1, 0);
-				if (below == null || mc.theWorld.getBlockState(below).getBlock() == Blocks.air) {
-					shouldPlace = true;
-				}
-			}
-			
-			if (shouldPlace) {
-				
-				if (!timer.hasTimeElapsed(80, true)) {
-					if (extend.getValue() > 0.5) {
-						return;
-					}
-				}
-				
-				for (EnumFacing facing : EnumFacing.VALUES) {
-					
-					switch (facing) {
-					case UP:
-						
-						for (double k = 0; k < extend.getValue(); k += 0.1) {
-							BlockPos underBelow = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 2D, mc.thePlayer.posZ);
-							if (MovementUtils.isMoving()) {
-								underBelow = WorldUtils.getForwardBlock(k).add(0, -2, 0);
-							}
-							
-							if (keepY.isEnabled()) {
-								underBelow.y = ((int)keepPosY - 1);
-							}
-							
-							if (mc.theWorld.getBlockState(underBelow).getBlock() != Blocks.air) {
-								
-								ItemStack block = setStackToPlace();
-								if (block == null || block.getItem() == null || !(block.getItem() instanceof ItemBlock)) {
-									return;
-								}
-								
-								if (keepY.isEnabled() && underBelow.y != keepPosY - 1) {
-									break;
-								}
-								
-								//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(underBelow, EnumFacing.UP.getIndex(), block, 0, 0, 0));
-								if (mc.playerController.onPlayerRightClickNoSync(mc.thePlayer, mc.theWorld, block,
-										underBelow, EnumFacing.UP,
-										RotationUtils.getVectorForRotation(
-												getRotationsHypixel(underBelow, EnumFacing.UP)[1],
-												getRotationsHypixel(underBelow, EnumFacing.UP)[1]))
-										&& block != null && block.getItem() != null
-										&& block.getItem() instanceof ItemBlock) {
-									mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0APacketAnimation());
-									event.setYaw(getRotationsHypixel(underBelow, facing)[0]);
-									event.setPitch(getRotationsHypixel(underBelow, facing)[1]);
-									lastYaw = event.yaw;
-									lastPitch = event.pitch;
-									RenderUtils.setCustomYaw(lastYaw);
-									RenderUtils.setCustomPitch(lastPitch);
-									lastPlace = underBelow.add(0, 1, 0);
-									//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
-									return;
-								}
-								
-							}
-						}
-						
-						break;
-					case NORTH:
-					case EAST:
-					case SOUTH:
-					case WEST:
-						
-						for (double k = 0; k < extend.getValue(); k += 0.1) {
-							BlockPos keepY = WorldUtils.getForwardBlock(k).add(0, -1, 0);
-							if (this.keepY.isEnabled()) {
-								keepY.y = (int) keepPosY;
-							}
-							BlockInfo defaultPos = findFacingAndBlockPosForBlock(keepY);
-							
-							if (defaultPos == null)
-								return;
-							
-							if (mc.theWorld.getBlockState(defaultPos.pos).getBlock() != Blocks.air) {
-								
-								ItemStack block = setStackToPlace();
-								if (block == null || block.getItem() == null || !(block.getItem() instanceof ItemBlock)) {
-									return;
-								}
-								
-								boolean endAfter = false;
-								
-								if (mc.theWorld.getBlockState(WorldUtils.getForwardBlock(k).add(0, -1, 0)).getBlock() == Blocks.air) {
-									endAfter = true;
-								}
-								
-								if (this.keepY.isEnabled()) {
-									if (defaultPos.facing == EnumFacing.UP || defaultPos.facing == EnumFacing.DOWN) {
-										break;
-									}
-								}
-								
-								//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(defaultPos.pos, defaultPos.facing.getIndex(), block, 0, 0, 0));
-								if (defaultPos.pos.y != keepPosY - 1 && (mc.thePlayer.motionX != 0 || mc.thePlayer.motionZ != 0
-										|| (mc.thePlayer.motionY != 0 && mc.thePlayer.fallDistance > 2))
-										&& block != null && block.getItem() != null
-										&& block.getItem() instanceof ItemBlock) {
-									if (mc.playerController.onPlayerRightClickNoSync(mc.thePlayer, mc.theWorld, block,
-											defaultPos.pos, defaultPos.facing,
-											RotationUtils.getVectorForRotation(
-													getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[0],
-													getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[1]))) {
-										//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0APacketAnimation());
-										mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C0APacketAnimation());
-										event.setYaw(getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[0]);
-										event.setPitch(getRotationsHypixel(defaultPos.pos.offset(defaultPos.facing), defaultPos.facing)[1]);
-										lastYaw = event.yaw;
-										lastPitch = event.pitch;
-										RenderUtils.setCustomYaw(lastYaw);
-										RenderUtils.setCustomPitch(lastPitch);
-										lastPlace = defaultPos.targetPos;
-										//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
-										if (endAfter) {
-											return;
-										}
-									}
-								}
-								
-							}else {
-								RenderUtils.setCustomYaw(lastYaw);
-								RenderUtils.setCustomPitch(lastPitch);
-								event.setYaw(lastYaw);
-								event.setPitch(lastPitch);
-							}
-						}
-						
-						break;
-						
-					}
-					
-				}
-				
-			}
+			RenderUtils.setCustomYaw(event.yaw);
+			RenderUtils.setCustomPitch(event.pitch);
+			lastYaw = event.yaw;
+			lastPitch = event.pitch;
+			mc.playerController.onPlayerRightClickNoSync(mc.thePlayer, mc.theWorld, block, info.pos, info.facing, RotationUtils.getVectorForRotation(rots[1], rots[0]));
+			mc.getNetHandler().getNetworkManager().sendPacket(new C0APacketAnimation());
 			
 		}
 		
@@ -469,7 +386,7 @@ public class BlockFly extends Module {
 	private BlockInfo findFacingAndBlockPosForBlock(BlockPos input) {
 
 		if (SpicyClient.config.inventoryManager.isInventoryOpen) {
-			mc.thePlayer.sendQueue.addToSendQueue(new C0DPacketCloseWindow());
+			//mc.thePlayer.sendQueue.addToSendQueue(new C0DPacketCloseWindow());
 		}
 		
 		BlockInfo output = new BlockInfo();
@@ -483,7 +400,7 @@ public class BlockFly extends Module {
 				output.pos = output.pos.offset(face);
 				output.facing = face.getOpposite();
 				output.targetPos = new BlockPos(input.getX(), input.getY(), input.getZ());
-				if (keepY.isEnabled()) {
+				if (keepY.isEnabled() && mc.thePlayer.posY - 1 >= keepPosY) {
 					output.pos.y = (int) keepPosY;
 					output.targetPos.y = (int) keepPosY;
 				}
@@ -505,7 +422,7 @@ public class BlockFly extends Module {
 						output.pos = output.pos.offset(face).offset(face1);
 						output.facing = face.getOpposite();
 						output.targetPos = output.pos.offset(face);
-						if (keepY.isEnabled()) {
+						if (keepY.isEnabled() && mc.thePlayer.posY - 1 >= keepPosY) {
 							output.pos.y = (int) keepPosY;
 							output.targetPos.y = (int) keepPosY;
 						}
@@ -534,7 +451,7 @@ public class BlockFly extends Module {
 							output.pos = output.pos.offset(face).offset(face1).offset(face2);
 							output.facing = face2.getOpposite();
 							output.targetPos = output.pos.offset(face).offset(face2);
-							if (keepY.isEnabled()) {
+							if (keepY.isEnabled() && mc.thePlayer.posY - 1 >= keepPosY) {
 								output.pos.y = (int) keepPosY;
 								output.targetPos.y = (int) keepPosY;
 							}
@@ -569,7 +486,7 @@ public class BlockFly extends Module {
 								output.pos = output.pos.offset(face).offset(face1).offset(face2).offset(face3);
 								output.facing = face3.getOpposite();
 								output.targetPos = output.pos.offset(face).offset(face2).offset(face3);
-								if (keepY.isEnabled()) {
+								if (keepY.isEnabled() && mc.thePlayer.posY - 1 >= keepPosY) {
 									output.pos.y = (int) keepPosY;
 									output.targetPos.y = (int) keepPosY;
 								}
@@ -593,24 +510,33 @@ public class BlockFly extends Module {
 
 	public float[] getRotationsHypixel(BlockPos paramBlockPos, EnumFacing paramEnumFacing) {
 		
-		/*
-		double offsetX = 0.6, offsetZ = 0.4;
+		double offsetX = 0, offsetZ = 0;
 		
-        double d1 = (double)paramBlockPos.getX() + offsetX - mc.thePlayer.posX + (double)paramEnumFacing.getFrontOffsetX() / 2.0D;
-        double d2 = (double)paramBlockPos.getZ() + offsetZ - mc.thePlayer.posZ + (double)paramEnumFacing.getFrontOffsetZ() / 2.0D;
-        double d3 = mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight() - ((double)paramBlockPos.getY() + 0.5D);
+		offsetX = (double)paramEnumFacing.getFrontOffsetX() / 2.0D;
+		offsetZ = (double)paramEnumFacing.getFrontOffsetZ() / 2.0D;
+		
+		if (paramEnumFacing.getFrontOffsetX() == 0 && paramEnumFacing.getFrontOffsetZ() == -1) {
+			offsetZ = 0.5;
+		}
+		else if (paramEnumFacing.getFrontOffsetX() == -1 && paramEnumFacing.getFrontOffsetZ() == 0) {
+			offsetX = 0.5;
+		}
+		
+		lastBlockPos = paramBlockPos;
+		lastFacing = paramEnumFacing;
+		
+        double d1 = (double)paramBlockPos.getX() - mc.thePlayer.posX + offsetX + 0.5;
+        double d2 = (double)paramBlockPos.getZ() - mc.thePlayer.posZ + offsetZ + 0.5;
+        double d3 = mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight() - ((double)paramBlockPos.getY() + ((double)paramEnumFacing.getFrontOffsetZ() / 2.0D));
         double d4 = (double)MathHelper.sqrt_double(d1 * d1 + d2 * d2);
         float f1 = (float)(Math.atan2(d2, d1) * 180.0D / 3.141592653589793D) - 90.0F;
         float f2 = (float)(Math.atan2(d3, d4) * 180.0D / 3.141592653589793D);
         if (f1 < 0.0F) {
-            f1 += 360.0F;
+            //f1 += 360.0F;
         }
         
-        //f1 += 180;
-        //f1 = MathHelper.wrapAngleTo180_float(f1);
-        //f2 += 30;
-        //f2 -= 30;
-        f2 += 25 + new Random().nextInt(5);
+        f1 = MathHelper.wrapAngleTo180_float(f1);
+        f2 = MathHelper.wrapAngleTo180_float(f2);
         
         if (f2 > 90)
         	f2 = 89f + new Random().nextFloat();
@@ -618,23 +544,19 @@ public class BlockFly extends Module {
         if (f2 < -90)
         	f2 = -89 + (new Random().nextFloat() * -1);
         
-        //Command.sendPrivateChatMessage(f1 + " : " + f2);
-        
         return new float[]{f1, f2};
         
 		
 		//return (new Random().nextBoolean()) ? new float[] {mc.thePlayer.rotationYaw + 180, 83} : new float[] {mc.thePlayer.rotationYaw, 85};
 		//return new float[] {mc.thePlayer.rotationYaw, 85};
-		*/
 		
-		paramBlockPos = paramBlockPos.offset(paramEnumFacing.getOpposite());
-		
-		lastPos = new Vec3(paramBlockPos.getX(), paramBlockPos.getY(), paramBlockPos.getZ());
-		
-		return RotationUtils.getRotationFromPosition(lastPos.xCoord,
-				lastPos.zCoord, lastPos.yCoord);
-		
-    }
+//		paramBlockPos = paramBlockPos.offset(paramEnumFacing.getOpposite());
+//
+//		lastPos = new Vec3(paramBlockPos.getX(), paramBlockPos.getY(), paramBlockPos.getZ());
+//
+//		return RotationUtils.getRotationFromPosition(lastPos.xCoord, lastPos.zCoord, lastPos.yCoord);
+
+	}
 	
 	public static ItemStack setStackToPlace() {
 		
@@ -666,14 +588,14 @@ public class BlockFly extends Module {
 			
 		}
 		if (lastSlot != slot) {
-			mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C09PacketHeldItemChange(slot));
+			mc.getNetHandler().getNetworkManager().sendPacket(new C09PacketHeldItemChange(slot));
 			lastSlot = slot;
 		}
 		return block;
 	}
 	
 	public boolean shouldCancelCheck(EnumFacing face) {
-		if (keepY.isEnabled()) {
+		if (keepY.isEnabled() && mc.thePlayer.posY - 1 >= keepPosY) {
 			return !(face == EnumFacing.UP);
 		}else {
 			return true;

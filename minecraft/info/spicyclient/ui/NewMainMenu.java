@@ -116,21 +116,17 @@ public class NewMainMenu extends GuiScreen {
         
         // Put the added things here
         // changeLogs.add("+ ");
-        changeLogs.add("+ Hypixel nofall (works sometimes)");
-        changeLogs.add("+ Hypixel blockfly no longer bans");
-        changeLogs.add("+ Movable hud widgets");
+        changeLogs.add("+ AntiAntiXray that bypasses different antixrays");
+        changeLogs.add("+ KeepY blockfly should now place blocks under you if you fall instead of doing nothing");
+        changeLogs.add("+ Blockfly rots fixed");
         
         // Put the changed things here
         // changeLogs.add("* ");
-        changeLogs.add("* Fixed fireball/pearl fly");
-        changeLogs.add("* Criticals might bypass (very untested)");
-        changeLogs.add("* Mike module now acts more like mike should");
+        changeLogs.add("* Changes to the hypixel disabler ping setting");
+        changeLogs.add("* Bug fixes");
         
         // Put the removed things here
         // changeLogs.add("- ");
-        changeLogs.add("- Removed the hypixel five second disabler");
-        changeLogs.add("- Removed the hypixel click teleport");
-        changeLogs.add("- Removed the bitcoin miner");
         
         int line = 1;
         float maxSize1 = 0;

@@ -305,36 +305,46 @@ public class Killaura extends Module {
 						
 	                    try {
 	                    	
-	                        if (mc.getNetHandler().getPlayerInfo(((EntityPlayer)target).getUniqueID()).responseTime > 1) {
-	                        	Command.sendPrivateChatMessage("A watchdog bot was removed from your game (ping check)");
-	                        	mc.theWorld.removeEntity(target);
-	                        	return;
-	                        }else {
-		                    	new Thread("Bot checker thread") {
-		                    		public void run() {
+	                    	new Thread("Bot checker thread") {
+	                    		public void run() {
 
-		                    			try {
-											if (mc.getNetHandler()
-													.getPlayerInfo(((EntityPlayer) target).getUniqueID()) == null) {
-												Command.sendPrivateChatMessage(
-														"A watchdog bot was removed from your game (null npi check)");
-												mc.theWorld.removeEntity(target);
-												return;
-											} else if (mc.getNetHandler()
-													.getPlayerInfo(((EntityPlayer) target).getUniqueID())
-													.getGameProfile() == null) {
-												Command.sendPrivateChatMessage(
-														"A watchdog bot was removed from your game (null game profile check)");
-												mc.theWorld.removeEntity(target);
-												return;
-											}
-										} catch (Exception e2) {
-											e2.printStackTrace();
-										}
+	                    			try {
+	        	                        if (mc.getNetHandler().getPlayerInfo(((EntityPlayer)target).getUniqueID()).responseTime > 1) {
+	        	                        	Command.sendPrivateChatMessage("A watchdog bot was removed from your game (ping check)");
+	        	                        	mc.theWorld.removeEntity(target);
+	        	                        	return;
+	        	                        }
+	    							} catch (Exception e2) {
+	    								
+	    							}
+	                				
+	                				try {
+	        	                        if (mc.getNetHandler()
+	    										.getPlayerInfo(((EntityPlayer) target).getUniqueID()) == null) {
+	    									Command.sendPrivateChatMessage(
+	    											"A watchdog bot was removed from your game (null npi check)");
+	    									mc.theWorld.removeEntity(target);
+	    									return;
+	    								}
+	    							} catch (Exception e2) {
+	    								
+	    							}
+	                				
+	                				try {
+	        	                        if (mc.getNetHandler()
+	    										.getPlayerInfo(((EntityPlayer) target).getUniqueID())
+	    										.getGameProfile() == null) {
+	    									Command.sendPrivateChatMessage(
+	    											"A watchdog bot was removed from your game (null game profile check)");
+	    									mc.theWorld.removeEntity(target);
+	    									return;
+	    								}
+	    							} catch (Exception e2) {
+	    								
+	    							}
 
-		                    		};
-		                    	}.start();
-	                        }
+	                    		};
+	                    	}.start();
 						} catch (NullPointerException e1) {
 							
 							//e1.printStackTrace();

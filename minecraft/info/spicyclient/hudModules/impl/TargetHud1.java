@@ -66,10 +66,10 @@ public class TargetHud1 extends HudModule {
 		}
 		
 		// Color override
-		color = 0xff00ff00;
-		if (Killaura.target.hurtResistantTime >= 16) {
-			color = 0xffff0000;
-		}
+//		color = 0xff00ff00;
+//		if (Killaura.target.hurtResistantTime >= 16) {
+//			color = 0xffff0000;
+//		}
 		// Color override
 		
 		Gui.drawRect(sr.getScaledWidth() / 2 - 110, sr.getScaledHeight() / 2 + 100, sr.getScaledWidth() / 2 + 110, sr.getScaledHeight() / 2 + 170, 0xff36393f);

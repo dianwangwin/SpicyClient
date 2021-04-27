@@ -363,7 +363,7 @@ public class KillSults extends Module {
 		furryKillsults.add("<PlayerName> really likes this meme h׼tt׼p:/׼/׼spicy׼clie׼nt.i׼nfo׼/furry׼2.׼jpg");
 		furryKillsults.add("<PlayerName> Should check out ht׼tp׼:/׼/spicy׼client׼.i׼nfo/fur׼ry3׼.׼png׼");
 		furryKillsults.add("<PlayerName> browses furaffinity");
-		furryKillsults.add("<PlayerName> joined r/furryirl");
+		furryKillsults.add("<PlayerName> joined r/furry_irl");
 		// Removed the youtube channel names because they probably don't want to me mentioned in this client
 		furryKillsults.add("<PlayerName> Probably watches furry youtubers");
 		

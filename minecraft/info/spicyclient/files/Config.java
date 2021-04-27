@@ -3,6 +3,8 @@ package info.spicyclient.files;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.lwjgl.input.Keyboard;
+
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.hudModules.HudModule.HudModuleConfig;
@@ -10,6 +12,7 @@ import info.spicyclient.modules.Module;
 import info.spicyclient.modules.Module.Category;
 import info.spicyclient.modules.beta.TestModuleOne;
 import info.spicyclient.modules.combat.*;
+import info.spicyclient.modules.community.Scaffold;
 import info.spicyclient.modules.community.Speed;
 import info.spicyclient.modules.memes.*;
 import info.spicyclient.modules.movement.*;
@@ -19,9 +22,11 @@ import info.spicyclient.modules.render.Snow.Snowflake;
 import info.spicyclient.modules.world.*;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.settings.BooleanSetting;
+import info.spicyclient.settings.KeybindSetting;
 import info.spicyclient.settings.ModeSetting;
 import info.spicyclient.settings.NumberSetting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 
 public class Config {
 	
@@ -125,6 +130,8 @@ public class Config {
 	public SpeedDebug speedDebug = new SpeedDebug();
 	public RotateItem rotateItem = new RotateItem();
 	public ResetHudModules resetHudModules = new ResetHudModules();
+	public Scaffold scaffold = new Scaffold();
+	public SpicyAntiAntiXray spicyAntiAntiXray = new SpicyAntiAntiXray();
 	
 	public String clientName = "Spicy ", clientVersion = "B3 Beta";
 	
@@ -197,7 +204,7 @@ public class Config {
 		modules.add(con.smallItems);
 		modules.add(con.lsd);
 		modules.add(con.tracers);
-		modules.add(con.blockCoding);
+		//modules.add(con.blockCoding);
 		modules.add(con.testModuleOne);
 		//modules.add(con.hypixel5SecDisabler);
 		modules.add(con.hud);
@@ -230,6 +237,8 @@ public class Config {
 		modules.add(con.speedDebug);
 		modules.add(con.rotateItem);
 		modules.add(con.resetHudModules);
+		modules.add(con.scaffold);
+		modules.add(con.spicyAntiAntiXray);
 		
 		return modules;
 		
@@ -326,6 +335,8 @@ public class Config {
 			this.speedDebug = new SpeedDebug();
 			this.rotateItem = new RotateItem();
 			this.resetHudModules = new ResetHudModules();
+			this.scaffold = new Scaffold();
+			this.spicyAntiAntiXray = new SpicyAntiAntiXray();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");
@@ -379,12 +390,9 @@ public class Config {
 			
 			this.oldHitting.animationSetting.modes.add("Astolfo");
 			
-			this.antiVoid.jumpFirst = new BooleanSetting("Jump first", false);
-			
 			this.inventoryManager.category = Category.PLAYER;
 			
 			this.blockFly.keepY = new BooleanSetting("Keep Y", false);
-			this.blockFly.hypixel = new BooleanSetting("Hypixel", false);
 			
 		}
 		
@@ -415,6 +423,8 @@ public class Config {
 				originalMotionY = Minecraft.getMinecraft().thePlayer.motionY,
 				originalMotionZ = Minecraft.getMinecraft().thePlayer.motionZ;
 		
+		GuiScreen backupGuiScreen = Minecraft.getMinecraft().currentScreen;
+		
 		if (this.clientVersion.toLowerCase().replace(this.version.toLowerCase(), "").length() == 0) {
 			Config temp = new Config("temp");
 			this.clientName = temp.clientName;
@@ -439,6 +449,10 @@ public class Config {
 			
 		}
 		
+		if (!ircChat.isEnabled()) {
+			ircChat.toggle();
+		}
+		
 		SpicyClient.config = this;
 		
 		NotificationManager.getNotificationManager().notificationQueue.clear();
@@ -449,6 +463,8 @@ public class Config {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		Minecraft.getMinecraft().currentScreen = backupGuiScreen;
 		
 		Minecraft.getMinecraft().thePlayer.setPosition(originalX, originalY, originalZ);
 		Minecraft.getMinecraft().thePlayer.motionX = originalMotionX;

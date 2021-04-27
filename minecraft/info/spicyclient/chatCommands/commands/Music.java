@@ -82,14 +82,15 @@ public class Music extends Command {
 						
 					}
 					
-					try {
-						MusicManager.getMusicManager().playMp3(files[new Random().nextInt(files.length)].toURI().toString().replaceAll(" ", "%20"));
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-						sendPrivateChatMessage("§b[ §fMusic §b] §f", true, "Unable to play song (No mp3 files in directory?)");
-						return;
-					}
-					MusicManager.getMusicManager().shuffle = true;
+					new Thread("Music player shuffle thread") {
+						@Override
+						public void run() {
+							if (MusicManager.getMusicManager().playingMusic) {
+								MusicManager.getMusicManager().stopPlaying();
+							}
+							MusicManager.getMusicManager().shuffle = true;
+						}
+					}.start();
 					
 				}
 				else if (splitMessage[1].equalsIgnoreCase("list")) {

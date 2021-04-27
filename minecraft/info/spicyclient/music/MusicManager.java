@@ -120,6 +120,7 @@ public class MusicManager {
 					}
 					
 					playingMusic = true;
+					SpicyClient.discord.refresh();
 					
 					mediaPlayer.setVolume(volume);
 					
@@ -164,7 +165,11 @@ public class MusicManager {
 		if (mediaPlayer != null || musicNotification != null) {
 			playingMusic = false;
 			mediaPlayer.stop();
-			musicNotification.timeOnScreen = 0;
+			try {
+				musicNotification.timeOnScreen = 0;
+			} catch (Exception e) {
+				
+			}
 			SpicyClient.discord.refresh();
 		}
 		
@@ -174,7 +179,7 @@ public class MusicManager {
 	
 	public void changeNotificationColor(EventUpdate e) {
 		
-		if (shuffle && musicNotification.left && musicNotification.joined) {
+		if (shuffle && (musicNotification == null || (musicNotification.left && musicNotification.joined))) {
 			Command.sendPrivateChatMessage("§b[ §fMusic §b] §f", true, "Playing next song...");
 			File[] files = FileManager.music.listFiles();
 			
@@ -185,7 +190,18 @@ public class MusicManager {
 				
 			}
 			
-			MusicManager.getMusicManager().playMp3(files[new Random().nextInt(files.length)].toURI().toString().replaceAll(" ", "%20"));
+			new Thread("Music player shuffle thread") {
+				@Override
+				public void run() {
+					try {
+						shuffle = false;
+						MusicManager.getMusicManager().playMp3(files[new Random().nextInt(files.length)].toURI().toString().replaceAll(" ", "%20"));
+						shuffle = true;
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					}
+				}
+			}.start();
 			
 		}
 		
