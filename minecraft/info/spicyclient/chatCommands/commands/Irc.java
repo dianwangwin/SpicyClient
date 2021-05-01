@@ -26,7 +26,11 @@ public class Irc extends Command {
 		}
 		
 		String ircMessage = message.substring(4 + SpicyClient.commandManager.prefix.length());
-		IrcChat.messenger.sendPacket(new SpicyPacket(type.MESSAGE, ircMessage, null, null, null));
+		if (ircMessage.equalsIgnoreCase("/list")) {
+			IrcChat.messenger.sendPacket(new SpicyPacket(type.LIST, null, null, null, null));
+		}else {
+			IrcChat.messenger.sendPacket(new SpicyPacket(type.MESSAGE, ircMessage, null, null, null));
+		}
 		
 	}
 	

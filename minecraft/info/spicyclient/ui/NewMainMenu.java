@@ -119,10 +119,14 @@ public class NewMainMenu extends GuiScreen {
         changeLogs.add("+ AntiAntiXray that bypasses different antixrays");
         changeLogs.add("+ KeepY blockfly should now place blocks under you if you fall instead of doing nothing");
         changeLogs.add("+ Blockfly rots fixed");
+//        changeLogs.add("+ Hypixel bhop mode fixed");
         
         // Put the changed things here
         // changeLogs.add("* ");
         changeLogs.add("* Changes to the hypixel disabler ping setting");
+        changeLogs.add("* Fixed music player crashing the game on startup");
+        changeLogs.add("* Discord rp startup crash fix");
+        changeLogs.add("* \".irc /list\" now shows a list of online players");
         changeLogs.add("* Bug fixes");
         
         // Put the removed things here

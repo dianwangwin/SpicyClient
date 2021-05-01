@@ -30,6 +30,7 @@ import info.spicyclient.settings.SettingChangeEvent;
 import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.Timer;
 import info.spicyclient.util.WorldUtils;
+import net.minecraft.block.BlockStairs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.init.Blocks;
@@ -59,7 +60,7 @@ import optifine.MathUtils;
 
 public class Bhop extends Module {
 	
-	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "PvpLands", "Hypixel", "Test", "Test 2", "Test 3");
+	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "PvpLands", "Hypixel", "NCP1", "Test", "Test 2", "Test 3");
 	
 	public NumberSetting hypixelSpeed = new NumberSetting("Speed", 0.01, 0.0001, 0.03, 0.0001);
 	
@@ -79,6 +80,9 @@ public class Bhop extends Module {
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
+		if (!mode.modes.contains("NCP1")) {
+			mode.modes.add("NCP1");
+		}
 		this.addSettings(mode, hypixelSpeed);
 	}
 	
@@ -114,6 +118,8 @@ public class Bhop extends Module {
 		
 		lastY = mc.thePlayer.posY;
 		speed = hypixelSpeed.getValue() * 11;
+		status = 0;
+		boosted = false;
 		
 	}
 	
@@ -223,56 +229,80 @@ public class Bhop extends Module {
 				}
 				else if (mode.is("Hypixel") && MovementUtils.isMoving() && (!SpicyClient.config.blockFly.isEnabled() || (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) || true)) {
 					
-					mc.timer.timerSpeed = 1.0f;
 					mc.gameSettings.keyBindJump.pressed = false;
 					//Command.sendPrivateChatMessage(Speed);
 					if (MovementUtils.isOnGround(0.00000001)) {
 						mc.thePlayer.jump();
-						Speed = 100;
+						MovementUtils.strafe();
+						Speed = (float) (100 + (hypixelSpeed.getValue() * 1000));
 					}else {
 						
-						Speed -= 0.1;
+						Speed -= 1;
 						
 						if (Speed <= 1) {
 							Speed = 1;
 						}
 						
 						MovementUtils.setMotion((MovementUtils.getBaseMoveSpeed() / 100) * Speed);
-						mc.timer.timerSpeed = 1.2f;
+//						mc.timer.timerSpeed = 1.2f;
 						
 					}
 					
 				}
-				else if (mode.is("Test") && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
+				else if (mode.is("Hypixel") && !MovementUtils.isMoving()) {
+					MovementUtils.setMotion(0);
+				}
+				else if (mode.is("NCP1")) {
 					
 					mc.gameSettings.keyBindJump.pressed = false;
 					
-					if (!mc.thePlayer.isInWater()) {
-						
-						mc.thePlayer.noClip = true;
-						
-						if (!MovementUtils.isOnGround(1) && boosted) {
-							
-							//mc.thePlayer.motionY -= 0.01;
-							boosted = false;
-							//e.setCanceled(true);
-							
-						}
-						else if (MovementUtils.isOnGround(0.000000000004)) {
-							mc.thePlayer.jump();
-							boosted = true;
-						}
-						
-						mc.thePlayer.setSprinting(true);
-						//MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + 0.01f);
-						MovementUtils.setMotion((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + ((float)hypixelSpeed.getValue()));
-						
-					}else {
-						
+					if (!MovementUtils.isMoving()) {
+						mc.timer.timerSpeed = 1f;
+						return;
+					}
+					
+					MovementUtils.strafe();
+					
+					if (MovementUtils.isOnGround(0.00000001)) {
+						mc.thePlayer.jump();
+					}
+					
+					if (!boosted) {
+						boosted = true;
+						new Thread("Bhop thread") {
+							public void run() {
+								Command.sendPrivateChatMessage("fast");
+								mc.timer.timerSpeed = 1000000000f;
+								try {
+									Thread.sleep(10);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+								Command.sendPrivateChatMessage("slow");
+								mc.timer.timerSpeed = 0.1f;
+								try {
+									Thread.sleep(20);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+								boosted = false;
+							}
+						}.start();
+					}
+					
+					if (!MovementUtils.isMoving()) {
+						MovementUtils.setMotion(0);
 					}
 					
 				}
-				else if (mode.is("Test 3")) {
+				else if (mode.is("Test") && MovementUtils.isMoving()) {
+					
+					mc.thePlayer.setSprinting(true);
+					
+			         double xDist = mc.thePlayer.posX - mc.thePlayer.prevPosX;
+			         double zDist = mc.thePlayer.posZ - mc.thePlayer.prevPosZ;
+			         double lastDistSonic = Math.sqrt(xDist * xDist + zDist * zDist);
+			         MovementUtils.setMotion(MovementUtils.getBlocksPerSecond() - lastDistSonic);
 					
 				}
 			}

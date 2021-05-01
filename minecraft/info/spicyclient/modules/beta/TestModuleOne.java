@@ -42,9 +42,9 @@ public class TestModuleOne extends Module {
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
-			if (mc.thePlayer.isPlayerSleeping()) {
-				mc.thePlayer.sleeping = false;
-			}
+			EventUpdate update = (EventUpdate)e;
+			update.setYaw(180);
+			update.setPitch(0);
 			
 		}
 		

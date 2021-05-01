@@ -1,5 +1,6 @@
 package info.spicyclient.spicyMessageClient;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -34,6 +35,12 @@ public class Messenger extends NetworkConnection {
 				}
 				else if (sPacket.packetType == type.BROADCAST) {
 					Command.sendPrivateChatMessage("irc", false, (String) sPacket.payload1);
+				}
+				else if (sPacket.packetType == type.LIST) {
+					StringBuilder names = new StringBuilder();
+					names.append("Online players: ");
+					((ArrayList<String>) sPacket.payload2).forEach(name -> names.append(name + ", "));
+					Command.sendPrivateChatMessage("irc", false, names.toString().substring(0, names.toString().length() - 2));
 				}
 			}
 		});

@@ -26,8 +26,8 @@ public class NetworkConnection {
 	private CopyOnWriteArrayList<NetworkSubscription> subs = new CopyOnWriteArrayList<NetworkSubscription>();
 	private boolean keepThreadsAlive = false;
 	private long lastPing = System.currentTimeMillis();
-	private String aesKey = Security.getRandomString(32);
-	protected boolean handshakeCompleted = false;
+	private String aesKey = Security.getRandomString(16);
+	public boolean handshakeCompleted = false;
 	
 	public void openConnection(String address, int port) throws Exception {
 		
@@ -114,6 +114,7 @@ public class NetworkConnection {
 				sendMessage(json);
 			}
 		} catch (Exception e) {
+			keepThreadsAlive = false;
 			e.printStackTrace();
 		}
 		
@@ -127,6 +128,7 @@ public class NetworkConnection {
 			sendMessage(json);
 			
 		} catch (Exception e) {
+			keepThreadsAlive = false;
 			e.printStackTrace();
 		}
 		

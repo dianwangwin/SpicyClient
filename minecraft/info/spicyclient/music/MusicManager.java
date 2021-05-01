@@ -35,8 +35,14 @@ import net.minecraft.client.gui.ScaledResolution;
 public class MusicManager {
 	
 	public static MusicManager musicManager;
+	public static boolean started = false;
 	
-	public static MusicManager getMusicManager() {
+	public static MusicManager getMusicManager() throws Exception {
+		
+		if (SpicyClient.musicPlayerFailedToStart && started) {
+			return null;
+		}
+		started = true;
 		
 		if (musicManager == null) {
 			musicManager = new MusicManager();
@@ -195,7 +201,11 @@ public class MusicManager {
 				public void run() {
 					try {
 						shuffle = false;
-						MusicManager.getMusicManager().playMp3(files[new Random().nextInt(files.length)].toURI().toString().replaceAll(" ", "%20"));
+						try {
+							MusicManager.getMusicManager().playMp3(files[new Random().nextInt(files.length)].toURI().toString().replaceAll(" ", "%20"));
+						} catch (Exception e2) {
+							// TODO: handle exception
+						}
 						shuffle = true;
 					} catch (IllegalArgumentException e) {
 						e.printStackTrace();

@@ -24,6 +24,7 @@ public class CommandManager {
 		addCommand(new Skin());
 		addCommand(new Friend());
 		addCommand(new Irc());
+		addCommand(new Vclip());
 		
 	}
 	

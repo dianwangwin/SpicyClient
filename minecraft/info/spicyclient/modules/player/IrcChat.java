@@ -57,7 +57,11 @@ public class IrcChat extends Module {
 	public void onEvent(Event e) {
 		
 		if (e instanceof EventUpdate && e.isPre() && mc.thePlayer.ticksExisted % 40 == 0) {
-			if (messenger == null || (!messenger.isConnected())) {
+			if (!messenger.isConnected() && messenger.handshakeCompleted) {
+				NotificationManager.getNotificationManager().createNotification("IRC", "Attempting to reconnect you", true, 20000, Type.WARNING, Color.RED);
+				onEnable();
+			}
+			else if (messenger == null || (!messenger.isConnected())) {
 				NotificationManager.getNotificationManager().createNotification("IRC", "You were disconnected from the server", true, 20000, Type.WARNING, Color.RED);
 				toggle();
 			}

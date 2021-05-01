@@ -8,6 +8,9 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.files.FileManager;
 import info.spicyclient.music.MusicManager;
+import info.spicyclient.notifications.Color;
+import info.spicyclient.notifications.NotificationManager;
+import info.spicyclient.notifications.Type;
 import net.minecraft.client.Minecraft;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
@@ -20,11 +23,20 @@ public class Music extends Command {
 
 	public Music() {
 		super("music", "music play/stop/list/shuffle/volume song.mp3/volume", 1);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
 	public void commandAction(String message) {
+		
+		try {
+			if (MusicManager.getMusicManager() == null) {
+				NotificationManager.getNotificationManager().createNotification("Music player", "The music player has failed to start", true, 5000, Type.WARNING, Color.RED);
+				return;
+			}
+		} catch (Exception e) {
+			NotificationManager.getNotificationManager().createNotification("Music player", "The music player has failed to start", true, 5000, Type.WARNING, Color.RED);
+			return;
+		}
 		
 		new Thread("Music Command Thread") {
 			
@@ -47,27 +59,45 @@ public class Music extends Command {
 				
 				if (splitMessage[1].equalsIgnoreCase("play") && musicName != "") {
 					
-					MusicManager.getMusicManager().playMp3(new File(FileManager.music + "\\" + musicName).toURI().toString().replaceAll(" ", "%20"));
+					try {
+						MusicManager.getMusicManager().playMp3(new File(FileManager.music + "\\" + musicName).toURI().toString().replaceAll(" ", "%20"));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					
-					MusicManager.getMusicManager().shuffle = false;
+					try {
+						MusicManager.getMusicManager().shuffle = false;
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					
 				}
 				else if (splitMessage[1].equalsIgnoreCase("stop")) {
-					MusicManager.getMusicManager().stopPlaying();
-					MusicManager.getMusicManager().shuffle = false;
+					try {
+						MusicManager.getMusicManager().stopPlaying();
+						MusicManager.getMusicManager().shuffle = false;
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				else if (splitMessage[1].equalsIgnoreCase("volume") && musicName != "") {
 					
-					if (MusicManager.getMusicManager().mediaPlayer != null) {
-						
-						try {
-							MusicManager.getMusicManager().mediaPlayer.setVolume(Double.valueOf(musicName) / 100);
-							MusicManager.getMusicManager().volume = Double.valueOf(musicName) / 100;
-							sendPrivateChatMessage("§b[ §fMusic §b] §f", true, "Set the music volume to " + musicName);
-						} catch (NumberFormatException e) {
-							sendPrivateChatMessage("§b[ §fMusic §b] §f", true, "Please type a number between 1 and 100");
+					try {
+						if (MusicManager.getMusicManager().mediaPlayer != null) {
+							
+							try {
+								MusicManager.getMusicManager().mediaPlayer.setVolume(Double.valueOf(musicName) / 100);
+								MusicManager.getMusicManager().volume = Double.valueOf(musicName) / 100;
+								sendPrivateChatMessage("§b[ §fMusic §b] §f", true, "Set the music volume to " + musicName);
+							} catch (NumberFormatException e) {
+								sendPrivateChatMessage("§b[ §fMusic §b] §f", true, "Please type a number between 1 and 100");
+							}
+							
 						}
-						
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 					
 				}
@@ -85,10 +115,15 @@ public class Music extends Command {
 					new Thread("Music player shuffle thread") {
 						@Override
 						public void run() {
-							if (MusicManager.getMusicManager().playingMusic) {
-								MusicManager.getMusicManager().stopPlaying();
+							try {
+								if (MusicManager.getMusicManager().playingMusic) {
+									MusicManager.getMusicManager().stopPlaying();
+								}
+								MusicManager.getMusicManager().shuffle = true;
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
 							}
-							MusicManager.getMusicManager().shuffle = true;
 						}
 					}.start();
 					

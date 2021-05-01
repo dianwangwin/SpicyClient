@@ -94,6 +94,7 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.network.play.server.S45PacketTitle;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.util.ResourceLocation;
@@ -121,9 +122,10 @@ public class SpicyClient {
 	public static String originalUsername = "Not Set";
 	public static Boolean originalAccountOnline;
 	
-	public static boolean discordFailedToStart = false;
+	// volatile needed so it doesn't get stuck
+	public static volatile boolean discordFailedToStart = true, musicPlayerFailedToStart = true;
 	
-	public static int currentVersionNum = 26, currentBuildNum = 3;
+	public static int currentVersionNum = 28, currentBuildNum = 3;
 	
 	public static boolean currentlyLoadingConfig = false, hasInitViaversion = false;
 	
@@ -146,10 +148,19 @@ public class SpicyClient {
 			e.printStackTrace();
 		}
 		
-		// Does music player stuff
-		Media tempMedia = new Media("http://google.com/SpicyClient.mp3");
-		MusicManager.getMusicManager();
-		MusicManager.getMusicManager().mediaPlayer = new MediaPlayer(tempMedia);
+		new Thread("Music player startup anti crash thread") {
+			public void run() {
+				try {
+					// Does music player stuff
+					Media tempMedia = new Media("http://google.com/SpicyClient.mp3");
+					MusicManager.getMusicManager();
+					musicPlayerFailedToStart = false;
+					MusicManager.getMusicManager().mediaPlayer = new MediaPlayer(tempMedia);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
 		
 		// Caches images
 		
@@ -286,16 +297,25 @@ public class SpicyClient {
 		
 		discord = new DiscordRP();
 		
-		if (PlatformUtil.isMac()) {
-			discordFailedToStart = true;
-		}else {
-			try {
-				// Start the discord rich presence
-				discord.start();
-			} catch (Exception e) {
-				discordFailedToStart = true;
+		new Thread("Discord rp startup anti crash thread") {
+			public void run() {
+				try {
+					if (PlatformUtil.isMac()) {
+						discordFailedToStart = true;
+					}else {
+						try {
+							// Start the discord rich presence
+							discord.start();
+							discordFailedToStart = false;
+						} catch (Exception e) {
+							discordFailedToStart = true;
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
-		}
+		}.start();
 		
 		info.spicyclient.modules.Module.CategoryList = Arrays.asList(Category.values());
 		
@@ -446,6 +466,19 @@ public class SpicyClient {
 			
 		}
 		
+		if (e instanceof EventReceivePacket && ServerUtils.isOnHypixel()) {
+			EventReceivePacket event = (EventReceivePacket)e;
+			if (event.packet instanceof S02PacketChat) {
+				S02PacketChat chat = (S02PacketChat) event.packet;
+				String[] chatParts = chat.getChatComponent().getFormattedText().split(" ");
+				System.out.println(chat.getChatComponent().getFormattedText());
+				if (chatParts[0].startsWith("§dFrom") && chatParts[1].endsWith(":")) {
+					NotificationManager.getNotificationManager().createNotification("Chat message", chat.getChatComponent().getFormattedText() + "  ", false, 15000, info.spicyclient.notifications.Type.INFO, Color.PINK);
+				}
+				
+			}
+		}
+		
 		if (e instanceof EventUpdate && e.isPre()) {
 			if (tabsSaveTimer.hasTimeElapsed(5000, true)) {
 				new Thread("Saving info files") {
@@ -467,7 +500,11 @@ public class SpicyClient {
 			RenderUtils.resetPlayerYaw();
 			RenderUtils.resetPlayerPitch();
 			
-			MusicManager.getMusicManager().changeNotificationColor((EventUpdate) e);
+			try {
+				MusicManager.getMusicManager().changeNotificationColor((EventUpdate) e);
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
 			
 			if (ServerUtils.isOnHypixel()) {
 				
@@ -801,6 +838,14 @@ public class SpicyClient {
 			builder.append("Discord failed to start: " + discordFailedToStart);
 		} catch (Exception e) {
 			builder.append("Discord failed to start: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Music player failed to start: " + musicPlayerFailedToStart);
+		} catch (Exception e) {
+			builder.append("Music player failed to start: ERROR");
 		}
 		
 		builder.append("\n");

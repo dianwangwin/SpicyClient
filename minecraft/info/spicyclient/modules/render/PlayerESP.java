@@ -11,6 +11,7 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventKey;
 import info.spicyclient.events.listeners.EventPlayerRender;
+import info.spicyclient.events.listeners.EventRender3D;
 import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
@@ -56,39 +57,29 @@ public class PlayerESP extends Module {
 	
 	public void onEvent(Event e) {
 		
+		if (e instanceof EventRender3D && e.isPre() && boxes.isEnabled()) {
+			GL11.glEnable(32823);
+            GL11.glPolygonOffset(1.0f, -1100000.0f);
+			for (Object ent : mc.theWorld.loadedEntityList) {
+				if (ent instanceof EntityPlayer) {
+					EntityPlayer player = (EntityPlayer)ent;
+					if (!player.getPosition().equals(mc.thePlayer.getPosition())) {
+						RenderUtils.drawPlayerBox(((double)player.posX + player.renderOffsetX), ((double)player.posY + player.renderOffsetY), ((double)player.posZ + player.renderOffsetZ));
+					}
+				}
+			}
+			GL11.glDisable(32823);
+            GL11.glPolygonOffset(1.0f, 1100000.0f);
+		}
+		
 		if (e instanceof EventPlayerRender) {
 			
 			if (e.isPre()) {
 				
-				//GlStateManager.disableDepth();
 				if (chams.isEnabled()) {
 	                GL11.glEnable(32823);
 	                GL11.glPolygonOffset(1.0f, -1100000.0f);
 				}
-				
-				EventPlayerRender event = (EventPlayerRender) e;
-				
-				if (boxes.isEnabled()) {
-					
-					try {
-						
-						if (event.entity instanceof EntityPlayer && SpicyClient.config.antibot.isEnabled() && !mc.isSingleplayer() && mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel") && mc.getNetHandler().getPlayerInfo(((EntityPlayer)event.entity).getUniqueID()).responseTime > 1) {
-							
-						}else {
-							
-							AbstractClientPlayer player = event.entity;
-							//RenderUtils.renderAxisAlignedBB(player.boundingBox);
-							RenderUtils.drawPlayerBox(player.posX, player.posY, player.posZ, player);
-							
-						}
-						
-					} catch (Exception e2) {
-						
-					}
-					
-				}
-				
-				//GlStateManager.enableDepth();
 				
 			}
 			

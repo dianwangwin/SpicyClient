@@ -65,7 +65,7 @@ public class RenderUtils {
 	public static Tessellator tessellator = Tessellator.getInstance();
 	
 	// Someone gave me this code
-	public static void drawPlayerBox(Double posX, Double posY, Double posZ, AbstractClientPlayer player){
+	public static void drawPlayerBox(Double posX, Double posY, Double posZ){
 		double x =
 			posX - 0.5
 				- Minecraft.getMinecraft().getRenderManager().renderPosX;

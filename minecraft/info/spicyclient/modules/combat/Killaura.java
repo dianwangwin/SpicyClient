@@ -118,8 +118,6 @@ public class Killaura extends Module {
 	public void onDisable() {
 		
 		SpicyClient.config.hudModConfig.targetHud1.healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
-		RenderUtils.resetPlayerYaw();
-		RenderUtils.resetPlayerPitch();
 		
         if (mc.thePlayer != null && (newAutoblock.is("Hypixel1") || newAutoblock.is("Hypixel2"))) {
         	try {
@@ -208,8 +206,6 @@ public class Killaura extends Module {
 					
 					SpicyClient.config.hudModConfig.targetHud1.healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
 					stopBlocking();
-					RenderUtils.resetPlayerYaw();
-					RenderUtils.resetPlayerPitch();
 					return;
 				}
 				
@@ -286,8 +282,6 @@ public class Killaura extends Module {
 					targets.removeAll(targetsToRemove);
 					
 					if (targets.isEmpty()) {
-						RenderUtils.resetPlayerYaw();
-						RenderUtils.resetPlayerPitch();
 						stopBlocking();
 						return;
 					}
@@ -533,8 +527,6 @@ public class Killaura extends Module {
 					
 					SpicyClient.config.hudModConfig.targetHud1.healthBar = new ScaledResolution(mc).getScaledWidth() / 2 - 41;
 					stopBlocking();
-					RenderUtils.resetPlayerYaw();
-					RenderUtils.resetPlayerPitch();
 					
 		            return;
 		            

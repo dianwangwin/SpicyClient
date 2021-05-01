@@ -77,8 +77,12 @@ public class DiscordRP {
 			lastLine = "Hacking in singleplayer";
 		}
 		
-		if (MusicManager.getMusicManager().playingMusic) {
-			lastLine = "Listening to " + MusicManager.getMusicManager().songName;
+		try {
+			if (MusicManager.getMusicManager().playingMusic) {
+				lastLine = "Listening to " + MusicManager.getMusicManager().songName;
+			}
+		} catch (Exception e) {
+			
 		}
 		
 		update(lastLine);

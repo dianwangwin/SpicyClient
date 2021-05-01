@@ -33,63 +33,68 @@ public class GuiDisconnected extends GuiScreen
         this.parentScreen = screen;
         this.reason = I18n.format(reasonLocalizationKey, new Object[0]);
         this.message = chatComp;
-        try {
-        	if (true) {
-        		long dateUnbanned = System.currentTimeMillis();
-            	String time = message.getSiblings().get(1).getFormattedText().substring(2, message.getSiblings().get(1).getFormattedText().length() - 2);
-            	if (time.equalsIgnoreCase("reason: ")) {
-            		for (int e = SpicyClient.altInfo.alts.size(); e > 0; e--) {
+        
+        new Thread("Ban time updater") {
+        	public void run() {
+        		
+                try {
+                	long dateUnbanned = System.currentTimeMillis();
+                	String time = message.getSiblings().get(1).getFormattedText().substring(2, message.getSiblings().get(1).getFormattedText().length() - 2);
+                	System.out.println(time);
+                	if (time.equalsIgnoreCase("reason: ")) {
+                		for (int e = SpicyClient.altInfo.alts.size(); e > 0; e--) {
+                    		try {
+                    			Alt a = SpicyClient.altInfo.alts.get(e);
+                    			if (a.username.equals(Minecraft.getMinecraft().getSession().getUsername())) {
+                        			a.unbannedAt = Long.MAX_VALUE;
+                        			FileManager.saveAltInfo(SpicyClient.altInfo);
+                        			return;
+                        		}
+        					} catch (Exception e2) {
+        						
+        					}
+                    	}
+                		return;
+                	}
+                	String[] times = time.split(" ");
+                	for (String date : times) {
+                		try {
+                			String numbers = date.substring(0, date.length() - 1);
+                    		if (date.endsWith("d")) {
+                    			dateUnbanned += TimeUnit.DAYS.toMillis(Integer.valueOf(numbers));
+                    		}
+                    		else if (date.endsWith("h")) {
+                    			dateUnbanned += TimeUnit.HOURS.toMillis(Integer.valueOf(numbers));
+                    		}
+                    		else if (date.endsWith("m")) {
+                    			dateUnbanned += TimeUnit.MINUTES.toMillis(Integer.valueOf(numbers));
+                    		}
+                    		else if (date.endsWith("s")) {
+                    			dateUnbanned += TimeUnit.SECONDS.toMillis(Integer.valueOf(numbers));
+                    		}
+        				} catch (Exception e) {
+        					e.printStackTrace();
+        				}
+                	}
+                	
+                	for (int e = SpicyClient.altInfo.alts.size(); e > 0; e--) {
                 		try {
                 			Alt a = SpicyClient.altInfo.alts.get(e);
                 			if (a.username.equals(Minecraft.getMinecraft().getSession().getUsername())) {
-                    			a.unbannedAt = Long.MAX_VALUE;
+                    			a.unbannedAt = dateUnbanned;
                     			FileManager.saveAltInfo(SpicyClient.altInfo);
-                    			return;
                     		}
-    					} catch (Exception e2) {
-    						
-    					}
+        				} catch (Exception e2) {
+        					
+        				}
                 	}
-            		return;
-            	}
-            	String[] times = time.split(" ");
-            	for (String date : times) {
-            		try {
-            			String numbers = date.substring(0, date.length() - 1);
-                		if (date.endsWith("d")) {
-                			dateUnbanned += TimeUnit.DAYS.toMillis(Integer.valueOf(numbers));
-                		}
-                		else if (date.endsWith("h")) {
-                			dateUnbanned += TimeUnit.HOURS.toMillis(Integer.valueOf(numbers));
-                		}
-                		else if (date.endsWith("m")) {
-                			dateUnbanned += TimeUnit.MINUTES.toMillis(Integer.valueOf(numbers));
-                		}
-                		else if (date.endsWith("s")) {
-                			dateUnbanned += TimeUnit.SECONDS.toMillis(Integer.valueOf(numbers));
-                		}
-    				} catch (Exception e) {
-    					
-    				}
-            	}
-            	
-            	for (int e = SpicyClient.altInfo.alts.size(); e > 0; e--) {
-            		try {
-            			Alt a = SpicyClient.altInfo.alts.get(e);
-            			if (a.username.equals(Minecraft.getMinecraft().getSession().getUsername())) {
-                			a.unbannedAt = dateUnbanned;
-                			FileManager.saveAltInfo(SpicyClient.altInfo);
-                			break;
-                		}
-					} catch (Exception e2) {
-						
-					}
-            	}
-            	
+        		} catch (Exception e) {
+        			
+        		}
+        		
         	}
-		} catch (Exception e) {
-			
-		}
+        }.start();
+        
     }
 
     /**

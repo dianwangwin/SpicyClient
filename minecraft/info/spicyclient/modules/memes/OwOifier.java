@@ -11,6 +11,7 @@ import info.spicyclient.events.listeners.EventChatmessage;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
+import info.spicyclient.util.RandomObjectArraylist;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -43,13 +44,19 @@ public class OwOifier extends Module {
 				
 				EventChatmessage chat = (EventChatmessage) e;
 				if (!chat.getMessage().startsWith("/")) {
-					chat.setMessage((chat.getMessage().toLowerCase().replace("l", "w").replace("r", "w").replace("o", "u").replace("p", "pw").replace("'", "").replace(",", "").replace("su", "so").replace("tuu", "2").replace("hewwu", "hewwo").replace("yuu", "u") + " uwu"));
+					chat.setMessage((chat.getMessage().toLowerCase().replace("l", "w").replace("r", "w").replace("o", "u").replace("p", "pw").replace("'", "").replace(",", "").replace("su", "so").replace("tuu", "2").replace("hewwu", "hewwo").replace("yuu", "u") + " " + getFurryText()));
 				}
 				
 			}
 			
 		}
 		
+	}
+	
+	public static String getFurryText() {
+		//RandomObjectArraylist<String> OwO = new RandomObjectArraylist<String>("OwO", "UwU", "Awoo", "ÒwÓ", "ÓwÒ", "ÔwÔ", "ÙwÚ", "ÚwÙ", "ÛwÛ", "Rawr");
+		RandomObjectArraylist<String> OwO = new RandomObjectArraylist<String>("OwO", "UwU", "Awoo", "Rawr");
+		return OwO.getRandomObject();
 	}
 	
 }

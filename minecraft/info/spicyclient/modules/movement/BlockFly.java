@@ -20,6 +20,7 @@ import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventSneaking;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
+import info.spicyclient.modules.combat.Killaura;
 import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.notifications.Type;
@@ -59,6 +60,7 @@ import net.minecraft.network.play.client.C0BPacketEntityAction.Action;
 import net.minecraft.network.play.client.C0DPacketCloseWindow;
 import net.minecraft.network.play.server.S2FPacketSetSlot;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
@@ -106,6 +108,25 @@ public class BlockFly extends Module {
 		lastSlot = -1;
 		keepPosY = mc.thePlayer.posY - 1;
 		
+		BlockPos block = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1, mc.thePlayer.posZ);
+		
+		for (double i = mc.thePlayer.posY - 1; i > mc.thePlayer.posY - 5; i -= 0.5) {
+			
+			try {
+				if (mc.theWorld.getBlockState(block).getBlock() != Blocks.air) {
+					
+					keepPosY = block.getY();
+					break;
+					
+				}
+			} catch (Exception e) {
+				
+			}
+			
+			block = block.add(0, -1, 0);
+			
+		}
+		
 	}
 	
 	public void onDisable() {
@@ -114,7 +135,7 @@ public class BlockFly extends Module {
 		mc.timer.timerSpeed = 1;
 	}
 	
-	public static transient float lastYaw = 0, lastPitch = 0;
+	public static transient float lastYaw = 0, lastPitch = 0, lastRandX = 0, lastRandY = 0, lastRandZ = 0;
 	public static transient BlockPos lastBlockPos = null;
 	public static transient EnumFacing lastFacing = null;
 	public static transient Timer timer = new Timer();
@@ -271,10 +292,14 @@ public class BlockFly extends Module {
 			*/
 			
 			// Keep rotations
-			if (lastBlockPos != null && lastFacing != null && MovementUtils.isOnGround(0.5)) {
-				float[] keepRots = getRotationsHypixel(lastBlockPos, lastFacing);
+			if (lastBlockPos != null && lastFacing != null) {
+				float[] keepRots = getRotationsHypixel(lastBlockPos, lastFacing, timer.hasTimeElapsed(200, true));
 				lastYaw = keepRots[0];
 				lastPitch = keepRots[1];
+			}
+			
+			if (SpicyClient.config.killaura.isEnabled() && Killaura.target != null) {
+				return;
 			}
 			
 			event.setYaw(lastYaw);
@@ -353,30 +378,23 @@ public class BlockFly extends Module {
 			BlockInfo info = findFacingAndBlockPosForBlock(targetPos);
 			
 			// Returns if it cannot find a block to place on
-			if (info == null) {
+			if (info == null || (SpicyClient.config.killaura.isEnabled() && Killaura.target != null)) {
+				return;
+			}
+			
+			if (info.facing == EnumFacing.UP && mc.thePlayer.posY - info.pos.getY() > 0 && mc.thePlayer.posY - info.pos.getY() <= 2.1 && !MovementUtils.isOnGround(0.0001)) {
 				return;
 			}
 			
 			// Places the block and sets the rots
-			float[] rots = getRotationsHypixel(info.pos, info.facing);
-			event.setYaw(rots[0] + RandomUtils.nextFloat(4, 10));
+			float[] rots = getRotationsHypixel(info.pos, info.facing, false);
+			event.setYaw(rots[0]);
 			event.setPitch(rots[1]);
-			
-//			This flags
-//			if (extend.getValue() == 0.1) {
-//                event.setYaw(mc.thePlayer.rotationYaw + RandomUtils.nextFloat(174, 179));
-//                if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
-//                	event.setPitch(70f);
-//                }else {
-//                	event.setPitch(90f);
-//                }
-//			}
-			
 			RenderUtils.setCustomYaw(event.yaw);
 			RenderUtils.setCustomPitch(event.pitch);
 			lastYaw = event.yaw;
 			lastPitch = event.pitch;
-			mc.playerController.onPlayerRightClickNoSync(mc.thePlayer, mc.theWorld, block, info.pos, info.facing, RotationUtils.getVectorForRotation(rots[1], rots[0]));
+			mc.playerController.onPlayerRightClickNoSync(mc.thePlayer, mc.theWorld, block, info.pos, info.facing, RotationUtils.getVectorForRotation(event.yaw, event.pitch));
 			mc.getNetHandler().getNetworkManager().sendPacket(new C0APacketAnimation());
 			
 		}
@@ -508,54 +526,47 @@ public class BlockFly extends Module {
 
 	}
 
-	public float[] getRotationsHypixel(BlockPos paramBlockPos, EnumFacing paramEnumFacing) {
+	public float[] getRotationsHypixel(BlockPos paramBlockPos, EnumFacing paramEnumFacing, boolean redoRands) {
 		
 		double offsetX = 0, offsetZ = 0;
 		
-		offsetX = (double)paramEnumFacing.getFrontOffsetX() / 2.0D;
-		offsetZ = (double)paramEnumFacing.getFrontOffsetZ() / 2.0D;
+		offsetX = (double)paramEnumFacing.getFrontOffsetX() / 4.0D;
+		offsetZ = (double)paramEnumFacing.getFrontOffsetZ() / 4.0D;
 		
 		if (paramEnumFacing.getFrontOffsetX() == 0 && paramEnumFacing.getFrontOffsetZ() == -1) {
-			offsetZ = 0.5;
+			offsetZ = 0.25;
 		}
 		else if (paramEnumFacing.getFrontOffsetX() == -1 && paramEnumFacing.getFrontOffsetZ() == 0) {
-			offsetX = 0.5;
+			offsetX = 0.25;
 		}
 		
 		lastBlockPos = paramBlockPos;
 		lastFacing = paramEnumFacing;
 		
-        double d1 = (double)paramBlockPos.getX() - mc.thePlayer.posX + offsetX + 0.5;
-        double d2 = (double)paramBlockPos.getZ() - mc.thePlayer.posZ + offsetZ + 0.5;
-        double d3 = mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight() - ((double)paramBlockPos.getY() + ((double)paramEnumFacing.getFrontOffsetZ() / 2.0D));
+		if (redoRands) {
+			lastRandX = (new Random().nextFloat() / 2);
+			lastRandY = (new Random().nextFloat() / 3);
+			lastRandZ = (new Random().nextFloat() / 2);
+		}
+		
+        double d1 = (double)paramBlockPos.getX() - mc.thePlayer.posX + offsetX + lastRandX;
+        double d2 = (double)paramBlockPos.getZ() - mc.thePlayer.posZ + offsetZ + lastRandZ;
+        double d3 = mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight() - ((double)paramBlockPos.getY() + 0.5);
         double d4 = (double)MathHelper.sqrt_double(d1 * d1 + d2 * d2);
         float f1 = (float)(Math.atan2(d2, d1) * 180.0D / 3.141592653589793D) - 90.0F;
         float f2 = (float)(Math.atan2(d3, d4) * 180.0D / 3.141592653589793D);
-        if (f1 < 0.0F) {
-            //f1 += 360.0F;
-        }
         
         f1 = MathHelper.wrapAngleTo180_float(f1);
         f2 = MathHelper.wrapAngleTo180_float(f2);
         
         if (f2 > 90)
-        	f2 = 89f + new Random().nextFloat();
+        	f2 = 90;
         
         if (f2 < -90)
-        	f2 = -89 + (new Random().nextFloat() * -1);
+        	f2 = -90;
         
         return new float[]{f1, f2};
         
-		
-		//return (new Random().nextBoolean()) ? new float[] {mc.thePlayer.rotationYaw + 180, 83} : new float[] {mc.thePlayer.rotationYaw, 85};
-		//return new float[] {mc.thePlayer.rotationYaw, 85};
-		
-//		paramBlockPos = paramBlockPos.offset(paramEnumFacing.getOpposite());
-//
-//		lastPos = new Vec3(paramBlockPos.getX(), paramBlockPos.getY(), paramBlockPos.getZ());
-//
-//		return RotationUtils.getRotationFromPosition(lastPos.xCoord, lastPos.zCoord, lastPos.yCoord);
-
 	}
 	
 	public static ItemStack setStackToPlace() {

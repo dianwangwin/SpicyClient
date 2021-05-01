@@ -102,7 +102,7 @@ public class NoFall extends Module {
 	private boolean isOverVoid() {
 		
 		boolean isOverVoid = true;
-		BlockPos block = mc.thePlayer.getPosition();
+		BlockPos block = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1, mc.thePlayer.posZ);
 		
 		for (double i = mc.thePlayer.posY + 1; i > 0; i -= 0.5) {
 			
