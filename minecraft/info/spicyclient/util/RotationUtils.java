@@ -1,6 +1,5 @@
 package info.spicyclient.util;
 
-import info.spicyclient.events.listeners.EventMotion;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -9,8 +8,19 @@ import net.minecraft.util.Vec3;
 
 public class RotationUtils {
 	
-	// FOUND ON THE OLD SIGMA SOURCE CODE
-	// here is a link to it https://gitlab.com/Arithmo/Sigma/-/blob/master/info/sigmaclient/util/RotationUtils.java
+	public static float updateRotation(float current, float intended, float factor) {
+		float var4 = MathHelper.wrapAngleTo180_float(intended - current);
+
+		if (var4 > factor) {
+			var4 = factor;
+		}
+
+		if (var4 < -factor) {
+			var4 = -factor;
+		}
+
+		return current + var4;
+	}
 	
     public static float getYawChange(double posX, double posZ, float playerYaw, Double playerX, Double playerZ) {
         double deltaX = posX - playerX;
