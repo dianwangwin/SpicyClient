@@ -25,6 +25,7 @@ import info.spicyclient.settings.SettingChangeEvent;
 import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.RenderUtils;
 import info.spicyclient.util.RotationUtils;
+import info.spicyclient.util.ServerUtils;
 import info.spicyclient.util.Timer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -154,13 +155,6 @@ public class Killaura extends Module {
 	}
 	
 	public void onEvent(Event e) {
-		
-		// For the target hud
-		if (e instanceof EventRenderGUI && target != null) {
-			
-			SpicyClient.config.hudModConfig.targetHud1.draw(false);
-			
-		}
 		
 		if (e instanceof EventUpdate) {
 			
@@ -469,7 +463,7 @@ public class Killaura extends Module {
 					startBlocking();
 					
 					if (hitOnHurtTime.isEnabled()) {
-						if (target.hurtTime > 1) {
+						if (target.hurtTime > 0) {
 							return;
 						}
 					}
@@ -538,21 +532,6 @@ public class Killaura extends Module {
 		
 	}
 	
-	private void blockHypixel(EntityLivingBase ent) {
-		
-		if (ent == null) {
-			return;
-		}
-		
-		sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());
-		
-		float[] rotations = RotationUtils.getRotations(target);
-		//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(ent, RotationUtils.getVectorForRotation(rotations[0], rotations[1])));
-		//mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(ent, Action.INTERACT));
-		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
-		
-	}
-	
     public boolean sendUseItem(EntityPlayer playerIn, World worldIn, ItemStack itemStackIn)
     {
     	
@@ -598,7 +577,7 @@ public class Killaura extends Module {
 		try {
 			if (blocking && newAutoblock.is("Hypixel1") && mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword) {
 	        	
-	        	//mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+//	        	mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
 				mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, new BlockPos(-0.8, -0.8, -0.8), EnumFacing.DOWN));
 	            mc.gameSettings.keyBindUseItem.pressed = false;
 	            
@@ -635,29 +614,26 @@ public class Killaura extends Module {
         	
         	blockHypixel(target);
         	
-        	/*
-        	if (target != null && interactAutoblock) {
-        		//mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, new Vec3(randomNumber(-50, 50) / 100.0, randomNumber(0, 200) / 100.0, randomNumber(-50, 50) / 100.0)));
-        		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.INTERACT));
-        		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.INTERACT));
-        		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.INTERACT));
-        		mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.INTERACT));
-        	}
-        	
-        	mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(getHypixelBlockpos(mc.getSession().getUsername()), 255, mc.thePlayer.inventory.getCurrentItem(), 0.0f, 0.0f, 0.0f));
-        	//mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
-        	
-        	mc.thePlayer.setItemInUse(mc.thePlayer.getCurrentEquippedItem(), 10);
-        	//mc.gameSettings.keyBindUseItem.pressed = true;
-        	//mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());
-            //mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
-             * 
-             */
         }
         else if (newAutoblock.is("Vanilla") && (mc.thePlayer.inventory.getCurrentItem() != null) && ((mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemSword))) {
             mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
         }
         
+	}
+	
+	private void blockHypixel(EntityLivingBase ent) {
+		
+		if (ent == null) {
+			return;
+		}
+		
+		sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem());
+		
+		float[] rotations = RotationUtils.getRotations(target);
+//		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(ent, RotationUtils.getVectorForRotation(rotations[0], rotations[1])));
+//		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C02PacketUseEntity(ent, Action.INTERACT));
+		mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
+		
 	}
 	
 	// I found these methods on github somewhere

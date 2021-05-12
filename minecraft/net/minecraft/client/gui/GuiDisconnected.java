@@ -40,7 +40,6 @@ public class GuiDisconnected extends GuiScreen
                 try {
                 	long dateUnbanned = System.currentTimeMillis();
                 	String time = message.getSiblings().get(1).getFormattedText().substring(2, message.getSiblings().get(1).getFormattedText().length() - 2);
-                	System.out.println(time);
                 	if (time.equalsIgnoreCase("reason: ")) {
                 		for (int e = SpicyClient.altInfo.alts.size(); e > 0; e--) {
                     		try {

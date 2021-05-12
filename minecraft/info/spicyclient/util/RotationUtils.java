@@ -56,7 +56,7 @@ public class RotationUtils {
         return new float[]{yaw, pitch};
     }
     
-    public static float[] getRotations(EntityLivingBase ent) {
+    public static float[] getRotations(Entity ent) {
         double x = ent.posX;
         double z = ent.posZ;
         double y = ent.posY + (ent.getEyeHeight() / 2.0F);

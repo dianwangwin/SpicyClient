@@ -91,77 +91,61 @@ public class Antibot extends Module {
 					S0CPacketSpawnPlayer p = (S0CPacketSpawnPlayer) packet.packet;
 					Entity entity = mc.theWorld.getEntityByID(p.getEntityID());
 					
-					new Thread("Bot checker thread") {
-                		public void run() {
-                			
-                			try {
-								Thread.sleep(3500);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-                			
-                			Entity entity = null;
-                			
-                			try {
-                				entity = mc.theWorld.getEntityByID(p.getEntityID());
-							} catch (Exception e2) {
-								
-							}
-                			
-                			try {
-    	                        if (mc.getNetHandler().getPlayerInfo(((EntityPlayer)entity).getUniqueID()).responseTime > 1) {
-    	                        	//Command.sendPrivateChatMessage("A watchdog bot was removed from your game (ping check)");
-    	                        	mc.theWorld.removeEntity(entity);
-    	                        	return;
-    	                        }
-							} catch (Exception e2) {
-								
-							}
-            				
-            				try {
-    	                        if (mc.getNetHandler()
-										.getPlayerInfo(((EntityPlayer) entity).getUniqueID()) == null) {
-									//Command.sendPrivateChatMessage(
-											//"A watchdog bot was removed from your game (null npi check)");
-									mc.theWorld.removeEntity(entity);
-									return;
-								}
-							} catch (Exception e2) {
-								
-							}
-            				
-            				try {
-    	                        if (mc.getNetHandler()
-										.getPlayerInfo(((EntityPlayer) entity).getUniqueID())
-										.getGameProfile() == null) {
-									//Command.sendPrivateChatMessage(
-											//"A watchdog bot was removed from your game (null game profile check)");
-									mc.theWorld.removeEntity(entity);
-									return;
-								}
-							} catch (Exception e2) {
-								
-							}
-
-                		};
-                	}.start();
+//					new Thread("Bot checker thread") {
+//                		public void run() {
+//                			
+//                			try {
+//								Thread.sleep(3500);
+//							} catch (InterruptedException e) {
+//								e.printStackTrace();
+//							}
+//                			
+//                			Entity entity = null;
+//                			
+//                			try {
+//                				entity = mc.theWorld.getEntityByID(p.getEntityID());
+//							} catch (Exception e2) {
+//								
+//							}
+//                			
+//                			try {
+//    	                        if (mc.getNetHandler().getPlayerInfo(((EntityPlayer)entity).getUniqueID()).responseTime > 1) {
+//    	                        	//Command.sendPrivateChatMessage("A watchdog bot was removed from your game (ping check)");
+//    	                        	mc.theWorld.removeEntity(entity);
+//    	                        	return;
+//    	                        }
+//							} catch (Exception e2) {
+//								
+//							}
+//            				
+//            				try {
+//    	                        if (mc.getNetHandler()
+//										.getPlayerInfo(((EntityPlayer) entity).getUniqueID()) == null) {
+//									//Command.sendPrivateChatMessage(
+//											//"A watchdog bot was removed from your game (null npi check)");
+//									mc.theWorld.removeEntity(entity);
+//									return;
+//								}
+//							} catch (Exception e2) {
+//								
+//							}
+//            				
+//            				try {
+//    	                        if (mc.getNetHandler()
+//										.getPlayerInfo(((EntityPlayer) entity).getUniqueID())
+//										.getGameProfile() == null) {
+//									//Command.sendPrivateChatMessage(
+//											//"A watchdog bot was removed from your game (null game profile check)");
+//									mc.theWorld.removeEntity(entity);
+//									return;
+//								}
+//							} catch (Exception e2) {
+//								
+//							}
+//
+//                		};
+//                	}.start();
 					
-					//hypixelAntibot();
-					/*
-					S0CPacketSpawnPlayer p = (S0CPacketSpawnPlayer) packet.packet;
-					Entity entity = mc.theWorld.getEntityByID(p.getEntityID());
-					
-					if (entity == null) {
-						return;
-					}
-					
-	                if (entity.getDisplayName().getFormattedText().startsWith("\u00a7") && !entity.isInvisible() && !entity.getDisplayName().getFormattedText().toLowerCase().contains("npc")) {
-	                	
-	                }else {
-	                	Command.sendPrivateChatMessage("The " + entity.getDisplayName().getFormattedText() + " bot was removed from your game");
-	                	packet.setCanceled(true);
-	                }
-					*/
 				}
 				
 			}

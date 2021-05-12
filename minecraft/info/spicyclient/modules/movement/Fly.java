@@ -202,8 +202,6 @@ public class Fly extends Module {
 		
 	}
 	
-	public static int fly_keybind = Keyboard.KEY_F;
-
 	public static transient int hypixelStage = 0, verusStage = 0;
 	public static transient boolean hypixelDamaged = false;
 	public static transient float lastPlayerHealth;
@@ -891,8 +889,11 @@ public class Fly extends Module {
     public static transient boolean testBool1 = false, testBool2 = false;
     
     public void onTestEnable() {
-    	testStage = 0;
-    	testDub1 = mc.thePlayer.posY - 1;
+    	
+    	mc.thePlayer.jump();
+//    	PlayerCapabilities caps = mc.thePlayer.capabilities;
+//    	caps.isFlying = true;
+//    	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(caps));
     }
     
     public void onTestDisable() {
@@ -922,6 +923,10 @@ public class Fly extends Module {
 			mc.thePlayer.onGround = true;
 			
 			MovementUtils.strafe((float) speed.getValue() * 3);
+			
+			if (!MovementUtils.isMoving()) {
+				MovementUtils.setMotion(0);
+			}
 			
 		}
     }

@@ -81,7 +81,8 @@ public class Furries extends Module {
 		WOLF1(new ResourceLocation("spicy/skins/wolf1.png")),
 		WOLF2(new ResourceLocation("spicy/skins/wolf2.png")),
 		WOLF3(new ResourceLocation("spicy/skins/wolf3.png")),
-		DOG1(new ResourceLocation("spicy/skins/dog1.png"));
+		DOG1(new ResourceLocation("spicy/skins/dog1.png")),
+		SPARKLEDOG1(new ResourceLocation("spicy/skins/sparkledog1.png"));
 		
 		public ResourceLocation skin;
 		

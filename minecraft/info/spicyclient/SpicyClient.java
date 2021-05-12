@@ -125,7 +125,7 @@ public class SpicyClient {
 	// volatile needed so it doesn't get stuck
 	public static volatile boolean discordFailedToStart = true, musicPlayerFailedToStart = true;
 	
-	public static int currentVersionNum = 28, currentBuildNum = 3;
+	public static int currentVersionNum = 30, currentBuildNum = 3;
 	
 	public static boolean currentlyLoadingConfig = false, hasInitViaversion = false;
 	
@@ -471,9 +471,8 @@ public class SpicyClient {
 			if (event.packet instanceof S02PacketChat) {
 				S02PacketChat chat = (S02PacketChat) event.packet;
 				String[] chatParts = chat.getChatComponent().getFormattedText().split(" ");
-				System.out.println(chat.getChatComponent().getFormattedText());
 				if (chatParts[0].startsWith("§dFrom") && chatParts[1].endsWith(":")) {
-					NotificationManager.getNotificationManager().createNotification("Chat message", chat.getChatComponent().getFormattedText() + "  ", false, 15000, info.spicyclient.notifications.Type.INFO, Color.PINK);
+					NotificationManager.getNotificationManager().createNotification("Chat message", chat.getChatComponent().getFormattedText() + "  ", true, 15000, info.spicyclient.notifications.Type.INFO, Color.PINK);
 				}
 				
 			}
