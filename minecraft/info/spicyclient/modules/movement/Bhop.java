@@ -271,14 +271,14 @@ public class Bhop extends Module {
 						boosted = true;
 						new Thread("Bhop thread") {
 							public void run() {
-								Command.sendPrivateChatMessage("fast");
+//								Command.sendPrivateChatMessage("fast");
 								mc.timer.timerSpeed = 1000000000f;
 								try {
 									Thread.sleep(10);
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								}
-								Command.sendPrivateChatMessage("slow");
+//								Command.sendPrivateChatMessage("slow");
 								mc.timer.timerSpeed = 0.1f;
 								try {
 									Thread.sleep(20);
@@ -299,10 +299,11 @@ public class Bhop extends Module {
 					
 					mc.thePlayer.setSprinting(true);
 					
-			         double xDist = mc.thePlayer.posX - mc.thePlayer.prevPosX;
-			         double zDist = mc.thePlayer.posZ - mc.thePlayer.prevPosZ;
-			         double lastDistSonic = Math.sqrt(xDist * xDist + zDist * zDist);
-			         MovementUtils.setMotion(MovementUtils.getBlocksPerSecond() - lastDistSonic);
+					if (MovementUtils.isOnGround(0.0001)) {
+						mc.thePlayer.jump();
+					}
+					
+					MovementUtils.strafe();
 					
 				}
 			}

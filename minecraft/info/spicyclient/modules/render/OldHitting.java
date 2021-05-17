@@ -63,7 +63,6 @@ public class OldHitting extends Module {
 				float f = 1.0F - (mc.getItemRenderer().prevEquippedProgress + (ir.equippedProgress - ir.prevEquippedProgress) * partialTicks);
 				float swingProgress = mc.thePlayer.getSwingProgress(partialTicks);
 				float swingProgressReversed = 1.0f - swingProgress;
-				
 				if (this.animationSetting.getMode() == "1.7" || this.animationSetting.is("1.7")) {
 					GlStateManager.translate(-0.15f, 0.15f, -0.2f);
 					ir.transformFirstPersonItem(f, swingProgress);
@@ -120,17 +119,11 @@ public class OldHitting extends Module {
 				}
 				else if (animationSetting.getMode() == "Spicy" || this.animationSetting.is("Spicy")) {
 					
-					GlStateManager.translate(-0.15f, 0.2f, -0.2f);
-					
-					GlStateManager.translate(0, 0, -0.2f);
-					if (-swingProgress > -0.5) {
-						GlStateManager.translate(0, -swingProgress, 0);
-					}else {
-						GlStateManager.translate(0, swingProgress - 1f, 0);
-					}
-					
-					ir.transformFirstPersonItem(f, swingProgress);
-					ir.func_178103_d();
+					GlStateManager.translate(0.56F, -0.32F, -0.71999997F);
+					GlStateManager.scale(0.4F, 0.4F, 0.4F);
+					GlStateManager.rotate(90, 1, 1, -4);
+					GlStateManager.rotate(90, -1, 0, 0);
+					GlStateManager.rotate((swingProgress < 0.5 ? swingProgress : swingProgressReversed) * -200, 2, 0, 0);
 					
 				}
 				else if (animationSetting.getMode() == "Astolfo" || this.animationSetting.is("Astolfo")) {
@@ -142,12 +135,10 @@ public class OldHitting extends Module {
 				else if (animationSetting.is("Test")) {
 					
 					GlStateManager.translate(0.56F, -0.32F, -0.71999997F);
-					//GlStateManager.translate(0.0F, f * -0.6F, 0.0F);
-					//GlStateManager.rotate(360 * swingProgress, 0.0F, -1.0F, 1.0F);
 					GlStateManager.scale(0.4F, 0.4F, 0.4F);
 					GlStateManager.rotate(90, 1, 1, -4);
 					GlStateManager.rotate(90, -1, 0, 0);
-					GlStateManager.rotate((swingProgress < 0.5 ? swingProgress : swingProgressReversed) * -20, 2, 0, 0);
+					GlStateManager.rotate((swingProgress < 0.5 ? swingProgress : swingProgressReversed) * -250, 2, 0, 0);
 					
 				}
 				
