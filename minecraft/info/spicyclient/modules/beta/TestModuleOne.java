@@ -3,9 +3,11 @@ package info.spicyclient.modules.beta;
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.events.Event;
+import info.spicyclient.events.listeners.EventRender3D;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.util.Timer;
+import info.spicyclient.util.pathfinding.PathFinder;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.play.client.C01PacketChatMessage;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
@@ -26,10 +28,13 @@ public class TestModuleOne extends Module {
 	public float flo = 0;
 	public boolean bool1 = false, bool2 = true;
 	public BlockPos pos = BlockPos.ORIGIN;
+	public PathFinder pathFinder = new PathFinder(4, false, false);
 	
 	@Override
 	public void onEnable() {
-		
+		pathFinder = new PathFinder(4, true, false);
+		BlockPos test = mc.thePlayer.getPosition().add(40, 10, 10);
+		pathFinder.createPath(mc.thePlayer.getPosition(), test);
 	}
 
 	@Override
@@ -40,12 +45,8 @@ public class TestModuleOne extends Module {
 	@Override
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventUpdate && e.isPre()) {
-			
-			EventUpdate update = (EventUpdate)e;
-			update.setYaw(180);
-			update.setPitch(0);
-			
+		if (e instanceof EventRender3D) {
+			pathFinder.renderPath();
 		}
 		
 	}

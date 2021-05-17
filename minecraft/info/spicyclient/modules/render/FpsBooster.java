@@ -101,11 +101,6 @@ public class FpsBooster extends Module {
 						NotificationManager.getNotificationManager().createNotification("FpsBooster",
 								"Turned off fancy graphics", true, 2000, Type.INFO, Color.PINK);
 					}
-					else if (!mc.gameSettings.ofFastMath) {
-						mc.gameSettings.ofFastMath = true;
-						NotificationManager.getNotificationManager().createNotification("FpsBooster",
-								"Turned on fast math", true, 2000, Type.INFO, Color.PINK);
-					}
 					else if (!mc.gameSettings.ofFastRender) {
 						mc.gameSettings.ofFastRender = true;
 						NotificationManager.getNotificationManager().createNotification("FpsBooster",
