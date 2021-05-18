@@ -1,5 +1,6 @@
 package info.spicyclient.modules.beta;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.events.Event;
@@ -29,11 +30,12 @@ public class TestModuleOne extends Module {
 	public float flo = 0;
 	public boolean bool1 = false, bool2 = true;
 	public BlockPos pos = BlockPos.ORIGIN;
-	public AStarPathFinder pathFinder = new AStarPathFinder();
+	public AStarPathFinder pathFinder = new AStarPathFinder(10000, false);
 	
 	@Override
 	public void onEnable() {
-//		BlockPos test = mc.thePlayer.getPosition().add(RandomUtils.nextDouble(0, 100) - 50, RandomUtils.nextDouble(0, 100) - 50, RandomUtils.nextDouble(0, 100) - 50);
+		pathFinder = new AStarPathFinder(10000, false);
+//		BlockPos test = mc.thePlayer.getPosition().add(RandomUtils.nextDouble(0, 100) - 50, 100, RandomUtils.nextDouble(0, 100) - 50);
 		BlockPos test = new BlockPos(-265, 57, 102);
 		pathFinder.createPath(mc.thePlayer.getPosition(), test);
 	}

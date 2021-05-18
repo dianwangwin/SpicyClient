@@ -2,6 +2,7 @@ package info.spicyclient.util.pathfinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.util.RenderUtils;
@@ -14,6 +15,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
 
 public class AStarPathFinder {
+	
+	public AStarPathFinder(long timeout, boolean goThoughBlocks) {
+		this.timeout = timeout;
+		this.goThoughBlocks = goThoughBlocks;
+	}
+	
+	public long timeout;
+	public boolean goThoughBlocks;
 	
 	// A* pathfinding basically works like this
 	// Step 1: Get list of nodes with lowest f value
@@ -44,9 +53,17 @@ public class AStarPathFinder {
 	}
 	
 	public ArrayList<BlockPos> path = new ArrayList<>();
-	public static ArrayList<Block> whiteListedBlocks = new ArrayList<>(Arrays.asList(Blocks.air));
 	
 	public ArrayList<BlockPos> createPath(BlockPos start, BlockPos end) {
+		
+		boolean flipAfter = false;
+		
+		if (getBlockCountAroundPos(start) < getBlockCountAroundPos(end)) {
+			BlockPos temp = start;
+			start = end;
+			end = temp;
+			flipAfter = true;
+		}
 		
 		path.clear();
 		
@@ -54,7 +71,7 @@ public class AStarPathFinder {
 		nodes.add(new Node(start, 0, WorldUtils.getDistance(start, end), null));
 		
 		// Prevents the program from freezing
-		long antiFreeze = System.currentTimeMillis() + 5000;
+		long antiFreeze = System.currentTimeMillis() + timeout;
 		while (System.currentTimeMillis() < antiFreeze) {
 			
 			// Prevents it from getting stuck if there is no path the to end
@@ -93,21 +110,42 @@ public class AStarPathFinder {
 			if (nodeToCheck.pos.equals(end)) {
 				path.clear();
 				Node backtrack = nodeToCheck;
-				while ((backtrack = backtrack.previousNode) != null) {
-					path.add(backtrack.pos);
-					backtrack = backtrack.previousNode;
+				try {
+					while ((backtrack = backtrack.previousNode) != null) {
+						path.add(backtrack.pos);
+						backtrack = backtrack.previousNode;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
+				
+				if (flipAfter)
+					Collections.reverse(path);
+				
 				return path;
 			}
 			
 			// Recreates arraylist with added values
 			nodeToCheck.hasChecked = true;
+			path.add(nodeToCheck.pos);
 			nodes = reCreateNodeArrayList(nodeToCheck, end, nodes);
 			
 		}
 		
 		return new ArrayList<>();
 		
+	}
+	
+	private int getBlockCountAroundPos(BlockPos pos) {
+		int blockCount = 0;
+		
+		for (int x = -10; x < 10; x++)
+			for (int y = -10; y < 10; y++)
+				for (int z = -10; z < 10; z++)
+					if (!Minecraft.getMinecraft().theWorld.getBlockState(pos.add(x, y, z)).getBlock().equals(Blocks.air))
+						blockCount++;
+		
+		return blockCount;
 	}
 	
 	private ArrayList<Node> reCreateNodeArrayList(Node nodeToCheck, BlockPos end, ArrayList<Node> existingNodes){
@@ -133,7 +171,7 @@ public class AStarPathFinder {
 				}
 			}
 			
-			if (add) {
+			if (add && !goThoughBlocks) {
 				if (!Minecraft.getMinecraft().theWorld.getBlockState(newNode.pos).getBlock().equals(Blocks.air))
 					add = false;
 			}
@@ -153,7 +191,7 @@ public class AStarPathFinder {
 		
 		ArrayList<Vec3> trailList = new ArrayList<Vec3>();
 		for (BlockPos pos : path) {
-			trailList.add(new Vec3(pos.x, pos.y, pos.z));
+			trailList.add(new Vec3(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5));
 		}
 		
 		Vec3 lastLoc = null;
