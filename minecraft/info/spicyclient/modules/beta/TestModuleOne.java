@@ -1,21 +1,13 @@
 package info.spicyclient.modules.beta;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventRender3D;
-import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.util.Timer;
 import info.spicyclient.util.pathfinding.AStarPathFinder;
-import info.spicyclient.util.pathfinding.PathFinder;
-import net.minecraft.init.Blocks;
-import net.minecraft.network.play.client.C01PacketChatMessage;
-import net.minecraft.network.play.client.C0BPacketEntityAction;
-import net.minecraft.network.play.client.C0BPacketEntityAction.Action;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 
 public class TestModuleOne extends Module {
 
@@ -37,7 +29,7 @@ public class TestModuleOne extends Module {
 		pathFinder = new AStarPathFinder(10000, false);
 //		BlockPos test = mc.thePlayer.getPosition().add(RandomUtils.nextDouble(0, 100) - 50, 100, RandomUtils.nextDouble(0, 100) - 50);
 		BlockPos test = new BlockPos(-265, 57, 102);
-		pathFinder.createPath(mc.thePlayer.getPosition(), test);
+		pathFinder.createPath(mc.thePlayer.getRealPosition(), test);
 	}
 
 	@Override

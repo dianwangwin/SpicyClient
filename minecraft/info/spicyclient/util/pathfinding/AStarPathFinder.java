@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import info.spicyclient.chatCommands.Command;
+import info.spicyclient.notifications.Color;
+import info.spicyclient.notifications.NotificationManager;
+import info.spicyclient.notifications.Type;
 import info.spicyclient.util.RenderUtils;
 import info.spicyclient.util.WorldUtils;
 import net.minecraft.block.Block;
@@ -55,6 +58,36 @@ public class AStarPathFinder {
 	public ArrayList<BlockPos> path = new ArrayList<>();
 	
 	public ArrayList<BlockPos> createPath(BlockPos start, BlockPos end) {
+		
+		if (!Minecraft.getMinecraft().theWorld.getBlockState(start).getBlock().equals(Blocks.air) && !goThoughBlocks) {
+			NotificationManager.getNotificationManager().createNotification("Pathfinder", "Start point is inside of block, selecting point next to it", true, 1000, Type.WARNING, Color.RED);
+			for (int x = -2; x < 2; x++)
+				for (int y = -2; y < 2; y++)
+					for (int z = -2; z < 2; z++)
+						if (Minecraft.getMinecraft().theWorld.getBlockState(start.add(x, y, z)).getBlock().equals(Blocks.air)) {
+							start = start.add(x, y, z);
+							break;
+						}
+			if (!Minecraft.getMinecraft().theWorld.getBlockState(start).getBlock().equals(Blocks.air)) {
+				NotificationManager.getNotificationManager().createNotification("Pathfinder", "Failed to find air point next to the original start point", true, 1000, Type.WARNING, Color.RED);
+				return new ArrayList<>();
+			}
+		}
+		
+		if (!Minecraft.getMinecraft().theWorld.getBlockState(end).getBlock().equals(Blocks.air) && !goThoughBlocks) {
+			NotificationManager.getNotificationManager().createNotification("Pathfinder", "End point is inside of block, selecting point next to it", true, 1000, Type.WARNING, Color.RED);
+			for (int x = -2; x < 2; x++)
+				for (int y = -2; y < 2; y++)
+					for (int z = -2; z < 2; z++)
+						if (Minecraft.getMinecraft().theWorld.getBlockState(end.add(x, y, z)).getBlock().equals(Blocks.air)) {
+							end = end.add(x, y, z);
+							break;
+						}
+			if (!Minecraft.getMinecraft().theWorld.getBlockState(end).getBlock().equals(Blocks.air)) {
+				NotificationManager.getNotificationManager().createNotification("Pathfinder", "Failed to find air point next to the original end point", true, 1000, Type.WARNING, Color.RED);
+				return new ArrayList<>();
+			}
+		}
 		
 		boolean flipAfter = false;
 		
@@ -110,6 +143,7 @@ public class AStarPathFinder {
 			if (nodeToCheck.pos.equals(end)) {
 				path.clear();
 				Node backtrack = nodeToCheck;
+				path.add(backtrack.pos);
 				try {
 					while ((backtrack = backtrack.previousNode) != null) {
 						path.add(backtrack.pos);
@@ -125,9 +159,11 @@ public class AStarPathFinder {
 				return path;
 			}
 			
+			// Debug lines
+//			path.add(nodeToCheck.pos);
+			
 			// Recreates arraylist with added values
 			nodeToCheck.hasChecked = true;
-			path.add(nodeToCheck.pos);
 			nodes = reCreateNodeArrayList(nodeToCheck, end, nodes);
 			
 		}
