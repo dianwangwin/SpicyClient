@@ -33,7 +33,8 @@ public class TestModuleOne extends Module {
 	
 	@Override
 	public void onEnable() {
-		BlockPos test = mc.thePlayer.getPosition().add(20, 0, 0);
+//		BlockPos test = mc.thePlayer.getPosition().add(RandomUtils.nextDouble(0, 100) - 50, RandomUtils.nextDouble(0, 100) - 50, RandomUtils.nextDouble(0, 100) - 50);
+		BlockPos test = new BlockPos(-265, 57, 102);
 		pathFinder.createPath(mc.thePlayer.getPosition(), test);
 	}
 

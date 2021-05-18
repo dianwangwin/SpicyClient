@@ -6,6 +6,7 @@ import java.util.Arrays;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.util.RenderUtils;
 import info.spicyclient.util.WorldUtils;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
@@ -43,6 +44,7 @@ public class AStarPathFinder {
 	}
 	
 	public ArrayList<BlockPos> path = new ArrayList<>();
+	public static ArrayList<Block> whiteListedBlocks = new ArrayList<>(Arrays.asList(Blocks.air));
 	
 	public ArrayList<BlockPos> createPath(BlockPos start, BlockPos end) {
 		
@@ -89,30 +91,21 @@ public class AStarPathFinder {
 			
 			// If it reached the end then return
 			if (nodeToCheck.pos.equals(end)) {
-				Command.sendPrivateChatMessage("yes");
 				path.clear();
 				Node backtrack = nodeToCheck;
 				while ((backtrack = backtrack.previousNode) != null) {
 					path.add(backtrack.pos);
 					backtrack = backtrack.previousNode;
 				}
-				
-//				Node backtrack = nodeToCheck;
-//				while (backtrack != null) {
-//					path.add(backtrack.pos);
-//					backtrack = backtrack.previousNode;
-//				}
 				return path;
 			}
 			
 			// Recreates arraylist with added values
 			nodeToCheck.hasChecked = true;
-			path.add(nodeToCheck.pos);
 			nodes = reCreateNodeArrayList(nodeToCheck, end, nodes);
 			
 		}
 		
-		Command.sendPrivateChatMessage("no");
 		return new ArrayList<>();
 		
 	}
