@@ -98,7 +98,7 @@ public class PathFinder {
 								endZ = tempZ;
 							}
 							
-							for (double percent = 0; percent < 100; percent += 0.1) {
+							for (double percent = 0; percent < 100; percent += 0.15) {
 								double rayX = startX + (((endX - startX) / 100) * percent),
 										rayY = startY + (((endY - startY) / 100) * percent),
 										rayZ = startZ + (((endZ - startZ) / 100) * percent);
