@@ -303,15 +303,17 @@ public class BlockFly extends Module {
 			EventUpdate event = (EventUpdate)e;
 			
 			// Additional info
-			this.additionalInformation = decimalFormat.format(lastRandX) + " " + SpicyClient.hud.separator + " " + decimalFormat.format(lastRandY) + " " + SpicyClient.hud.separator + " " + decimalFormat.format(lastRandZ);
+			this.additionalInformation = "Thomaz#3000's rotations";
 			
 			// prevents flags on hypixel
-			if (!sprint.isEnabled()) {
+			if (!sprint.isEnabled() && mc.thePlayer.isSprinting()) {
 				mc.thePlayer.setSprinting(false);
 			}
-			mc.thePlayer.onGround = false;
+			else if (sprint.isEnabled() && !mc.thePlayer.isSprinting()) {
+				mc.thePlayer.setSprinting(true);
+			}
 			
-			// Faster
+			// Timer boost
 			mc.timer.timerSpeed = ((float)timerBoost.getValue());
 			
 			// KeepY
@@ -322,8 +324,8 @@ public class BlockFly extends Module {
 			// Keep rotations
 			if (lastBlockPos != null && lastFacing != null) {
 				float[] keepRots = getRotationsHypixel(lastBlockPos, lastFacing, timer.hasTimeElapsed(62, true));
-//				lastYaw = keepRots[0];
-//				lastPitch = keepRots[1];
+				lastYaw = keepRots[0];
+				lastPitch = keepRots[1];
 			}
 			
 			if (SpicyClient.config.killaura.isEnabled() && Killaura.target != null) {
@@ -415,6 +417,8 @@ public class BlockFly extends Module {
 			}
 			
 			// Places the block and sets the rots
+			if (mc.thePlayer.isSprinting())
+				mc.thePlayer.setSprinting(false);
 			float[] rots = getRotationsHypixel(info.pos, info.facing, true);
 			event.setYaw(rots[0]);
 			event.setPitch(rots[1]);
@@ -423,6 +427,11 @@ public class BlockFly extends Module {
 			lastYaw = event.yaw;
 			lastPitch = event.pitch;
 			mc.getNetHandler().getNetworkManager().sendPacket(new C0APacketAnimation());
+			if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
+                mc.thePlayer.motionX *= 0.1D;
+                mc.thePlayer.motionZ *= 0.1D;
+                mc.thePlayer.moveForward = 0.0F;
+            }
 			mc.playerController.onPlayerRightClickNoSync(mc.thePlayer, mc.theWorld, block, info.pos, info.facing, RotationUtils.getVectorForRotation(event.yaw, event.pitch));
 			
 		}
@@ -433,9 +442,9 @@ public class BlockFly extends Module {
 		
 		if (rands) {
 			
-			lastRandX = RandomUtils.nextFloat(0, 1f);
-			lastRandY = RandomUtils.nextFloat(0.4f, 0.8f);
-			lastRandZ = RandomUtils.nextFloat(0, 1f);
+//			lastRandX = RandomUtils.nextFloat(0, 1f);
+//			lastRandY = RandomUtils.nextFloat(0.4f, 0.8f);
+//			lastRandZ = RandomUtils.nextFloat(0, 1f);
 //			lastRandX = 0.5f;
 //			lastRandY = 0.5f;
 //			lastRandZ = 0.5f;
@@ -498,8 +507,8 @@ public class BlockFly extends Module {
 		float f1 = (float) (Math.atan2(d2, d1) * 180.0D / 3.141592653589793D) - 90.0F;
 		float f2 = (float) (Math.atan2(d3, d4) * 180.0D / 3.141592653589793D);
 
-		f1 = MathHelper.wrapAngleTo180_float(f1);
-		f2 = MathHelper.wrapAngleTo180_float(f2);
+//		f1 = MathHelper.wrapAngleTo180_float(f1);
+//		f2 = MathHelper.wrapAngleTo180_float(f2);
 
 		if (f2 > 90)
 			f2 = 90;
@@ -510,7 +519,8 @@ public class BlockFly extends Module {
 //        mc.thePlayer.rotationYaw = f1;
 //        mc.thePlayer.rotationPitch = f2;
 
-		return new float[] { f1, f2 };
+//		return new float[] { mc.thePlayer.rotationYaw - 170, sprint.isEnabled() ? 60 : 70 };
+		return new float[] {f1, f2};
 
 	}
 	

@@ -1,4 +1,4 @@
-package info.spicyclient.ClickGUI;
+package info.spicyclient.clickGUI;
 
 import java.io.IOException;
 import java.util.ArrayList;

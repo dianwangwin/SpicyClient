@@ -6,8 +6,8 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
-import info.spicyclient.ClickGUI.ClickGUI;
-import info.spicyclient.ClickGUI.NewClickGui;
+import info.spicyclient.clickGUI.ClickGUI;
+import info.spicyclient.clickGUI.NewClickGui;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventKey;
 import info.spicyclient.events.listeners.EventRenderGUI;
@@ -29,7 +29,7 @@ import net.minecraft.client.gui.ScaledResolution;
 public class ClickGui extends Module{
 	
 	public static Minecraft mc = Minecraft.getMinecraft();
-	public static info.spicyclient.ClickGUI.ClickGUI clickGui = new info.spicyclient.ClickGUI.ClickGUI(null);
+	public static info.spicyclient.clickGUI.ClickGUI clickGui = new info.spicyclient.clickGUI.ClickGUI(null);
 	
 	public BooleanSetting sound = new BooleanSetting("Sound", true);
 	public NumberSetting volume = new NumberSetting("Volume", 0.5, 0.1, 1.0, 0.1);
@@ -70,7 +70,7 @@ public class ClickGui extends Module{
 			mc.displayGuiScreen(NewClickGui.getClickGui());
 		}
 		else if (clickguiMode.is("Spicy V1")) {
-			info.spicyclient.ClickGUI.ClickGUI clickGui = new info.spicyclient.ClickGUI.ClickGUI(null);
+			info.spicyclient.clickGUI.ClickGUI clickGui = new info.spicyclient.clickGUI.ClickGUI(null);
 			mc.displayGuiScreen(clickGui);
 		}
 		
@@ -97,7 +97,7 @@ public class ClickGui extends Module{
 					mc.displayGuiScreen(NewClickGui.getClickGui());
 				}
 				else if (clickguiMode.is("Spicy V1")) {
-					info.spicyclient.ClickGUI.ClickGUI clickGui = new info.spicyclient.ClickGUI.ClickGUI(null);
+					info.spicyclient.clickGUI.ClickGUI clickGui = new info.spicyclient.clickGUI.ClickGUI(null);
 					mc.displayGuiScreen(clickGui);
 				}
 				

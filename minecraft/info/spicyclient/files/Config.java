@@ -134,6 +134,8 @@ public class Config {
 	public SpicyAntiAntiXray spicyAntiAntiXray = new SpicyAntiAntiXray();
 	public TargetHud targetHud = new TargetHud();
 	public AimAssist aimAssist = new AimAssist();
+	public BedwarsDeathTeleport bedwarsDeathTeleport = new BedwarsDeathTeleport();
+	public TpAura tpAura = new TpAura();
 	
 	public String clientName = "Spicy ", clientVersion = "B3 Beta";
 	
@@ -230,7 +232,7 @@ public class Config {
 		modules.add(con.jelloForSpicy);
 		modules.add(con.speed);
 		modules.add(con.ircChat);
-		modules.add(con.hypixelClickTeleport);
+//		modules.add(con.hypixelClickTeleport);
 		modules.add(con.skin);
 		modules.add(con.cape);
 		modules.add(con.teams);
@@ -243,6 +245,8 @@ public class Config {
 		modules.add(con.spicyAntiAntiXray);
 		modules.add(con.targetHud);
 		modules.add(con.aimAssist);
+		modules.add(con.bedwarsDeathTeleport);
+		modules.add(con.tpAura);
 		
 		return modules;
 		
@@ -342,6 +346,8 @@ public class Config {
 			this.scaffold = new Scaffold();
 			this.spicyAntiAntiXray = new SpicyAntiAntiXray();
 			this.targetHud = new TargetHud();
+			this.bedwarsDeathTeleport = new BedwarsDeathTeleport();
+			this.tpAura = new TpAura();
 			
 			this.killaura.dontHitDeadEntitys = new BooleanSetting("Don't hit dead entitys", false);
 			this.killaura.newAutoblock = new ModeSetting("Autoblock mode", "None", "None", "Vanilla", "Hypixel");

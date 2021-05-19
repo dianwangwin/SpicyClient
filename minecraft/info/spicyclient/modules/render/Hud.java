@@ -6,7 +6,7 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
-import info.spicyclient.ClickGUI.NewClickGui;
+import info.spicyclient.clickGUI.NewClickGui;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventKey;
 import info.spicyclient.events.listeners.EventRenderGUI;
@@ -28,7 +28,7 @@ import net.minecraft.client.gui.ScaledResolution;
 public class Hud extends Module{
 	
 	public static Minecraft mc = Minecraft.getMinecraft();
-	public static info.spicyclient.ClickGUI.ClickGUI clickGui = new info.spicyclient.ClickGUI.ClickGUI(null);
+	public static info.spicyclient.clickGUI.ClickGUI clickGui = new info.spicyclient.clickGUI.ClickGUI(null);
 	
 	public BooleanSetting sound = new BooleanSetting("Sound", true),
 			hour24Time = new BooleanSetting("24 Hour Time", false);
@@ -111,7 +111,7 @@ public class Hud extends Module{
 				 
 				float brightness = hsb[2];
 				
-				info.spicyclient.ClickGUI.ClickGUI.accentColor = Color.HSBtoRGB(hue, saturation, 1);
+				info.spicyclient.clickGUI.ClickGUI.accentColor = Color.HSBtoRGB(hue, saturation, 1);
 				NewClickGui.accentColor = Color.HSBtoRGB(hue, saturation, 1);
 				SpicyClient.hud.primaryColor = Color.HSBtoRGB(hue, saturation, 1);
 				SpicyClient.hud.secondaryColor = Color.HSBtoRGB(hue, saturation, 0.6f);

@@ -7,6 +7,7 @@ import info.spicyclient.events.listeners.EventRender3D;
 import info.spicyclient.modules.Module;
 import info.spicyclient.util.Timer;
 import info.spicyclient.util.pathfinding.AStarPathFinder;
+import info.spicyclient.util.pathfinding.AStarPathFinderThread;
 import net.minecraft.util.BlockPos;
 
 public class TestModuleOne extends Module {
@@ -22,19 +23,19 @@ public class TestModuleOne extends Module {
 	public float flo = 0;
 	public boolean bool1 = false, bool2 = true;
 	public BlockPos pos = BlockPos.ORIGIN;
-	public AStarPathFinder pathFinder = new AStarPathFinder(10000, false);
+	public AStarPathFinderThread pathFinder = new AStarPathFinderThread(false);
 	
 	@Override
 	public void onEnable() {
-		pathFinder = new AStarPathFinder(10000, false);
-//		BlockPos test = mc.thePlayer.getPosition().add(RandomUtils.nextDouble(0, 100) - 50, 100, RandomUtils.nextDouble(0, 100) - 50);
-		BlockPos test = new BlockPos(-265, 57, 102);
-		pathFinder.createPath(mc.thePlayer.getRealPosition(), test);
+//		pathFinder.cancelPathFinding();
+//		pathFinder = new AStarPathFinderThread(false);
+//		BlockPos test = new BlockPos(-1390, 4, 439);
+//		pathFinder.createPathInThread(mc.thePlayer.getRealPosition(), test);
 	}
 
 	@Override
 	public void onDisable() {
-		
+		pathFinder.cancelPathFinding();
 	}
 
 	@Override

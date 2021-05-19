@@ -28,6 +28,7 @@ import info.spicyclient.ui.account.Login;
 import info.spicyclient.ui.account.Register;
 import info.spicyclient.ui.customOpenGLWidgets.Button;
 import info.spicyclient.util.Timer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiLanguage;
 import net.minecraft.client.gui.GuiMultiplayer;
@@ -48,6 +49,9 @@ public class NewMainMenu extends GuiScreen {
 	
 	@Override
 	public void initGui() {
+		
+//		Will be finished later
+//		Minecraft.getMinecraft().displayGuiScreen(new MainMenuV3());
 		
 		SpicyClient.discord.update("In the main menu");
 		SpicyClient.discord.refresh();
@@ -116,9 +120,12 @@ public class NewMainMenu extends GuiScreen {
         
         // Put the added things here
         // changeLogs.add("+ ");
+        changeLogs.add("+ Non sprint blockfly fixed (Thanks to Thomaz#3000 for rotations)");
         changeLogs.add("+ New target hud");
         changeLogs.add("+ Can now toggle target hud");
-        changeLogs.add("+ Fixed hypixel autoblock");
+        changeLogs.add("+ Bedwars death tp (also works in capture the wool)");
+        changeLogs.add("+ Test fly auto double jumps so you can fly in bedwars ulitmate and skywars slime");
+        changeLogs.add("+ Tp aura (works on brokenlens [play.brlns.net]) (use fly for no lagback)");
         
         // Put the changed things here
         // changeLogs.add("* ");

@@ -9,8 +9,8 @@ import java.util.Random;
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
-import info.spicyclient.ClickGUI.ClickGUI;
 import info.spicyclient.chatCommands.Command;
+import info.spicyclient.clickGUI.ClickGUI;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventSendPacket;

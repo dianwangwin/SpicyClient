@@ -1,4 +1,4 @@
-package info.spicyclient.ClickGUI;
+package info.spicyclient.clickGUI;
 
 import info.spicyclient.modules.Module;
 

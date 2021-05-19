@@ -73,7 +73,10 @@ public class Hypixel {
 		
 		if (damage > MathHelper.floor_double(mc.thePlayer.getMaxHealth()))
 			damage = MathHelper.floor_double(mc.thePlayer.getMaxHealth());
-
+		
+		if (damage > mc.thePlayer.getHealth())
+			damage = mc.thePlayer.getHealth() + 0.25;
+		
 		double offset = 0.0625;
 		//offset = 0.015625;
 		if (mc.thePlayer != null && mc.getNetHandler() != null) {

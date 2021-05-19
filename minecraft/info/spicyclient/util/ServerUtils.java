@@ -16,4 +16,16 @@ public class ServerUtils {
 		
 	}
 	
+	public static boolean isOnBrokenlens() {
+		
+		Minecraft mc = Minecraft.getMinecraft();
+		
+		if (!mc.isSingleplayer() && mc.getCurrentServerData().serverIP.toLowerCase().contains("brlns.net")) {
+			return true;
+		}
+		
+		return false;
+		
+	}
+	
 }

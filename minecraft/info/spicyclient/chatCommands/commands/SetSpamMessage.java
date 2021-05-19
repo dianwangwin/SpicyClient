@@ -22,7 +22,7 @@ public class SetSpamMessage extends Command {
 			spam += s + " ";
 		}
 		
-		spam = spam.replaceFirst(SpicyClient.commandManager.prefix + "setspammessage ", "");
+		spam = spam.substring((SpicyClient.commandManager.prefix + "setspammessage ").length());
 		spam = spam.substring(0, spam.length() - 1);
 		
 		SpicyClient.config.spammer.message = spam;

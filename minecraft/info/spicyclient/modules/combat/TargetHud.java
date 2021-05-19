@@ -30,7 +30,7 @@ public class TargetHud extends Module {
 			this.additionalInformation = mode.getMode();
 		}
 		
-		if (e instanceof EventRenderGUI && e.isPre() && (SpicyClient.config.killaura.isEnabled() || SpicyClient.config.aimAssist.isEnabled()) && Killaura.target != null) {
+		if (e instanceof EventRenderGUI && e.isPre()) {
 			
 			if (SpicyClient.config.aimAssist == null) {
 				SpicyClient.config.aimAssist = new AimAssist();
@@ -43,7 +43,22 @@ public class TargetHud extends Module {
 				}
 			}
 			
-			SpicyClient.config.hudModConfig.targetHud1.draw(false);
+			if (SpicyClient.config.tpAura == null) {
+				SpicyClient.config.tpAura = new TpAura();
+				for (Module m : SpicyClient.modules) {
+					if (m instanceof TpAura) {
+						SpicyClient.modules.remove(m);
+						SpicyClient.modules.add(SpicyClient.config.tpAura);
+						break;
+					}
+				}
+			}
+			
+			if ((SpicyClient.config.killaura.isEnabled() || SpicyClient.config.aimAssist.isEnabled() || SpicyClient.config.tpAura.isEnabled()) && Killaura.target != null) {
+				
+				SpicyClient.config.hudModConfig.targetHud1.draw(false);
+				
+			}
 			
 		}
 		

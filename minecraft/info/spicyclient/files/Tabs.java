@@ -2,7 +2,7 @@ package info.spicyclient.files;
 
 import java.util.ArrayList;
 
-import info.spicyclient.ClickGUI.Tab;
+import info.spicyclient.clickGUI.Tab;
 
 public class Tabs {
 	

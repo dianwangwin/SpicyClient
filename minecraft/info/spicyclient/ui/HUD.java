@@ -15,8 +15,8 @@ import com.sun.javafx.geom.Vec4d;
 import com.sun.javafx.geom.Vec4f;
 
 import info.spicyclient.SpicyClient;
-import info.spicyclient.ClickGUI.NewClickGui;
 import info.spicyclient.chatCommands.Command;
+import info.spicyclient.clickGUI.NewClickGui;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventRenderGUI;
 import info.spicyclient.modules.Module;

@@ -3,6 +3,7 @@ package info.spicyclient.util.pathfinding;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.notifications.Color;
@@ -19,13 +20,13 @@ import net.minecraft.util.Vec3;
 
 public class AStarPathFinder {
 	
-	public AStarPathFinder(long timeout, boolean goThoughBlocks) {
+	public AStarPathFinder(long timeout, boolean goThroughBlocks) {
 		this.timeout = timeout;
-		this.goThoughBlocks = goThoughBlocks;
+		this.goThroughBlocks = goThroughBlocks;
 	}
 	
 	public long timeout;
-	public boolean goThoughBlocks;
+	public boolean goThroughBlocks;
 	
 	// A* pathfinding basically works like this
 	// Step 1: Get list of nodes with lowest f value
@@ -55,11 +56,11 @@ public class AStarPathFinder {
 		
 	}
 	
-	public ArrayList<BlockPos> path = new ArrayList<>();
+	public CopyOnWriteArrayList<BlockPos> path = new CopyOnWriteArrayList<>();
 	
-	public ArrayList<BlockPos> createPath(BlockPos start, BlockPos end) {
+	public CopyOnWriteArrayList<BlockPos> createPath(BlockPos start, BlockPos end) {
 		
-		if (!Minecraft.getMinecraft().theWorld.getBlockState(start).getBlock().equals(Blocks.air) && !goThoughBlocks) {
+		if (!Minecraft.getMinecraft().theWorld.getBlockState(start).getBlock().equals(Blocks.air) && !goThroughBlocks) {
 			NotificationManager.getNotificationManager().createNotification("Pathfinder", "Start point is inside of block, selecting point next to it", true, 1000, Type.WARNING, Color.RED);
 			for (int x = -2; x < 2; x++)
 				for (int y = -2; y < 2; y++)
@@ -70,11 +71,11 @@ public class AStarPathFinder {
 						}
 			if (!Minecraft.getMinecraft().theWorld.getBlockState(start).getBlock().equals(Blocks.air)) {
 				NotificationManager.getNotificationManager().createNotification("Pathfinder", "Failed to find air point next to the original start point", true, 1000, Type.WARNING, Color.RED);
-				return new ArrayList<>();
+				return new CopyOnWriteArrayList<>();
 			}
 		}
 		
-		if (!Minecraft.getMinecraft().theWorld.getBlockState(end).getBlock().equals(Blocks.air) && !goThoughBlocks) {
+		if (!Minecraft.getMinecraft().theWorld.getBlockState(end).getBlock().equals(Blocks.air) && !goThroughBlocks) {
 			NotificationManager.getNotificationManager().createNotification("Pathfinder", "End point is inside of block, selecting point next to it", true, 1000, Type.WARNING, Color.RED);
 			for (int x = -2; x < 2; x++)
 				for (int y = -2; y < 2; y++)
@@ -85,7 +86,7 @@ public class AStarPathFinder {
 						}
 			if (!Minecraft.getMinecraft().theWorld.getBlockState(end).getBlock().equals(Blocks.air)) {
 				NotificationManager.getNotificationManager().createNotification("Pathfinder", "Failed to find air point next to the original end point", true, 1000, Type.WARNING, Color.RED);
-				return new ArrayList<>();
+				return new CopyOnWriteArrayList<>();
 			}
 		}
 		
@@ -140,22 +141,21 @@ public class AStarPathFinder {
 			}
 			
 			// If it reached the end then return
-			if (nodeToCheck.pos.equals(end)) {
-				path.clear();
-				Node backtrack = nodeToCheck;
-				path.add(backtrack.pos);
-				try {
-					while ((backtrack = backtrack.previousNode) != null) {
-						path.add(backtrack.pos);
-						backtrack = backtrack.previousNode;
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
+			path.clear();
+			Node backtrack = nodeToCheck;
+			path.add(backtrack.pos);
+			try {
+				while ((backtrack = backtrack.previousNode) != null) {
+					path.add(backtrack.pos);
+					backtrack = backtrack.previousNode;
 				}
-				
-				if (flipAfter)
-					Collections.reverse(path);
-				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			if (flipAfter)
+				Collections.reverse(path);
+			if (nodeToCheck.pos.equals(end)) {
 				return path;
 			}
 			
@@ -168,7 +168,7 @@ public class AStarPathFinder {
 			
 		}
 		
-		return new ArrayList<>();
+		return new CopyOnWriteArrayList<>();
 		
 	}
 	
@@ -207,7 +207,7 @@ public class AStarPathFinder {
 				}
 			}
 			
-			if (add && !goThoughBlocks) {
+			if (add && !goThroughBlocks) {
 				if (!Minecraft.getMinecraft().theWorld.getBlockState(newNode.pos).getBlock().equals(Blocks.air))
 					add = false;
 			}

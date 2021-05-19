@@ -1,6 +1,6 @@
 package info.spicyclient.blockCoding;
 
-import info.spicyclient.ClickGUI.Tab;
+import info.spicyclient.clickGUI.Tab;
 
 public class Block extends Tab {
 	

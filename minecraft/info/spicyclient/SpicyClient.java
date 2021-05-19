@@ -50,12 +50,12 @@ import com.sun.javafx.PlatformUtil;
 import com.thealtening.AltService;
 import com.thealtening.AltService.EnumAltService;
 
-import info.spicyclient.ClickGUI.NewClickGui;
-import info.spicyclient.ClickGUI.Tab;
 import info.spicyclient.autoUpdater.Updater;
 import info.spicyclient.bypass.Hypixel;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.chatCommands.CommandManager;
+import info.spicyclient.clickGUI.NewClickGui;
+import info.spicyclient.clickGUI.Tab;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventChatmessage;

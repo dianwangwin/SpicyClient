@@ -1,4 +1,4 @@
-package info.spicyclient.ClickGUI;
+package info.spicyclient.clickGUI;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -17,6 +17,7 @@ import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.settings.Setting;
 import info.spicyclient.ui.fonts.FontUtil;
 import info.spicyclient.ui.fonts.JelloFontRenderer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -36,7 +37,6 @@ public class NewClickGui extends GuiScreen {
 	
 	@Override
 	public void initGui() {
-		
 		clicked = false;
 		selectedSetting = null;
 		

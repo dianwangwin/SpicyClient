@@ -891,9 +891,9 @@ public class Fly extends Module {
     public void onTestEnable() {
     	
     	mc.thePlayer.jump();
-//    	PlayerCapabilities caps = mc.thePlayer.capabilities;
-//    	caps.isFlying = true;
-//    	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(caps));
+    	PlayerCapabilities caps = mc.thePlayer.capabilities;
+    	caps.isFlying = true;
+    	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(caps));
     }
     
     public void onTestDisable() {
