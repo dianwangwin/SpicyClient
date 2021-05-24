@@ -1,3 +1,5 @@
+# NOTICE: The code for Spicy is hard to read and messy, due to this a full recode is reqired. The recode will most likely not be open src as it's a pain to make bypasses this way. Also spicy has met it's goal of getting people up to speed on how hypixel bypasses work. For the moment the client is discontinued, but another will come
+
 # SpicyClient - The open source hypixel client
 Spicy is an open source Minecraft client that I create in my free time, you are free to reference and copy my code. There are two reasons why made it open source, The first one is that protecting the jar is annoying and the second is that I want people to be able to reference code whenever they need to. If you find any bugs or a hack is not currently bypassing then feel free to contact me. If you have any code that you want added to the client then you may also contact me
 
