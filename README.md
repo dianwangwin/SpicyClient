@@ -1,4 +1,4 @@
-# NOTICE: Spicy is discontinued, hypixel devs looked at the repo and patched everything. New client is hummus and the repo for that is [here](https://github.com/Hummus-Appreciation-Club/Hummus-client). If you cannot see the repo then you have not been invited to it. Dm lavaflowglow#0001 on discord to get invited
+# NOTICE: Spicy is discontinued, hypixel devs looked at the repo and patched everything. New client is hummus and the repo for that is [here](hhttps://github.com/Hummus-Appreciation-Club/Hummus-Client-New). If you cannot see the repo then you have not been invited to it. Dm lavaflowglow#0001 on discord to get invited
 
 # SpicyClient - The open source hypixel client (discontinued)
 Spicy is an open source Minecraft client that I create in my free time, you are free to reference and copy my code. There are two reasons why made it open source, The first one is that protecting the jar is annoying and the second is that I want people to be able to reference code whenever they need to. If you find any bugs or a hack is not currently bypassing then feel free to contact me. If you have any code that you want added to the client then you may also contact me
