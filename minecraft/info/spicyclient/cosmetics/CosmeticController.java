@@ -31,6 +31,7 @@ public class CosmeticController {
 		renderPlayer.addLayer(new Tophat(renderPlayer));
 		renderPlayer.addLayer(new DougDimmadome(renderPlayer));
 		renderPlayer.addLayer(new ProtogenMask(renderPlayer));
+		renderPlayer.addLayer(new FirstPerson(renderPlayer));
 		
 	}
 	

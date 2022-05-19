@@ -113,7 +113,7 @@ public abstract class EntityPlayer extends EntityLivingBase
     public double chasingPosZ;
 
     /** Boolean value indicating weather a player is sleeping or not */
-    protected boolean sleeping;
+    public boolean sleeping;
 
     /** the current location of the player */
     public BlockPos playerLocation;

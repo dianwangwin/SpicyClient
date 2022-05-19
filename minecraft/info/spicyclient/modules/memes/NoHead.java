@@ -10,6 +10,11 @@ import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
+import info.spicyclient.notifications.Color;
+import info.spicyclient.notifications.NotificationManager;
+import info.spicyclient.notifications.Type;
+import info.spicyclient.util.RenderUtils;
+import info.spicyclient.util.ServerUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -25,7 +30,10 @@ public class NoHead extends Module {
 	}
 	
 	public void onEnable() {
-		
+		if (ServerUtils.isOnHypixel()) {
+			toggle();
+			NotificationManager.getNotificationManager().createNotification("NoHead", "This instant bans on hypixel", true, 5000, Type.WARNING, Color.RED);
+		}
 	}
 	
 	public void onDisable() {
@@ -37,11 +45,12 @@ public class NoHead extends Module {
 		
 		if (e instanceof EventMotion) {
 			
-			if (e.isPre()) {
+			if (e.isPre() && !ServerUtils.isOnHypixel()) {
 				
 				EventMotion event = (EventMotion) e;
 				
 				event.setPitch(180);
+				RenderUtils.setCustomPitch(180);
 				
 			}
 			

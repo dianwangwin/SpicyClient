@@ -6,6 +6,8 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.clickGUI.ClickGUI;
+import info.spicyclient.clickGUI.NewClickGui;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventKey;
 import info.spicyclient.events.listeners.EventRenderGUI;
@@ -15,7 +17,6 @@ import info.spicyclient.settings.BooleanSetting;
 import info.spicyclient.settings.ModeSetting;
 import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.settings.SettingChangeEvent;
-import info.spicyclient.ui.HUD;
 import info.spicyclient.util.Timer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -25,10 +26,10 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.gui.ScaledResolution;
 
-public class ClickGUI extends Module{
+public class ClickGui extends Module{
 	
 	public static Minecraft mc = Minecraft.getMinecraft();
-	public static info.spicyclient.ClickGUI.ClickGUI clickGui = new info.spicyclient.ClickGUI.ClickGUI(null);
+	public static info.spicyclient.clickGUI.ClickGUI clickGui = new info.spicyclient.clickGUI.ClickGUI(null);
 	
 	public BooleanSetting sound = new BooleanSetting("Sound", true);
 	public NumberSetting volume = new NumberSetting("Volume", 0.5, 0.1, 1.0, 0.1);
@@ -37,15 +38,20 @@ public class ClickGUI extends Module{
 	public NumberSetting colorSettingGreen = new NumberSetting("Green", 255, 0, 255, 1);
 	public NumberSetting colorSettingBlue = new NumberSetting("Blue", 255, 0, 255, 1);
 	
-	public ClickGUI() {
+	public ModeSetting clickguiMode = new ModeSetting("ClickGui", "Spicy V2", "Spicy V1", "Spicy V2");
+	public NumberSetting padding = new NumberSetting("Padding", 8, 5.5, 10, 0.1);
+	
+	public ClickGui() {
 		super("ClickGUI", Keyboard.KEY_RSHIFT, Category.RENDER);
 		resetSettings();
 	}
 	
 	@Override
 	public void resetSettings() {
+		
 		this.settings.clear();
-		this.addSettings(sound, volume, mode, colorSettingRed, colorSettingGreen, colorSettingBlue);
+		this.addSettings(clickguiMode, padding);
+		
 	}
 	
 	@Override
@@ -59,33 +65,54 @@ public class ClickGUI extends Module{
 	}
 	
 	public void onEnable() {
-		info.spicyclient.ClickGUI.ClickGUI clickGui = new info.spicyclient.ClickGUI.ClickGUI(null);
-		mc.displayGuiScreen(clickGui);
+		
+		if (clickguiMode.is("Spicy V2")) {
+			mc.displayGuiScreen(NewClickGui.getClickGui());
+		}
+		else if (clickguiMode.is("Spicy V1")) {
+			info.spicyclient.clickGUI.ClickGUI clickGui = new info.spicyclient.clickGUI.ClickGUI(null);
+			mc.displayGuiScreen(clickGui);
+		}
+		
+		toggle();
+		
 	}
 	
 	public void onDisable() {
-		mc.displayGuiScreen(clickGui.last);
+		
 	}
 	
 	@Override
 	public void onSettingChange(SettingChangeEvent e) {
 		
-		if (e != null && mode != null) {
+		if (e.setting == clickguiMode) {
 			
-			if (e.setting.equals(mode)) {
-				if (mode.is("Switch between OwO and UwU")) {
-					
-					SpicyClient.hud.separator = " UwU ";
-					OwO = false;
-					
+			if (this.settings.contains(padding)) {
+				this.settings.remove(padding);
+			}
+			
+			if (mc.currentScreen != null && (mc.currentScreen instanceof NewClickGui || mc.currentScreen instanceof ClickGUI)) {
+				
+				if (clickguiMode.is("Spicy V2")) {
+					mc.displayGuiScreen(NewClickGui.getClickGui());
 				}
-				else if (mode.is("Switch between :OwO: and :UwU:")) {
-					
-					SpicyClient.hud.separator = " :UwU: ";
-					OwO = false;
-					
+				else if (clickguiMode.is("Spicy V1")) {
+					info.spicyclient.clickGUI.ClickGUI clickGui = new info.spicyclient.clickGUI.ClickGUI(null);
+					mc.displayGuiScreen(clickGui);
+				}
+				
+			}
+			
+			if (clickguiMode.is("Spicy V2")) {
+				if (!this.settings.contains(padding)) {
+					this.settings.add(padding);
 				}
 			}
+			else if (clickguiMode.is("Spicy V1")) {
+				
+			}
+			
+			reorderSettings();
 			
 		}
 		
@@ -95,66 +122,6 @@ public class ClickGUI extends Module{
 	private boolean OwO = true;
 	
 	public void onEvent(Event e) {
-		
-		if (e instanceof EventUpdate) {
-			
-			if (e.isPre()) {
-				
-				String hex = String.format("#%02X%02X%02X", ((int)colorSettingRed.getValue()), ((int)colorSettingGreen.getValue()), ((int)colorSettingBlue.getValue()));
-				
-				float[] hsb = Color.RGBtoHSB(((int)colorSettingRed.getValue()), ((int)colorSettingGreen.getValue()), ((int)colorSettingBlue.getValue()), null);
-				 
-				float hue = hsb[0];
-				 
-				float saturation = hsb[1];
-				 
-				float brightness = hsb[2];
-				
-				info.spicyclient.ClickGUI.ClickGUI.accentColor = Color.HSBtoRGB(hue, saturation, 1);
-				SpicyClient.hud.primaryColor = Color.HSBtoRGB(hue, saturation, 1);
-				SpicyClient.hud.secondaryColor = Color.HSBtoRGB(hue, saturation, 0.6f);
-				SpicyClient.config.tabgui.primaryColor = Color.HSBtoRGB(hue, saturation, 1);
-				SpicyClient.config.tabgui.secondaryColor = Color.HSBtoRGB(hue, saturation, 0.6f);
-				
-				// For the separator
-				if (mode.is("Switch between OwO and UwU") || mode.is("Switch between :OwO: and :UwU:")) {
-					
-					if (timer.hasTimeElapsed(750L, true)) {
-						
-						if (mode.is("Switch between OwO and UwU")) {
-							
-							if (OwO) {
-								SpicyClient.hud.separator = " UwU ";
-								OwO = false;
-							}else {
-								SpicyClient.hud.separator = " OwO ";
-								OwO = true;
-							}
-							
-						}
-						else if (mode.is("Switch between :OwO: and :UwU:")) {
-							
-							if (OwO) {
-								SpicyClient.hud.separator = " :UwU: ";
-								OwO = false;
-							}else {
-								SpicyClient.hud.separator = " :OwO: ";
-								OwO = true;
-							}
-							
-						}
-						
-					}
-					
-				}else {
-					
-					SpicyClient.hud.separator = mode.getMode();
-					
-				}
-				
-			}
-			
-		}
 		
 	}
 	

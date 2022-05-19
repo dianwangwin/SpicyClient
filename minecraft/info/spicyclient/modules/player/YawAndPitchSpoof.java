@@ -8,7 +8,7 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.modules.Module;
 import info.spicyclient.settings.BooleanSetting;
@@ -20,7 +20,7 @@ import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
-import net.minecraft.network.play.client.C0CPacketInput;
+import net.minecraft.network.play.client.C0CPacketBoatInput;
 import net.minecraft.network.play.client.C0EPacketClickWindow;
 import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
 

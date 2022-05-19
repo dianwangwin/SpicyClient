@@ -2,6 +2,9 @@ package net.minecraft.client.particle;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
+import info.spicyclient.chatCommands.Command;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

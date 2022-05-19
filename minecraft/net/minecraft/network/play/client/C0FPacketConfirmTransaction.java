@@ -59,4 +59,20 @@ public class C0FPacketConfirmTransaction implements Packet<INetHandlerPlayServer
     {
         return this.uid;
     }
+
+	public boolean isAccepted() {
+		return accepted;
+	}
+
+	public void setAccepted(boolean accepted) {
+		this.accepted = accepted;
+	}
+
+	public void setWindowId(int windowId) {
+		this.windowId = windowId;
+	}
+
+	public void setUid(short uid) {
+		this.uid = uid;
+	}
 }

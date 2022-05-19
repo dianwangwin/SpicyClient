@@ -2,18 +2,28 @@ package info.spicyclient;
 
 import java.awt.Font;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.Proxy;
+import java.net.Proxy.Type;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.ByteBuffer;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -21,51 +31,72 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
 import javax.swing.SwingUtilities;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
+import com.sun.javafx.PlatformUtil;
 import com.thealtening.AltService;
 import com.thealtening.AltService.EnumAltService;
 
-import info.spicyclient.ClickGUI.Tab;
+import info.spicyclient.autoUpdater.Updater;
+import info.spicyclient.bypass.Hypixel;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.chatCommands.CommandManager;
+import info.spicyclient.clickGUI.NewClickGui;
+import info.spicyclient.clickGUI.Tab;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventChatmessage;
 import info.spicyclient.events.listeners.EventKey;
-import info.spicyclient.events.listeners.EventPlayerRenderUtilRender;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventRenderGUI;
+import info.spicyclient.events.listeners.EventTick;
 import info.spicyclient.events.listeners.EventUpdate;
+import info.spicyclient.files.Account;
 import info.spicyclient.files.AltInfo;
 import info.spicyclient.files.Config;
 import info.spicyclient.files.FileManager;
-import info.spicyclient.fonts.FontManager;
-import info.spicyclient.fonts.FontRenderer;
+import info.spicyclient.files.Tabs;
+import info.spicyclient.hudModules.HudModule;
+import info.spicyclient.hudModules.HudModule.HudModuleConfig;
 import info.spicyclient.modules.Module;
 import info.spicyclient.modules.Module.Category;
 import info.spicyclient.modules.player.Timer;
 import info.spicyclient.modules.render.*;
 import info.spicyclient.music.MusicManager;
+import info.spicyclient.networking.NetworkManager;
+import info.spicyclient.networking.NetworkUtils;
+import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.ui.HUD;
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.event.EventHandler;
-import javafx.scene.SceneBuilder;
-import javafx.scene.control.LabelBuilder;
+import info.spicyclient.ui.fonts.FontUtil;
+import info.spicyclient.util.MovementUtils;
+import info.spicyclient.util.RandomUtils;
+import info.spicyclient.util.RenderUtils;
+import info.spicyclient.util.RotationUtils;
+import info.spicyclient.util.ServerUtils;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.stage.StageBuilder;
-import javafx.stage.WindowEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.play.server.S02PacketChat;
+import net.minecraft.network.play.server.S45PacketTitle;
+import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
 
@@ -85,80 +116,76 @@ public class SpicyClient {
 	
 	public static CommandManager commandManager = new CommandManager();
 	
-	public static int originalGuiScale = Minecraft.getMinecraft().gameSettings.guiScale;
+	public static Account account = new Account();
+	public static Tabs savedTabs = new Tabs();
 	
 	public static String originalUsername = "Not Set";
-	public static Boolean originalAccountOnline = false;
+	public static Boolean originalAccountOnline;
+	
+	// volatile needed so it doesn't get stuck
+	public static volatile boolean discordFailedToStart = true, musicPlayerFailedToStart = true;
+	
+	public static int currentVersionNum = 30, currentBuildNum = 3;
+	
+	public static boolean currentlyLoadingConfig = false, hasInitViaversion = false;
+	
+	public static HashMap<String, ResourceLocation> cachedImages = new HashMap<>();
+	
+	public static boolean bedwarsWarning = false, flyNotice = false;
 	
 	public static void StartUp() {
-		if (Minecraft.getMinecraft().getSession().getSessionType().equals(Session.Type.LEGACY)) {
-			System.out.println("Not pinging server, this is an offline account");
-			System.out.println("Please keep in mind that all this would send is your username and nothing else");
-			originalAccountOnline = false;
-			originalUsername = Minecraft.getMinecraft().getSession().getUsername();
-		}else {
-			System.out.println("Pinging the server, this is an online account");
-			System.out.println("Please keep in mind that all this sends is your username and nothing else");
-			originalAccountOnline = true;
-			originalUsername = Minecraft.getMinecraft().getSession().getUsername();
+		
+		try {
 			
-			String url = "http://spicyclient.info/api/api.php?username=" + originalUsername + "&stat_type=ping";
-		     URL obj = null;
-			try {
-				obj = new URL(url);
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (Minecraft.getMinecraft().getSession().getSessionType().equals(Session.Type.LEGACY)) {
+				originalAccountOnline = false;
+				originalUsername = Minecraft.getMinecraft().getSession().getUsername();
+			}else {
+				originalAccountOnline = true;
+				originalUsername = Minecraft.getMinecraft().getSession().getUsername();
 			}
-		     HttpURLConnection con = null;
-			try {
-				con = (HttpURLConnection) obj.openConnection();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		     //add request header
-		     con.setRequestProperty("User-Agent", "Mozilla/5.0");
-		     int responseCode = 0;
-			try {
-				responseCode = con.getResponseCode();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		     System.out.println("\nSending 'GET' request to URL : " + url);
-		     System.out.println("Response Code : " + responseCode);
-		     BufferedReader in = null;
-		     try {
-				in = new BufferedReader(
-				         new InputStreamReader(con.getInputStream()));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		     String inputLine;
-		     StringBuffer response = new StringBuffer();
-		     try {
-				in.close();
-			} catch (NullPointerException e) {
-				// TODO: handle exception
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
-		// Creates the font manager
-		FontManager.getFontManager();
-		// Sets the font renderer's font to the default font
-		FontRenderer.setCurrentFont(FontManager.getFontManager().getUniFont("opensans"));
+		new Thread("Music player startup anti crash thread") {
+			public void run() {
+				try {
+					// Does music player stuff
+					Media tempMedia = new Media("http://google.com/SpicyClient.mp3");
+					MusicManager.getMusicManager();
+					musicPlayerFailedToStart = false;
+					MusicManager.getMusicManager().mediaPlayer = new MediaPlayer(tempMedia);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
 		
-		// Does music player stuff
-		Media tempMedia = new Media("http://google.com/SpicyClient.mp3");
-		MusicManager.getMusicManager();
-		MusicManager.mediaPlayer = new MediaPlayer(tempMedia);
+		// Caches images
 		
+		cachedImages.put("watermarkWhite", new ResourceLocation("spicy/SpicyClientWhite.png"));
+		cachedImages.put("watermarkBlack", new ResourceLocation("spicy/SpicyClientBlack.png"));
+		cachedImages.put("gearIcon", new ResourceLocation("spicy/clickgui/gear.png"));
+		cachedImages.put("dropdownIcon", new ResourceLocation("spicy/clickgui/dropdown.png"));
+		cachedImages.put("circleIcon", new ResourceLocation("spicy/clickgui/circle.png"));
+		
+		for (info.spicyclient.notifications.Type notType : info.spicyclient.notifications.Type.values()) {
+			for (info.spicyclient.notifications.Color notColor : info.spicyclient.notifications.Color.values()) {
+				
+				cachedImages.put("spicy/notifications/" + notType.filePrefix + notColor.fileSuffix + ".png",
+						new ResourceLocation(
+								"spicy/notifications/" + notType.filePrefix + notColor.fileSuffix + ".png"));
+				
+			}
+		}
+		
+		for (ResourceLocation resource : cachedImages.values()) {
+			String name = resource.getResourcePath();
+			System.out.println("Cached " + name);
+		}
+		
+		// Caches images
 		
 		// Creates a new config with the default values
 		config = new Config("Default");
@@ -205,9 +232,90 @@ public class SpicyClient {
 		// Start the file manager
 		FileManager.init();
 		
-		// Start the discord rich presence
+		// Loads the saved account and creates a new file if it doesn't exist
+		if (!new File(FileManager.ROOT_DIR, "Account.AccountInfo").exists()) {
+			
+			System.out.println("Account file not found... Creating a new one");
+			try {
+				FileManager.saveAccount(SpicyClient.account);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+		}else {
+			System.out.println("Account file found... Loading the account data");
+		}
+		
+		try {
+			SpicyClient.account = (Account) FileManager.loadAccount(SpicyClient.account);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		// Loads the saved account and creates a new file if it doesn't exist
+		
+		// Checks if the session is valid
+		try {
+			
+			if (SpicyClient.account.loggedIn) {
+				
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/V2/SessionLogin.php"), new BasicNameValuePair("session", account.session)));
+				
+				if (response.getBoolean("error")) {
+					
+					account.loggedIn = false;
+					account.session = "";
+					FileManager.saveAccount(account);
+					
+				}
+				
+			}
+			
+		} catch (Exception e) {
+			
+			account.loggedIn = false;
+			account.session = "";
+			try {
+				FileManager.saveAccount(account);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			e.printStackTrace();
+		}
+		
+		try {
+			if (SpicyClient.account.loggedIn) {
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/V2/UpdateAlt.php"), new BasicNameValuePair("session", account.session), new BasicNameValuePair("alt", originalUsername)));
+			}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		discord = new DiscordRP();
-		discord.start();
+		
+		new Thread("Discord rp startup anti crash thread") {
+			public void run() {
+				try {
+					if (PlatformUtil.isMac()) {
+						discordFailedToStart = true;
+					}else {
+						try {
+							// Start the discord rich presence
+							discord.start();
+							discordFailedToStart = false;
+						} catch (Exception e) {
+							discordFailedToStart = true;
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
 		
 		info.spicyclient.modules.Module.CategoryList = Arrays.asList(Category.values());
 		
@@ -223,17 +331,66 @@ public class SpicyClient {
 			temp.setY(10 + catOffset);
 			temp.setOffsetX(0);
 			temp.setOffsetY(0);
-			info.spicyclient.ClickGUI.ClickGUI.tabs.add(temp);
+			savedTabs.tabs.add(temp);
 			catOffset += Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 20;
 			System.out.println("The " + c.name + " category has been set up");
 
 		}
+		
+		if (FileManager.canLoadTabs()) {
+			try {
+				savedTabs = (Tabs) FileManager.loadTabs(savedTabs);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}else {
+			try {
+				FileManager.saveTabs(savedTabs);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (FileManager.canLoadHudMods()) {
+			try {
+		    	HudModule.mods.clear();
+				config.hudModConfig = (HudModuleConfig) FileManager.loadHudMods(config.hudModConfig);
+				config.hudModConfig.resetFuckingModsListBecauseGoogleFuckingSucksAndTheirLibIsShitAndCannotLoadAFUCKINGClassCorrectlyWithoutFuckingItUpBeondBelief();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}else {
+			try {
+				FileManager.saveHudMods(config.hudModConfig);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		FontUtil.superherofx1.toString();
+		FontUtil.superherofx2.toString();
 		
 	}
 	
 	public static void shutdown() {
 		
 		discord.shutdown();
+		
+		try {
+			if (SpicyClient.account.loggedIn) {
+				JSONObject response = new JSONObject(NetworkManager.getNetworkManager().sendPost(new HttpPost("https://SpicyClient.info/api/V2/UpdateAlt.php"), new BasicNameValuePair("session", account.session), new BasicNameValuePair("alt", originalUsername)));
+			}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
+			FileManager.saveTabs(savedTabs);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -249,10 +406,21 @@ public class SpicyClient {
 		
 	}
 	
+	public static transient info.spicyclient.util.Timer tabsSaveTimer = new info.spicyclient.util.Timer();
+	
 	public static void onEvent(Event e) {
 		
 		if (Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null) {
 			return;
+		}
+		
+		if (currentlyLoadingConfig) {
+			e.setCanceled(true);
+			return;
+		}
+		
+		if (account.loggedIn) {
+			account.onEvent(e);
 		}
 		
 		if (e instanceof EventChatmessage) {
@@ -274,12 +442,125 @@ public class SpicyClient {
 			
 		}
 		
+		if (e instanceof EventReceivePacket && e.isPre()) {
+			
+			if (((EventReceivePacket)e).packet instanceof S45PacketTitle) {
+				
+				try {
+					S45PacketTitle packet = ((S45PacketTitle)((EventReceivePacket)e).packet);
+					
+					ScoreObjective scoreobjective = Minecraft.getMinecraft().theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+					String scoreTitle = scoreobjective.getDisplayName();
+					//Command.sendPrivateChatMessage(scoreTitle);
+					if (scoreTitle.toLowerCase().contains("bed wars")) {
+						if (packet.getMessage().getFormattedText().toLowerCase().contains("respawned")) {
+							info.spicyclient.bypass.hypixel.Fly.disabledUntil = System.currentTimeMillis() + 2500;
+							NotificationManager.getNotificationManager().createNotification("Bedwars", "You have 2.5 seconds to fly", true, 3000, info.spicyclient.notifications.Type.INFO, Color.PINK);
+						}
+					}
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+				
+			}
+			
+		}
+		
+		if (e instanceof EventReceivePacket && ServerUtils.isOnHypixel()) {
+			EventReceivePacket event = (EventReceivePacket)e;
+			if (event.packet instanceof S02PacketChat) {
+				S02PacketChat chat = (S02PacketChat) event.packet;
+				String[] chatParts = chat.getChatComponent().getFormattedText().split(" ");
+				if (chatParts[0].startsWith("§dFrom") && chatParts[1].endsWith(":")) {
+					NotificationManager.getNotificationManager().createNotification("Chat message", chat.getChatComponent().getFormattedText() + "  ", true, 15000, info.spicyclient.notifications.Type.INFO, Color.PINK);
+				}
+				
+			}
+		}
+		
+		if (e instanceof EventUpdate && e.isPre()) {
+			if (tabsSaveTimer.hasTimeElapsed(5000, true)) {
+				new Thread("Saving info files") {
+					public void run() {
+						try {
+							FileManager.saveTabs(savedTabs);
+							FileManager.saveHudMods(config.hudModConfig);
+						} catch (IOException e) {
+							
+						}
+					}
+				}.start();
+			}
+			
+			if (!Minecraft.getMinecraft().gameSettings.ofShowCapes) {
+				Minecraft.getMinecraft().gameSettings.ofShowCapes = true;
+			}
+			
+			RenderUtils.resetPlayerYaw();
+			RenderUtils.resetPlayerPitch();
+			
+			try {
+				MusicManager.getMusicManager().changeNotificationColor((EventUpdate) e);
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+			
+			if (ServerUtils.isOnHypixel()) {
+				
+				try {
+					
+					if (Minecraft.getMinecraft().thePlayer.ticksExisted == 5) {
+						bedwarsWarning = false;
+						flyNotice = false;
+					}
+					
+					if (!flyNotice && SpicyClient.config.fly.getKey() != Keyboard.KEY_NONE && SpicyClient.config.fly.mode.is("Hypixel")) {
+						ScoreObjective scoreobjective = Minecraft.getMinecraft().theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+						String scoreTitle = scoreobjective.getDisplayName();
+						//Command.sendPrivateChatMessage(scoreTitle);
+						if (scoreTitle.toLowerCase().contains("skywars")) {
+							
+							//Command.sendPrivateChatMessage(RandomUtils.getTeamName(11, Minecraft.getMinecraft().theWorld.getScoreboard()));
+							
+							if (RandomUtils.getTeamName(10, Minecraft.getMinecraft().theWorld.getScoreboard()).toLowerCase().contains("next event")) {
+								info.spicyclient.bypass.hypixel.Fly.disabledUntil = System.currentTimeMillis() + 2500;
+								NotificationManager.getNotificationManager().createNotification("Skywars", "You have 2.5 seconds to fly", true, 3000, info.spicyclient.notifications.Type.INFO, Color.PINK);
+								flyNotice = true;
+							}
+							
+						}
+					}
+					
+					if (!bedwarsWarning) {
+						ScoreObjective scoreobjective = Minecraft.getMinecraft().theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+						String scoreTitle = scoreobjective.getDisplayName();
+						//Command.sendPrivateChatMessage(scoreTitle);
+						if (scoreTitle.toLowerCase().contains("bed wars")) {
+							
+							//Command.sendPrivateChatMessage(RandomUtils.getTeamName(11, Minecraft.getMinecraft().theWorld.getScoreboard()));
+							
+							if (RandomUtils.getTeamName(11, Minecraft.getMinecraft().theWorld.getScoreboard()).toLowerCase().contains("diamond ii in")) {
+								NotificationManager.getNotificationManager().createNotification("Warning", "Flying now may result in a ban", true, 15000, info.spicyclient.notifications.Type.WARNING, Color.RED);
+								bedwarsWarning = true;
+							}
+							
+						}
+					}
+					
+				} catch (Exception e2) {
+					//e2.printStackTrace();
+				}
+				
+			}
+			
+		}
+		
 		for (Module m : modules) {
 			
 			//if (!m.toggled)
 			//	continue;
 			
-			if (m.toggled || m instanceof ClickGUI) {
+			if (m.toggled || m instanceof Hud) {
 				
 				boolean sendTwice = false;
 				
@@ -306,7 +587,7 @@ public class SpicyClient {
 				m.onEvent(e);
 				
 			}
-			else if (!m.toggled || m instanceof ClickGUI) {
+			else if (!m.toggled || m instanceof Hud) {
 				
 				boolean sendTwice = false;
 				
@@ -351,77 +632,40 @@ public class SpicyClient {
 	public static void loadConfig(Config c) {
 		
 		modules.clear();
+		modules = Config.getModulesForConfig(c);
 		
-		// Normal modules
-		
-		modules.add(c.tabgui);
-		modules.add(c.clickgui);
-		modules.add(c.killaura);
-		modules.add(c.fly);
-		modules.add(c.sprint);
-		modules.add(c.bhop);
-		modules.add(c.rainbowgui);
-		modules.add(c.fullbright);
-		modules.add(c.nofall);
-		modules.add(c.keystrokes);
-		modules.add(c.fastplace);
-		modules.add(c.step);
-		modules.add(c.noHead);
-		modules.add(c.oldHitting);
-		modules.add(c.noSlow);
-		modules.add(c.owoifier);
-		modules.add(c.chatBypass);
-		modules.add(c.safewalk);
-		modules.add(c.blockFly);
-		modules.add(c.playerESP);
-		modules.add(c.antiVoid);
-		modules.add(c.longJump);
-		modules.add(c.spider);
-		modules.add(c.altManager);
-		modules.add(c.timer);
-		modules.add(c.antiKnockback);
-		modules.add(c.back);
-		modules.add(c.noClip);
-		modules.add(c.blink);
-		modules.add(c.autoClicker);
-		modules.add(c.fastBreak);
-		modules.add(c.inventoryManager);
-		modules.add(c.tophat);
-		modules.add(c.worldTime);
-		modules.add(c.chestStealer);
-		modules.add(c.noRotate);
-		modules.add(c.skyColor);
-		modules.add(c.reach);
-		modules.add(c.csgoSpinbot);
-		modules.add(c.yawAndPitchSpoof);
-		modules.add(c.antibot);
-		modules.add(c.pingSpoof);
-		modules.add(c.killSults);
-		modules.add(c.autoLog);
-		modules.add(c.floofyFoxes);
-		modules.add(c.jesus);
-		modules.add(c.phase);
-		modules.add(c.dougDimmadome);
-		modules.add(c.criticals);
-		modules.add(c.wtap);
-		modules.add(c.triggerBot);
-		modules.add(c.trail);
-		modules.add(c.reachNotify);
-		modules.add(c.hideName);
-		modules.add(c.discordRichPresence);
-		modules.add(c.autoArmor);
-		modules.add(c.antiLava);
-		modules.add(c.invWalk);
-		modules.add(c.mike);
-		modules.add(c.disabler);
-		modules.add(c.smallItems);
-		modules.add(c.lsd);
-		modules.add(c.tracers);
-		modules.add(c.blockCoding);
+		int failedToLoad = 0;
 		
 		for (Module temp : SpicyClient.modules) {
 			
-			temp.name = temp.name.replaceAll("\\s+","");
+			if (temp == null) {
+				modules.remove(temp);
+				failedToLoad++;
+			}else {
+				temp.name = temp.name.replaceAll("\\s+","");
+			}
+			
+		}
+		
+		if (failedToLoad > 0) {
+			
+			Command.sendPrivateChatMessage("There are missing modules in this config (outdated?), attempting to restore them");
+			
+			CopyOnWriteArrayList<Module> restoreModules = new CopyOnWriteArrayList<>();
+			restoreModules = Config.getModulesForConfig(new Config("Restore Modules"));
+			
+			for (Module m : modules) {
+				for (Module r : restoreModules) {
+					if (m.getClass().getName().equals(r.getClass().getName())) {
+						restoreModules.remove(r);
+					}
+				}
+			}
+			
+			for (Module merge : restoreModules) {
+				modules.add(merge);
+				Command.sendPrivateChatMessage("Successfully restored the " + merge.name + " module");
+			}
 			
 		}
 		
@@ -516,8 +760,112 @@ public class SpicyClient {
 		
 		Minecraft.getMinecraft().mojangLogo = RandomBackgrounds.SPICYCLIENT.image;
 		
+		int lowChance = new Random().nextInt(1000);
+		
+		if (lowChance == 1) {
+			
+			Minecraft.getMinecraft().mojangLogo = RandomBackgrounds.LAVAFLOWGLOW.image;
+			
+		}
+		else if (lowChance == 2) {
+			
+			Minecraft.getMinecraft().mojangLogo = RandomBackgrounds.FLOOFYFOX1.image;
+			
+		}
+		
 		// Uses 512x512 images
 		System.out.println("Splash screen set");
+		
+	}
+	
+	// This is at the start of the minecraft crash report
+	public static void setCrashReportHeader(StringBuilder builder) {
+		
+		builder.append("---- SpicyClient ----");
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Version: " + SpicyClient.currentVersionNum);
+		} catch (Exception e) {
+			builder.append("Version: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Config version: " + SpicyClient.config.version);
+		} catch (Exception e) {
+			builder.append("Config version: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Config display name: " + SpicyClient.config.clientName);
+		} catch (Exception e) {
+			builder.append("Config display name: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Config display version: " + SpicyClient.config.clientVersion);
+		} catch (Exception e) {
+			builder.append("Config display version: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Currently loading config: " + currentlyLoadingConfig);
+		} catch (Exception e) {
+			builder.append("Currently loading config: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Discord rp running: " + discord.running);
+		} catch (Exception e) {
+			builder.append("Discord rp running: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Discord failed to start: " + discordFailedToStart);
+		} catch (Exception e) {
+			builder.append("Discord failed to start: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Music player failed to start: " + musicPlayerFailedToStart);
+		} catch (Exception e) {
+			builder.append("Music player failed to start: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Is using premium account: " + originalAccountOnline);
+		} catch (Exception e) {
+			builder.append("Is using premium account: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		try {
+			builder.append("Account username: " + originalUsername);
+		} catch (Exception e) {
+			builder.append("Account username: ERROR");
+		}
+		
+		builder.append("\n");
+		
+		builder.append("---- SpicyClient ----");
 		
 	}
 	

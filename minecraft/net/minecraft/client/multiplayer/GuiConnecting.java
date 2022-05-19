@@ -17,6 +17,7 @@ import net.minecraft.network.login.client.C00PacketLoginStart;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 
+import org.apache.http.client.methods.HttpGet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
@@ -55,6 +56,27 @@ public class GuiConnecting extends GuiScreen
         
         SpicyClient.discord.update("Hacking on " + ip + (port != 25565 ? ":" + port : ""));
         Display.setTitle(SpicyClient.config.clientName + SpicyClient.config.clientVersion + " - on the server " + ip + (port != 25565 ? ":" + port : ""));
+        
+    	new Thread() {
+    		
+    		public void run() {
+    			
+    			try {
+    				
+    				// Removed this statistic
+    				/*
+        			info.spicyclient.networking.NetworkManager.getNetworkManager().sendGet(new HttpGet(("http://spicyclient.info/api/api.php?username="
+							+ (SpicyClient.originalAccountOnline ? "" : "[CRACKED]-") + SpicyClient.originalUsername
+							+ "&stat_type=serverAnalytics&arg1=" + ip + ":" + port)));
+        			*/
+    				
+				} catch (Exception e) {
+					
+				}
+    			
+    		}
+    		
+    	}.start();
         
         (new Thread("Server Connector #" + CONNECTION_ID.incrementAndGet())
         {

@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import info.spicyclient.cosmetics.CosmeticBase;
 import info.spicyclient.cosmetics.CosmeticController;
 import info.spicyclient.cosmetics.CosmeticModelBase;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;

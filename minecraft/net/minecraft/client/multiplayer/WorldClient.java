@@ -460,7 +460,7 @@ public class WorldClient extends World
             this.mc.getSoundHandler().playSound(positionedsoundrecord);
         }
     }
-
+    
     public void makeFireworks(double x, double y, double z, double motionX, double motionY, double motionZ, NBTTagCompound compund)
     {
         this.mc.effectRenderer.addEffect(new EntityFirework.StarterFX(this, x, y, z, motionX, motionY, motionZ, this.mc.effectRenderer, compund));

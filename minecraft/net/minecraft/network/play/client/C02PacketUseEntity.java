@@ -82,11 +82,20 @@ public class C02PacketUseEntity implements Packet<INetHandlerPlayServer>
     {
         return this.hitVec;
     }
+    
+	public int getEntityId() {
+		return entityId;
+	}
 
+	public void setEntityId(int entityId) {
+		this.entityId = entityId;
+	}
+    
     public static enum Action
     {
         INTERACT,
         ATTACK,
         INTERACT_AT;
     }
+    
 }

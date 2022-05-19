@@ -9,6 +9,7 @@ import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.settings.ModeSetting;
 import info.spicyclient.settings.SettingChangeEvent;
+import info.spicyclient.util.MovementUtils;
 
 public class Step extends Module {
 	
@@ -33,7 +34,7 @@ public class Step extends Module {
 		if (e.setting.equals(mode)) {
 			
 			if (mode.is("Vanilla") && this.isToggled()) {
-				mc.thePlayer.stepHeight = 1f;
+				mc.thePlayer.stepHeight = 4f;
 				mc.timer.ticksPerSecond = 20f;
 			}
 			else if (mode.is("NCP") && this.isToggled()) {
@@ -46,7 +47,7 @@ public class Step extends Module {
 	
 	public void onEnable() {
 		if (mode.is("Vanilla")) {
-			mc.thePlayer.stepHeight = 20f;
+			mc.thePlayer.stepHeight = 4f;
 		}
 	}
 	
@@ -69,11 +70,22 @@ public class Step extends Module {
 		
 		if (e instanceof EventUpdate) {
 			
-			if (e.isPre() && mode.is("Vanilla")) {
-				mc.thePlayer.stepHeight = 20f;
+			Double offset = mc.thePlayer.posY - ((int)mc.thePlayer.posY);
+			
+			if (offset < 0) {
+				offset *= -1;
 			}
 			
-			else if (e.isBeforePre() && mode.is("NCP")) {
+			if (e.isPre() && mode.is("Vanilla")) {
+				mc.thePlayer.stepHeight = 4f;
+			}
+			
+			else if (e.isBeforePre() && mode.is("NCP") && MovementUtils.canStep(1)) {
+				
+				mc.thePlayer.motionY = 0.37;
+				mc.thePlayer.isCollidedHorizontally = false;
+				
+				/*
             	if (mc.thePlayer.isCollidedHorizontally && mc.thePlayer.onGround) {
             		mc.timer.timerSpeed = 1.5f;
             		mc.thePlayer.onGround = true;
@@ -85,7 +97,7 @@ public class Step extends Module {
             		mc.thePlayer.motionY = 0;
             		stepped = false;
             	}
-				
+				*/
 			}
 			
 		}

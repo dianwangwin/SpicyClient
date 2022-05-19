@@ -2,6 +2,10 @@ package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
 
+import info.spicyclient.SpicyClient;
+import info.spicyclient.chatCommands.Command;
+import info.spicyclient.hudModules.HudModule;
+import info.spicyclient.hudModules.HudModule.HudModuleConfig;
 import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.notifications.Type;
@@ -23,6 +27,9 @@ import org.lwjgl.input.Mouse;
 
 public class GuiChat extends GuiScreen
 {
+	
+	public static HudModule selectedMod = null;
+	
     private static final Logger logger = LogManager.getLogger();
     private String historyBuffer = "";
 
@@ -186,6 +193,13 @@ public class GuiChat extends GuiScreen
     {
         if (mouseButton == 0)
         {
+        	
+        	selectedMod = HudModule.getHudModuleFromPos(mouseX, mouseY);
+        	if (selectedMod != null) {
+        		selectedMod.tempOffsetX = (mouseX - selectedMod.offsetX) - selectedMod.left;
+        		selectedMod.tempOffsetY = (mouseY - selectedMod.offsetY) - selectedMod.up;
+        	}
+        	
             IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
 
             if (this.handleComponentClick(ichatcomponent))
@@ -197,7 +211,22 @@ public class GuiChat extends GuiScreen
         this.inputField.mouseClicked(mouseX, mouseY, mouseButton);
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
-
+    
+    @Override
+    protected void mouseReleased(int mouseX, int mouseY, int mouseButton) {
+    	
+    	if (mouseButton == 0) {
+    		
+    		if (selectedMod != null) {
+    			
+    			selectedMod = null;
+    			
+    		}
+    		
+    	}
+    	
+    }
+    
     /**
      * Sets the text of the chat
      */
@@ -313,6 +342,16 @@ public class GuiChat extends GuiScreen
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
+    	
+    	if (selectedMod != null) {
+    		
+    		selectedMod.offsetX = (mouseX - selectedMod.tempOffsetX) - selectedMod.left;
+    		selectedMod.offsetY = (mouseY - selectedMod.tempOffsetY) - selectedMod.up;
+    		
+    	}
+    	
+    	HudModule.fakeRenderAllhudMods();
+    	
         drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
         this.inputField.drawTextBox();
         IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());

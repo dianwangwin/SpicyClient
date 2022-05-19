@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.lwjgl.input.Keyboard;
 
+import info.spicyclient.ui.fonts.FontUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -11,7 +12,7 @@ import net.minecraft.util.ChatAllowedCharacters;
 
 public class Button {
 	
-	public Button(float left, float bottom, float right, float up, int outlineColor, int insideColor, int textColor, float outlineThiccness, GuiScreen screen) {
+	public Button(float left, float bottom, float right, float up, int outlineColor, int insideColor, int textColor, float outlineThickness, GuiScreen screen) {
 		this.left = left;
 		this.bottom = bottom;
 		this.right = right;
@@ -19,11 +20,11 @@ public class Button {
 		this.outlineColor = outlineColor;
 		this.insideColor = insideColor;
 		this.textColor = textColor;
-		this.outlineThiccness = outlineThiccness;
+		this.outlineThickness = outlineThickness;
 		this.screen = screen;
 	}
 	
-	public float left = 0, bottom = 0, right = 0, up = 0 , outlineThiccness = 2;
+	public float left = 0, bottom = 0, right = 0, up = 0 , outlineThickness = 2;
 	public int outlineColor = -1, insideColor = 0xff000000, textColor = -1;
 	public GuiScreen screen = null;
 	public String text = null;
@@ -35,7 +36,7 @@ public class Button {
 		
 		GlStateManager.pushMatrix();
 		screen.drawRect(left, bottom, right, up, outlineColor);
-		screen.drawRect(left + outlineThiccness, bottom - outlineThiccness, right - outlineThiccness, up + outlineThiccness, insideColor);
+		screen.drawRect(left + outlineThickness, bottom - outlineThickness, right - outlineThickness, up + outlineThickness, insideColor);
 		GlStateManager.popMatrix();
 		
 		GlStateManager.pushMatrix();
@@ -100,11 +101,11 @@ public class Button {
 	}
 
 	public double getOutlineThiccness() {
-		return outlineThiccness;
+		return outlineThickness;
 	}
 
 	public void setOutlineThiccness(float outlineThiccness) {
-		this.outlineThiccness = outlineThiccness;
+		this.outlineThickness = outlineThiccness;
 	}
 
 	public int getOutlineColor() {

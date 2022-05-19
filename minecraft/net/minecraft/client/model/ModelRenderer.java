@@ -345,4 +345,13 @@ public class ModelRenderer
             this.compileDisplayList(this.savedScale);
         }
     }
+    
+    public void setPosition(float x, float y, float z) {
+    	
+    	offsetX = x;
+    	offsetY = y;
+    	offsetZ = z;
+    	
+    }
+    
 }

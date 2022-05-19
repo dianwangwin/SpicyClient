@@ -1,7 +1,10 @@
 package info.spicyclient.modules.world;
 
+import java.util.Random;
+
 import org.lwjgl.input.Keyboard;
 
+import info.spicyclient.bypass.Hypixel;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventOnLadder;
@@ -10,7 +13,12 @@ import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.settings.ModeSetting;
 import info.spicyclient.settings.NumberSetting;
+import info.spicyclient.util.InventoryUtils;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.network.play.client.C16PacketClientStatus;
+import net.minecraft.network.play.client.C16PacketClientStatus.EnumState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 
@@ -18,7 +26,7 @@ public class ChestStealer extends Module {
 	
 	public static Thread chestStealerThread = null;
 	
-	NumberSetting delay = new NumberSetting("Delay", 250, 0, 2000, 50);
+	NumberSetting delay = new NumberSetting("Delay", 250, 0, 2000, 10);
 	
 	public ChestStealer() {
 		super("Chest Stealer", Keyboard.KEY_NONE, Category.WORLD);
@@ -60,15 +68,25 @@ public class ChestStealer extends Module {
 					try {
 						
 						for (int i = 0; i < (chestEvent.chest.inventoryRows * 9); i++) {
+							
+							if (mc.currentScreen == null || !(mc.currentScreen instanceof GuiContainer)) {
+								break;
+							}
+							
 							Slot slot = (Slot) chestEvent.chest.inventorySlots.inventorySlots.get(i);
-							if (slot.getStack() != null) {
+							if (slot.getHasStack()) {
 								
 								try {
-									Thread.sleep((long) delay.getValue());
+									Thread.sleep((long) delay.getValue() + new Random().nextInt(40));
 								}catch (ThreadDeath e) {
 									e.printStackTrace();
 								}
-								chestEvent.chest.spicyHandleMouseInput(slot, slot.slotNumber, 0, 1);
+								
+				                if (!(mc.currentScreen instanceof GuiInventory)) {
+				                    //mc.getNetHandler().addToSendQueue(new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT));
+				                }
+				                
+								Hypixel.hypixelShiftClick(slot, slot.slotNumber, chestEvent.chest.inventorySlots.windowId);
 								
 							}
 						}

@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
-import info.spicyclient.ClickGUI.ClickGUI;
 import info.spicyclient.chatCommands.Command;
+import info.spicyclient.clickGUI.ClickGUI;
 import info.spicyclient.events.Event;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
@@ -19,6 +21,7 @@ import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.settings.SettingChangeEvent;
 import info.spicyclient.settings.SettingChangeEvent.type;
 import info.spicyclient.util.InventoryUtils;
+import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemAxe;
@@ -36,7 +39,9 @@ import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
-import net.minecraft.network.play.client.C0CPacketInput;
+import net.minecraft.network.play.client.C09PacketHeldItemChange;
+import net.minecraft.network.play.client.C0CPacketBoatInput;
+import net.minecraft.network.play.client.C0DPacketCloseWindow;
 import net.minecraft.network.play.client.C16PacketClientStatus;
 import net.minecraft.network.play.client.C16PacketClientStatus.EnumState;
 
@@ -55,6 +60,8 @@ public class InventoryManager extends Module {
 	public NumberSetting swordSlot = new NumberSetting("Sword slot", 1, 1, 9, 1);
 	public NumberSetting pickaxeSlot = new NumberSetting("Pickaxe slot", 2, 1, 9, 1);
 	public NumberSetting axeSlot = new NumberSetting("Axe slot", 3, 1, 9, 1);
+	
+	public static transient boolean isInventoryOpen = false;
 	
 	public InventoryManager() {
 		super("Inventory Manager", Keyboard.KEY_NONE, Category.PLAYER);
@@ -192,13 +199,14 @@ public class InventoryManager extends Module {
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
-			if (mc.currentScreen != null && !(mc.currentScreen instanceof ClickGUI)) {
+			if (mc.currentScreen != null && (!(mc.currentScreen instanceof ClickGUI) || !(mc.currentScreen instanceof GuiChest))) {
+				closeInv();
 				return;
 			}
 			
 			this.additionalInformation = "Hypixel";
 			
-			if (!SpicyClient.config.autoArmor.timer.hasTimeElapsed(250, false)) {
+			if (!SpicyClient.config.autoArmor.timer.hasTimeElapsed(250 + new Random().nextInt(40), false)) {
 				return;
 			}
 			
@@ -220,10 +228,11 @@ public class InventoryManager extends Module {
 	    					
 	        				if (!(mc.currentScreen instanceof GuiInventory)) {
 	        					packetSent = true;
-	            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-	            				mc.thePlayer.sendQueue.addToSendQueue(p);
+	            				
+	            				
 	        				}
-	    					
+	        				
+	        				openInv();
 	    					InventoryUtils.swap(i, (int)swordSlot.getValue() - 1);
 	    					sword = true;
 	    					
@@ -232,10 +241,11 @@ public class InventoryManager extends Module {
 	    				if(InventoryUtils.isBestPickaxe(item) && item.getItem() instanceof ItemPickaxe){
 	        				if (!(mc.currentScreen instanceof GuiInventory)) {
 	        					packetSent = true;
-	            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-	            				mc.thePlayer.sendQueue.addToSendQueue(p);
+	            				
+	            				
 	        				}
 	        				
+	        				openInv();
 	    					InventoryUtils.swap(i, (int)pickaxeSlot.getValue() - 1);
 	    					pickaxe = true;
 	    					
@@ -244,10 +254,11 @@ public class InventoryManager extends Module {
 	    				if(InventoryUtils.isBestAxe(item) && item.getItem() instanceof ItemAxe){
 	        				if (!(mc.currentScreen instanceof GuiInventory)) {
 	        					packetSent = true;
-	            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-	            				mc.thePlayer.sendQueue.addToSendQueue(p);
+	            				
+	            				
 	        				}
 	        				
+	        				openInv();
 	    					InventoryUtils.swap(i, (int)axeSlot.getValue() - 1);
 	    					axe = true;
 	    					
@@ -274,12 +285,14 @@ public class InventoryManager extends Module {
 	    						
 		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
-		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		            				
+		            				
 		        				}
 		        				
+		        				openInv();
 		    					InventoryUtils.drop(i);
 		    					SpicyClient.config.autoArmor.timer.reset();
+		    					closeInv();
 		    					return;
 		    					
 	    					}
@@ -294,12 +307,14 @@ public class InventoryManager extends Module {
 	    						
 		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
-		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		            				
+		            				
 		        				}
 		        				
+		        				openInv();
 		    					InventoryUtils.drop(i);
 		    					SpicyClient.config.autoArmor.timer.reset();
+		    					closeInv();
 		    					return;
 		    					
 	    					}
@@ -314,12 +329,14 @@ public class InventoryManager extends Module {
 		    						
 			        				if (!(mc.currentScreen instanceof GuiInventory)) {
 			        					packetSent = true;
-			            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-			            				mc.thePlayer.sendQueue.addToSendQueue(p);
+			            				
+			            				
 			        				}
 			        				
+			        				openInv();
 			    					InventoryUtils.drop(i);
 			    					SpicyClient.config.autoArmor.timer.reset();
+			    					closeInv();
 			    					return;
 			    					
 		    					}
@@ -328,12 +345,14 @@ public class InventoryManager extends Module {
 		    					
 		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
-		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		            				
+		            				
 		        				}
 		        				
+		        				openInv();
 		    					InventoryUtils.drop(i);
 		    					SpicyClient.config.autoArmor.timer.reset();
+		    					closeInv();
 		    					return;
 		    					
 		    				}
@@ -344,12 +363,14 @@ public class InventoryManager extends Module {
 		    						
 			        				if (!(mc.currentScreen instanceof GuiInventory)) {
 			        					packetSent = true;
-			            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-			            				mc.thePlayer.sendQueue.addToSendQueue(p);
+			            				
+			            				
 			        				}
 			        				
+			        				openInv();
 			    					InventoryUtils.drop(i);
 			    					SpicyClient.config.autoArmor.timer.reset();
+			    					closeInv();
 			    					return;
 			    					
 		    					}
@@ -358,12 +379,14 @@ public class InventoryManager extends Module {
 		    					
 		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
-		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		            				
+		            				
 		        				}
 		        				
+		        				openInv();
 		    					InventoryUtils.drop(i);
 		    					SpicyClient.config.autoArmor.timer.reset();
+		    					closeInv();
 		    					return;
 		    					
 		    				}
@@ -374,12 +397,14 @@ public class InventoryManager extends Module {
 		    						
 			        				if (!(mc.currentScreen instanceof GuiInventory)) {
 			        					packetSent = true;
-			            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-			            				mc.thePlayer.sendQueue.addToSendQueue(p);
+			            				
+			            				
 			        				}
 			        				
+			        				openInv();
 			    					InventoryUtils.drop(i);
 			    					SpicyClient.config.autoArmor.timer.reset();
+			    					closeInv();
 			    					return;
 			    					
 		    					}
@@ -388,12 +413,14 @@ public class InventoryManager extends Module {
 		    					
 		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
-		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		            				
+		            				
 		        				}
 		        				
+		        				openInv();
 		    					InventoryUtils.drop(i);
 		    					SpicyClient.config.autoArmor.timer.reset();
+		    					closeInv();
 		    					return;
 		    					
 		    				}
@@ -402,12 +429,14 @@ public class InventoryManager extends Module {
 		    					
 		        				if (!(mc.currentScreen instanceof GuiInventory)) {
 		        					packetSent = true;
-		            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-		            				mc.thePlayer.sendQueue.addToSendQueue(p);
+		            				
+		            				
 		        				}
 		        				
+		        				openInv();
 		    					InventoryUtils.drop(i);
 		    					SpicyClient.config.autoArmor.timer.reset();
+		    					closeInv();
 		    					return;
 		    					
 		    				}
@@ -424,12 +453,14 @@ public class InventoryManager extends Module {
 				    					
 				        				if (!(mc.currentScreen instanceof GuiInventory)) {
 				        					packetSent = true;
-				            				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
-				            				mc.thePlayer.sendQueue.addToSendQueue(p);
+				            				
+				            				
 				        				}
 				        				
+				        				openInv();
 				    					InventoryUtils.drop(i);
 				    					SpicyClient.config.autoArmor.timer.reset();
+				    					closeInv();
 				    					return;
 				    					
 				    				}
@@ -450,7 +481,68 @@ public class InventoryManager extends Module {
 				SpicyClient.config.autoArmor.timer.reset();
 			}
 			
+			closeInv();
+			
 		}
+		
+		if (e instanceof EventSendPacket && e.isPre()) {
+			
+			Packet packet = ((EventSendPacket)e).packet;
+			
+            if (packet instanceof C0DPacketCloseWindow) {
+                isInventoryOpen = false;
+                //Command.sendPrivateChatMessage("Closed");
+            }
+            else if (packet instanceof C16PacketClientStatus) {
+                C16PacketClientStatus open = (C16PacketClientStatus)packet;
+                if (open.getStatus() == EnumState.OPEN_INVENTORY_ACHIEVEMENT) {
+                    isInventoryOpen = true;
+                    //Command.sendPrivateChatMessage("Opened");
+                }
+            }
+            
+		}
+		
+	}
+	
+	@Override
+	public void onEventWhenDisabled(Event e) {
+		
+		if (e instanceof EventSendPacket && e.isPre()) {
+			
+			Packet packet = ((EventSendPacket)e).packet;
+			
+            if (packet instanceof C0DPacketCloseWindow) {
+                isInventoryOpen = false;
+            }
+            else if (packet instanceof C16PacketClientStatus) {
+                C16PacketClientStatus open = (C16PacketClientStatus)packet;
+                if (open.getStatus() == EnumState.OPEN_INVENTORY_ACHIEVEMENT) {
+                    isInventoryOpen = true;
+                }
+            }
+            
+		}
+		
+	}
+	
+	public void openInv() {
+		
+        if (!this.isInventoryOpen) {
+            mc.thePlayer.sendQueue.addToSendQueue(new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT));
+        }
+
+        this.isInventoryOpen = true;
+        
+	}
+	
+	public void closeInv() {
+		
+		if (this.isInventoryOpen) {
+            mc.thePlayer.sendQueue.addToSendQueue(new C0DPacketCloseWindow(mc.thePlayer.inventoryContainer.windowId));
+        }
+
+        this.isInventoryOpen = false;
 		
 	}
 	

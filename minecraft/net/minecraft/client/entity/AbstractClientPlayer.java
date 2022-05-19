@@ -3,6 +3,7 @@ package net.minecraft.client.entity;
 import com.mojang.authlib.GameProfile;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.modules.memes.Furries;
 
 import java.io.File;
 import net.minecraft.client.Minecraft;
@@ -88,6 +89,12 @@ public abstract class AbstractClientPlayer extends EntityPlayer
     public ResourceLocation getLocationSkin()
     {
     	
+    	if (SpicyClient.config.skin.isEnabled() && getName() == Minecraft.getMinecraft().thePlayer.getName()) {
+    		
+    		return SpicyClient.config.skin.getSkin();
+    		
+    	}
+    	
     	if (SpicyClient.config.dougDimmadome.isEnabled()) {
     		
     		return new ResourceLocation("spicy/doug_dimmadome.png");
@@ -100,6 +107,12 @@ public abstract class AbstractClientPlayer extends EntityPlayer
     		
     	}
     	
+    	if (SpicyClient.config.furries.isEnabled()) {
+    		
+    		return Furries.setSkin(this);
+    		
+    	}
+    	
         NetworkPlayerInfo networkplayerinfo = this.getPlayerInfo();
         return networkplayerinfo == null ? DefaultPlayerSkin.getDefaultSkin(this.getUniqueID()) : networkplayerinfo.getLocationSkin();
     }
@@ -108,9 +121,10 @@ public abstract class AbstractClientPlayer extends EntityPlayer
     {
         if (!Config.isShowCapes())
         {
-            return null;
+            //return null;
         }
-        else if (this.locationOfCape != null)
+        
+        if (this.locationOfCape != null)
         {
             return this.locationOfCape;
         }

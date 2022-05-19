@@ -29,13 +29,18 @@ import optifine.Config;
 import optifine.DynamicLights;
 import optifine.Reflector;
 
+import java.io.IOException;
+
 import org.lwjgl.opengl.GL11;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.EventDirection;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventSwordBlockAnimation;
-import info.spicyclient.events.listeners.EventUpdate;
+import info.spicyclient.files.FileManager;
+import info.spicyclient.modules.Module;
+import info.spicyclient.modules.render.RotateItem;
 import shadersmod.client.Shaders;
 
 public class ItemRenderer {
@@ -257,7 +262,9 @@ public class ItemRenderer {
 		GlStateManager.rotate(f3 * 10.0F, 1.0F, 0.0F, 0.0F);
 		GlStateManager.rotate(f3 * 30.0F, 0.0F, 0.0F, 1.0F);
 	}
-
+	
+	public static transient double rotate = 0;
+	
 	/**
 	 * Performs transformations prior to the rendering of a held item in first
 	 * person.
@@ -268,6 +275,36 @@ public class ItemRenderer {
 		GlStateManager.rotate(45.0F, 0.0F, 1.0F, 0.0F);
 		float f = MathHelper.sin(swingProgress * swingProgress * (float) Math.PI);
 		float f1 = MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float) Math.PI);
+		
+		try {
+			if (SpicyClient.config.rotateItem.isEnabled()) {
+				
+				rotate += SpicyClient.config.rotateItem.speed.getValue() / 4;
+				if (rotate >= 360) {
+					rotate = rotate % 360;
+				}
+				
+				if (!mc.thePlayer.isBlocking() && mc.thePlayer.swingProgress == 0) {
+					f = (float) rotate;
+					f1 = 0.1f;
+				}
+			}
+		} catch (NullPointerException e) {
+			SpicyClient.config.rotateItem = new RotateItem();
+			for (Module mod : SpicyClient.modules) {
+				if (mod instanceof RotateItem) {
+					SpicyClient.modules.remove(mod);
+				}
+			}
+			SpicyClient.modules.add(SpicyClient.config.rotateItem);
+			try {
+				FileManager.save_config(SpicyClient.config.name);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
 		GlStateManager.rotate(f * -20.0F, 0.0F, 1.0F, 0.0F);
 		GlStateManager.rotate(f1 * -20.0F, 0.0F, 0.0F, 1.0F);
 		GlStateManager.rotate(f1 * -80.0F, 1.0F, 0.0F, 0.0F);

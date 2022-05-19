@@ -1,18 +1,22 @@
 package info.spicyclient.modules.movement;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
+import info.spicyclient.events.listeners.EventMove;
 import info.spicyclient.events.listeners.EventOnLadder;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
@@ -25,8 +29,11 @@ import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.settings.SettingChangeEvent;
 import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.Timer;
+import info.spicyclient.util.WorldUtils;
+import net.minecraft.block.BlockStairs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerCapabilities;
+import net.minecraft.init.Blocks;
 import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C00PacketKeepAlive;
@@ -46,12 +53,14 @@ import net.minecraft.network.play.client.C19PacketResourcePackStatus;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.network.status.client.C00PacketServerQuery;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
+import optifine.MathUtils;
 
 public class Bhop extends Module {
 	
-	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "PvpLands", "Hypixel", "Test", "Test 2", "Test 3");
+	public ModeSetting mode = new ModeSetting("Mode", "Vanilla", "Vanilla", "PvpLands", "Hypixel", "NCP1", "Test", "Test 2", "Test 3");
 	
 	public NumberSetting hypixelSpeed = new NumberSetting("Speed", 0.01, 0.0001, 0.03, 0.0001);
 	
@@ -71,6 +80,9 @@ public class Bhop extends Module {
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
+		if (!mode.modes.contains("NCP1")) {
+			mode.modes.add("NCP1");
+		}
 		this.addSettings(mode, hypixelSpeed);
 	}
 	
@@ -98,13 +110,17 @@ public class Bhop extends Module {
 	}
 	
 	public void onEnable() {
-		
+		this.speed = 0.0D;
 		if (SpicyClient.config.fly.isEnabled()) {
 			toggle();
 			NotificationManager.getNotificationManager().createNotification("Don't use bhop while fly is enabled!", "", true, 5000, Type.WARNING, Color.RED);
 		}
 		
 		lastY = mc.thePlayer.posY;
+		speed = hypixelSpeed.getValue() * 11;
+		status = 0;
+		boosted = false;
+		
 	}
 	
 	public void onDisable() {
@@ -124,15 +140,15 @@ public class Bhop extends Module {
     
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventPacket) {
+		if (e instanceof EventReceivePacket) {
 			
 			if (e.isPre()) {
 				
-				EventPacket packetEvent = (EventPacket) e;
+				EventReceivePacket packetEvent = (EventReceivePacket) e;
 				
 				if (packetEvent.packet instanceof S08PacketPlayerPosLook) {
 					
-					if (lagbackCheck >= 3) {
+					if (lagbackCheck >= 1) {
 						
 						lagbackCheck = 0;
 						lastLagback = System.currentTimeMillis() - (5*1000);
@@ -167,11 +183,8 @@ public class Bhop extends Module {
 			
 		}
 		
-		BlockFly b = SpicyClient.config.blockFly;
-		
 		if (e instanceof EventUpdate) {
 			if (e.isPre()) {
-				
 				this.additionalInformation = mode.getMode();
 				
 				if (mode.getMode().equalsIgnoreCase("Vanilla") && mc.gameSettings.keyBindForward.pressed) {
@@ -189,10 +202,8 @@ public class Bhop extends Module {
 			if (e.isBeforePost()) {
 				
 				EventMotion event = (EventMotion) e;
-				if (b == null) {
-					
-				}
-				else if (mode.getMode().equalsIgnoreCase("Pvplands") && !b.isEnabled() && !mc.thePlayer.isInWater()) {
+				
+				if (mode.getMode().equalsIgnoreCase("Pvplands") && !mc.thePlayer.isInWater()) {
 					
 					if (mc.thePlayer.onGround && mc.gameSettings.keyBindForward.pressed) {
 						mc.thePlayer.setSprinting(true);
@@ -209,98 +220,110 @@ public class Bhop extends Module {
 					}
 					
 				}
-				else if (mode.getMode().equalsIgnoreCase("Pvplands") && !b.isEnabled() && mc.thePlayer.isInWater()) {
+				else if (mode.getMode().equalsIgnoreCase("Pvplands") && mc.thePlayer.isInWater()) {
 					if (mc.thePlayer.onGround) {
 						mc.gameSettings.keyBindJump.pressed = false;
 						mc.thePlayer.jump();
 						mc.thePlayer.setSprinting(true);
 					}
 				}
-				else if (mode.is("Hypixel") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
+				else if (mode.is("Hypixel") && MovementUtils.isMoving() && (!SpicyClient.config.blockFly.isEnabled() || (SpicyClient.config.killaura.isEnabled() && SpicyClient.config.killaura.target != null) || true)) {
+					
+					mc.gameSettings.keyBindJump.pressed = false;
+					//Command.sendPrivateChatMessage(Speed);
+					if (MovementUtils.isOnGround(0.00000001)) {
+						mc.thePlayer.jump();
+						MovementUtils.strafe();
+						Speed = (float) (100 + (hypixelSpeed.getValue() * 1000));
+					}else {
+						
+						Speed -= 1;
+						
+						if (Speed <= 1) {
+							Speed = 1;
+						}
+						
+						MovementUtils.setMotion((MovementUtils.getBaseMoveSpeed() / 100) * Speed);
+//						mc.timer.timerSpeed = 1.2f;
+						
+					}
+					
+				}
+				else if (mode.is("Hypixel") && !MovementUtils.isMoving()) {
+					MovementUtils.setMotion(0);
+				}
+				else if (mode.is("NCP1")) {
 					
 					mc.gameSettings.keyBindJump.pressed = false;
 					
-					mc.thePlayer.noClip = true;
-					
-					if (mc.thePlayer.onGround) {
-						
-						mc.thePlayer.jump();
-						
-						e.setCanceled(true);
-						
+					if (!MovementUtils.isMoving()) {
+						mc.timer.timerSpeed = 1f;
+						return;
 					}
+					
+					MovementUtils.strafe();
+					
+					if (MovementUtils.isOnGround(0.00000001)) {
+						mc.thePlayer.jump();
+					}
+					
+					if (!boosted) {
+						boosted = true;
+						new Thread("Bhop thread") {
+							public void run() {
+//								Command.sendPrivateChatMessage("fast");
+								mc.timer.timerSpeed = 1000000000f;
+								try {
+									Thread.sleep(10);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+//								Command.sendPrivateChatMessage("slow");
+								mc.timer.timerSpeed = 0.1f;
+								try {
+									Thread.sleep(20);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+								boosted = false;
+							}
+						}.start();
+					}
+					
+					if (!MovementUtils.isMoving()) {
+						MovementUtils.setMotion(0);
+					}
+					
+				}
+				else if (mode.is("Test") && MovementUtils.isMoving()) {
 					
 					mc.thePlayer.setSprinting(true);
-					//MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + 0.01f);
-					MovementUtils.setMotion((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + ((float)hypixelSpeed.getValue()));
-
-				}
-				else if (mode.is("Test") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
 					
-					mc.gameSettings.keyBindJump.pressed = false;
-					
-					if (mc.thePlayer.onGround) {
-						
+					if (MovementUtils.isOnGround(0.0001)) {
 						mc.thePlayer.jump();
-						e.setCanceled(true);
-						
 					}
 					
-					mc.thePlayer.setSprinting(true);
-					MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + 0.005511111f);
+					MovementUtils.strafe();
 					
 				}
-				else if (mode.is("Test 3") && !b.isEnabled() && !mc.thePlayer.isInWater() && (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed)) {
-					
-					if (mc.thePlayer.onGround) {
-						
-						mc.thePlayer.jump();
-						//mc.thePlayer.motionY = 0.42f;
-						e.setCanceled(true);
-						
-					}
-					
-					mc.gameSettings.keyBindJump.pressed = false;
-					
-					mc.thePlayer.onGround = true;
-					mc.thePlayer.noClip = true;
-					
-					if (mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed) {
-						
-						MovementUtils.strafe(0.5F);
-						
-					}
-					
-					/*
-					switch (stage) {
-					case 0:
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-						stage++;
-						break;
-					case 1:
-						// mc.thePlayer.posY = mc.thePlayer.posY + 9.947598300641403E-14;
-						// mc.thePlayer.posY = mc.thePlayer.lastTickPosY + 0.0002000000000066393;
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0002000000000066393,
-								mc.thePlayer.posZ);
-						stage++;
-						break;
-					case 2:
-						// mc.thePlayer.posY = mc.thePlayer.posY + -9.947598300641403E-14;
-						// mc.thePlayer.posY = mc.thePlayer.lastTickPosY -0.0002000000000066393;
-						mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + -0.0002000000000066393,
-								mc.thePlayer.posZ);
-						stage = 0;
-						break;
-					}
-					*/
-					//mc.thePlayer.motionY = 0;
-					
-				}
-				
 			}
 			
 		}
 		
 	}
 	
+	public static transient float Speed = 0;
+	public static transient boolean lastDistanceReset = false;
+	
+	public static double roundToPlace(double value, int places) {
+		if (places < 0) {
+			throw new IllegalArgumentException();
+		} else {
+			BigDecimal bd = new BigDecimal(value);
+			bd = bd.setScale(places, RoundingMode.HALF_UP);
+			return bd.doubleValue();
+		}
+	}
+    double forward;
+    double strafe;
 }

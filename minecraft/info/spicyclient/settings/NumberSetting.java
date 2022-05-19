@@ -9,6 +9,10 @@ public class NumberSetting extends Setting {
 	
 	public boolean ClickGuiSelected = false;
 	
+	// For Jello
+	public transient float hover = 1;
+	public transient float lastHover = 1;
+	
 	public NumberSetting(String name, double value, double minimum, double maximum, double increment) {
 		
 		this.name = name;

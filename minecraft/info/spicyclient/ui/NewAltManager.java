@@ -21,8 +21,9 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.TheAlteningAPI;
 import info.spicyclient.files.AltInfo;
 import info.spicyclient.files.FileManager;
-import info.spicyclient.files.AltInfo.alt;
+import info.spicyclient.files.AltInfo.Alt;
 import info.spicyclient.ui.customOpenGLWidgets.TextBox;
+import info.spicyclient.util.RandomUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
@@ -59,7 +60,7 @@ public class NewAltManager extends GuiScreen {
 	public static float scroll = 0;
 	
 	public FontRenderer fr;
-	alt editThis = null;
+	Alt editThis = null;
 	public static boolean fontRendererInitialized = false, firstTimeStartup = true, setApiKey = false, addAlt = false, editAlt = false;
 	
 	@Override
@@ -71,7 +72,6 @@ public class NewAltManager extends GuiScreen {
 	}
 	
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		
 		if (!fontRendererInitialized) {
 			fr = mc.fontRendererObj;
 			try {
@@ -86,7 +86,7 @@ public class NewAltManager extends GuiScreen {
 		if (firstTimeStartup) {
 			
 			for (int e = SpicyClient.altInfo.alts.size(); e > 0; e--) {
-				alt a = SpicyClient.altInfo.alts.get(e - 1);
+				Alt a = SpicyClient.altInfo.alts.get(e - 1);
 				a.status = 0;
 			}
 			
@@ -102,7 +102,7 @@ public class NewAltManager extends GuiScreen {
 		
 		int altAmount = 0;
 		for (int e = SpicyClient.altInfo.alts.size(); e > 0; e--) {
-			alt a = SpicyClient.altInfo.alts.get(e - 1);
+			Alt a = SpicyClient.altInfo.alts.get(e - 1);
 			if ((10 + (altAmount * 80)) + scrollOffset < this.height || (10 + (altAmount * 80)) + scrollOffset < 0) {
 				GlStateManager.pushMatrix();
 				drawRect(28, (10 + (altAmount * 80)) + scrollOffset, this.width / 1.6, 80 + ((altAmount * 80)) + scrollOffset, 0xff202225);
@@ -128,9 +128,11 @@ public class NewAltManager extends GuiScreen {
 				String password = null;
 				for (int i = 0; i < a.password.length(); i++) {
 					if (password == null) {
-						password = "ꏌ";
+						//password = "ꏌ";
+						password = "╳";
 					}else {
-						password = password + "ꏌ";
+						//password += "ꏌ";
+						password += "╳";
 					}
 				}
 				
@@ -143,6 +145,18 @@ public class NewAltManager extends GuiScreen {
 					}else {
 						drawString(fr , "Email: " + a.email, (30) / 1.5, (int) ((12 + (altAmount * 80) + 30) + scrollOffset) / 1.5, -1);
 						drawString(fr , "Password: " + password, (30) / 1.5, (int) ((12 + (altAmount * 80) + 50) + scrollOffset) / 1.5, -1);
+						if (a.unbannedAt != 0) {
+							if (a.unbannedAt > System.currentTimeMillis()) {
+								String unbannedAt = RandomUtils.getFormattedDateAndTime(a.unbannedAt);
+								if (a.unbannedAt == Long.MAX_VALUE) {
+									unbannedAt = "Permanently";
+								}
+								drawString(fr, "Banned until:", ((this.width / 1.6) - (fr.getStringWidth("Banned until:") * 1.5) - 4) / 1.5, (int) ((12 + (altAmount * 80) + 30) + scrollOffset) / 1.5, -1);
+								drawString(fr, unbannedAt, ((this.width / 1.6) - (fr.getStringWidth(unbannedAt) * 1.5) - 4) / 1.5, (int) ((12 + (altAmount * 80) + 50) + scrollOffset) / 1.5, -1);
+							}else {
+								drawString(fr, "Unbanned", ((this.width / 1.6) - (fr.getStringWidth("Unbanned:") * 1.5) - 4) / 1.5, (int) ((12 + (altAmount * 80) + 30) + scrollOffset) / 1.5, 0xff43b581);
+							}
+						}
 					}
 				}
 				
@@ -298,7 +312,7 @@ public class NewAltManager extends GuiScreen {
 		
 		// To prevent the text from blinking
 		// The max fps is 30
-		long fps = 18;
+		long fps = 17;
 		try {
 			Thread.sleep(1000 / fps);
 		} catch (InterruptedException e) {
@@ -321,7 +335,12 @@ public class NewAltManager extends GuiScreen {
     			textBox2.selected = true;
     		}
     		else if (keyCode == Keyboard.KEY_V && isCtrlKeyDown() && addAlt) {
-    			textBox1.addChar(getClipboardString());
+    			if (getClipboardString().contains(":") && getClipboardString().split(":").length == 2) {
+    				textBox1.addChar(getClipboardString().split(":")[0]);
+    				textBox2.addChar(getClipboardString().split(":")[1]);
+    			}else {
+    				textBox1.addChar(getClipboardString());
+    			}
     		}else {
     			textBox1.typeKey(typedChar, keyCode);
     		}
@@ -332,7 +351,12 @@ public class NewAltManager extends GuiScreen {
     	}
     	else if (textBox2.selected) {
     		if (keyCode == Keyboard.KEY_V && isCtrlKeyDown() && addAlt) {
-    			textBox2.addChar(getClipboardString());
+    			if (getClipboardString().contains(":") && getClipboardString().split(":").length == 2) {
+    				textBox1.addChar(getClipboardString().split(":")[0]);
+    				textBox2.addChar(getClipboardString().split(":")[1]);
+    			}else {
+    				textBox2.addChar(getClipboardString());
+    			}
     		}else {
     			textBox2.typeKey(typedChar, keyCode);
     		}
@@ -496,7 +520,7 @@ public class NewAltManager extends GuiScreen {
         			
             		try {
         				JSONObject account = TheAlteningAPI.call_me();
-        				alt a = new alt(account.getString("token"), "fur", true);
+        				Alt a = new Alt(account.getString("token"), "fur", true);
         				a.username = account.getString("username");
         				SpicyClient.altInfo.addCreatedAlt(a);
         			} catch (Exception e) {
@@ -516,11 +540,11 @@ public class NewAltManager extends GuiScreen {
         		
         		
     			boolean loginSuccess = false;
-	    		alt Alt = null;
+	    		Alt Alt = null;
 	        	int altAmount = 0;
 	        	String oldname = mc.session.getUsername();
 	    		for (int e = SpicyClient.altInfo.alts.size(); e > 0; e--) {
-	    			alt a = SpicyClient.altInfo.alts.get(e - 1);
+	    			Alt a = SpicyClient.altInfo.alts.get(e - 1);
 	    			
 	        		if (mouseX > 28 && mouseX < this.width / 1.6 && mouseY > (10 + (altAmount * 80)) + scrollOffset && mouseY < 80 + ((altAmount * 80)) + scrollOffset) {
 	        			if (a.premium) {
@@ -568,7 +592,7 @@ public class NewAltManager extends GuiScreen {
 	    		if (loginSuccess) {
 	    			
 	    			for (int e = SpicyClient.altInfo.alts.size(); e > 0; e--) {
-	    				alt a = SpicyClient.altInfo.alts.get(e - 1);
+	    				Alt a = SpicyClient.altInfo.alts.get(e - 1);
 	    				
 	        			if (a != Alt) {
 	        				a.status = 0;
@@ -584,10 +608,10 @@ public class NewAltManager extends GuiScreen {
     	
 		if (mouseButton == 1) {
 			
-    		alt Alt = null;
+    		Alt Alt = null;
         	int altAmount = 0;
     		for (int e = SpicyClient.altInfo.alts.size(); e > 0; e--) {
-    			alt a = SpicyClient.altInfo.alts.get(e - 1);
+    			Alt a = SpicyClient.altInfo.alts.get(e - 1);
     			
         		if (mouseX > 28 && mouseX < this.width / 1.6 && mouseY > (10 + (altAmount * 80)) + scrollOffset && mouseY < 80 + ((altAmount * 80)) + scrollOffset) {
         			

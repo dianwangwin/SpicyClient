@@ -2,6 +2,8 @@ package info.spicyclient.chatCommands.commands;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ChatComponentText;
 
 public class Help extends Command {
 

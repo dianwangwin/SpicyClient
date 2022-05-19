@@ -11,7 +11,7 @@ public class BiomeGenPlains extends BiomeGenBase
 {
     protected boolean field_150628_aC;
 
-    protected BiomeGenPlains(int p_i1986_1_)
+    public BiomeGenPlains(int p_i1986_1_)
     {
         super(p_i1986_1_);
         this.setTemperatureRainfall(0.8F, 0.4F);

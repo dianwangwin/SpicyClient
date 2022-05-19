@@ -1,5 +1,6 @@
 package info.spicyclient.chatCommands.commands;
 
+import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 
 public class Say extends Command {
@@ -18,7 +19,7 @@ public class Say extends Command {
 			publicMessage += s + " ";
 		}
 		
-		publicMessage = publicMessage.replaceFirst(".say ", "");
+		publicMessage = publicMessage.replaceFirst(SpicyClient.commandManager.prefix + "say ", "");
 		publicMessage = publicMessage.substring(0, publicMessage.length() - 1);
 		
 		sendPublicChatMessage(publicMessage);

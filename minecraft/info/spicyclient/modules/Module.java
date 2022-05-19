@@ -7,6 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.events.Event;
+import info.spicyclient.music.MusicManager;
 import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.notifications.Type;
@@ -17,16 +18,24 @@ import info.spicyclient.settings.NumberSetting;
 import info.spicyclient.settings.Setting;
 import info.spicyclient.settings.SettingChangeEvent;
 import info.spicyclient.settings.SettingChangeEvent.type;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 
 public abstract class Module {
 	
-	public String name;
+	public transient String name;
 	public transient String additionalInformation = "";
 	public boolean toggled = false;
 	public transient boolean expanded = false;
 	public transient boolean ClickGuiExpanded = false;
 	public transient int index;
+	public transient float animation = 0;
+	
+	// For Jello
+	public transient float hoverPercent = 0;
+	public transient float lastHoverPercent = 0;
 	
 	public boolean isToggled() {
 		return toggled;
@@ -104,8 +113,12 @@ public abstract class Module {
 			
 			onEnable();
 			
-			if (SpicyClient.config.clickgui.sound.isEnabled()) {
-				Minecraft.getMinecraft().thePlayer.playSound("random.click", (float) SpicyClient.config.clickgui.volume.getValue(), 0.6f);
+			if (SpicyClient.config.hud.sound.isEnabled()) {
+				try {
+					Minecraft.getMinecraft().thePlayer.playSound("random.click", (float) SpicyClient.config.hud.volume.getValue(), 0.6f);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
 			}
 			
 		}else {
@@ -114,8 +127,12 @@ public abstract class Module {
 			
 			onDisable();
 			
-			if (SpicyClient.config.clickgui.sound.isEnabled()) {
-				Minecraft.getMinecraft().thePlayer.playSound("random.click", (float) SpicyClient.config.clickgui.volume.getValue(), 0.4f);
+			if (SpicyClient.config.hud.sound.isEnabled()) {
+				try {
+					Minecraft.getMinecraft().thePlayer.playSound("random.click", (float) SpicyClient.config.hud.volume.getValue(), 0.4f);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
 			}
 			
 		}
@@ -151,8 +168,9 @@ public abstract class Module {
 		PLAYER("Player"),
 		RENDER("Render"),
 		MEMES("Memes"),
-		BETA("Beta Modules"),
-		WORLD("World");
+		WORLD("World"),
+		COMMUNITY("Community"),
+		BETA("Beta Modules");
 		
 		public String name;
 		

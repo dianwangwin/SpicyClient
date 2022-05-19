@@ -101,12 +101,9 @@ public class NetworkPlayerInfo
 
     public ResourceLocation getLocationCape()
     {
-        if (this.locationCape == null)
-        {
-            this.loadPlayerTextures();
-        }
-
-        return this.locationCape;
+    	
+    	return new ResourceLocation("spicy/cape.png");
+    	
     }
 
     public ScorePlayerTeam getPlayerTeam()

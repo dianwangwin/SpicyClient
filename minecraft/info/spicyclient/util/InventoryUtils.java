@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemPickaxe;
@@ -13,10 +14,16 @@ import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
+import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
 public class InventoryUtils {
+	
+    public static void switchToSlot(int slot){
+    	Minecraft.getMinecraft().thePlayer.inventory.currentItem = slot - 1;
+    	Minecraft.getMinecraft().getNetHandler().getNetworkManager().sendPacketNoEvent(new C09PacketHeldItemChange(slot - 1));
+    }
 	
     public static void shiftClick(int slot){
     	Minecraft.getMinecraft().playerController.windowClick(Minecraft.getMinecraft().thePlayer.inventoryContainer.windowId, slot, 0, 1, Minecraft.getMinecraft().thePlayer);
@@ -24,6 +31,10 @@ public class InventoryUtils {
 
     public static void drop(int slot){
     	Minecraft.getMinecraft().playerController.windowClick(Minecraft.getMinecraft().thePlayer.inventoryContainer.windowId, slot, 1, 4, Minecraft.getMinecraft().thePlayer);
+    }
+    
+    public static void click(int slot){
+    	Minecraft.getMinecraft().playerController.windowClick(Minecraft.getMinecraft().thePlayer.inventoryContainer.windowId, slot, 0, 0, Minecraft.getMinecraft().thePlayer);
     }
     
     // I found these on github
@@ -70,6 +81,7 @@ public class InventoryUtils {
         }
     	return true;
     }
+    
     public static boolean isBestShovel(ItemStack stack){
     	Item item = stack.getItem();
     	if(!(item instanceof ItemSpade))
@@ -160,6 +172,61 @@ public class InventoryUtils {
     	}
     	
     	return false;
+    	
+    }
+    
+    public static Slot getBestSwordSlot(){
+    	
+    	float damage = 0;
+    	Slot bestSword = null;
+    	for (int i = 9; i < 45; i++) {
+            if (Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+            	Slot slot = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i);
+                if(slot.getStack().getItem() instanceof ItemSword)
+                	if (isBestWeapon(slot.getStack())) {
+                		bestSword = slot;
+                	}
+                	
+            }
+        }
+    	
+    	return bestSword;
+    	
+    }
+    
+    public static Slot getBestPickaxeSlot(){
+    	
+    	Slot bestPickaxe = null;
+    	for (int i = 9; i < 45; i++) {
+            if (Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+            	Slot slot = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i);
+                if(slot.getStack().getItem() instanceof ItemPickaxe)
+                	if (isBestPickaxe(slot.getStack())) {
+                		bestPickaxe = slot;
+                	}
+                	
+            }
+        }
+    	
+    	return bestPickaxe;
+    	
+    }
+    
+    public static Slot getBestAxeSlot(){
+    	
+    	Slot bestAxe = null;
+    	for (int i = 9; i < 45; i++) {
+            if (Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+            	Slot slot = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(i);
+                if(slot.getStack().getItem() instanceof ItemAxe)
+                	if (isBestAxe(slot.getStack())) {
+                		bestAxe = slot;
+                	}
+                	
+            }
+        }
+    	
+    	return bestAxe;
     	
     }
     

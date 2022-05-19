@@ -20,7 +20,7 @@ import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
-import net.minecraft.network.play.client.C0CPacketInput;
+import net.minecraft.network.play.client.C0CPacketBoatInput;
 import net.minecraft.network.play.client.C0DPacketCloseWindow;
 import net.minecraft.network.play.client.C0EPacketClickWindow;
 import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
@@ -208,7 +208,7 @@ public enum EnumConnectionState
             this.registerPacket(EnumPacketDirection.SERVERBOUND, C09PacketHeldItemChange.class);
             this.registerPacket(EnumPacketDirection.SERVERBOUND, C0APacketAnimation.class);
             this.registerPacket(EnumPacketDirection.SERVERBOUND, C0BPacketEntityAction.class);
-            this.registerPacket(EnumPacketDirection.SERVERBOUND, C0CPacketInput.class);
+            this.registerPacket(EnumPacketDirection.SERVERBOUND, C0CPacketBoatInput.class);
             this.registerPacket(EnumPacketDirection.SERVERBOUND, C0DPacketCloseWindow.class);
             this.registerPacket(EnumPacketDirection.SERVERBOUND, C0EPacketClickWindow.class);
             this.registerPacket(EnumPacketDirection.SERVERBOUND, C0FPacketConfirmTransaction.class);

@@ -21,6 +21,10 @@ import net.minecraft.world.World;
 import optifine.Config;
 
 import org.lwjgl.opengl.GL11;
+
+import info.spicyclient.SpicyClient;
+import info.spicyclient.events.EventType;
+import info.spicyclient.events.listeners.EventRenderLivingLabel;
 import shadersmod.client.Shaders;
 
 public abstract class Render<T extends Entity>
@@ -339,8 +343,19 @@ public abstract class Render<T extends Entity>
     /**
      * Renders an entity's name above its head
      */
-    protected void renderLivingLabel(T entityIn, String str, double x, double y, double z, int maxDistance)
+    public void renderLivingLabel(T entityIn, String str, double x, double y, double z, int maxDistance)
     {
+    	
+    	EventRenderLivingLabel event = new EventRenderLivingLabel(str, x, y, z, maxDistance);
+    	event.setType(EventType.PRE);
+    	SpicyClient.onEvent(event);
+    	
+    	str = event.text;
+    	x = event.x;
+    	y = event.y;
+    	z = event.z;
+    	maxDistance = event.maxDistance;
+    	
         double d0 = entityIn.getDistanceSqToEntity(this.renderManager.livingPlayer);
 
         if (d0 <= (double)(maxDistance * maxDistance))
@@ -386,6 +401,10 @@ public abstract class Render<T extends Entity>
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.popMatrix();
         }
+        
+    	event.setType(EventType.POST);
+    	SpicyClient.onEvent(event);
+        
     }
 
     public RenderManager getRenderManager()

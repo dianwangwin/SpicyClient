@@ -30,7 +30,8 @@ public enum EnumChatFormatting
     STRIKETHROUGH("STRIKETHROUGH", 'm', true),
     UNDERLINE("UNDERLINE", 'n', true),
     ITALIC("ITALIC", 'o', true),
-    RESET("RESET", 'r', -1);
+    RESET("RESET", 'r', -1),
+	RAINBOW("RAINBOW", 's', -69);
 
     private static final Map<String, EnumChatFormatting> nameMapping = Maps.<String, EnumChatFormatting>newHashMap();
 

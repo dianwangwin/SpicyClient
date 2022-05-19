@@ -39,7 +39,13 @@ public class Blink extends Module {
 	
 	public void onDisable() {
 		
+		int i = 0;
+		
 		for (Packet p : packets) {
+			
+			if (p instanceof C03PacketPlayer) {
+				//i++;
+			}
 			
 			if (mc.isSingleplayer()) {
 				
@@ -49,10 +55,14 @@ public class Blink extends Module {
 			
 		}
 		packets.clear();
-		
+		//Command.sendPrivateChatMessage(i);
 	}
 	
 	public void onEvent(Event e) {
+		
+		if (e instanceof EventUpdate && e.isPre()) {
+			this.additionalInformation = packets.size() + " Packets";
+		}
 		
 		if (e instanceof EventSendPacket) {
 			

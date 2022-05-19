@@ -4,9 +4,10 @@ import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.EventDirection;
 import info.spicyclient.events.EventType;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventSendPacket;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -48,7 +49,6 @@ import net.minecraft.util.MessageDeserializer;
 import net.minecraft.util.MessageDeserializer2;
 import net.minecraft.util.MessageSerializer;
 import net.minecraft.util.MessageSerializer2;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
@@ -160,7 +160,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
             try
             {
             	
-            	EventPacket event = new EventPacket(EventType.PRE, EventDirection.INCOMING, p_channelRead0_2_);
+            	EventReceivePacket event = new EventReceivePacket(EventType.PRE, EventDirection.INCOMING, p_channelRead0_2_);
             	SpicyClient.onEvent(event);
             	
             	if (event.isCanceled()) {
@@ -255,6 +255,11 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
     }
     
     public void sendPacketNoEvent(Packet packet) {
+    	
+    	if (SpicyClient.currentlyLoadingConfig) {
+    		return;
+    	}
+    	
         if (channel != null && channel.isOpen()) {
             flushOutboundQueue();
             dispatchPacket(packet, null);
@@ -417,6 +422,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
                 }
 
                 p_initChannel_1_.pipeline().addLast((String)"timeout", (ChannelHandler)(new ReadTimeoutHandler(30))).addLast((String)"splitter", (ChannelHandler)(new MessageDeserializer2())).addLast((String)"decoder", (ChannelHandler)(new MessageDeserializer(EnumPacketDirection.CLIENTBOUND))).addLast((String)"prepender", (ChannelHandler)(new MessageSerializer2())).addLast((String)"encoder", (ChannelHandler)(new MessageSerializer(EnumPacketDirection.SERVERBOUND))).addLast((String)"packet_handler", (ChannelHandler)networkmanager);
+                
             }
         })).channel(oclass)).connect(p_181124_0_, p_181124_1_).syncUninterruptibly();
         return networkmanager;
@@ -501,7 +507,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
             }
             else
             {
-                this.channel.pipeline().addBefore("decoder", "decompress", new NettyCompressionDecoder(treshold));
+            	this.channel.pipeline().addBefore("decoder", "decompress", new NettyCompressionDecoder(treshold));
             }
 
             if (this.channel.pipeline().get("compress") instanceof NettyCompressionEncoder)
@@ -510,7 +516,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
             }
             else
             {
-                this.channel.pipeline().addBefore("encoder", "compress", new NettyCompressionEncoder(treshold));
+            	this.channel.pipeline().addBefore("encoder", "compress", new NettyCompressionEncoder(treshold));
             }
         }
         else

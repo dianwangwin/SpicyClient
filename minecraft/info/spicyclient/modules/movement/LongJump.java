@@ -3,6 +3,7 @@ package info.spicyclient.modules.movement;
 import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.bypass.Hypixel;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventMotion;
 import info.spicyclient.events.listeners.EventUpdate;
@@ -10,6 +11,7 @@ import info.spicyclient.modules.Module;
 import info.spicyclient.modules.Module.Category;
 import info.spicyclient.util.MovementUtils;
 import info.spicyclient.util.Timer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.util.MathHelper;
@@ -22,14 +24,8 @@ public class LongJump extends Module {
 
 	
 	public void onEnable() {
-		
-        PlayerCapabilities playerCapabilities = new PlayerCapabilities();
-        playerCapabilities.isFlying = true;
-        playerCapabilities.allowFlying = true;
-        playerCapabilities.setFlySpeed((float) ((Math.random() * (9.0 - 0.1)) + 0.1));
-        playerCapabilities.isCreativeMode = true;
-        mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C13PacketPlayerAbilities(playerCapabilities));
-		
+		jumped = false;
+		timer.reset();
 	}
 	
 	public void onDisable() {
@@ -48,27 +44,21 @@ public class LongJump extends Module {
 		
 		if (e instanceof EventMotion) {
 			
-			if (e.isPost()) {
-				
-				if (jumped && mc.thePlayer.onGround) {
-					this.toggle();
-					jumped = false;
-					return;
-				}
-				
-				mc.gameSettings.keyBindJump.pressed = false;
-
-                if (mc.thePlayer.onGround) {
-                	
-                	MovementUtils.strafe((float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + 1.25f);
-                    mc.thePlayer.jump();
-                    e.setCanceled(true);
-                    jumped = true;
-
-                }
-
-                mc.thePlayer.setSprinting(true);
-				
+			if (!jumped && MovementUtils.isOnGround(0.00001)) {
+				Hypixel.damageHypixel(2);
+				jumped = true;
+			}
+			
+			if (jumped && mc.thePlayer.hurtResistantTime == 19) {
+				mc.thePlayer.motionY += 0.4;
+				MovementUtils.setMotion(0.45);
+			}
+			else if (jumped) {
+				MovementUtils.strafe();
+			}
+			
+			if (jumped && mc.thePlayer.hurtResistantTime == 0 && MovementUtils.isOnGround(0.0001) && timer.hasTimeElapsed(1000, true)) {
+				toggle();
 			}
 			
 		}

@@ -1,9 +1,11 @@
 package net.minecraft.client.entity;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventChatmessage;
 import info.spicyclient.events.listeners.EventMotion;
+import info.spicyclient.events.listeners.EventMove;
 import info.spicyclient.events.listeners.EventUpdate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
@@ -39,7 +41,7 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
-import net.minecraft.network.play.client.C0CPacketInput;
+import net.minecraft.network.play.client.C0CPacketBoatInput;
 import net.minecraft.network.play.client.C0DPacketCloseWindow;
 import net.minecraft.network.play.client.C13PacketPlayerAbilities;
 import net.minecraft.network.play.client.C16PacketClientStatus;
@@ -166,7 +168,25 @@ public class EntityPlayerSP extends AbstractClientPlayer
             this.mc.getSoundHandler().playSound(new MovingSoundMinecartRiding(this, (EntityMinecart)entityIn));
         }
     }
-
+    
+    @Override
+	public void moveEntity(double x, double y, double z) {
+    	EventMove event = new EventMove(z, y, z);
+    	event.setType(EventType.PRE);
+    	event.setX(x);
+    	event.setY(y);
+    	event.setZ(z);
+    	SpicyClient.onEvent(event);
+    	
+    	if (SpicyClient.config.targetStrafe.isEnabled()) {
+    		SpicyClient.config.targetStrafe.onEvent(event);
+    	}
+    	
+		super.moveEntity(event.x, event.y, event.z);
+		event.setType(EventType.POST);
+		SpicyClient.onEvent(event);
+	}
+    
     /**
      * Called to update the entity's position/logic.
      */
@@ -179,7 +199,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
             if (this.isRiding())
             {
                 this.sendQueue.addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(this.rotationYaw, this.rotationPitch, this.onGround));
-                this.sendQueue.addToSendQueue(new C0CPacketInput(this.moveStrafing, this.moveForward, this.movementInput.jump, this.movementInput.sneak));
+                this.sendQueue.addToSendQueue(new C0CPacketBoatInput(this.moveStrafing, this.moveForward, this.movementInput.jump, this.movementInput.sneak));
             }
             else
             {
@@ -194,11 +214,11 @@ public class EntityPlayerSP extends AbstractClientPlayer
     public void onUpdateWalkingPlayer()
     {
     	
-    	EventUpdate e = new EventUpdate();
+    	EventUpdate e = new EventUpdate(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.rotationYaw, this.rotationPitch, this.onGround);
     	e.setType(EventType.PRE);
     	SpicyClient.onEvent(e);
     	
-    	EventMotion event = new EventMotion(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.motionX, this.motionY, this.motionZ, this.rotationYaw, this.rotationPitch, this.onGround);
+    	EventMotion event = new EventMotion(e.getX(), e.getY(), e.getZ(), this.motionX, this.motionY, this.motionZ, e.getYaw(), e.getPitch(), e.isOnGround());
     	event.setType(EventType.PRE);
     	SpicyClient.onEvent(event);
     	
@@ -292,7 +312,11 @@ public class EntityPlayerSP extends AbstractClientPlayer
         
         event.setType(EventType.POST);
     	SpicyClient.onEvent(event);
-        
+    	
+    	e = new EventUpdate(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.rotationYaw, this.rotationPitch, this.onGround);
+    	e.setType(EventType.POST);
+    	SpicyClient.onEvent(e);
+    	
     }
 
     /**
@@ -585,7 +609,11 @@ public class EntityPlayerSP extends AbstractClientPlayer
     {
         return new BlockPos(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D);
     }
-
+    
+    public BlockPos getRealPosition() {
+    	return new BlockPos(posX, posY, posZ);
+    }
+    
     public void playSound(String name, float volume, float pitch)
     {
         this.worldObj.playSound(this.posX, this.posY, this.posZ, name, volume, pitch, false);

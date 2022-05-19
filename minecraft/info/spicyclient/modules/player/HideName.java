@@ -4,7 +4,7 @@ import org.lwjgl.input.Keyboard;
 
 import info.spicyclient.SpicyClient;
 import info.spicyclient.events.Event;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.settings.ModeSetting;
@@ -14,7 +14,6 @@ import net.minecraft.network.play.server.S3BPacketScoreboardObjective;
 import net.minecraft.network.play.server.S3CPacketUpdateScore;
 import net.minecraft.network.play.server.S3DPacketDisplayScoreboard;
 import net.minecraft.util.ChatComponentText;
-import sun.net.www.content.text.plain;
 
 public class HideName extends Module {
 	
@@ -38,16 +37,15 @@ public class HideName extends Module {
 			this.additionalInformation = mode.getMode();
 		}
 		
-		if (e instanceof EventPacket && e.isPre()) {
+		if (e instanceof EventReceivePacket && e.isPre()) {
 			
-			EventPacket packetEvent = (EventPacket) e;
+			EventReceivePacket packetEvent = (EventReceivePacket) e;
 			if (packetEvent.packet instanceof S02PacketChat) {
 				
 				S02PacketChat packet = (S02PacketChat) packetEvent.packet;
 				
 				if (packet.getChatComponent().getUnformattedText().replaceAll("׼", "").contains(mc.getSession().getUsername())) {
-					mc.thePlayer.addChatComponentMessage(new ChatComponentText(packet.getChatComponent().getFormattedText().replaceAll("׼", "").replaceAll(mc.getSession().getUsername(), mode.getMode())));
-					e.setCanceled(true);
+					packet.chatComponent = new ChatComponentText(packet.getChatComponent().getFormattedText().replaceAll("׼", "").replaceAll(mc.getSession().getUsername(), mode.getMode()));
 				}
 				
 			}

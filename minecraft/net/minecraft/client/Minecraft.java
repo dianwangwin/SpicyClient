@@ -15,6 +15,8 @@ import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 
 import info.spicyclient.SpicyClient;
+import info.spicyclient.events.EventType;
+import info.spicyclient.events.listeners.EventTick;
 import info.spicyclient.files.Config;
 import info.spicyclient.ui.NewMainMenu;
 
@@ -277,7 +279,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     public final File mcDataDir;
     private final File fileAssets;
     private final String launchedVersion;
-    private final Proxy proxy;
+    public Proxy proxy;
     private ISaveFormat saveLoader;
 
     /**
@@ -304,7 +306,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     public final FrameTimer field_181542_y = new FrameTimer();
     long field_181543_z = System.nanoTime();
     private final boolean jvm64bit;
-    private final boolean isDemo;
+    
+    // Fuck you mojang
+    private final boolean isDemo = false;
+    
     private NetworkManager myNetworkManager;
     private boolean integratedServerIsRunning;
 
@@ -378,7 +383,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.session = gameConfig.userInfo.session;
         logger.info("Setting user: " + this.session.getUsername());
         logger.info("(Session ID is " + this.session.getSessionID() + ")");
-        this.isDemo = gameConfig.gameInfo.isDemo;
+        
+        // Try me bitch
+        //this.isDemo = gameConfig.gameInfo.isDemo;
+        
         this.displayWidth = gameConfig.displayInfo.width > 0 ? gameConfig.displayInfo.width : 1;
         this.displayHeight = gameConfig.displayInfo.height > 0 ? gameConfig.displayInfo.height : 1;
         this.tempDisplayWidth = gameConfig.displayInfo.width;
@@ -1740,6 +1748,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage
      */
     public void runTick() throws IOException
     {
+    	
+    	EventTick event = new EventTick();
+    	event.setType(EventType.PRE);
+    	SpicyClient.onEvent(event);
+    	
         if (this.rightClickDelayTimer > 0)
         {
             --this.rightClickDelayTimer;
@@ -2271,6 +2284,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         this.mcProfiler.endSection();
         this.systemTime = getSystemTime();
+        
+    	event.setType(EventType.POST);
+    	SpicyClient.onEvent(event);
+        
     }
 
     /**

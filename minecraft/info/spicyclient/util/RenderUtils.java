@@ -1,10 +1,15 @@
 package info.spicyclient.util;
 
+import java.awt.Color;
+
 import org.lwjgl.opengl.GL11;
 
+import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -23,6 +28,7 @@ public class RenderUtils {
 	public static void setCustomYaw(float customYaw) {
 		CustomYaw = customYaw;
 		SetCustomYaw = true;
+		mc.thePlayer.rotationYawHead = customYaw;
 	}
 	
 	public static void resetPlayerYaw() {
@@ -59,7 +65,7 @@ public class RenderUtils {
 	public static Tessellator tessellator = Tessellator.getInstance();
 	
 	// Someone gave me this code
-	public static void drawPlayerBox(Double posX, Double posY, Double posZ, AbstractClientPlayer player){
+	public static void drawPlayerBox(Double posX, Double posY, Double posZ){
 		double x =
 			posX - 0.5
 				- Minecraft.getMinecraft().getRenderManager().renderPosX;
@@ -121,6 +127,16 @@ public class RenderUtils {
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glColor4f(1, 1, 1, 1);
         
+	}
+	
+	public static void setColorForIcon(Color color) {
+		GlStateManager.enableBlend();
+		GlStateManager.color(((float) color.getRed()) / 255, ((float) color.getGreen()) / 255,
+				((float) color.getBlue()) / 255);
+	}
+	
+	public static void resetColor() {
+		GlStateManager.color(1, 1, 1, 1);
 	}
 	
 }

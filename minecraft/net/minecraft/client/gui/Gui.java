@@ -214,4 +214,82 @@ public class Gui
         worldrenderer.pos((double)x, (double)y, 0.0D).tex((double)(u * f), (double)(v * f1)).endVertex();
         tessellator.draw();
     }
+    
+    /**
+     * Draws a textured rectangle at z = 0. Args: x, y, u, v, width, height, textureWidth, textureHeight
+     */
+    public static void drawModalRectWithCustomSizedTexture(double x, double y, double u, double v, double width, double height, double textureWidth, double textureHeight)
+    {
+    	double f = 1.0F / textureWidth;
+    	double f1 = 1.0F / textureHeight;
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+        worldrenderer.pos((double)x, (double)(y + height), 0.0D).tex((double)(u * f), (double)((v + (float)height) * f1)).endVertex();
+        worldrenderer.pos((double)(x + width), (double)(y + height), 0.0D).tex((double)((u + (float)width) * f), (double)((v + (float)height) * f1)).endVertex();
+        worldrenderer.pos((double)(x + width), (double)y, 0.0D).tex((double)((u + (float)width) * f), (double)(v * f1)).endVertex();
+        worldrenderer.pos((double)x, (double)y, 0.0D).tex((double)(u * f), (double)(v * f1)).endVertex();
+        tessellator.draw();
+    }
+
+	/**
+	 * Draw a 1 pixel wide horizontal line. Args: x1, x2, y, color
+	 */
+	public static void drawHLine(float startX, float endX, float y, int color) {
+		drawHorizontalLine(startX, endX, y, color);
+	}
+
+	public static void drawVLine(float startX, float endX, float y, int color) {
+		drawVerticalLine(startX, endX, y, color);
+	}
+	
+	public static void drawLine(float startX, float endX, float startY, float endY, int color) {
+		
+	}
+	
+	protected static void drawHorizontalLine(float startX, float endX, float y, int color) {
+		if (endX < startX) {
+			float var5 = startX;
+			startX = endX;
+			endX = var5;
+		}
+
+		drawRect(startX, y, endX + 1, y + 1, color);
+	}
+
+	protected static void drawHorizontalLine(double startX, double endX, double y, int color) {
+		if (endX < startX) {
+			double var5 = startX;
+			startX = endX;
+			endX = var5;
+		}
+
+		drawRect(startX, y, endX + 1, y + 1, color);
+	}
+
+	/**
+	 * Draw a 1 pixel wide vertical line. Args : x, y1, y2, color
+	 */
+	protected static void drawVerticalLine(float x, float startY, float endY, int color) {
+		if (endY < startY) {
+			float var5 = startY;
+			startY = endY;
+			endY = var5;
+		}
+
+		drawRect(x, startY + 1, x + 1, endY, color);
+	}
+
+	/**
+	 * Draw a 1 pixel wide vertical line. Args : x, y1, y2, color
+	 */
+	protected static void drawVerticalLine(double x, double startY, double endY, int color) {
+		if (endY < startY) {
+			double var5 = startY;
+			startY = endY;
+			endY = var5;
+		}
+
+		drawRect(x, startY + 1, x + 1, endY, color);
+	}
 }

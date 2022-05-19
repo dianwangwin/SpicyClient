@@ -149,11 +149,11 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 
                 if (RenderUtils.SetCustomPitch && entity == Minecraft.getMinecraft().thePlayer) {
                 	f8 = RenderUtils.getCustomPitch();
-                	Minecraft.getMinecraft().thePlayer.renderYawOffset = RenderUtils.getCustomYaw();
                 }
                 
                 if (RenderUtils.SetCustomYaw && entity == Minecraft.getMinecraft().thePlayer) {
-                	f2 = RenderUtils.getCustomYaw();
+                	Minecraft.getMinecraft().thePlayer.renderYawOffset = RenderUtils.getCustomYaw();
+                	Minecraft.getMinecraft().thePlayer.prevRenderYawOffset = RenderUtils.getCustomYaw();
                 }
                 
                 this.renderLivingAt(entity, x, y, z);
@@ -184,6 +184,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 if (this.renderOutlines)
                 {
                     boolean flag1 = this.setScoreTeamColor(entity);
+                    f2 = f1 - f;
                     this.renderModel(entity, f6, f5, f7, f2, f8, 0.0625F);
 
                     if (flag1)

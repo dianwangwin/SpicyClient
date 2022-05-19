@@ -1,6 +1,7 @@
 package info.spicyclient.modules.player;
 
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
@@ -9,27 +10,40 @@ import info.spicyclient.SpicyClient;
 import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventChatmessage;
+import info.spicyclient.events.listeners.EventGetBlockHitbox;
 import info.spicyclient.events.listeners.EventMotion;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
+import info.spicyclient.events.listeners.EventSendPacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.notifications.Color;
 import info.spicyclient.notifications.NotificationManager;
 import info.spicyclient.notifications.Type;
+import info.spicyclient.settings.BooleanSetting;
 import info.spicyclient.settings.ModeSetting;
 import info.spicyclient.settings.NumberSetting;
+import info.spicyclient.util.Data6d;
+import info.spicyclient.util.MovementUtils;
+import info.spicyclient.util.RandomUtils;
+import info.spicyclient.util.ServerUtils;
 import info.spicyclient.util.Timer;
 import net.minecraft.block.BlockAir;
+import net.minecraft.init.Blocks;
+import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition;
+import net.minecraft.network.play.client.C03PacketPlayer.C05PacketPlayerLook;
+import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 
 public class AntiVoid extends Module {
 	
-	
-	// Not used anymore
-	private ModeSetting mode = new ModeSetting("Mode", "Hypixel", "Hypixel");
+	public BooleanSetting jumpFirst = new BooleanSetting("Jump first", false);
+	private ModeSetting mode = new ModeSetting("Mode", "HypixelNew", "HypixelNew");
 	
 	public AntiVoid() {
 		super("Anti Void", Keyboard.KEY_NONE, Category.PLAYER);
@@ -43,83 +57,126 @@ public class AntiVoid extends Module {
 	}
 	
 	public void onEnable() {
-		
+		lastOnground = null;
+		antivoid = false;
+		packets.clear();
+		if (ServerUtils.isOnHypixel()) {
+			NotificationManager.getNotificationManager().createNotification("Antivoid", "Antivoid does not bypass", true, 5000, Type.WARNING, Color.RED);
+			//toggle();
+		}
 	}
 	
 	public void onDisable() {
-		
+		/*
+		for (Packet p : packets) {
+			mc.getNetHandler().getNetworkManager().sendPacket(p);
+		}
+		*/
+		packets.clear();
 	}
+	
+	private static transient CopyOnWriteArrayList<Packet> packets = new CopyOnWriteArrayList<Packet>();
+	private static transient Data6d lastOnground = null;
+	private static transient boolean antivoid = false, resumeCheckingAfterFall = false;
+	private static transient Timer noSpam = new Timer();
 	
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventPacket) {
+		if (SpicyClient.config.fly.isEnabled()) {
+			resumeCheckingAfterFall = SpicyClient.config.fly.isEnabled();
+			lastOnground = null;
+			return;
+		}
+		
+		if (resumeCheckingAfterFall) {
+			lastOnground = null;
+			if (e instanceof EventUpdate && e.isPre()) {
+				if (MovementUtils.isOnGround(0.0001)) {
+					resumeCheckingAfterFall = false;
+				}
+			}
+			return;
+		}
+		
+//		if (ServerUtils.isOnHypixel()) {
+//			NotificationManager.getNotificationManager().createNotification("Antivoid", "Antivoid does not bypass", true, 5000, Type.WARNING, Color.RED);
+//			toggle();
+//		}
+		
+		if (e instanceof EventUpdate && e.isPre()) {
 			
-			if (e.isPre()) {
+			this.additionalInformation = mode.getMode();
+			
+			if (!isOverVoid()) {
+				lastOnground = new Data6d(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, mc.thePlayer.motionX, mc.thePlayer.motionY, mc.thePlayer.motionZ);
+				for (Packet p : packets) {
+					mc.getNetHandler().getNetworkManager().sendPacketNoEvent(p);
+				}
+				packets.clear();
+				antivoid = false;
+			}else {
+				
+				if (mc.thePlayer.fallDistance >= 20 && antivoid && noSpam.hasTimeElapsed(2000, true)) {
+					packets.clear();
+					try {
+						RandomUtils.setPosAndMotionWithData6d(lastOnground);
+					} catch (Exception e2) {
+						
+					}
+					antivoid = false;
+					NotificationManager.getNotificationManager().createNotification("Antivoid", "Antivoid saved you", true, 5000, Type.INFO, Color.BLUE);
+					resumeCheckingAfterFall = true;
+				}
+				
+			}
+			
+		}
+		else if (e instanceof EventSendPacket && e.isBeforePre()) {
+			
+			if (isOverVoid()) {
+				packets.add(((EventSendPacket)e).packet);
+				e.setCanceled(true);
+				antivoid = true;
+			}
+			
+		}
+		
+	}
+	
+	private boolean isOverVoid() {
+		
+		boolean isOverVoid = true;
+		BlockPos block = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1, mc.thePlayer.posZ);
+		
+		for (double i = mc.thePlayer.posY + 1; i > 0; i -= 0.5) {
+			
+			if (isOverVoid) {
 				
 				try {
-					if (((EventPacket) e).packet instanceof S08PacketPlayerPosLook) {
+					if (mc.theWorld.getBlockState(block).getBlock() != Blocks.air) {
 						
-						mc.thePlayer.fallDistance = 0;
+						isOverVoid = false;
+						break;
 						
 					}
-				} catch (NullPointerException e2) {
+				} catch (Exception e) {
 					
 				}
 				
 			}
 			
+			block = block.add(0, -1, 0);
+			
 		}
 		
-		if (e instanceof EventUpdate) {
-			
-			if (e.isPre()) {
-				
-				if (mode.is("Hypixel") && !SpicyClient.config.fly.isEnabled()) {
-					
-					this.additionalInformation = "Hypixel";
-					
-					boolean isOverVoid = true;
-					BlockPos block = mc.thePlayer.getPosition();
-					
-					for (int i = (int) mc.thePlayer.posY; i > 0; i--) {
-						
-						if (isOverVoid) {
-							
-							if (!(mc.theWorld.getBlockState(block).getBlock() instanceof BlockAir)) {
-								
-								isOverVoid = false;
-								
-							}
-							
-						}
-						
-						block = block.add(0, -1, 0);
-						
-					}
-					
-			        if (!mc.thePlayer.onGround && (mc.thePlayer.fallDistance >= 20.0f || mc.thePlayer.posY < 0) && isOverVoid) {
-			        	
-			        	Random r = new Random();
-			        	
-			        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
-			        	//mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY - 3, mc.thePlayer.posZ, false));
-			        	mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 12, mc.thePlayer.posZ, false));
-			        	//mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 6, mc.thePlayer.posZ);
-			        	mc.thePlayer.fallDistance = -1;
-			        	NotificationManager.getNotificationManager().createNotification("Antivoid saved you", "", true, 2000, Type.INFO, Color.BLUE);
-			        	//mc.thePlayer.motionY = 1;
-			            //float f = mc.thePlayer.rotationYaw * 0.017453292F;
-			            //mc.thePlayer.motionX -= (double)(MathHelper.sin(f) * 0.035f);
-			           //c.thePlayer.motionZ += (double)(MathHelper.cos(f) * 0.035f);
-			            
-			        }
-					
-				}
-				
+		for (double i = 0; i < 10; i += 0.1) {
+			if (MovementUtils.isOnGround(i) && isOverVoid) {
+				isOverVoid = false;
+				break;
 			}
-			
 		}
 		
+		return isOverVoid;
 	}
 	
 }

@@ -25,7 +25,6 @@ import net.minecraft.util.Vec3;
 public class Trail extends Module {
 	
 	private transient static ArrayList<Vec3> trailList = new ArrayList<Vec3>();
-	private transient static Timer timer = new Timer();
 	
 	public Trail() {
 		super("Trail", Keyboard.KEY_NONE, Category.RENDER);
@@ -41,20 +40,17 @@ public class Trail extends Module {
 		
 		if (e instanceof EventUpdate && e.isPre()) {
 			
+			if (mc.thePlayer.ticksExisted < 5) {
+				trailList.clear();
+			}
+			
 			this.additionalInformation = trailList.size() + " Lines drawn";
 			
 		}
 		
 		if (e instanceof EventRender3D) {
 			
-			//((EventRender3D) e).reset();
 			EventRender3D render3d = (EventRender3D) e;
-			
-			if (timer.hasTimeElapsed(250, true)){
-				
-				//trailList.add(new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ));
-				
-			}
 			
 			if (trailList.size() == 0) {
 				trailList.add(new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ));
@@ -86,9 +82,6 @@ public class Trail extends Module {
 				}
 				
 			}
-			
-			//RenderUtils.drawLine(render3d.getX(), render3d.getY(), render3d.getZ(), render3d.getX(), render3d.getY() + 10, render3d.getZ());
-			//RenderUtils.drawLine(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, mc.thePlayer.posX, mc.thePlayer.posY + 100000, mc.thePlayer.posZ);
 			
 		}
 		

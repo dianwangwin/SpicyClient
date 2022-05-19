@@ -33,9 +33,10 @@ public class AutoArmor extends Module {
 			this.additionalInformation = "Hypixel";
 			
 	        if(mc.currentScreen == null || mc.currentScreen instanceof GuiInventory || mc.currentScreen instanceof GuiChat){
-	        	if(timer.hasTimeElapsed(500, false)){
-	        		getBestArmor();
-	        	}
+	        	//if(timer.hasTimeElapsed(500, false)){
+	        		//getBestArmor();
+	        	//}
+	        	getBestArmor();
 	        }
 		}
 		

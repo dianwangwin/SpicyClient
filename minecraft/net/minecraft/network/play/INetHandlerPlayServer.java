@@ -10,7 +10,7 @@ import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
-import net.minecraft.network.play.client.C0CPacketInput;
+import net.minecraft.network.play.client.C0CPacketBoatInput;
 import net.minecraft.network.play.client.C0DPacketCloseWindow;
 import net.minecraft.network.play.client.C0EPacketClickWindow;
 import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
@@ -119,7 +119,7 @@ public interface INetHandlerPlayServer extends INetHandler
      * Processes player movement input. Includes walking, strafing, jumping, sneaking; excludes riding and toggling
      * flying/sprinting
      */
-    void processInput(C0CPacketInput packetIn);
+    void processInput(C0CPacketBoatInput packetIn);
 
     /**
      * Updates which quickbar slot is selected

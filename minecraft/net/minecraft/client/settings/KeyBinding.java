@@ -18,8 +18,8 @@ public class KeyBinding implements Comparable<KeyBinding>
     private int keyCode;
 
     /** Is the key held down? */
-    public boolean pressed;
-    private int pressTime;
+    public boolean pressed, realPressed;
+    private int pressTime, realPressTime;
 
     public static void onTick(int keyCode)
     {
@@ -30,6 +30,7 @@ public class KeyBinding implements Comparable<KeyBinding>
             if (keybinding != null)
             {
                 ++keybinding.pressTime;
+                ++keybinding.realPressTime;
             }
         }
     }
@@ -43,6 +44,7 @@ public class KeyBinding implements Comparable<KeyBinding>
             if (keybinding != null)
             {
                 keybinding.pressed = pressed;
+                keybinding.realPressed = pressed;
             }
         }
     }
@@ -88,6 +90,11 @@ public class KeyBinding implements Comparable<KeyBinding>
     {
         return this.pressed;
     }
+    
+    public boolean isRealKeyDown()
+    {
+        return this.realPressed;
+    }
 
     public String getKeyCategory()
     {
@@ -110,11 +117,28 @@ public class KeyBinding implements Comparable<KeyBinding>
             return true;
         }
     }
+    
+    public boolean isRealPressed()
+    {
+        if (this.realPressTime == 0)
+        {
+            return false;
+        }
+        else
+        {
+            --this.realPressTime;
+            return true;
+        }
+    }
 
     private void unpressKey()
     {
         this.pressTime = 0;
         this.pressed = false;
+        
+        this.realPressTime = 0;
+        this.realPressed = false;
+        
     }
 
     public String getKeyDescription()

@@ -43,7 +43,12 @@ public class GuiNewChat extends Gui
                 {
                     flag = true;
                 }
-
+                
+                // So the info in the bottom left does no overlap the chat
+                if (!flag)
+                	GlStateManager.translate(0, -23, 0);
+                // So the info in the bottom left does no overlap the chat
+                
                 float f1 = this.getChatScale();
                 int l = MathHelper.ceiling_float_int((float)this.getChatWidth() / f1);
                 GlStateManager.pushMatrix();

@@ -249,7 +249,7 @@ public class TextureUtil
         copyToBufferPos(p_110990_0_, 0, p_110990_1_);
     }
 
-    private static void copyToBufferPos(int[] p_110994_0_, int p_110994_1_, int p_110994_2_)
+    public static void copyToBufferPos(int[] p_110994_0_, int p_110994_1_, int p_110994_2_)
     {
         int[] aint = p_110994_0_;
 

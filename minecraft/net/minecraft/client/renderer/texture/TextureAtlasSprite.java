@@ -68,7 +68,7 @@ public class TextureAtlasSprite
         }
     }
 
-    protected static TextureAtlasSprite makeAtlasSprite(ResourceLocation spriteResourceLocation)
+    public static TextureAtlasSprite makeAtlasSprite(ResourceLocation spriteResourceLocation)
     {
         String s = spriteResourceLocation.toString();
         return (TextureAtlasSprite)(locationNameClock.equals(s) ? new TextureClock(s) : (locationNameCompass.equals(s) ? new TextureCompass(s) : new TextureAtlasSprite(s)));

@@ -13,7 +13,7 @@ import info.spicyclient.chatCommands.Command;
 import info.spicyclient.events.Event;
 import info.spicyclient.events.listeners.EventChatmessage;
 import info.spicyclient.events.listeners.EventMotion;
-import info.spicyclient.events.listeners.EventPacket;
+import info.spicyclient.events.listeners.EventReceivePacket;
 import info.spicyclient.events.listeners.EventUpdate;
 import info.spicyclient.modules.Module;
 import info.spicyclient.settings.BooleanSetting;
@@ -31,8 +31,10 @@ import net.minecraft.network.play.client.C02PacketUseEntity.Action;
 
 public class KillSults extends Module {
 	
-	private ModeSetting messageMode = new ModeSetting("Message Type", "Furry", "Furry", "Retarded Furry", "Annoying", "SpicyClient Ads");
+	public ModeSetting messageMode = new ModeSetting("Message Type", "Furry", "Furry", "Retarded Furry", "Annoying", "SpicyClient Ads", "SpicyFacts", "Cereal");
 	private ModeSetting serverMode = new ModeSetting("Server Mode", "PvpLands", "PvpLands", "Hypixel", "Test");
+	
+	public BooleanSetting hypixelShout = new BooleanSetting("/Shout", false);
 	
 	public BooleanSetting pvplandsPayback = new BooleanSetting("Payback", false);
 	
@@ -47,11 +49,13 @@ public class KillSults extends Module {
 	private static ArrayList<String> retardedFurryKillsults = new ArrayList<String>();
 	private static ArrayList<String> annoyingKillsults = new ArrayList<String>();
 	private static ArrayList<String> spicyClientAdsKillsults = new ArrayList<String>();
+	private static ArrayList<String> spicyFactsKillsults = new ArrayList<String>();
+	private static ArrayList<String> cerealKillsults = new ArrayList<String>();
 	
 	@Override
 	public void resetSettings() {
 		this.settings.clear();
-		this.addSettings(messageMode, serverMode, pvplandsPayback);
+		this.addSettings(messageMode, serverMode, pvplandsPayback, hypixelShout);
 	}
 	
 	@Override
@@ -60,6 +64,10 @@ public class KillSults extends Module {
 		if (e != null && e.setting != null) {
 			
 			if (e.setting.equals(serverMode)) {
+				
+				if (this.settings.contains(hypixelShout)) {
+					this.settings.remove(hypixelShout);
+				}
 				
 				if (serverMode.is("PvpLands")) {
 					
@@ -83,12 +91,18 @@ public class KillSults extends Module {
 				}
 				else if (serverMode.is("Hypixel")) {
 					
+					if (!this.settings.contains(hypixelShout)) {
+						this.settings.add(hypixelShout);
+					}
+					
 					if (this.settings.contains(pvplandsPayback)) {
 						
 						settings.remove(pvplandsPayback);
 						this.settings.sort(Comparator.comparing(s -> s == keycode ? 1 : 0));
 						
 					}
+					
+					reorderSettings();
 					
 				}
 				
@@ -119,13 +133,13 @@ public class KillSults extends Module {
 			
 		}
 		
-		if (e instanceof EventPacket) {
+		if (e instanceof EventReceivePacket) {
 			
 			if (e.isBeforePre()) {
 				
 				if (e.isIncoming()) {
 					
-					EventPacket event = (EventPacket) e;
+					EventReceivePacket event = (EventReceivePacket) e;
 					
 					if (event.packet instanceof S02PacketChat) {
 						
@@ -161,6 +175,16 @@ public class KillSults extends Module {
 						else if (messageMode.is("SpicyClient Ads")) {
 							
 							killsults = this.spicyClientAdsKillsults;
+							
+						}
+						else if (messageMode.is("SpicyFacts")) {
+							
+							killsults = this.spicyFactsKillsults;
+							
+						}
+						else if (messageMode.is("Cereal")) {
+							
+							killsults = this.cerealKillsults;
 							
 						}
 						
@@ -200,7 +224,7 @@ public class KillSults extends Module {
 							}
 							
 				        	//if((message.toLowerCase().contains("you won! want to play again? click here!") || message.toLowerCase().contains("coins! (win)")) || message.toLowerCase().contains("experience! (win)")){
-							if((message.toLowerCase().contains("queued! use the bed to return to lobby!")) || message.toLowerCase().contains("coins! (win)") || message.toLowerCase().contains("experience! (win)")){
+							if((message.toLowerCase().contains("queued! use the bed to return to lobby!")) || message.toLowerCase().contains("coins! (win)") || message.toLowerCase().contains("experience! (win)") || message.toLowerCase().contains("you won! want to play again? click here!") || message.toLowerCase().contains("you died! want to play again? click here!")){
 				        		
 								if (messageMode.is("Annoying") || messageMode.getMode() == "Annoying") {
 									Command.sendPublicChatMessage("E׼Z");
@@ -260,9 +284,9 @@ public class KillSults extends Module {
 									
 									message = message.replaceAll("<PlayerName>", playerName);
 									if (messageMode.is("Retarded Furry") || messageMode.getMode() == "Retarded Furry" || messageMode.is("Annoying") || messageMode.getMode() == "Annoying" || messageMode.is("SpicyClient Ads") || messageMode.getMode() == "SpicyClient Ads") {
-										mc.thePlayer.sendChatMessage(message);
+										mc.thePlayer.sendChatMessage((this.hypixelShout.enabled ? "/shout " : "") + message);
 									}else {
-										Command.sendPublicChatMessage(message);
+										Command.sendPublicChatMessage((this.hypixelShout.enabled ? "/shout " : "") + message);
 									}
 									return;
 			        				
@@ -318,7 +342,7 @@ public class KillSults extends Module {
 		
 		// Use <PlayerName> in those caps and with the <> to print out the player that you killed
 		
-		// for the furry killsults list
+		// For the furry killsults list
 		furryKillsults.add("<PlayerName> Just got killed by a furry");
 		furryKillsults.add("<PlayerName> OwO");
 		furryKillsults.add("<PlayerName> UwU");
@@ -336,15 +360,15 @@ public class KillSults extends Module {
 		furryKillsults.add("<PlayerName> #LegalizeAwoo");
 		furryKillsults.add("<PlayerName> is a furry confirmed?!?!?!?!!");
 		furryKillsults.add("<PlayerName> should visit ht׼tp:׼//׼spi׼cyc׼lient׼.in׼fo/fu׼rry1.g׼if");
-		furryKillsults.add("<PlayerName> really likes this meme htt׼p:/׼/׼spicy׼clie׼nt.i׼nfo׼/furry׼2.jpg");
+		furryKillsults.add("<PlayerName> really likes this meme h׼tt׼p:/׼/׼spicy׼clie׼nt.i׼nfo׼/furry׼2.׼jpg");
 		furryKillsults.add("<PlayerName> Should check out ht׼tp׼:/׼/spicy׼client׼.i׼nfo/fur׼ry3׼.׼png׼");
 		furryKillsults.add("<PlayerName> browses furaffinity");
-		furryKillsults.add("<PlayerName> joined r/furryirl");
+		furryKillsults.add("<PlayerName> joined r/furry_irl");
 		// Removed the youtube channel names because they probably don't want to me mentioned in this client
 		furryKillsults.add("<PlayerName> Probably watches furry youtubers");
 		
 		// WARNING THE RETARDED FURRY KILLSULTS ARE NSFW
-		// for the retarded furry killsults list
+		// For the retarded furry killsults list
 		// Writing these made me cringe so hard and I refuse to make more
 		retardedFurryKillsults.add("It's <PlayerName>s time to E621 and cry");
 		retardedFurryKillsults.add("Hey <PlayerName> want to yiff with me?");
@@ -362,7 +386,7 @@ public class KillSults extends Module {
 		retardedFurryKillsults.add("Wait, <PlayerName> wants to mursuit with me?!?!?!?");
 		retardedFurryKillsults.add("<PlayerName> Enjoys e621 confirmed?!?!?!?!?!?!?!");
 		
-		// for the annoying killsults list
+		// For the annoying killsults list
 		annoyingKillsults.add("<PlayerName> L");
 		annoyingKillsults.add("<PlayerName> EZ");
 		annoyingKillsults.add("<PlayerName> bad");
@@ -376,7 +400,7 @@ public class KillSults extends Module {
 		annoyingKillsults.add("<PlayerName> bad lol");
 		annoyingKillsults.add("<PlayerName> git gud");
 		
-		// for the spicyclient ads killsults list
+		// For the spicyclient ads killsults list
 		spicyClientAdsKillsults.add("<PlayerName> SpicyClient.info is your new home");
 		spicyClientAdsKillsults.add("<PlayerName> Download SpicyClient at SpicyClient.info");
 		spicyClientAdsKillsults.add("<PlayerName> SpicyClient is the easy way to get kills");
@@ -387,6 +411,25 @@ public class KillSults extends Module {
 		spicyClientAdsKillsults.add("<PlayerName> SpicyClient is free and open source, download today at SpicyClient.info");
 		spicyClientAdsKillsults.add("<PlayerName> Is bad because they dont use SpicyClient");
 		spicyClientAdsKillsults.add("<PlayerName> Get SpicyClient noob");
+		
+		// for the spicy facts killsults list
+		spicyFactsKillsults.add("<PlayerName> [FACT] SpicyClient is open source");
+		spicyFactsKillsults.add("<PlayerName> [FACT] SpicyClient is free");
+		spicyFactsKillsults.add("<PlayerName> [FACT] SpicyClient is the best free hypixel client");
+		spicyFactsKillsults.add("<PlayerName> [FACT] You should download SpicyClient");
+		spicyFactsKillsults.add("<PlayerName> [FACT] SpicyClient uses the MIT license");
+		spicyFactsKillsults.add("<PlayerName> [FACT] SpicyClient is better than sigma");
+		spicyFactsKillsults.add("<PlayerName> [FACT] SpicyClient > Sigma");
+		spicyFactsKillsults.add("<PlayerName> [FACT] SpicyClient has tons of Hypixel bypasses");
+		spicyFactsKillsults.add("<PlayerName> [FACT] Downloading SpicyClient makes you 200% more pog");
+		
+		// for the cereal killsults list
+		cerealKillsults.add("<PlayerName> No hax just a well balanced breakfast");
+		cerealKillsults.add("<PlayerName> R-double e-s-e-s YES, P-to the u-double f-s YES");
+		cerealKillsults.add("<PlayerName> My lucky charms were extra lucky");
+		cerealKillsults.add("<PlayerName> SpicyClient is part of a well balanced breakfast");
+		cerealKillsults.add("<PlayerName> Cheerios cereal now comes with spicyclient");
+		cerealKillsults.add("<PlayerName> ׼W׼h׼a׼t ׼t׼h׼e ׼f׼u׼c׼k׼ ׼a׼r׼e׼ ׼w׼h׼e׼a׼t׼i׼e׼s׼?");
 		
 	}
 	

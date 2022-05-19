@@ -14,7 +14,7 @@ public class DiscordRichPresence extends Module {
 
 	public DiscordRichPresence() {
 		super("Discord Rich Presence", Keyboard.KEY_NONE, Category.PLAYER);
-		this.toggled = true;
+		this.toggled = !SpicyClient.discordFailedToStart;
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -33,12 +33,24 @@ public class DiscordRichPresence extends Module {
 	@Override
 	public void onEvent(Event e) {
 		
-		if (e instanceof EventUpdate && e.isPre() && SpicyClient.discord != null && !SpicyClient.discord.running) {
+		if (e instanceof EventUpdate && e.isPre() && !SpicyClient.discordFailedToStart && SpicyClient.discord != null && !SpicyClient.discord.running) {
 			
-			SpicyClient.discord.start();
+			try {
+				SpicyClient.discord.start();
+			} catch (Exception e1) {
+				Command.sendPrivateChatMessage("Discord failed to start when you first started the client, this module is unavailable");
+				toggle();
+				e1.printStackTrace();
+				return;
+			}
 			SpicyClient.discord.running = true;
 			SpicyClient.discord.refresh();
 			
+		}
+		else if (e instanceof EventUpdate && e.isPre() && SpicyClient.discordFailedToStart) {
+			Command.sendPrivateChatMessage("Discord failed to start when you first started the client, this module is unavailable");
+			toggle();
+			return;
 		}
 		
 	}

@@ -5,6 +5,7 @@ import com.google.gson.JsonSyntaxException;
 import info.spicyclient.SpicyClient;
 import info.spicyclient.events.EventType;
 import info.spicyclient.events.listeners.EventRender3D;
+import info.spicyclient.modules.world.InfinitePlace;
 import info.spicyclient.ui.NewMainMenu;
 
 import java.awt.Color;
@@ -188,12 +189,12 @@ public class EntityRenderer implements IResourceManagerReloadListener
     /**
      * The texture id of the blocklight/skylight texture used for lighting effects
      */
-    private final DynamicTexture lightmapTexture;
+    public final DynamicTexture lightmapTexture;
 
     /**
      * Colors computed in updateLightmap() and loaded into the lightmap emptyTexture
      */
-    private final int[] lightmapColors;
+    public final int[] lightmapColors;
     private final ResourceLocation locationLightMap;
 
     /**
@@ -202,7 +203,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
     private boolean lightmapUpdateNeeded;
 
     /** Torch flicker X */
-    private float torchFlickerX;
+    public float torchFlickerX;
     private float torchFlickerDX;
 
     /** Rain sound counter */
@@ -226,7 +227,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
     private double cameraZoom = 1.0D;
     private double cameraYaw;
     private double cameraPitch;
-    private ShaderGroup theShaderGroup;
+    public ShaderGroup theShaderGroup;
     private static final ResourceLocation[] shaderResourceLocations = new ResourceLocation[] {new ResourceLocation("shaders/post/notch.json"), new ResourceLocation("shaders/post/fxaa.json"), new ResourceLocation("shaders/post/art.json"), new ResourceLocation("shaders/post/bumpy.json"), new ResourceLocation("shaders/post/blobs2.json"), new ResourceLocation("shaders/post/pencil.json"), new ResourceLocation("shaders/post/color_convolve.json"), new ResourceLocation("shaders/post/deconverge.json"), new ResourceLocation("shaders/post/flip.json"), new ResourceLocation("shaders/post/invert.json"), new ResourceLocation("shaders/post/ntsc.json"), new ResourceLocation("shaders/post/outline.json"), new ResourceLocation("shaders/post/phosphor.json"), new ResourceLocation("shaders/post/scan_pincushion.json"), new ResourceLocation("shaders/post/sobel.json"), new ResourceLocation("shaders/post/bits.json"), new ResourceLocation("shaders/post/desaturate.json"), new ResourceLocation("shaders/post/green.json"), new ResourceLocation("shaders/post/blur.json"), new ResourceLocation("shaders/post/wobble.json"), new ResourceLocation("shaders/post/blobs.json"), new ResourceLocation("shaders/post/antialias.json"), new ResourceLocation("shaders/post/creeper.json"), new ResourceLocation("shaders/post/spider.json")};
     public static final int shaderCount = shaderResourceLocations.length;
     private int shaderIndex;
@@ -350,7 +351,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         }
     }
 
-    private void loadShader(ResourceLocation resourceLocationIn)
+    public void loadShader(ResourceLocation resourceLocationIn)
     {
         if (OpenGlHelper.isFramebufferEnabled())
         {
@@ -725,7 +726,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
     /**
      * Setups all the GL settings for view bobbing. Args: partialTickTime
      */
-    private void setupViewBobbing(float partialTicks)
+    public void setupViewBobbing(float partialTicks)
     {
         if (this.mc.getRenderViewEntity() instanceof EntityPlayer)
         {
@@ -1048,7 +1049,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 flag = this.mc.getRenderViewEntity() instanceof EntityLivingBase && ((EntityLivingBase)this.mc.getRenderViewEntity()).isPlayerSleeping();
                 boolean flag1 = !ReflectorForge.renderFirstPersonHand(this.mc.renderGlobal, p_renderHand_1_, p_renderHand_2_);
 
-                if (flag1 && this.mc.gameSettings.thirdPersonView == 0 && !flag && !this.mc.gameSettings.hideGUI && !this.mc.playerController.isSpectator())
+                if (flag1 && (this.mc.gameSettings.thirdPersonView == 0 && !SpicyClient.config.firstPerson.isEnabled()) && !flag && !this.mc.gameSettings.hideGUI && !this.mc.playerController.isSpectator())
                 {
                     this.enableLightmap();
 

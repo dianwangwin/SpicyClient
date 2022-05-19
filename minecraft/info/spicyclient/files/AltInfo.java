@@ -5,14 +5,14 @@ import java.util.ArrayList;
 
 public class AltInfo {
 	
-	public ArrayList<alt> alts = new ArrayList<AltInfo.alt>();
+	public ArrayList<Alt> alts = new ArrayList<AltInfo.Alt>();
 	
 	public String API_Key = "api-xxxx-xxxx-xxxx";
 	
 	public void addAlt(String email, String password, boolean premium) {
 		
 		if (premium) {
-			AltInfo.alt a = new alt(email, password, premium);
+			AltInfo.Alt a = new Alt(email, password, premium);
 			this.alts.add(a);
 			
 			try {
@@ -22,7 +22,7 @@ public class AltInfo {
 				e.printStackTrace();
 			}
 		}else {
-			AltInfo.alt a = new alt(email, password, premium);
+			AltInfo.Alt a = new Alt(email, password, premium);
 			a.username = email;
 			this.alts.add(a);
 			
@@ -36,7 +36,7 @@ public class AltInfo {
 		
 	}
 	
-	public void addCreatedAlt(alt a) {
+	public void addCreatedAlt(Alt a) {
 		
 		if (a.premium) {
 			
@@ -62,16 +62,17 @@ public class AltInfo {
 		
 	}
 	
-	public static class alt{
+	public static class Alt{
 		
 		public String username = "Log in to view the username";
 		public String email;
 		public String password;
 		public boolean premium;
 		public int status = 0;
+		public long unbannedAt = 0;
 		
 		
-		public alt(String email, String password, boolean premium) {
+		public Alt(String email, String password, boolean premium) {
 			
 			this.email = email;
 			this.password = password;
